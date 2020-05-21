@@ -1,6 +1,6 @@
 # Troubleshooting
 
-If you're having trouble with the langauge server, check the below for information which
+If you're having trouble with the language server, check the below for information which
 may help. If something isn't covered here, please file an issue with the information given
 in [Filing an issue](#filing-an-issue).
 
@@ -8,13 +8,6 @@ in [Filing an issue](#filing-an-issue).
 ## Known issues
 
 None at this time.
-
-
-## Requirements
-
-Python is a requirement for the language server to run. In VS Code, an interpreter
-_must_ be selected in order for the language server to properly initialize. If your
-language server fails to start, be sure that you have selected an interpreter.
 
 
 ## Common questions and issues
@@ -30,7 +23,7 @@ the main root of user module imports. This means that if your imports are not re
 to this path, the language server will not be able to find them. This is common
 for users who have a `src` directory which contains their code, a directory for
 an installable package, etc. Note that the `src` scenario is automatically detected
-by the language server, so no configuration is necessary in that case.
+by the language server, so no configuration is necessary in that particular case.
 
 These extra roots must be specified to the language server. The easiest way to
 do this (with the VS Code Python extension) is to create a workspace configuration
@@ -48,11 +41,6 @@ with the contents:
 This list can be extended to other paths within the workspace (or even with
 code outside the workspace in more complicated setups). Relative paths will
 be taken as relative to the workspace root.
-
-
-### "Server initialization failed"
-
-If you see this message, ensure that an interpreter has been selected. (See [Requirements](#requirements)).
 
 
 ## Filing an issue
