@@ -4,11 +4,14 @@ Pylance
 
 Pylance is an extension that works alongside Python in Visual Studio Code to provide performant language support. Under the hood, Pylance is powered by [Pyright](https://github.com/microsoft/pyright), Microsoft's static type checking tool. Using Pyright, Pylance has the ability to supercharge your Python IntelliSense experience with rich type information, helping you write better code faster.
 
+This repository is to allow our users to file issues, request features, and get support. The Pylance codebase is not open-source but you can contribute to Pyright to make improvements to the core typing engine that powers the Pylance experience.
+
+The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
+
 Quick Start
 ============
-1. Make sure that you have the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) installed in Visual Studio Code
-2. Install the Pylance extension from the marketplace
-3. Open a Python (.py) file and the Pylance extension will activate
+1. Install the Pylance extension from the marketplace
+2. Open a Python (.py) file and the Pylance extension will activate
 
 Features
 =========
