@@ -10,7 +10,7 @@ The Pylance name is a small ode to Monty Python's Lancelot who was the first kni
 
 Quick Start
 ============
-1. Install the Pylance extension from the marketplace
+1. Install the [Pylance extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) from the marketplace
 2. Open a Python (.py) file and the Pylance extension will activate
 
 Features
