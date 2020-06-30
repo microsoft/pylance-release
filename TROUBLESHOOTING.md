@@ -52,7 +52,7 @@ When filing an issue, make sure you do the following:
     - Adding this will cause a large amount of info to be printed to the Python output panel.
     This should not be left long term, as the performance impact of the logging is significant.
 - State which language server version you are using: 
-    -   To find your version: Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python" in the dropdown on the right ("Python Language Server" if running Insiders build of VS Code). Look for the line Microsoft Python Language Server version X in the console.
+    - To find your version: Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
 - State the environment where your code is running; i.e. Python version, the virtual environment type, etc.
     - If using a virtual environment, please include the requirements.txt file.
     - If working with a conda environment, attach the environment.yml file.
