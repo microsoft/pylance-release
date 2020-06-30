@@ -98,7 +98,7 @@ For information on getting started, refer to the [CONTRIBUTING instructions](htt
 
 Feedback
 ===============
-* File a bug in [GitHub Issues](https://github.com/microsoft/pylance/issues/new/choose)
+* File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
 * [Tweet us](https://twitter.com/pythonvscode/) with other feedback
 
 
