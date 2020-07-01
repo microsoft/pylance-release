@@ -10,14 +10,14 @@ assignees: ''
 <!-- 
 Read the guidelines for filing an issue first. 
 
-https://github.com/microsoft/python-language-server-v2/blob/master/TROUBLESHOOTING.md#filing-an-issue
+https://github.com/microsoft/pylance-release/blob/master/TROUBLESHOOTING.md#filing-an-issue
 -->
 
 ## Environment data
 <!--
 To find your version: 
 
-Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python" in the dropdown on the right ("Python Language Server" if running Insiders build of VS Code). Look for the line Microsoft Python Language Server version X in the console.
+Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
 -->
 
 - Language Server version: XXX   
@@ -45,7 +45,7 @@ Adding this will cause a large amount of info to be printed to the Python output
 XXX
 ```
 
-## Code Snippet / Additional lnformation
+## Code Snippet / Additional information
 
 <!--
 Note: If you think a GIF of what is happening would be helpful, consider tools like https://www.cockos.com/licecap/, https://github.com/phw/peek or https://www.screentogif.com/ .
