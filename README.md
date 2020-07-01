@@ -15,19 +15,19 @@ This repository is for providing feedback and documentation on the Pylance langu
 
 Pylance provides some awesome features for Python 3, including:
 
-- Docstrings
-- Signature help, with type information
-- Parameter suggestions
-- Code completion
-- Auto-imports (as well as add and remove import code actions)
-- As-you-type reporting of code errors and warnings (diagnostics)
-- Code outline
-- Code navigation
-- Code lens (references/implementations)
-- Type checking mode
-- Native multi-root workspace support
-- IntelliCode compatibility
-- Jupyter Notebooks compatibility
+-   Docstrings
+-   Signature help, with type information
+-   Parameter suggestions
+-   Code completion
+-   Auto-imports (as well as add and remove import code actions)
+-   As-you-type reporting of code errors and warnings (diagnostics)
+-   Code outline
+-   Code navigation
+-   Code lens (references/implementations)
+-   Type checking mode
+-   Native multi-root workspace support
+-   IntelliCode compatibility
+-   Jupyter Notebooks compatibility
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
@@ -35,61 +35,61 @@ See the [changelog](CHANGELOG.md) for the latest release.
 
 Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the settings.json file in your workspace, or edited through the Settings Editor UI.
 
-- `python.analysis.typeCheckingMode`
+-   `python.analysis.typeCheckingMode`
 
-  - Used to specify the level of type checking analysis performed;
-  - Default: `off`
-  - Available values:
-    - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
-    - `basic`: Non-type checking-related rules (all rules in `off`) + basic type checking rules
-    - `strict`: All type checking rules at the highest severity of error (includes all rules in `off` and `basic` categories)
+    -   Used to specify the level of type checking analysis performed;
+    -   Default: `off`
+    -   Available values:
+        -   `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
+        -   `basic`: Non-type checking-related rules (all rules in `off`) + basic type checking rules
+        -   `strict`: All type checking rules at the highest severity of error (includes all rules in `off` and `basic` categories)
 
-- `python.analysis.diagnosticMode`
+-   `python.analysis.diagnosticMode`
 
-  - Used to allow a user to specify what files they want the language server to analyze to get problems flagged in their code.
-  - Available values:
-    - `workspace`
-    - `openFilesOnly` (default)
+    -   Used to allow a user to specify what files they want the language server to analyze to get problems flagged in their code.
+    -   Available values:
+        -   `workspace`
+        -   `openFilesOnly` (default)
 
-- `python.analysis.stubPaths`
+-   `python.analysis.stubPaths`
 
-  - Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
-  - Default value: `./typings`
+    -   Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
+    -   Default value: `./typings`
 
-- `python.analysis.autoSearchPaths`
+-   `python.analysis.autoSearchPaths`
 
-  - Used to automatically add search paths based on some predefined names (like `src`).
-  - Available values:
-    - `true` (default)
-    - `false`
+    -   Used to automatically add search paths based on some predefined names (like `src`).
+    -   Available values:
+        -   `true` (default)
+        -   `false`
 
-- `python.analysis.diagnosticSeverityOverrides`
+-   `python.analysis.diagnosticSeverityOverrides`
 
-  - Used to allow a user to override the severity levels for individual diagnostics should they desire
-  - Accepted severity values:
+    -   Used to allow a user to override the severity levels for individual diagnostics should they desire
+    -   Accepted severity values:
 
-    - `error` (red squiggle)
-    - `warning` (yellow squiggle)
-    - `information` (blue squiggle)
-    - `none` (disables the rule)
+        -   `error` (red squiggle)
+        -   `warning` (yellow squiggle)
+        -   `information` (blue squiggle)
+        -   `none` (disables the rule)
 
-  - Available rule to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
-  - Example:
+    -   Available rule to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
+    -   Example:
 
-  ```
-  {
-      "python.analysis.diagnosticSeverityOverrides:" {
-          "reportUnboundVariable" : "information",
-          "reportImplicitStringConcatenation" : "warning"
-      }
-  }
-  ```
+    ```json
+    {
+        "python.analysis.diagnosticSeverityOverrides:" {
+            "reportUnboundVariable" : "information",
+            "reportImplicitStringConcatenation" : "warning"
+        }
+    }
+    ```
 
-- `python.analysis.useLibraryCodeForTypes`
-  - Used to parse the source code for a package when a typestub is not found
-  - Accepted values:
-    - `true` (default)
-    - `false`
+-   `python.analysis.useLibraryCodeForTypes`
+    -   Used to parse the source code for a package when a typestub is not found
+    -   Accepted values:
+        -   `true` (default)
+        -   `false`
 
 # Contributing
 
@@ -101,8 +101,8 @@ For information on getting started, refer to the [CONTRIBUTING instructions](htt
 
 # Feedback
 
-- File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
-- [Tweet us](https://twitter.com/pythonvscode/) with other feedback
+-   File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
+-   [Tweet us](https://twitter.com/pythonvscode/) with other feedback
 
 # License
 
