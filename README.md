@@ -78,7 +78,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
     ```json
     {
-        "python.analysis.diagnosticSeverityOverrides:" {
+        "python.analysis.diagnosticSeverityOverrides": {
             "reportUnboundVariable" : "information",
             "reportImplicitStringConcatenation" : "warning"
         }
