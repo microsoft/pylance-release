@@ -2,11 +2,7 @@ Pylance
 =====================
 ### Fast, feature-rich language support for Python
 
-This repository is for providing feedback and documentation on the Pylance language server extension in Visual Studio Code. You can use the repository to report issues or submit feature requests. Pylance is not open source, but you can contribute by filing issues or by making contributions to the open-source [Pyright](www.github.com/microsoft/pyright) type checking engine that powers Pylance.
-
-This repository is for providing feedback on the Pylance language server extension in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to Pyright to make improvements to the core typing engine that powers the Pylance experience.
-
-The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
+This repository is for providing feedback and documentation on the Pylance language server extension in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to Pyright to make improvements to the core typing engine that powers the Pylance experience.
 
 Quick Start
 ============
