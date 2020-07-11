@@ -1,5 +1,11 @@
 # Changelog
 
+## 2020.7.1 (10 July 2020)
+
+-   Fixed background analysis thread, which prevented diagnostics (syntax checks, import warnings, etc) from working.
+    ([pylance-release#86](https://github.com/microsoft/pylance-release/issues/86))
+-   Fixed setting and survey banners blocking startup.
+
 ## 2020.7.0 (9 July 2020)
 
 -   Hovers for class invocations will now show the `__init__` method's docstring.
@@ -9,7 +15,7 @@
 -   Fixed multi-line string literals in tooltips.
 -   IntelliCode now operates in environments without OpenMP.
 -   The `pandas` stubs have been improved.
-    ([pylance-release#71](https://github.com/microsoft/pylance-release/issues/13), [pylance-release#71](https://github.com/microsoft/pylance-release/issues/73), [pylance-release#73](https://github.com/microsoft/pylance-release/issues/71))
+    ([pylance-release#13](https://github.com/microsoft/pylance-release/issues/13), [pylance-release#71](https://github.com/microsoft/pylance-release/issues/73), [pylance-release#73](https://github.com/microsoft/pylance-release/issues/71))
 -   `pyplot.subplots`'s signature has been fixed.
     ([pylance-release#43](https://github.com/microsoft/pylance-release/issues/43))
 -   The bundled copy of typeshed has been updated.
