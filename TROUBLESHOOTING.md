@@ -8,7 +8,17 @@ in [Filing an issue](#filing-an-issue).
 
 ### settings.json does not recognize 'Pylance' as a python.languageServer value
 
-In order to enable Pylance as your language server for Python in VS Code, you must install the Pylance extension from the marketplace. In the future, we may support the 'Pylance' value as a `python.languageServer` value. If you want to disable Pylance, simply uninstall or disable the extension.
+https://github.com/microsoft/pylance-release/issues/16
+
+In order to enable Pylance as your language server for Python in VS Code, you must install the Pylance extension from the marketplace.
+
+After installation, Pylance will prompt to switch your preferences to use Pylance language server. Accept in order to update settings.json to set `"python.languageServer": "Pylance"`.
+
+Note that if you open settings.json in the text editor, VS Code will report `Pylance` as an invalid value for `python.languageServer`. This can be safely ignored.
+
+In addition, the settings UI editor will report the language server to be `Jedi`, because the UI shows the first valid value in the case where the current value is found to be invalid.
+
+If you want to disable Pylance, simply uninstall or disable the extension, and/or change the value of `python.languageServer` back to `Jedi`.
 
 ## Common questions and issues
 
@@ -55,8 +65,9 @@ When filing an issue, make sure you do the following:
 -   Enable trace logging by adding `"python.analysis.logLevel": "Trace"` to your settings.json configuration file.
     -   Adding this will cause a large amount of info to be printed to the Python output panel.
         This should not be left long term, as the performance impact of the logging is significant.
--   State which language server version you are using:
-    -   To find your version: Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
+-   State which language server version you are using. To find your version, you can either:
+    -   Open the VS Code extensions panel. Locate Pylance from the list of installed extensions. The version appears next to the name.
+    -   Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
 -   State the environment where your code is running; i.e. Python version, the virtual environment type, etc.
     -   If using a virtual environment, please include the requirements.txt file.
     -   If working with a conda environment, attach the environment.yml file.
