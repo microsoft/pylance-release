@@ -8,6 +8,7 @@ This repository is for providing feedback and documentation on the Pylance langu
 
 1. Install the [Pylance extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) from the marketplace.
 1. Open a Python (.py) file and the Pylance extension will activate.
+1. Select Yes when prompted to make Pylance the default language server. This will update your preferences, which you can also do manually by adding `"python.languageSever": "Pylance"` to your settings.json file using the text editor.
 
 # Features
 
@@ -23,7 +24,6 @@ Pylance provides some awesome features for Python 3, including:
 -   As-you-type reporting of code errors and warnings (diagnostics)
 -   Code outline
 -   Code navigation
--   Code lens (references/implementations)
 -   Type checking mode
 -   Native multi-root workspace support
 -   IntelliCode compatibility
