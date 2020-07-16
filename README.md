@@ -51,7 +51,7 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `workspace`
         -   `openFilesOnly` (default)
 
--   `python.analysis.stubPaths`
+-   `python.analysis.stubPath`
 
     -   Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
     -   Default value: `./typings`
