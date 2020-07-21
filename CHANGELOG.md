@@ -1,11 +1,47 @@
 # Changelog
 
+## 2020.7.3 (21 July 2020)
+
+-   Fixed typo in marketplace entry's readme.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.53 to 1.1.54, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Changed logic for reportMissingModuleSource diagnostic rule so it isn't reported for stub files.
+    -   Enhancement: Added support for typing.OrderedDict, which is a generic alias for collections.OrderedDict.
+        ([pylance-release#151](https://github.com/microsoft/pylance-release/issues/151))
+    -   Bug Fix: Fixed bug in docstring trimming code that resulted in some docstrings (those consisting of two lines where the second line was empty) not appearing when hovering over functions.
+    -   Bug Fix: Fixed bug in type checker that resulted in incorrect error when creating a generic type alias with a compatible TypeVar as one of the type arguments.
+    -   Bug Fix: Fixed bug that caused value expressions for default parameter values in lambdas to be evaluated within the wrong scope resulting in errors if the lambda scope had a same-named symbol.
+-   [1.1.54](https://github.com/microsoft/pyright/releases/tag/1.1.54)
+    -   Enhancement: Added json schema for mspythonconfig.json (in addition to pyrightconfig.json).
+    -   Enhancement: Updated config file watcher logic so it can detect when a new config file is added to a workspace.
+    -   Bug Fix: "Find all references" should not return references to a symbol within library code unless that library source file is currently open in the editor.
+    -   Bug Fix: Fixed bug in type checker that caused a crash when analyzing an abstract class with a constructor that contained two or more parameters, all of which are unannotated.
+        ([pylance-release#118](https://github.com/microsoft/pylance-release/issues/118))
+    -   Bug Fix: Fixed pyrightconfig.json JSON schema to accept "information" as a valid diagnostic severity setting.
+    -   Enhancement: Updated log levels for messages logged by the Pyright service. Some log levels were "info" but should have been "warning" or "error".
+        ([pylance-release#120](https://github.com/microsoft/pylance-release/issues/120))
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation for \*args or \*\*kwargs parameters if no type annotation was present. This bug also affected completion suggestions for these parameters.
+        ([pylance-release#119](https://github.com/microsoft/pylance-release/issues/119))
+    -   Bug Fix: Fixed a bug that resulted in Pyright attempting to parse and analyze binaries (native libraries) like ".pyd" and ".so" files.
+        ([pylance-release#124](https://github.com/microsoft/pylance-release/issues/124))
+    -   Bug Fix: Fixed bug in argument/parameter matching when an unpack operator is used in the argument and the parameter is a \*varg type.
+    -   Enhancement: Renamed setting "pyright.useLibraryCodeForTypes" to "python.analysis.useLibraryCodeForTypes" for compatibility with Pylance. The older setting name is still supported but will be removed in the future.
+    -   Enhancement: Added code to handle the case where a class is assigned to a type described by a callable protocol object. In this case, the class constructor's signature should be compared against the `__call__` signature defined in the protocol.
+    -   Bug Fix: Fixed bug in import resolver that caused imports that referred to local namespace packages not to resolve.
+    -   Bug Fix: Fixed bug that caused enum names that were not uppercase to be handled incorrectly.
+    -   Bug Fix: Fixed bug that caused incorrect type analysis when a package `__init__.py` imported and re-exported a symbol that matched the submodule it was being imported from, e.g. `from .foo import foo`.
+    -   Bug Fix: Fixed bug in type analyzer where default value expressions for lambda parameters were not being evaluated. This meant that errors related to these expressions were not reported, and symbols referenced within them were marked as unreferenced.
+
 ## 2020.7.2 (15 July 2020)
 
 -   Allow find all references to search libraries if invoked from non-user files.
 
 In addition, Pylance's copy of Pyright has been updated from 1.1.51 to 1.1.53, including the following changes:
 
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Updated config file watcher logic so it can detect when a new config file is added to a workspace.
 -   [1.1.53](https://github.com/microsoft/pyright/releases/tag/1.1.53)
     -   Bug Fix: Fixed bug in parser where it was emitting a spurious error about function return type annotations being a tuple when it was simply enclosed in parentheses.
     -   Bug Fix: Fixed a bug that caused completion suggestions not to work for the LHS of a member access expression (e.g. the "a" in "a.b").
