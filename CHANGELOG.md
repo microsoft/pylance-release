@@ -1,5 +1,71 @@
 # Changelog
 
+## 2020.7.4 (29 July 2020)
+
+-   Fixed case where analysis progress spinner would not disappear after analysis was complete.
+-   Improved active parameter bolding in signature help for functions with multiple overrides.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.54 to 1.1.58, including the following changes:
+
+-   [1.1.58](https://github.com/microsoft/pyright/releases/tag/1.1.58)
+    -   Enhancement: Rework signature help to use new VS Code / LSP APIs. Function overrides and active parameters are handled much, much better.
+    -   Enhancement: Added strict-mode check for declared return types in type stubs, which don't allow for return type inference.
+    -   Bug Fix: Fixed bug in type checker that resulted in a crash when a function declaration referred to itself within its return type annotation.
+        ([pylance-release#181](https://github.com/microsoft/pylance-release/issues/181))
+    -   Bug Fix: Fixed bug that caused duplicate diagnostics to be reported for quoted type annotations in some cases.
+    -   Bug Fix: Fixed bug that caused "find all references" and "replace symbol" to sometimes miss references to a symbol if they were within quoted type annotations or type comments.
+    -   Bug Fix: Fixed bugs in a few of the "find all references" tests, which were not properly quoting a forward-declared symbol.
+    -   Bug Fix: Fixed a bug that caused infinite recursion and a crash when printing the type of a function that refers to itself within its own return type annotation.
+        ([pylance-release#181](https://github.com/microsoft/pylance-release/issues/181))
+    -   Bug Fix: Fixed bug where an f-string expression generated an error if it ended in an equal sign followed by whitespace. The Python 3.8 spec doesn't indicate whether whitespace is allowed here, but clearly the interpreter accepts it.
+        ([pylance-release#182](https://github.com/microsoft/pylance-release/issues/182))
+    -   Bug Fix: Fixed bug in logic that handles chained comparisons (e.g. `a < b < c`). The code was not properly handling the case where the left expression was parenthesized (e.g. `(a < b) < c`).
+    -   Enhancement: Improved bidirectional type inference in the case where the type and the expected type are generic but the expected type is a base class that has been specialized. For example, if the expected type is `Mapping[str, int]` and the type is a `dict`.
+-   [1.1.57](https://github.com/microsoft/pyright/releases/tag/1.1.57)
+    -   Bug Fix: Fixed bug that caused partial type stub creation (for subpackages of a top-level package) to be generated in the wrong directory.
+    -   Change in Behavior: Changed logic within type evaluator to track differences between None and NoneType. Previously, they were treated interchangeably. This worked in most cases, but there are some edge cases where the difference is important.
+    -   Change in Behavior: Changed logic that converts a type to text so it properly distinguishes between "None" and "NoneType". It previously always output "None".
+    -   Enhancement: Added support for NoneType matching a type expression `Type[T]` during TypeVar matching.
+    -   Bug Fix: Fixed the handling of class or instance variable declarations that redefine a same-named symbol in an outer scope but do not use a variable declaration statement within the class.
+        ([pylance-release#175](https://github.com/microsoft/pylance-release/issues/175))
+    -   Bug Fix: Updated type checker's logic for dealing with symbols that are declared in an inner scope and an outer scope but used within the inner scope prior to being redefined.
+    -   Bug Fix: Fixed bug a homogeneous tuple of indeterminate length was indexed with a constant expression.
+    -   Enhancement: Made the reportIncompatibleMethodOverride rule smarter. It now properly handles position-only parameters and allows a subclass to extend the signature of a method it is overriding as long as the parameters are \*varg, \*\*kwarg, or have default values.
+        ([pylance-release#157](https://github.com/microsoft/pylance-release/issues/157))
+    -   Enhancement: Augmented the reportIncompatibleMethodOverride diagnostic rule to check for cases where a non-function symbol within a subclass redefines a function symbol in a base class.
+    -   New Feature: Added new diagnostic rule "reportIncompatibleVariableOverride" which is similar to "reportIncompatibleMethodOverride" except that it reports incompatible overrides of variables (non-methods).
+-   [1.1.56](https://github.com/microsoft/pyright/releases/tag/1.1.56)
+    -   Bug Fix: Fixed bug that caused the default python platform not to be specified if there was no config file and no python interpreter selected.
+    -   Bug Fix: Fixed crash in type checker that occurs when removing NoReturn from a union and having no remaining types.
+    -   Bug Fix: Fixed bug that caused `__name__` not to be flagged as an invalid attribute on a class instance.
+        ([pylance-release#154](https://github.com/microsoft/pylance-release/issues/154))
+    -   Bug Fix: Fixed bug that caused quoted type annotation (i.e. a forward reference) that contains type arguments to report an "unbound symbol".
+    -   Enhancement: Improved CompletionItemKind for intrinsic class symbols like `__name__`, etc.
+        ([pylance-release#154](https://github.com/microsoft/pylance-release/issues/154))
+    -   Bug Fix: Fixed bug in parsing of unicode named character encodings within string literals when the encoding included capital letters.
+        ([pylance-release#161](https://github.com/microsoft/pylance-release/issues/161))
+    -   Bug Fix: Fixed bug whereby a non-function definition (such as an instance variable) within a subclass was not considered as having overridden an abstract method or property within a base class.
+    -   Change in Behavior: Changed Never internal type to be assignable to any type. Previously, it was assignable to no type.
+    -   Bug Fix: Fixed bug that caused a spurious error during TypeVar matching when the TypeVar is constrained and is initially matched against an Any or Unknown type but is later matched against a known type.
+    -   Bug Fix: Fixed bug in dataclass logic that reported spurious error when initializing attribute with `field(init=False)`.
+        ([pylance-release#162](https://github.com/microsoft/pylance-release/issues/162))
+    -   Change in Behavior: Renamed ParameterSpecification to ParamSpec to reflect latest PEP 612 changes.
+    -   Enhancement: Updated typeshed fallback stubs to latest version.
+    -   Change in Behavior: Updated PEP 612 and 614 features to be dependent on 3.10 rather than 3.9.
+    -   Bug Fix: Fixed bug that caused diagnostics to persist in files that are not part of the workspace even after they are closed.
+    -   Bug Fix: Fixed bug that generated incorrect type checking error when type alias used a `Type[x]` type annotation.
+-   [1.1.55](https://github.com/microsoft/pyright/releases/tag/1.1.55)
+    -   Bug Fix: Changed logic for reportMissingModuleSource diagnostic rule so it isn't reported for stub files.
+    -   Enhancement: Added support for typing.OrderedDict, which is a generic alias for collections.OrderedDict.
+        ([pylance-release#151](https://github.com/microsoft/pylance-release/issues/151))
+    -   Enhancement: Added support for new Python extension callback so Pyright extension is notified when pythonPath is modified.
+    -   Bug Fix: Fixed bug in docstring trimming code that resulted in some docstrings (those consisting of two lines where the second line was empty) not appearing when hovering over functions.
+    -   Bug Fix: Fixed bug in type checker that resulted in incorrect error when creating a generic type alias with a compatible TypeVar as one of the type arguments.
+    -   Bug Fix: Fixed bug that caused value expressions for default parameter values in lambdas to be evaluated within the wrong scope resulting in errors if the lambda scope had a same-named symbol.
+    -   Bug Fix: Fixed bugs in handling of wildcard imports. First, it was not properly handling the implicit introduction of symbol A in the statement `from .A import *`. Second, it was implicitly including submodules as part of the wildcard, and it shouldn't.
+    -   Bug Fix: Fixed bug that resulted in incorrect error when using an unpack operator in an argument expression that corresponds to a \*varg parameter in the callee.
+    -   Bug Fix: Fixed recent regression that caused `isinstance` check to emit a bad error when `self.__class__` was passed as a second argument.
+
 ## 2020.7.3 (21 July 2020)
 
 -   Fixed typo in marketplace entry's readme.
