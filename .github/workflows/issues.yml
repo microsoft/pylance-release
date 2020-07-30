@@ -1,0 +1,14 @@
+name: issue-automation
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled]
+
+jobs:
+  automate-issues-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: andymckay/labeler@master
+        with:
+          add-labels: 'triage'
+          ignore-if-labeled: true
