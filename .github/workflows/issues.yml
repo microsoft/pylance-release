@@ -17,6 +17,6 @@ jobs:
 
       - name: If labeled, remove triage
         uses: andymckay/labeler@master
-        if: ${{ steps.no-labels.outcome == 'skipped' && join(github.event.issue.labels.*.name, ',') != '' }}
+        if: ${{ steps.no-labels.outcome == 'skipped' && join(github.event.issue.labels.*.name, ',') != 'triage' }}
         with:
           remove-labels: 'triage'
