@@ -37,7 +37,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 -   `python.analysis.typeCheckingMode`
 
-    -   Used to specify the level of type checking analysis performed;
+    -   Used to specify the level of type checking analysis performed.
     -   Default: `off`
     -   Available values:
         -   `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
@@ -70,7 +70,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 -   `python.analysis.diagnosticSeverityOverrides`
 
-    -   Used to allow a user to override the severity levels for individual diagnostics should they desire
+    -   Used to allow a user to override the severity levels for individual diagnostics should they desire.
     -   Accepted severity values:
 
         -   `error` (red squiggle)
@@ -91,7 +91,13 @@ Pylance provides users with the ability to customize their Python language suppo
     ```
 
 -   `python.analysis.useLibraryCodeForTypes`
-    -   Used to parse the source code for a package when a typestub is not found
+    -   Used to parse the source code for a package when a typestub is not found.
+    -   Accepted values:
+        -   `true` (default)
+        -   `false`
+
+*   `python.analysis.autoImportCompletions`
+    -   Used to control the offering of auto-imports in completions.
     -   Accepted values:
         -   `true` (default)
         -   `false`

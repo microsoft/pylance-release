@@ -1,5 +1,43 @@
 # Changelog
 
+## 2020.8.0 (5 August 2020)
+
+-   Added `python.analysis.autoImportCompletions` setting (`true` by default), which allows auto-import completions to be disabled.
+    ([pylance-release#64](https://github.com/microsoft/pylance-release/issues/64))
+-   Fixed the "make Pylance your default language server" prompt when language server setting was previously set outside of the user settings.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.58 to 1.1.60, including the following changes:
+
+-   [1.1.60](https://github.com/microsoft/pyright/releases/tag/1.1.60)
+    -   Bug Fix: Fixed a bug "aliased import with leading underscore produces private usage error".
+    -   Bug Fix: Fixed a bug that caused the wrong diagnostic message string to be used when "Generic" is used with no type arguments.
+    -   Enhancement: Added new diagnostic message for when "Generic" is used in contexts outside of a class definition statement.
+    -   Bug Fix (from Pylance): Use `sys.version_info` to query interpreter version.
+    -   Enhancement: Added heuristics to type var solver so it picks the "least complex" solution when considering the elements within a union.
+    -   Enhancement: Updated typeshed stubs to the latest versions.
+    -   Bug Fix: Fixed a bug that caused an error to be reported when a newline token was used within an f-string expression.
+        ([pylance-release#200](https://github.com/microsoft/pylance-release/issues/200))
+    -   Enhancement: Added new diagnostic rule "reportInvalidStubStatement" (on by default in strict mode, off otherwise) that reports diagnostics for statements that should not appear within a type stub file.
+    -   Enhancement: Added diagnostic for a module-level `__getattr__` function defined in a type stub file when in strict mode.
+    -   Bug Fix: Fixed bug that caused imports (and other symbols) to be reported as unaccessed if they were accessed from within code that was deemed to be unreachable (e.g. due to the current platform configuration).
+    -   Behavior Change: Changed logic for reportUnusedClass and reportUnusedFunction diagnostic rules so they don't report private-named functions and classes within stub files.
+    -   Bug Fix: The token "..." should mean an ellipsis object, not the ellipsis class, when used in a normal expression within a non-stub file.
+    -   Enhancement (from Pylance): Add python.analysis.autoImportCompletions to control auto-import completions.
+-   [1.1.59](https://github.com/microsoft/pyright/releases/tag/1.1.59)
+    -   Bug Fix: Changed the inferred type of an async function to use `Coroutine` rather than `Awaitable` type. `Coroutine` is a subclass of `Awaitable` and is arguably more correct in this case.
+        ([pylance-release#184](https://github.com/microsoft/pylance-release/issues/184))
+    -   Bug Fix: Fixed a bug in the handling of position-only parameters with default values followed by named parameters or \*\*kwargs.
+    -   Bug Fix: Fixed a bug where "yield from" argument was assumed to be an "Iterator", but it should really be an "Iterable".
+    -   Bug Fix: Fixed bug where "from .A import A" statement caused symbol "A" to have an inferred type that was a union of a module and other type, even though the other type immediately overwrites the module.
+        ([pylance-release#188](https://github.com/microsoft/pylance-release/issues/188))
+    -   Behavior Change: Changed type stub generator to never generate parameter type annotations based purely on default value types since those can be incorrect or incomplete. Changed type stub generator to automatically add method return types for common magic methods whose return type is always the same.
+    -   Behavior Change: Changed type stub generator to avoid emitting functions and methods that begin with an underscore.
+    -   Enhancement: Changed type checker to flag unaccessed symbols within type stubs in some cases. It doesn't mark function parameters or variables as unaccessed, and it doesn't mark imports of the form "from x import y as z" or "import a as b" as unaccessed since those are intended to be re-exports.
+    -   Enhancement: Changed type checker to treat "..." as an "Unknown" type when used as the RHS of an assignment statement such as "a = ...". This idiom appears sometimes within type stubs, and it should be treated as a missing (unknown) type so stub authors know that they need to fill in a type annotation.
+    -   Enhancement: Improved the diagnostic message used to report parameter type mismatches when a parameter name isn't known.
+    -   Bug Fix: Fixed a bug whereby a TypeVar in a source type could be conflated with a same-named TypeVar in a dest type when performing TypeVar matching.
+    -   Bug Fix: On the Windows platform, avoid calling 'python3' to determine the import paths for the current interpreter. This command can sometimes display a dialog indicating that python isn't installed and can be downloaded from the store.
+
 ## 2020.7.4 (29 July 2020)
 
 -   Fixed case where analysis progress spinner would not disappear after analysis was complete.

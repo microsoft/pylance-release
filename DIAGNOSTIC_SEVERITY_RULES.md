@@ -42,3 +42,4 @@ This doc details all available rules that can be customized using the `python.an
 | reportImplicitStringConcatenation | Diagnostics for two or more string literals that follow each other, indicating an implicit concatenation. This is considered a bad practice and often masks bugs such as missing commas.  |
 | reportUndefinedVariable | Diagnostics for undefined variables. |
 | reportUnboundVariable | Diagnostics for unbound and possibly unbound variables. |
+| reportInvalidStubStatement | Diagnostics for statements that should not appear within a stub file. |
