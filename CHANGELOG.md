@@ -1,5 +1,63 @@
 # Changelog
 
+## 2020.8.1 (13 August 2020)
+
+Notable changes:
+
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#27](https://github.com/microsoft/pylance-release/issues/27), [pylance-release#90](https://github.com/microsoft/pylance-release/issues/90), [pylance-release#144](https://github.com/microsoft/pylance-release/issues/144), [pylance-release#148](https://github.com/microsoft/pylance-release/issues/148), [pylance-release#202](https://github.com/microsoft/pylance-release/issues/202))
+-   The VS Code settings editor (both UI and JSON) now provides hints for `python.analysis.diagnosticSeverityOverrides`, listing all valid options, their values, and descriptions.
+-   Old-style `# type` comments for function signature type annotations are now supported. This syntax is underspecified and not preferred, but is commonly used to provide compatibility with (the now end-of-life) Python 2, and may improve the usability of some libraries.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.60 to 1.1.62, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused incorrect evaluation of symbol types within a chain of assignments (e.g. "a = b = c = 4") in some cases.
+    -   Enhancement: Improved type checker's handling of "in" operator. It previously flagged an error if the right operand didn't support a `__contains__` method. It now properly checks for iterable types as well.
+    -   Bug Fix: Fixed bug in bidirectional type inference for dictionary statements. The logic was not allowing for dict subclass Mapping.
+    -   Enhancement: Added support for special type "Counter" exported by typing module, which is an alias for collections.Counter.
+        ([pylance-release#229](https://github.com/microsoft/pylance-release/issues/229))
+    -   Bug Fix: Fixed out-of-memory error that occurred during a workspace "find symbols" operation. We were not properly checking for the heap high watermark during this operation.
+        ([pylance-release#228](https://github.com/microsoft/pylance-release/issues/228))
+-   [1.1.62](https://github.com/microsoft/pyright/releases/tag/1.1.62)
+    -   Bug Fix: Fixed bug in the handling of unrecognized escape sequences within string literals.
+        ([pylance-release#219](https://github.com/microsoft/pylance-release/issues/219))
+    -   Bug Fix: Fixed bug related to a subtle interaction between bidirectional type inference of list expressions that contain literal values and TypeVar matching. The previous logic was incorrectly matching T in `List[T]` and the list contained a literal type. It should have stripped the literal if possible.
+    -   Enhancement: Added diagnostic message for TypeVar with a single constraint type for consistency with mypy.
+    -   Enhancement: Added support for member access completion suggestions when the LHS is a function or a None type.
+        ([pylance-release#214](https://github.com/microsoft/pylance-release/issues/214))
+    -   Behavior Change: Behavior change for type stub generator: don't emit `__all__` assignments or assignments to self.xxx in function bodies. These violate PEP 484 guidelines for type stubs.
+    -   Enhancement: Added diagnostic check to reportInvalidStubStatement that flags parameter default value expressions that are not "..." in stub files.
+    -   Bug Fix: Fixed bug that caused annotated types of vargs and kwargs parameters not to be printed in hover text.
+    -   Enhancement: Implemented support for older-style function annotation type comments. I previously resisted adding this additional complexity, but we're seeing many libraries that still contain these annotations for backward compatibility with Python 2.
+    -   Bug Fix: Fixed bug that caused a crash in the type analyzer when a protocol class referred to itself.
+        ([pylance-release#225](https://github.com/microsoft/pylance-release/issues/225))
+    -   Enhancement: Added support for "useLibraryCodeForTypes" option in config file. It overrides the client setting of the same name or the "--lib" command-line option.
+    -   Bug Fix: Fixed several bugs in logging for config errors.
+    -   Enhancement: Added logic to type checker to validate that the "self" or "cls" parameter with a specified type annotation is assignable when binding the method to an object or class.
+    -   Enhancement: Improved type assignment diagnostic message. Added "(property)" designator to the end of a property type to differentiate it from a normal attribute.
+    -   Enhancement: Added code to validate that method overloads are all abstract or not.
+    -   Enhancement: Updated typeshed stubs to the latest.
+-   [1.1.61](https://github.com/microsoft/pyright/releases/tag/1.1.61)
+    -   Bug Fix: Fixed bug that caused symbols to be marked unaccessed if they were accessed by code that is not accessible (e.g. due to conditional execution based on the platform).
+    -   Bug Fix: Updated PEP 604 and PEP 612 error message to refer to Python 3.10 instead of 3.9.
+    -   Behavior Change: Changed logic that validates "self" or "cls" parameter names to ignore the check if the provided parameter name begins with an underscore, as is seen in several typeshed stub files.
+    -   Bug Fix: Fixed bug in nested f-string parsing when f-string contains triple quotes that include single quotes.
+        ([pylance-release#203](https://github.com/microsoft/pylance-release/issues/206))
+    -   Bug Fix: Fixed handling of a class that is subclassed from both Enum and another class (like str).
+    -   Enhancement: Added support for generic classes that refer to themselves as type arguments within their base class.
+    -   Bug Fix: Improved error message for partially-unknown types that have a type alias.
+    -   Bug Fix: Allow use of forward-declared classes as subclass in class declarations within type stub files.
+    -   Bug Fix: Add special-case handling of `__class_getitem__` method, which acts as a class method even though it is not decorated as such.
+    -   Bug Fix: Added missing validation of arguments to `type` call.
+    -   Enhancement: Added `=` character to end of named parameter for completion suggestions within a call signature.
+        ([pylance-release#209](https://github.com/microsoft/pylance-release/issues/209))
+    -   Bug Fix: Added client capability check for signature information "labelOffsetSupport" for compatibility with clients that don't support this capability.
+    -   Bug Fix: When adding completion suggestions to the list for expression completion, avoid adding duplicately-named symbols that appear in nested scopes.
+        ([pylance-release#215](https://github.com/microsoft/pylance-release/issues/215))
+    -   Bug Fix: Fixed bug related to calls of methods on a metaclass via classes that are constructed by that metaclass.
+    -   Enhancement: Added check for single @overload function with no additional overloads.
+
 ## 2020.8.0 (5 August 2020)
 
 -   Added `python.analysis.autoImportCompletions` setting (`true` by default), which allows auto-import completions to be disabled.
