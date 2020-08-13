@@ -4,12 +4,6 @@ If you're having trouble with the language server, check the below for informati
 may help. If something isn't covered here, please file an issue with the information given
 in [Filing an issue](#filing-an-issue).
 
-## Known issues
-
-### settings.json does not recognize 'Pylance' as a python.languageServer value
-
-In order to enable Pylance as your language server for Python in VS Code, you must install the Pylance extension from the marketplace. In the future, we may support the 'Pylance' value as a `python.languageServer` value. If you want to disable Pylance, simply uninstall or disable the extension.
-
 ## Common questions and issues
 
 ### Unresolved import warnings
