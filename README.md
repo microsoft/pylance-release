@@ -91,16 +91,24 @@ Pylance provides users with the ability to customize their Python language suppo
     ```
 
 -   `python.analysis.useLibraryCodeForTypes`
+
     -   Used to parse the source code for a package when a typestub is not found.
     -   Accepted values:
         -   `true` (default)
         -   `false`
 
-*   `python.analysis.autoImportCompletions`
+-   `python.analysis.autoImportCompletions`
+
     -   Used to control the offering of auto-imports in completions.
     -   Accepted values:
         -   `true` (default)
         -   `false`
+
+-   `python.analysis.completeFunctionParens`
+    -   Add parentheses to function completions.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
 
 # Contributing
 

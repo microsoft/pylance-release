@@ -1,5 +1,63 @@
 # Changelog
 
+## 2020.8.2 (20 August 2020)
+
+Notable changes:
+
+-   The new `python.analysis.completeFunctionParens` option adds parenthesis to function and method completions. This option is disabled by default.
+    ([pylance-release#37](https://github.com/microsoft/pylance-release/issues/37))
+-   Workspace symbol searching will no longer search or return results from libraries or bundled type stubs, which greatly improves its performance.
+    ([pylance-release#34](https://github.com/microsoft/pylance-release/issues/34), [pylance-release#228](https://github.com/microsoft/pylance-release/issues/228))
+-   File watching support has been improved, leading to improved performance and lower peak memory consumption.
+-   Settings from MPLS (for example `python.autoComplete.extraPaths` and `python.autoComplete.addBrackets`) will now be automatically ported to their updated names if present and Pylance is enabled.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.62 to 1.1.64, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in type evaluator that caused an incorrect error when a class decorator was used for a generic class.
+    -   Bug Fix: Fixed bug in parsing of f-strings that contain \N escape and a Unicode character name that includes a hyphen.
+        ([pylance-release#263](https://github.com/microsoft/pylance-release/issues/263))
+    -   Behavior Change: Changed capitalization of the python.analysis.logLevel setting so it matches Pylance. The settings code in Pyright is case insensitive, but the JSON editor emits a warning if the case doesn't match.
+    -   Bug Fix: Fixed bug in the type evaluation of expressions with + or - operators and integer literal operands. These expressions should evaluate to a literal type, not an int.
+        ([pylance-release#260](https://github.com/microsoft/pylance-release/issues/260))
+    -   Bug Fix: Fixed bug in method override validation code. It wasn't applying partial specialization of the base class, resulting in inappropriate errors in some cases.
+    -   Bug Fix: Fixed bug in reportIncompatibleMethodOverride diagnostic check. The logic was checking for wider parameter types when it should have been checking for narrower.
+    -   Enhancement: Changed nested diagnostic messages to use non-breaking spaces so indentations are visible within the VS Code "Problems" panel.
+    -   Enhancement: Improved diagnostic messages for tuple matching and union assignments.
+    -   Enhancement: Added support for protocol matching where the protocol includes an overloaded method.
+    -   Bug Fix: Fixed bug in command-line version that caused an error to be reported when "useLibraryCodeForTypes" or "verboseOutput" was specified in the pyrightconfig.json file.
+-   [1.1.64](https://github.com/microsoft/pyright/releases/tag/1.1.64)
+    -   Bug Fix: Fixed regression that caused "isinstance(x, Callable)" to be flagged as an error when PEP 484 says that it's legal.
+        ([pylance-release#247](https://github.com/microsoft/pylance-release/issues/247))
+    -   Enhancement: Changed error messages related to "partially unknown" types to expand type aliases, which can obscure the unknown part of the type.
+    -   Enhancement: Added support for narrowing types based on the pattern `A.B == <literal>` and `A.B != <literal>` when A has a union type and all members of the union have a field "B" with a declared literal type that discriminates one sub-type from another.
+    -   Enhancement: Added bidirectional type inference for ternary expressions.
+    -   Bug Fix: Fixed incorrect handling of member accesses when the accessed field had a type that was a union between two or more classes, some with special accessor methods (e.g. `__get__`) and some without.
+    -   Enhancement: Improved type checking for assignments of callable types. Previously, certain edge cases were ignored.
+    -   Enhancement: Added code to check for overlapping (obscured) overload functions.
+    -   Bug Fix: Fixed bug that caused incorrect evaluation of type alias that refers to Literal types. The literal values were being stripped in some cases.
+    -   Bug Fix: Fixed recent regression that caused type aliases that described literal types to be printed incorrectly in hover text and error messages.
+    -   Enhancement: Added code to report overloads that overlap in an "unsafe" way — i.e. they can potentially accept the same arguments but return different (incompatible) types.
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Bug Fix: Fixed bug in assignment checks between homogeneous multi-length tuples and fixed-size tuples.
+-   [1.1.63](https://github.com/microsoft/pyright/releases/tag/1.1.63)
+    -   Enhancement: Diagnostic rule severity overrides are now editable in the VS Code settings UI.
+    -   Bug Fix: Fixed out-of-memory error that occurred during a workspace "find symbols" operation. We were not properly checking for the heap high watermark during this operation.
+        ([pylance-release#254](https://github.com/microsoft/pylance-release/issues/254))
+    -   Enhancement: Added support for special type "Counter" exported by typing module, which is an alias for collections.Counter.
+    -   Bug Fix: Fixed bug in bidirectional type inference for dictionary statements. The logic was not allowing for dict subclass Mapping.
+    -   Enhancement: Improved type checker's handling of "in" operator. It previously flagged an error if the right operand didn't support a `__contains__` method. It now properly checks for iterable types as well.
+    -   Bug Fix: Fixed bug that caused incorrect evaluation of symbol types within a chain of assignments (e.g. "a = b = c = 4") in some cases.
+    -   Enhancement: Enabled file watcher for libraries to detect changes in installed packages. This behavior is already standard for Pylance, but it was disabled for Pyright.
+    -   Enhancement: Improved handling of Tuple type. The type checker now does a better job retaining the types of the individual elements within a Tuple or a class that derives from a Tuple.
+    -   Enhancement: Improved support for NamedTuple classes and classed derived from NamedTuple. The type checker now retains types of individual elements when used with unpacking and indexing operators.
+        ([pylance-release#251](https://github.com/microsoft/pylance-release/issues/251))
+    -   Behavior Change: Changed "find workspace symbols" to return only symbols from within user code or opened files, not library files that are closed.
+        ([pylance-release#34](https://github.com/microsoft/pylance-release/issues/34), [pylance-release#228](https://github.com/microsoft/pylance-release/issues/228))
+    -   Bug Fix: Fixed recent regression that caused incorrect errors to be generated in sub files for certain call expressions.
+        ([pylance-release#243](https://github.com/microsoft/pylance-release/issues/243))
+    -   New Feature: Added support for Concatenate as described in latest version of PEP 612. Added ParamSpec and Concatenate to typing.pyi.
+
 ## 2020.8.1 (13 August 2020)
 
 Notable changes:
