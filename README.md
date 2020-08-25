@@ -110,6 +110,10 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
+# Known Issues
+
+- VSCode Predefined variables (i.e: `${workspaceRoot}`) do not currently work with Pylance.
+
 # Contributing
 
 Pylance leverages Microsoft's open-source static type checking tool, Pyright, to provide performant language support for Python.
