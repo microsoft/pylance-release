@@ -1,5 +1,50 @@
 # Changelog
 
+## 2020.8.3 (28 August 2020)
+
+Notable changes:
+
+-   Overall memory usage has been improved; in many use cases, peak memory usage has been reduced by 10%.
+-   Performance with large unions of `Literal` strings has been greatly improved.
+-   Type aliases now show more consistently in tooltips.
+-   The upcoming Python 3.10 `typing.TypeAlias` (PEP 613) is now supported.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.64 to 1.1.65, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Improved completion suggestion behavior when the insertion point is between an identifier and an empty index (e.g. "f[]") or in the presence of a missing right square bracket (e.g. "f.[")
+        ([pylance-release#286](https://github.com/microsoft/pylance-release/issues/286))
+    -   Behavior Change: Changed diagnostic related to type argument count to be controlled by the "reportGeneralTypeIssues" diagnostic rule. It was previously always emitted as an error.
+        ([pylance-release#290](https://github.com/microsoft/pylance-release/issues/290))
+-   [1.1.65](https://github.com/microsoft/pyright/releases/tag/1.1.65)
+    -   Bug Fix: Fixed bug in command-line version that caused an error to be reported when "useLibraryCodeForTypes" or "verboseOutput" was specified in the pyrightconfig.json file.
+    -   Enhancement: Added support for protocol matching where the protocol includes an overloaded method.
+    -   Enhancement: Improved diagnostic messages for function type mismatches.
+    -   Enhancement: Improved diagnostic messages for tuple matching and union assignments.
+    -   Enhancement: Changed nested diagnostic messages to use non-breaking spaces so indentations are visible within the VS Code "Problems" panel.
+    -   Bug Fix: Fixed bug in reportIncompatibleMethodOverride diagnostic check. The logic was checking for wider parameter types when it should have been checking for narrower.
+    -   Bug Fix: Fixed bug in method override validation code. It wasn't applying partial specialization of the base class, resulting in inappropriate errors in some cases.
+    -   Bug Fix: Fixed bug in the type evaluation of expressions with + or - operators and integer literal operands. These expressions should evaluate to a literal type, not an int.
+        ([pylance-release#260](https://github.com/microsoft/pylance-release/issues/260))
+    -   Bug Fix: Fixed bug in parsing of f-strings that contain \N escape and a Unicode character name that includes a hyphen.
+        ([pylance-release#263](https://github.com/microsoft/pylance-release/issues/263))
+    -   Bug Fix: Fixed bug in type evaluator that caused an incorrect error when a class decorator was used for a generic class.
+    -   Bug Fix: (From Pylance) Fixed performance problem related to file change events triggered by reads from site-packages.
+    -   Enhancement: Enabled support for PEP 613 (TypeAlias).
+    -   Bug Fix: Fixed bug that caused type aliases to get expanded in some contexts when they shouldn't.
+        ([pylance-release#265](https://github.com/microsoft/pylance-release/issues/265))
+    -   Bug Fix: Fixed bug that caused "from .A import \*" to work incorrectly when the wildcard included symbol A.
+        ([pylance-release#269](https://github.com/microsoft/pylance-release/issues/269))
+    -   Enhancement: Added logic in completion provider to return class variables in base classes when the insertion point is in the context of a subclass body.
+    -   Bug Fix: Fixed TypeAlias code to check for Python 3.10 rather than 3.9 since PEP 613 has been moved out to 3.10.
+    -   Enhancement: Added performance optimization for TypedDict classes. Entries are now computed once and cached in the class type. This provides a big speed-up for TypeDict classes that have a large number of fields.
+    -   Enhancement: Added performance optimization for union types that contain large numbers of string literals. The code for inserting new items into a union is O(n^2); this optimization makes it O(n) for string literal types.
+    -   Bug Fix: Fixed bug that caused custom import aliases of "Final", "Literal" and "TypeAlias" to not work correctly.
+    -   Bug Fix: Fixed bug that resulted in spurious errors when hovering over module names in import statements.
+    -   Bug Fix: Fixed several bugs relating to symbols introduced into a class by its metaclass.
+        ([pylance-release#154](https://github.com/microsoft/pylance-release/issues/154))
+    -   Bug Fix: Fixed bug that caused type analyzer to crash when a nonlocal binding referred to a symbol that was not present in an outer scope and then was assigned to.
+
 ## 2020.8.2 (20 August 2020)
 
 Notable changes:
