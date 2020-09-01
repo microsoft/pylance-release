@@ -39,6 +39,10 @@ be taken as relative to the workspace root.
 
 Note that if you are coming to Pylance from using the Microsoft Python Language Server, this setting has changed from `python.autoComplete.extraPaths` to `python.analysis.extraPaths`.
 
+### Migrating from the Microsoft Python Language Server to Pylance
+
+If you are moving from the Microsoft Python Language Server over to Pylance, a good place to start is by reading [our migration doc](MIGRATING_TO_PYLANCE.md) which outlines a couple notable changes between the language servers.
+
 ### Minimum VS Code version
 
 To use Pylance, you will need to be using VS Code version 1.46.0 or above.

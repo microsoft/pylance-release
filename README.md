@@ -103,12 +103,16 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Accepted values:
         -   `true` (default)
         -   `false`
-
--   `python.analysis.completeFunctionParens`
+        
+ -   `python.analysis.completeFunctionParens`
     -   Add parentheses to function completions.
     -   Accepted values:
         -   `true`
         -   `false` (default)
+        
+# Troubleshooting
+
+Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
 
 # Contributing
 
