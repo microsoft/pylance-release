@@ -6,10 +6,6 @@ in [Filing an issue](#filing-an-issue).
 
 ## Known issues
 
-### settings.json does not recognize 'Pylance' as a python.languageServer value
-
-In order to enable Pylance as your language server for Python in VS Code, you must install the Pylance extension from the marketplace. In the future, we may support the 'Pylance' value as a `python.languageServer` value. If you want to disable Pylance, simply uninstall or disable the extension.
-
 ## Common questions and issues
 
 ### Unresolved import warnings
@@ -42,6 +38,10 @@ code outside the workspace in more complicated setups). Relative paths will
 be taken as relative to the workspace root.
 
 Note that if you are coming to Pylance from using the Microsoft Python Language Server, this setting has changed from `python.autoComplete.extraPaths` to `python.analysis.extraPaths`.
+
+### Migrating from the Microsoft Python Language Server to Pylance
+
+If you are moving from the Microsoft Python Language Server over to Pylance, a good place to start is by reading [our migration doc](MIGRATING_TO_PYLANCE.md) which outlines a couple notable changes between the language servers.
 
 ### Minimum VS Code version
 

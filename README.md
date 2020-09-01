@@ -91,6 +91,10 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true` (default)
         -   `false`
 
+# Troubleshooting
+
+Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
+
 # Contributing
 
 Pylance leverages Microsoft's open-source static type checking tool, Pyright, to provide performant language support for Python.
