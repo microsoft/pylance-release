@@ -8,6 +8,7 @@ This repository is for providing feedback and documentation on the Pylance langu
 
 1. Install the [Pylance extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) from the marketplace.
 1. Open a Python (.py) file and the Pylance extension will activate.
+1. Select Yes when prompted to make Pylance the default language server. This will update your preferences, which you can also do manually by adding `"python.languageServer": "Pylance"` to your settings.json file using the text editor.
 
 # Features
 
@@ -23,7 +24,6 @@ Pylance provides some awesome features for Python 3, including:
 -   As-you-type reporting of code errors and warnings (diagnostics)
 -   Code outline
 -   Code navigation
--   Code lens (references/implementations)
 -   Type checking mode
 -   Native multi-root workspace support
 -   IntelliCode compatibility
@@ -37,7 +37,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 -   `python.analysis.typeCheckingMode`
 
-    -   Used to specify the level of type checking analysis performed;
+    -   Used to specify the level of type checking analysis performed.
     -   Default: `off`
     -   Available values:
         -   `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
@@ -51,7 +51,7 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `workspace`
         -   `openFilesOnly` (default)
 
--   `python.analysis.stubPaths`
+-   `python.analysis.stubPath`
 
     -   Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
     -   Default value: `./typings`
@@ -63,9 +63,14 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true` (default)
         -   `false`
 
+-   `python.analysis.extraPaths`
+
+    -   Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
+    -   Default value: empty array
+
 -   `python.analysis.diagnosticSeverityOverrides`
 
-    -   Used to allow a user to override the severity levels for individual diagnostics should they desire
+    -   Used to allow a user to override the severity levels for individual diagnostics should they desire.
     -   Accepted severity values:
 
         -   `error` (red squiggle)
@@ -86,11 +91,25 @@ Pylance provides users with the ability to customize their Python language suppo
     ```
 
 -   `python.analysis.useLibraryCodeForTypes`
-    -   Used to parse the source code for a package when a typestub is not found
+
+    -   Used to parse the source code for a package when a typestub is not found.
     -   Accepted values:
         -   `true` (default)
         -   `false`
 
+-   `python.analysis.autoImportCompletions`
+
+    -   Used to control the offering of auto-imports in completions.
+    -   Accepted values:
+        -   `true` (default)
+        -   `false`
+        
+ -   `python.analysis.completeFunctionParens`
+    -   Add parentheses to function completions.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+        
 # Troubleshooting
 
 Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).

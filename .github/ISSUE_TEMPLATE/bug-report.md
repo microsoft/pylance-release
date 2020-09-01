@@ -15,9 +15,11 @@ https://github.com/microsoft/pylance-release/blob/master/TROUBLESHOOTING.md#fili
 ## Environment data
 
 <!--
-To find your version:
+To find your version, you can either:
 
-Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
+- Open the VS Code extensions panel. Locate Pylance from the list of installed extensions. The version appears next to the name.
+
+- Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
 -->
 
 -   Language Server version: XXX

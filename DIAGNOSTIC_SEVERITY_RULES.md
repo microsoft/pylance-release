@@ -26,7 +26,8 @@ This doc details all available rules that can be customized using the `python.an
 | reportUntypedNamedTuple | Diagnostics when “namedtuple” is used rather than “NamedTuple”. The former contains no type information, whereas the latter does. |
 | reportPrivateUsage | Diagnostics for incorrect usage of private or protected variables or functions. Protected class members begin with a single underscore `_` and can be accessed only by subclasses. Private class members begin with a double underscore but do not end in a double underscore and can be accessed only within the declaring class. Variables and functions declared outside of a class are considered private if their names start with either a single or double underscore, and they cannot be accessed outside of the declaring module. |
 | reportConstantRedefinition | Diagnostics for attempts to redefine variables whose names are all-caps with underscores and numerals. |
-| reportIncompatibleMethodOverride | Diagnostics for methods that override a method of the same name in a base class in an incompatible manner (different number of parameters, different parameter types, or a different return type).  |
+| reportIncompatibleMethodOverride | Diagnostics for methods that override a method of the same name in a base class in an incompatible manner (wrong number of parameters, incompatible parameter types, or incompatible return type). |
+| reportIncompatibleVariableOverride | Diagnostics for class variable declarations that override a symbol of the same name in a base class with a type that is incompatible with the base class symbol type. |
 | reportInvalidStringEscapeSequence | Diagnostics for invalid escape sequences used within string literals. The Python specification indicates that such sequences will generate a syntax error in future versions. |
 | reportUnknownParameterType | Diagnostics for input or return parameters for functions or methods that have an unknown type. |
 | reportUnknownArgumentType | Diagnostics for call arguments for functions or methods that have an unknown type. |
@@ -41,3 +42,4 @@ This doc details all available rules that can be customized using the `python.an
 | reportImplicitStringConcatenation | Diagnostics for two or more string literals that follow each other, indicating an implicit concatenation. This is considered a bad practice and often masks bugs such as missing commas.  |
 | reportUndefinedVariable | Diagnostics for undefined variables. |
 | reportUnboundVariable | Diagnostics for unbound and possibly unbound variables. |
+| reportInvalidStubStatement | Diagnostics for statements that should not appear within a stub file. |
