@@ -45,7 +45,7 @@ If you are moving from the Microsoft Python Language Server over to Pylance, a g
 
 ### Minimum VS Code version
 
-To use Pylance, you will need to be using VS Code version 1.48.0 or above.
+To use Pylance, you will need to be using VS Code version 1.46.0 or above.
 
 ## Filing an issue
 
