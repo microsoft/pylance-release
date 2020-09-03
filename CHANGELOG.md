@@ -1,5 +1,49 @@
 # Changelog
 
+## 2020.9.0 (3 September 2020)
+
+Notable changes:
+
+-   Pylance now supports semantic highlighting. In order to enable this feature, you must be using at least version 2020.8.106424 of the Python extension, as well as a VS Code theme which includes semantic colorization support (e.g., Dark+, Light+, One Dark Pro, others).
+    ([pylance-release#220](https://github.com/microsoft/pylance-release/issues/220))
+-   Pylance will now index libraries and unopened files at startup to provide auto-import completions even for variables that have not been fully analyzed. This index is also used to improve the performance of the workspace symbols search.
+-   The auto-import completions offered should now more accurately reflect the "intended" import, rather than suggesting importing deeper modules. This helps improve the behavior in libraries that re-export symbols through other modules.
+    ([pylance-release#222](https://github.com/microsoft/pylance-release/issues/222), [pylance-release#139](https://github.com/microsoft/pylance-release/issues/139), [pylance-release#28](https://github.com/microsoft/pylance-release/issues/28), [pylance-release#97](https://github.com/microsoft/pylance-release/issues/97))
+-   The auto-import completion tooltip now more clearly states what will be added to your import block. For example, a completion for "join" will explicitly say `from os.path import join`, rather than just "Auto-import from os.path".
+-   When the `completeFunctionParens` feature is enabled, the signature help will now open automatically, matching the behavior when the parentheses are user-written.
+    ([pylance-release#273](https://github.com/microsoft/pylance-release/issues/273))
+-   Pylance now includes schemas for `pyrightconfig.json`/`mspythonconfig.json`, which enables code completion and validation for these config files.
+    ([pylance-release#40](https://github.com/microsoft/pylance-release/issues/40))
+-   Methods which only raise `NotImplementedError` will now be treated as abstract and not be marked as not returning, preventing some child class functions from being spuriously marked as dead code. Explicitly declaring classes and methods as abstract is still strongly preferred as it allows the type checker to more accurately check child classes for correctness.
+    ([pylance-release#248](https://github.com/microsoft/pylance-release/issues/248))
+-   The default `stubPath` now correctly shows in the VS Code settings UI with its default "typings".
+    ([pylance-release#285](https://github.com/microsoft/pylance-release/issues/285))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.65 to 1.1.66, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused the recently-added "discriminated field type narrowing" to be used in cases where it should not. This resulted in types being narrowed inappropriately when a field was typed as a union of literals.
+-   [1.1.66](https://github.com/microsoft/pyright/releases/tag/1.1.66)
+    -   Enhancement: Improved completion suggestion behavior when the insertion point is between an identifier and an empty index (e.g. "f[]") or in the presence of a missing right square bracket (e.g. "f.[").
+    -   Behavior Change: Changed diagnostic related to type argument count to be controlled by the "reportGeneralTypeIssues" diagnostic rule. It was previously always emitted as an error.
+    -   From Pylance: Fix progress reporter type, auto-import/symbol changes, worker thread updates, improve auto-import tooltips (#977)
+    -   Enhancement: Updated typeshed stubs to the latest version.
+        ([pylance-release#293](https://github.com/microsoft/pylance-release/issues/293))
+    -   Bug Fix: Eliminated incorrect error when "super()" was used in a class where one or more parent classes were of an unknown type.
+    -   Bug Fix: Changed the handling of old-style comment method annotations to accept an optional annotation for "self" and "cls" parameters.
+    -   Bug Fix: Changed handling of dataclass classes that derive from a class whose type is unknown. The synthesized constructor now allows any parameter list in this case.
+    -   Enhancement: Improved completion provider to distinguish properties from other methods.
+        ([pylance-release#299](https://github.com/microsoft/pylance-release/issues/299))
+    -   Behavior Change: Changed heuristics for function return type inference so methods that raise a NotImplementedError and have no other return path have an inferred return type of Unknown rather than NoReturn. Such methods should be marked as abstract, but frequently they are not.
+    -   Behavior Change: Changed the behavior of the import resolution logic to fail an import resolution of a multi-part name (e.g. "a.b.c") if it can't be fully resolved. This could produce false positives in cases where third-party libraries are using dynamic tricks to manipulate their package namespace, but it will eliminate false negatives.
+    -   Bug Fix: Suppress the use of "Unnecessary" diagnostic hints (used to display variables and code blocks in gray) if the LSP client claims not to support this tag.
+    -   Enhancement: Added new "reportMissingTypeArgument" diagnostic rule and enabled it by default in "strict" mode. It generates a diagnostic when a generic class or generic type alias is used in an annotation with no type arguments provided.
+    -   Bug Fix: Fixed handling of scopes for nested classes. The previous logic allowed an inner class to access variables defined in an outer class, which is not permitted.
+    -   Enhancement: Added check for raise statements that take an exception class but the class constructor requires one or more arguments.
+    -   Bug Fix: Fixed bug in tokenizer that cause line numbers to be off when an invalid token occurred at the end of a line.
+    -   Bug Fix: Fixed a bug in the Pyright parser. It was not correctly following the Python grammar spec when parsing type annotations, so it generated syntax errors in some cases where that was inappropriate.
+    -   Enhancement: Added a check and a general type diagnostic for metaclass conflicts.
+
 ## 2020.8.3 (28 August 2020)
 
 Notable changes:

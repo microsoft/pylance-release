@@ -28,6 +28,7 @@ Pylance provides some awesome features for Python 3, including:
 -   Native multi-root workspace support
 -   IntelliCode compatibility
 -   Jupyter Notebooks compatibility
+-   Semantic highlighting
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
@@ -103,13 +104,13 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Accepted values:
         -   `true` (default)
         -   `false`
-        
- -   `python.analysis.completeFunctionParens`
-    -   Add parentheses to function completions.
-    -   Accepted values:
-        -   `true`
-        -   `false` (default)
-        
+
+-   `python.analysis.completeFunctionParens`
+-   Add parentheses to function completions.
+-   Accepted values:
+    -   `true`
+    -   `false` (default)
+
 # Troubleshooting
 
 Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
