@@ -5,6 +5,7 @@ This doc details all available rules that can be customized using the `python.an
 | Value  | Description                                                                                                               |
 |--------|---------------------------------------------------------------------------------------------------------------------------|
 | reportGeneralTypeIssues | Diagnostics for general type inconsistencies, unsupported operations, argument/parameter mismatches, etc. This covers all of the basic type-checking rules not covered by other rules. It does not include syntax errors. |
+| reportPropertyTypeMismatch | Diagnostics for properties where the type of the value passed to the setter is not assignable to the value returned by the getter. Such mismatches violate the intended use of properties, which are meant to act like variables. |
 | reportMissingImports | Diagnostics for imports that have no corresponding imported python file or type stub file. |
 | reportMissingModuleSource | Diagnostics for imports that have no corresponding source file. This happens when a type stub is found, but the module source file was not found, indicating that the code may fail at runtime when using this execution environment. Type checking will be done using the type stub. |
 | reportMissingTypeStubs | Diagnostics for imports that have no corresponding type stub file (either a typeshed file or a custom type stub). The type checker requires type stubs to do its best job at analysis. |
@@ -34,6 +35,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnknownLambdaType | Diagnostics for input or return parameters for lambdas that have an unknown type. |
 | reportUnknownVariableType | Diagnostics for variables that have an unknown type.  |
 | reportUnknownMemberType | Diagnostics for class or instance variables that have an unknown type. |
+| reportMissingTypeArgument | Diagnostics for when a generic class is used without providing explicit or implicit type arguments. |
 | reportCallInDefaultInitializer | Diagnostics for function calls within a default value initialization expression. Such calls can mask expensive operations that are performed at module initialization time. |
 | reportUnnecessaryIsInstance | Diagnostics for 'isinstance' or 'issubclass' calls where the result is statically determined to be always true or always false. Such calls are often indicative of a programming error. |
 | reportUnnecessaryCast | Diagnostics for 'cast' calls that are statically determined to be unnecessary. Such calls are sometimes indicative of a programming error. |
