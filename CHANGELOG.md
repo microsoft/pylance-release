@@ -1,13 +1,20 @@
 # Changelog
 
-## 2020.9.1 (10 September 2020)
+## 2020.9.2 (10 September 2020)
 
 Notable changes:
 -   Bug Fix: Addressed memory and cpu issues a number of users had with indexer but setting it off by default 
     ([pylance-release#321](https://github.com/microsoft/pylance-release/issues/321))
     
 In addition, Pylance's copy of Pyright has been updated from 1.1.66 to 1.1.70, including the following changes:
-
+-   [1.1.70](https://github.com/microsoft/pyright/releases/tag/1.1.70)
+    -   Enhancement: Added support for PEP 585. Standard collection types defined in builtins can now be used like their typing counterparts. This includes "tuple", which needs         special-case handling because its class definition in builtins.pyi indicates that it has a single type parameter, but it actually supports variadic parameters.
+    -   Bug Fix: Added code to prevent heap overrun errors during parsing/binding, most notably during indexing operations.
+    -   Bug Fix: Fixed bug that caused runtime crash if typeshed stubs couldn't be found or didn't define 'tuple'.
+    -   Bug Fix: Improved interaction between recursive type aliases and bidirectional type inference for lists and dicts.
+    -   Bug Fix: Improved type narrowing for assignments in cases where the destination of the assignment is declared as a union and the assigned type is a narrower form of one         of the union elements. Previously, the narrowing logic didn't choose the narrowest type possible in this case.
+    -   Enhancement: Added perf optimization for unions that contain hundreds or thousands of int literal values. This is similar to another recent optimization for str literal         unions.
+    -   From Pylance: Ensure that auto-import doesn't place import statement below usage.
 -   [1.1.69](https://github.com/microsoft/pyright/releases/tag/1.1.69)
     -   Enhancement: Improved type analysis perf by about 5% and reduced memory usage slightly by not formatting and logging diagnostic messages in cases where they are                 suppressed (e.g. argument type mismatches when doing overload matching).
     -   Bug Fix: Fixed bug that affected dependency tracking of source files on platforms with case-insensitive file systems. In some cases, the case of paths differed, and the         logic was treating these as separate files.
