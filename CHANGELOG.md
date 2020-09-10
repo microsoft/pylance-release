@@ -3,7 +3,7 @@
 ## 2020.9.2 (10 September 2020)
 
 Notable changes:
--   Bug Fix: Addressed memory and cpu issues a number of users had with indexer but setting it off by default 
+-   Bug Fix: Addressing memory and cpu issues a number of users had by no longer indexing libraries and unopened files at startup. This will revert auto-import completions and workspace     symbols performance to previous levels.
     ([pylance-release#321](https://github.com/microsoft/pylance-release/issues/321))
     
 In addition, Pylance's copy of Pyright has been updated from 1.1.66 to 1.1.70, including the following changes:
