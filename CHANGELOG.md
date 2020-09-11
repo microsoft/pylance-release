@@ -1,42 +1,44 @@
 # Changelog
 
-## 2020.9.2 (10 September 2020)
+## 2020.9.4 (10 September 2020)
 
 Notable changes:
--   Bug Fix: Addressing memory and cpu issues a number of users had by no longer indexing libraries and unopened files at startup. This will revert auto-import completions and workspace     symbols performance to previous levels.
+
+-   Bug Fix: Addressing memory and cpu issues a number of users had by no longer indexing libraries and unopened files at startup. This will revert auto-import completions and workspace symbols performance to previous levels.
     ([pylance-release#321](https://github.com/microsoft/pylance-release/issues/321))
-    
+
 In addition, Pylance's copy of Pyright has been updated from 1.1.66 to 1.1.70, including the following changes:
+
 -   [1.1.70](https://github.com/microsoft/pyright/releases/tag/1.1.70)
-    -   Enhancement: Added support for PEP 585. Standard collection types defined in builtins can now be used like their typing counterparts. This includes "tuple", which needs         special-case handling because its class definition in builtins.pyi indicates that it has a single type parameter, but it actually supports variadic parameters.
+    -   Enhancement: Added support for PEP 585. Standard collection types defined in builtins can now be used like their typing counterparts. This includes "tuple", which needs special-case handling because its class definition in builtins.pyi indicates that it has a single type parameter, but it actually supports variadic parameters.
     -   Bug Fix: Added code to prevent heap overrun errors during parsing/binding, most notably during indexing operations.
     -   Bug Fix: Fixed bug that caused runtime crash if typeshed stubs couldn't be found or didn't define 'tuple'.
     -   Bug Fix: Improved interaction between recursive type aliases and bidirectional type inference for lists and dicts.
-    -   Bug Fix: Improved type narrowing for assignments in cases where the destination of the assignment is declared as a union and the assigned type is a narrower form of one         of the union elements. Previously, the narrowing logic didn't choose the narrowest type possible in this case.
-    -   Enhancement: Added perf optimization for unions that contain hundreds or thousands of int literal values. This is similar to another recent optimization for str literal         unions.
+    -   Bug Fix: Improved type narrowing for assignments in cases where the destination of the assignment is declared as a union and the assigned type is a narrower form of one of the union elements. Previously, the narrowing logic didn't choose the narrowest type possible in this case.
+    -   Enhancement: Added perf optimization for unions that contain hundreds or thousands of int literal values. This is similar to another recent optimization for str literal unions.
     -   From Pylance: Ensure that auto-import doesn't place import statement below usage.
 -   [1.1.69](https://github.com/microsoft/pyright/releases/tag/1.1.69)
-    -   Enhancement: Improved type analysis perf by about 5% and reduced memory usage slightly by not formatting and logging diagnostic messages in cases where they are                 suppressed (e.g. argument type mismatches when doing overload matching).
-    -   Bug Fix: Fixed bug that affected dependency tracking of source files on platforms with case-insensitive file systems. In some cases, the case of paths differed, and the         logic was treating these as separate files.
-    -   Enhancement: Added diagnostics for type variables that are used improperly as defined in PEP 484: 1) conflicting type variables that are used in nested generic class             declarations, and 2) type variables that are used within annotations outside of a context in which they have meaning.
-    -   New Feature: Added support for "higher-order" type variables. You can now pass a generic function as an argument to another generic function, and the type var solver can         solve the type variables for both at the same time.
+    -   Enhancement: Improved type analysis perf by about 5% and reduced memory usage slightly by not formatting and logging diagnostic messages in cases where they are suppressed (e.g. argument type mismatches when doing overload matching).
+    -   Bug Fix: Fixed bug that affected dependency tracking of source files on platforms with case-insensitive file systems. In some cases, the case of paths differed, and the logic was treating these as separate files.
+    -   Enhancement: Added diagnostics for type variables that are used improperly as defined in PEP 484: 1) conflicting type variables that are used in nested generic class declarations, and 2) type variables that are used within annotations outside of a context in which they have meaning.
+    -   New Feature: Added support for "higher-order" type variables. You can now pass a generic function as an argument to another generic function, and the type var solver can solve the type variables for both at the same time.
     -   New Feature: Added support for recursive type aliases.
-    -   Behavior Change: Updated the default Python version from 3.8 to 3.9. This is used only if it is not otherwise configured and there is no Python environment from which to         determine the version.
-    -   Enhancement: Added checks for usage of certain built-in types that are defined as generic in the typeshed stubs but generate runtime exceptions if subscripted on older           versions of Python (prior to 3.9). Such types need to be enclosed in quotes when used in annotations.
+    -   Behavior Change: Updated the default Python version from 3.8 to 3.9. This is used only if it is not otherwise configured and there is no Python environment from which to determine the version.
+    -   Enhancement: Added checks for usage of certain built-in types that are defined as generic in the typeshed stubs but generate runtime exceptions if subscripted on older versions of Python (prior to 3.9). Such types need to be enclosed in quotes when used in annotations.
 -   [1.1.67](https://github.com/microsoft/pyright/releases/tag/1.1.67)
-    -   Bug Fix: Fixed bug that caused the recently-added "discriminated field type narrowing" to be used in cases where it should not. This resulted in types being narrowed             inappropriately when a field was typed as a union of literals.
+    -   Bug Fix: Fixed bug that caused the recently-added "discriminated field type narrowing" to be used in cases where it should not. This resulted in types being narrowed inappropriately when a field was typed as a union of literals.
     -   Behavior Change: Changed command-line version to not print any non-JSON output when "--outputjson" option is used.
-    -   Behavior Change: Changed behavior when "useLibraryCodeForTypes" is set to "false". Previously, all ".py" library code was ignored in this case. Now, ".py" types are used         for types if the package has an associated "py.typed" file as specified in PEP 561. Packages with no "py.typed" file will still be ignored if "useLibraryCodeForTypes" is         "false".
+    -   Behavior Change: Changed behavior when "useLibraryCodeForTypes" is set to "false". Previously, all ".py" library code was ignored in this case. Now, ".py" types are used for types if the package has an associated "py.typed" file as specified in PEP 561. Packages with no "py.typed" file will still be ignored if "useLibraryCodeForTypes" is "false".
     -   Bug Fix: Fixed a couple of bugs that resulted in the hover text incorrectly identifying a symbol as a "type alias".
-    -   Behavior Change: Changed type inference logic to use "List", "Set", and "Dict" rather than "list", "set" and "dict" when inferring the type of a list, set or dict               expression. These are aliases for the same underlying class, but the upper-case versions are more consistent with type annotations used within the code.
+    -   Behavior Change: Changed type inference logic to use "List", "Set", and "Dict" rather than "list", "set" and "dict" when inferring the type of a list, set or dict expression. These are aliases for the same underlying class, but the upper-case versions are more consistent with type annotations used within the code.
     -   Bug Fix: Fixed "NoReturn" inference logic for async functions. This logic was previously flagging the code after a call to such a function as unreachable.
     -   Enhancement: Improved parser to detect syntax errors involving unpack operator within a comprehension.
-    -   Enhancement: Changed import resolution logic to allow binaries (e.g. ".so" files) to satisfy local imports (within the package), not just third-party imports (within             site-packages).
+    -   Enhancement: Changed import resolution logic to allow binaries (e.g. ".so" files) to satisfy local imports (within the package), not just third-party imports (within site-packages).
     -   Enhancement: Extended bidirectional type inference (expected types) to list comprehensions.
-    -   New Feature: Added new diagnostic rule "reportPropertyTypeMismatch" that verifies that the type of the input parameter to a property's setter is assignable to the return         type of the getter.
+    -   New Feature: Added new diagnostic rule "reportPropertyTypeMismatch" that verifies that the type of the input parameter to a property's setter is assignable to the return type of the getter.
     -   Bug Fix: Fixed bug that caused a crash in the type checker in cases where type arguments were not provided to a few special-case built-in classes.
-    -   Bug Fix: Fixed a bug in the handling of generics that involve constrained TypeVars. The TypeVar matching logic was sometimes inappropriately specializing the type using         the first constrained type.
-    -   Bug Fix: Added special-case handling in type checker for callers who request the type of an expression that happens to be a name used in a call expression to designate a         named parameter. This isn't really an expression, so the code wasn't handling it correctly, but callers (such as the hover provider and the new semantic token provider)         were assuming that it was safe. This resulted in incorrect "X is not defined" diagnostics being logged.
+    -   Bug Fix: Fixed a bug in the handling of generics that involve constrained TypeVars. The TypeVar matching logic was sometimes inappropriately specializing the type using the first constrained type.
+    -   Bug Fix: Added special-case handling in type checker for callers who request the type of an expression that happens to be a name used in a call expression to designate a named parameter. This isn't really an expression, so the code wasn't handling it correctly, but callers (such as the hover provider and the new semantic token provider) were assuming that it was safe. This resulted in incorrect "X is not defined" diagnostics being logged.
 
 ## 2020.9.0 (3 September 2020)
 
