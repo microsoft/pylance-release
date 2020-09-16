@@ -15,6 +15,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnusedFunction | Diagnostics for a function or method with a private name (starting with an underscore) that is not accessed. |
 | reportUnusedVariable | Diagnostics for a variable that is not accessed. |
 | reportDuplicateImport | Diagnostics for an imported symbol or module that is imported more than once. |
+| reportWildcardImportFromLibrary | Diagnostics for an wildcard import from an external library. |
 | reportOptionalSubscript | Diagnostics for an attempt to subscript (index) a variable with an Optional type. |
 | reportOptionalMemberAccess | Diagnostics for an attempt to access a member of a variable with an Optional type. |
 | reportOptionalCall | Diagnostics for an attempt to call a variable with an Optional type. |
