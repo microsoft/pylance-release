@@ -1,5 +1,42 @@
 # Changelog
 
+## 2020.9.5 (16 September 2020)
+
+Notable changes:
+
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#302](https://github.com/microsoft/pylance-release/issues/302), [pylance-release#303](https://github.com/microsoft/pylance-release/issues/303), [pylance-release#337](https://github.com/microsoft/pylance-release/issues/337))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.70 to 1.1.72, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Tweaked the logic for py.typed type inference. Assignments that are type aliases should never be ignored in a py.typed package if they are defined in a pyi file.
+    -   Behavior Change: Changed reveal_type to use an information diagnostic severity rather than warning. Added support in CLI for information diagnostic severity. These were previously dropped.
+    -   Behavior Change: Changed reveal_type to return a string literal that represents the printed version of the type.
+-   [1.1.72](https://github.com/microsoft/pyright/releases/tag/1.1.72)
+    -   Bug Fix: Changed the type of `__path__` attribute for a module from `Iterable[str]` to `List[str]`.
+    -   Bug Fix: Fixed a bug that caused a crash in the type checker in some rare cases when a function or class declaration was located within a block of code is unaccessible.
+        ([pylance-release#369](https://github.com/microsoft/pylance-release/issues/369))
+    -   Behavior Change: Changed python.analysis.logLevel to use "Information" rather than "Info" for consistency with Python extension.
+    -   Bug Fix: Changed comment-style type annotations for functions to always allow forward declarations.
+    -   Behavior Change: Added special-case logic for the `tuple` constructor. Rather than returning a type of `tuple[_T_co]`, it now returns a type of `tuple[_T_co, ...]`.
+    -   Behavior Change: Changed behavior of type evaluator for modules within a "py.typed" package when "typeCheckingMode" is not "off". If it encounters an unannotated symbol, the type evaluator no longer attempts to infer its type. Instead, it returns an unknown type. When "typeCheckingMode" is "off" (the default value for Pylance), inference is still used.
+    -   Enhancement: Improved reportMissingTypeArgument diagnostic rule to report cases where some type arguments are provided but some are missing. Previously, it detected only those cases where no type arguments were provided.
+    -   Bug Fix: Fixed bug that caused incorrect error to be generated when a yield was used within a lambda.
+        ([pylance-release#373](https://github.com/microsoft/pylance-release/issues/373))
+-   [1.1.71](https://github.com/microsoft/pyright/releases/tag/1.1.71)
+    -   Behavior Change: Added code to disable the Pyright extension when the Pylance extension is installed. The two extensions are not intended to work together.
+    -   Bug Fix: Fixed bug in handling of specialized "tuple" class as defined in PEP 585.
+    -   Behavior Change: Changed the behavior of the command-line version of pyright when file specs are passed on the command line. Previously, file specs couldn't be used in conjunction with a config file. Now a config file is used, but the specified file specs override the "include" section of the config file.
+    -   Enhancement: Added validation of arguments passed to `__init_subclass__` method described in PEP 487.
+    -   Enhancement: Added detection of duplicate base classes in a class declaration.
+    -   Bug Fix: Fixed bug that generated incorrect "could not create consistent mro" error if one of the base classes was "Generic". The Python interpreter appears to special-case this class.
+        ([pylance-release#361](https://github.com/microsoft/pylance-release/issues/361))
+    -   New Feature: Added support for new "reportWildcardImportFromLibrary" diagnostic rule that checks for the use of wildcard imports from non-local modules. By default, it is reported as a warning, but in strict mode it is an error.
+    -   Enhancement: Added code to synthesize custom overloaded "pop", "setdefault", and "\_\_delitem\_\_" methods for TypedDict classes.
+    -   Enhancement: Added support for the direct instantiation of a metaclass rather than using the normal metaclass hook.
+        ([pylance-release#360](https://github.com/microsoft/pylance-release/issues/360))
+
 ## 2020.9.4 (10 September 2020)
 
 Notable changes:
