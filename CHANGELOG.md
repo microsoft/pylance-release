@@ -1,5 +1,59 @@
 # Changelog
 
+## 2020.9.6 (23 September 2020)
+
+Notable changes:
+
+-   Docstrings for the builtins are now supported. You should now see docstrings in tooltips for functions like `print`, `range`, `open`, `str.split`, types like `int`, `float`, `str`, `Exception`, and more.
+    ([pylance-release#49](https://github.com/microsoft/pylance-release/issues/49))
+-   Semantic highlighting has been expanded to provide more token types and modifiers. Special tokens such as `self` and `cls`, constants, dunder methods, and type hints in comment will be styled similarly to VS Code's built-in regex-based highlighting.
+    ([pylance-release#323](https://github.com/microsoft/pylance-release/issues/323), [pylance-release#335](https://github.com/microsoft/pylance-release/issues/335))
+-   String literals are no longer highlighted when hovered or containing a cursor.
+    ([pylance-release#172](https://github.com/microsoft/pylance-release/issues/172))
+-   Relative paths provided settings like `extraPaths` and `stubPath` will now correctly be resolved relative to the workspace.
+    ([pylance-release#326](https://github.com/microsoft/pylance-release/issues/326))
+-   When hovering on a class invocation and the `__init__` method does not have a docstring, the class's docstring will be displayed instead.
+    ([pylance-release#316](https://github.com/microsoft/pylance-release/issues/316))
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#385](https://github.com/microsoft/pylance-release/issues/385), [pylance-release#387](https://github.com/microsoft/pylance-release/issues/387), [pylance-release#389](https://github.com/microsoft/pylance-release/issues/389), [pylance-release#390](https://github.com/microsoft/pylance-release/issues/390), [pylance-release#391](https://github.com/microsoft/pylance-release/issues/391), [pylance-release#393](https://github.com/microsoft/pylance-release/issues/393))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.72 to 1.1.74, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Fixed bug that caused some source files that were part of a "py.typed" package to not be identified as such. This meant that the special rules for "py.typed" exports were not being applied in those cases.
+-   [1.1.74](https://github.com/microsoft/pyright/releases/tag/1.1.74)
+    -   Bug Fix: Fixed bug that caused some type aliases defined in ".py" files within a py.typed package to be treated as unknown.
+    -   Bug Fix: Fixed bug relating to member access expressions used in the LHS of an assignment where the inferred type of the member is an object that does not provide a `__set__` method. This should generate an error, and it was not.
+    -   Bug Fix: Fixed bug in completion provider that sometimes resulted in detailed completion information not to be displayed. The provider was making use of an internal "symbol ID" to resolve symbol information lazily when the item was selected from the completion menu, but the symbol ID was not guaranteed to be the same from one call to the next.
+        ([pylance-release#382](https://github.com/microsoft/pylance-release/issues/382))
+    -   Bug Fix: Fixed a bug where an overloaded function could not be assigned to the type 'object' without generating an error. This should be allowed.
+    -   Bug Fix: Fixed bug with the invocation of the `__get__` method. It was not being bound to the correct object when called, resulting in incorrect type variable resolution if the "self" parameter was annotated with a TypeVar.
+    -   Behavior Change: Eliminated string literal highlighting within document highlight provider. We received significant user feedback that this was not desirable.
+        ([pylance-release#172](https://github.com/microsoft/pylance-release/issues/172))
+    -   Bug Fix: Fixed bug in handling the two-argument form of "super". The type evaluator was not properly honoring the second argument, which specifies the class or object that should be use for binding.
+        ([pylance-release#395](https://github.com/microsoft/pylance-release/issues/395))
+    -   Performance Improvement: Changed the logic that infers the type of a list, set, or dict to look at only the first 64 entries. There were cases where thousands of entries were provided in list and dict statements, and this resulted in very poor performance. In practice, looking at the first 64 entries as part of the inference heuristic is sufficient.
+    -   Bug Fix: Fixed bug that caused a enums to be incorrectly reported as "not iterable" in cases where a generic `Type[Enum]` was used.
+    -   Bug Fix: Fixed bug where type aliases that referred to literals would have those literal values stripped if the type alias was declared within a class.
+    -   Bug Fix: Made the printing of literal types more consistent within error messages and hover text. If the type is an literal type (as opposed to a literal instance), it is now consistently printed as `Type[Literal[...]]`.
+    -   Bug Fix: Fixed bug in the handling of overloaded magic methods associated with arithmetic operators. If no overload was found in the primary method (e.g. `__add__`), it was not properly falling back on the reverse method (e.g. `__radd__`).
+    -   Bug Fix: Fixed bug that caused the type checker to indicate that None was not compatible with the Hashable protocol.
+    -   Enhancement: Improved support for constrained TypeVars. The list of constrained types is now honored when providing completion suggestions and when narrowing types for isinstance/issubclass calls.
+    -   Enhancement: Improved type checking for binary operations. Previously, if the right-hand operand was a union and at least one subtype was supported, no error was reported. The new implementation verifies that all subtypes are supported and emits an error if not.
+    -   Bug Fix: Fixed bug that reported incorrect error when attempting to index a symbol whose type was annotated with `Type[enum]`.
+    -   Enhancement: Improved reporting of errors for call expressions, especially in the case where the call type is a union and one or more subtypes are not callable.
+    -   Bug Fix: Fixed a bug in the handling of wildcard imports when a dunder all symbol is present in the target and the dunder all array refers to an implicitly-imported submodule.
+        ([pylance-release#402](https://github.com/microsoft/pylance-release/issues/402))
+-   [1.1.73](https://github.com/microsoft/pyright/releases/tag/1.1.73)
+    -   Behavior Change: Changed reveal_type to return a string literal that represents the printed version of the type.
+    -   Behavior Change: Changed reveal_type to use an information diagnostic severity rather than warning. Added support in CLI for information diagnostic severity. These were previously dropped.
+    -   Bug Fix: Tweaked the logic for py.typed type inference. Assignments that are type aliases should never be ignored in a py.typed package if they are defined in a pyi file.
+    -   Bug Fix: Fixed bug in the parser relating to assignment expressions. It was not allowing for ternary expressions in the RHS.
+        ([pylance-release#381](https://github.com/microsoft/pylance-release/issues/381))
+    -   Bug Fix: Fixed a bug that caused an incorrect error to be reported when a callable type was assigned to an 'object'. This should be allowed.
+    -   Bug Fix: Fixed bug in the completion provider where it was not properly handling object references through "self".
+    -   Bug Fix: Fixed bug in the type checker with respect to member accesses where the LHS is a class and the RHS is a property. This should evaluate to a property object.
+
 ## 2020.9.5 (16 September 2020)
 
 Notable changes:
