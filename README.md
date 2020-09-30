@@ -123,11 +123,11 @@ Here's an example of what semantic highlighting can add:
 
 Without semantic highlighting:
 
-![ screencast ](semantic-disabled.png)
+![ semantic highlighting disabled ](semantic-disabled.png)
 
 With semantic highlighting:
 
-![ screencast ](semantic-enabled.png)
+![ semantic highlighting enabled ](semantic-enabled.png)
 
 Semantic colors can be customized in settings.json by associating the Pylance semantic token types and modifiers with the desired colors.
 
