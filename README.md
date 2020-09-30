@@ -112,6 +112,61 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
+Semantic highlighting
+=====================
+
+Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
+
+Semantic tokenization allows language servers to provide additional token information based on the language server's knowledge on how to resolve symbols in the context of a project. Themes can opt-in to use semantic tokens to improve and refine the syntax highlighting from grammars. The editor applies the highlighting from semantic tokens on top of the highlighting from grammars.
+
+Here's an example of what semantic highlighting can add:
+
+Without semantic highlighting:
+
+![ semantic highlighting disabled ](semantic-disabled.png)
+
+With semantic highlighting:
+
+![ semantic highlighting enabled ](semantic-enabled.png)
+
+Semantic colors can be customized in settings.json by associating the Pylance semantic token types and modifiers with the desired colors.
+
+- Semantic token types
+    - class, enum
+    - parameter, variable, property, enumMember
+    - function, member
+    - module
+    - intrinsic
+    - magicFunction (dunder methods)
+    - selfParameter, clsParameter
+
+- Semantic token modifiers
+    - declaration
+    - readonly, static, abstract
+    - async
+    - typeHint, typeHintComment
+    - decorator
+
+The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to. 
+
+Example of customizing semantic colors in settings.json:
+```
+{
+    "editor.semanticTokenColorCustomizations": {
+        "[One Dark Pro]": { // Apply to this theme only
+            "enabled": true,
+            "rules": {
+                "magicFunction:python": "#ee0000",
+                "function.declaration:python": "#990000",
+                "*.decorator:python": "#0000dd",
+                "*.typeHint:python": "#5500aa",
+                "*.typeHintComment:python": "#aaaaaa"
+            }
+        }
+    }
+}
+```
+
 # Troubleshooting
 
 Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
