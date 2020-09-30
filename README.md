@@ -152,18 +152,18 @@ The [scope inspector](https://code.visualstudio.com/api/language-extensions/synt
 Example of customizing semantic colors in settings.json:
 ```
 {
-  "editor.semanticTokenColorCustomizations": {
-    "[One Dark Pro]": { // Apply to this theme only
-      "enabled": true,
-      "rules": {
-        "magicFunction:python": "#ee0000",
-        "function.declaration:python": "#990000",
-        "*.decorator:python": "#0000dd",
-        "*.typeHint:python": "#5500aa",
-        "*.typeHintComment:python": "#aaaaaa"
-      }
+    "editor.semanticTokenColorCustomizations": {
+        "[One Dark Pro]": { // Apply to this theme only
+            "enabled": true,
+            "rules": {
+                "magicFunction:python": "#ee0000",
+                "function.declaration:python": "#990000",
+                "*.decorator:python": "#0000dd",
+                "*.typeHint:python": "#5500aa",
+                "*.typeHintComment:python": "#aaaaaa"
+            }
+        }
     }
-  }
 }
 ```
 
