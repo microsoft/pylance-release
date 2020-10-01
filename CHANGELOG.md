@@ -1,5 +1,51 @@
 # Changelog
 
+## 2020.9.7 (30 September 2020)
+
+Notable changes:
+
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#386](https://github.com/microsoft/pylance-release/issues/386), [pylance-release#399](https://github.com/microsoft/pylance-release/issues/399), [pylance-release#405](https://github.com/microsoft/pylance-release/issues/405), [pylance-release#411](https://github.com/microsoft/pylance-release/issues/411), [pylance-release#412](https://github.com/microsoft/pylance-release/issues/412))
+-   Imports of the form `from X import Y as Z` and dead code blocks will no longer have spurious errors with semantic highlighting enabled.
+    ([pylance-release#376](https://github.com/microsoft/pylance-release/issues/376), [pylance-release#401](https://github.com/microsoft/pylance-release/issues/406))
+-   Decorators and declarations now have additional semantic token modifiers for further customization.
+    ([pylance-release#401](https://github.com/microsoft/pylance-release/issues/401))
+-   Temporary folder creation on multi-user shared systems has been fixed.
+    ([pylance-release#421](https://github.com/microsoft/pylance-release/issues/421))
+-   Auto-import completions will now show "Auto-import" in the completion list when the tooltip hasn't been expanded.
+-   Fixed a regression in the configuration of some paths, which may have prevented the correct python interpreter from being selected.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.74 to 1.1.75, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug where Enum constructor was not handling some variations of parameter types.
+    -   Bug Fix: Fixed spurious error when "Literal" was used with a dynamic type argument in a place where a type annotation wasn't expected.
+-   [1.1.75](https://github.com/microsoft/pyright/releases/tag/1.1.75)
+    -   Bug Fix: Fixed bug that caused some source files that were part of a "py.typed" package to not be identified as such. This meant that the special rules for "py.typed" exports were not being applied in those cases.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Behavior Change: Added special-case handling of values within enum classes in a py.typed package. They should be treated as constants and not require type annotations.
+    -   Behavior Change: Improved detection of implicit type aliases.
+    -   Bug Fix: Fixed bug that caused incorrect error in case where bidirectional type inference was used with a list expression and the expected type was an empty protocol.
+        ([pylance-release#409](https://github.com/microsoft/pylance-release/issues/409))
+    -   Bug Fix: Fixed a bug where spurious errors were generated when using an unannotated "self" as an argument to a constructor in a generic class.
+        ([pylance-release#423](https://github.com/microsoft/pylance-release/issues/423))
+    -   Enhancement: Added type narrowing for expressions of the form `<string> in X` and `<string> not in X` where X is a union of TypedDict instances.
+    -   Bug Fix: Fixed several bugs related to recursive type aliases. The hover text was sometimes incorrect, type narrowing for "isinstance" was broken in some cases, and the reportUnnecessaryIsInstance rule was reporting incorrect errors.
+    -   Bug Fix: Fixed bug in code that prints function types that contain a "named-parameter separator" (`_`). It was emitting an extra slash (`_/`).
+    -   Enhancement: Added check for position-only argument separator ("/") appearing as the first parameter in a parameter list. This is a syntax error.
+    -   Bug Fix: Fixed incorrect handling of global name bindings when a same-named nonlocal name was present.
+        ([pylance-release#429](https://github.com/microsoft/pylance-release/issues/429))
+    -   Enhancement: Expanded support for idioms used in libraries to define `__all__`. Tuples are now supported, as are calls to `expand`, `append` and `remove`.
+    -   Bug Fix: Fixed bug with synthesized `__set__` and `__del__` property methods. The wrong parameter types were being specified for the 'self' and 'obj' parameters.
+    -   Bug Fix: Fixed bug in diagnostics reporting logic that caused stack overflow in some rare cases.
+    -   Bug Fix: Fixed bug in `callable` type narrowing logic where the union of the type includes `None`.
+    -   Bug Fix: Improved handling of bidirectional type inference for constructor calls on generic types. In particular, the new logic better handles the case where the expected type is a union.
+    -   Bug Fix: Fixed bug in type inference for generator types. It was not properly adding the three type arguments for Generator in the inferred return type.
+        ([pylance-release#431](https://github.com/microsoft/pylance-release/issues/431))
+    -   Behavior Change: Implemented new rules for reexports within a py.typed module. ".py" files now follow PEP 484 rules with an override based on `__all__`.
+    -   New Feature: Implemented new "verifytypes" command-line option that analyzes a py.typed package and reports missing or partially-unknown types.
+    -   Enhancement: Added limiter for list type inference to clip the number of unique subtypes and avoid poor performance in some cases.
+
 ## 2020.9.6 (23 September 2020)
 
 Notable changes:
