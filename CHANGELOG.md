@@ -1,5 +1,9 @@
 # Changelog
 
+## 2020.9.8 (2 October 2020)
+
+This is a hotfix release, fixing a regression in 2020.9.7 that caused some `numpy` members (such as `numpy.nan`) to be missing.
+
 ## 2020.9.7 (30 September 2020)
 
 Notable changes:
