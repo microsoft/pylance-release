@@ -1,5 +1,66 @@
 # Changelog
 
+## 2020.10.0 (7 October 2020)
+
+Notable changes:
+
+-   Indexing performance has been improved. The indexer is still disabled by default, but we'd appreciate feedback about its behavior. Indexing can be enabled by setting `"python.analysis.indexing": true`.
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#426](https://github.com/microsoft/pylance-release/issues/426), [pylance-release#427](https://github.com/microsoft/pylance-release/issues/427), [pylance-release#428](https://github.com/microsoft/pylance-release/issues/428), [pylance-release#436](https://github.com/microsoft/pylance-release/issues/436), [pylance-release#444](https://github.com/microsoft/pylance-release/issues/444), [pylance-release#448](https://github.com/microsoft/pylance-release/issues/448), [pylance-release#449](https://github.com/microsoft/pylance-release/issues/449), [pylance-release#457](https://github.com/microsoft/pylance-release/issues/457))
+-   Semantic token scopes for some type hints have been fixed.
+    ([pylance-release#459](https://github.com/microsoft/pylance-release/issues/459))
+-   Type aliases should now be more consistently used in tooltips.
+    ([pylance-release#301](https://github.com/microsoft/pylance-release/issues/301))
+-   Python 3.9's more permissive decorator syntax is now supported.
+-   Recursive type aliases are now supported.
+-   Experimental support for a new proposed `typing` extension "TypeGuard" has been added. This extension allows for the creation of user-defined type guards.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.75 to 1.1.78, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed the handling of backslashes within an f-string that is also raw.
+    -   Enhancement: Improved some internal type transforms to preserve type alias information where possible. This helps types be more readable in hover text and error messages.
+        ([pylance-release#301](https://github.com/microsoft/pylance-release/issues/301))
+-   [1.1.78](https://github.com/microsoft/pyright/releases/tag/1.1.78)
+    -   Bug Fix: Fixed regression were diagnostics reported for constructor argument expressions were being suppressed.
+    -   Bug Fix: Fixed bug that was causing "self is unknown type" errors in strict mode for "self" parameters used within a protocol class.
+        ([pylance-release#458](https://github.com/microsoft/pylance-release/issues/458))
+    -   Enhancement: Added support for arbitrary expressions in decorators for Python 3.9 and newer as specified in PEP 614.
+    -   Enhancement: Implemented provisional "TypeGuard" functionality that allows for user-defined type guard functions. This must still go through a spec'ing and ratification process before it is finalized. Until then, details could change.
+    -   Enhancement: Added diagnostic messages for incorrect use of contravariant type variable as a method return type or a covariant type variable as a method parameter.
+    -   Bug Fix: Added missing comparison operator methods (`__eq__`, `__lt__`, etc.) for dataclass.
+-   [1.1.77](https://github.com/microsoft/pyright/releases/tag/1.1.77)
+    -   Bug Fix: Fixed bug where float and complex values were being inferred as Literal types when PEP 586 clearly states that complex and float values are not supported for Literal.
+    -   Bug Fix: Fixed spurious "variable is unbound" error when symbol was used in a compound conditional expression where the first part of the expression was statically determined to short-circuit the evaluation (e.g. `if False and name:`).
+        ([pylance-release#452](https://github.com/microsoft/pylance-release/issues/452))
+    -   Bug Fix: Fixed regression relating to bidirectional type inference used for constructor calls.
+    -   Bug Fix: Fixed bug that caused an internal error (stack overflow) when analyzing types of symbols that mutually depend upon each other and are potentially (but turn out not to be) type aliases.
+    -   Bug Fix: Improved handling of constrained type variables where one of the constraints is a narrower version of another.
+        ([pylance-release#453](https://github.com/microsoft/pylance-release/issues/453))
+    -   Bug Fix: Eliminated spurious "cannot instantiate abstract class" error when the value being instantiated is typed as `Type[X]`. Even though `X` is abstract, this shouldn't generate an error because `Type[X]` means "any subclass of `X`".
+    -   Bug Fix: Fixed handling of bidirectional type inference when source is an expression involving an "and" or "or" binary operator.
+    -   Enhancement: Changed type printing logic to include the name of a module for module types for clarity. Rather than 'Module', it now prints 'Module("&lt;name&gt;")'. This string is used in hover text and diagnostic messages.
+    -   Bug Fix: Fixed bug in hover provider where it incorrectly labeled variables as "type alias" if they are instantiated from a type alias.
+    -   Bug Fix: Fixed bug that caused type narrowing for assignments not to be applied when the source of the assignment was a call to a constructor.
+    -   Enhancement: Improved type narrowing for assignments when destination is declared with one or more "Any" type arguments.
+    -   Enhancement: Improved bidirectional type inference for list and dict types when destination type is a union that contains one or more specialized list or dict types.
+    -   Enhancement: Improved support for generic recursive type aliases. Improved bidirectional type inference for list and dict types when destination type is a wider protocol type (like Iterable, Mapping, Sequence, etc.).
+    -   Bug Fix: Added escapes in docstring markdown converter for "<" and ">" characters so they are not interpreted as an HTML tag by the markdown renderer.
+-   [1.1.76](https://github.com/microsoft/pyright/releases/tag/1.1.76)
+    -   Bug Fix: Fixed spurious error when "Literal" was used with a dynamic type argument in a place where a type annotation wasn't expected.
+    -   Enhancement: Improved type verification report for readability.
+    -   Bug Fix: Fixed bug where Enum constructor was not handling some variations of parameter types.
+    -   Bug Fix: Fix handling of pythonPath setting when it is unset.
+    -   Enhancement: Improved logging for import search paths.
+    -   Enhancement: Improved experience for auto-import completions by including "Auto-import" in details.
+    -   Enhancement: Added optimizations in type validator to avoid checking built-in classes.
+    -   Enhancement: Added checks in type validator for metaclasses.
+    -   Bug Fix: Improved handling of bidirectional type inference when RHS of assignment is a constructor.
+    -   Bug Fix: Added support for `__all__` assignments that include a type annotation. Added support for the `__all__ += <module>.__all__` idiom for mutating the `__all__` value. This idiom is used by numpy.
+    -   Bug Fix: Fixed bug that caused symbols referenced by `__all__` not to be marked as accessed in some cases.
+        ([pylance-release#446](https://github.com/microsoft/pylance-release/issues/446))
+    -   Enhancement: Added diagnostic check for static and class methods used for property getters, setters and deleters.
+
 ## 2020.9.8 (2 October 2020)
 
 This is a hotfix release, fixing a regression in 2020.9.7 that caused some `numpy` members (such as `numpy.nan`) to be missing.
