@@ -1,5 +1,40 @@
 # Changelog
 
+## 2020.10.1 (14 October 2020)
+
+Notable changes:
+
+-   The `pandas` stubs have been further improved.
+    ([pylance-release#457](https://github.com/microsoft/pylance-release/issues/457))
+-   Semantic tokens will now be refreshed on settings change.
+-   Completions for function parameters will no longer incorrectly appear outside call parenthesis.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.78 to 1.1.79, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused an incorrect error when `self.__class__` was used as the second argument to an `isinstance` call.
+    -   Bug Fix: Changed logic for function return type inference so "unbound" type is never propagated to callers. This eliminates incorrect and confusing errors.
+        ([pylance-release#488](https://github.com/microsoft/pylance-release/issues/488))
+-   [1.1.79](https://github.com/microsoft/pyright/releases/tag/1.1.79)
+    -   Bug Fix: Fixed the handling of backslashes within an f-string that is also raw.
+    -   Enhancement: Added streaming support for "find all references" so updates appear incrementally.
+    -   Enhancement: Improved some internal type transforms to preserve type alias information where possible. This helps types be more readable in hover text and error messages.
+    -   Bug Fix: Fixed bug that caused identifiers with non-ASCII characters to sometimes be handled incorrectly.
+        ([pylance-release#466](https://github.com/microsoft/pylance-release/issues/466))
+    -   Bug Fix: Fixed bug that resulted in an incorrect "unbound variable" error when the variable was used in an assignment expression within an if/else conditional expression.
+        ([pylance-release#468](https://github.com/microsoft/pylance-release/issues/468))
+    -   Bug Fix: Fixed bug where implementation of an overloaded function was included in the list of overloads leading to incorrect signature suggestions and false positives for various overload diagnostic checks.
+    -   Enhancement: Updated typeshed to latest.
+    -   Bug Fix: Added missing descriptor for "python.analysis.extraPaths" in Pyright VS Code extension. This caused VS Code to indicate that this setting wasn't known.
+    -   Bug Fix: Fixed bugs in import resolver when a project contains multiple namespace packages with the same name.
+        ([pylance-release#471](https://github.com/microsoft/pylance-release/issues/471))
+    -   Bug Fix: Fixed bug that resulted in "unknown" parameter type when assigning a lambda to a variable with a declared Callable type.
+    -   Bug Fix: Fixed issue with call signature arguments.
+    -   Enhancement: Added support for plain text doc strings.
+    -   Bug Fix: Fixed bug that caused a type variable to be "unknown" in some cases where a generic class type was used without providing explicit type arguments.
+    -   Bug Fix: Fixed handling of "Annotated" type introduced in PEP 593. Wasn't properly handling string literals in type arguments.
+        ([pylance-release#479](https://github.com/microsoft/pylance-release/issues/479))
+
 ## 2020.10.0 (7 October 2020)
 
 Notable changes:
