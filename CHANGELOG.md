@@ -1,5 +1,43 @@
 # Changelog
 
+## 2020.10.2 (21 October 2020)
+
+Notable changes:
+
+-   Incremental text changes are now supported, which should improve performance when editing large files.
+-   Invalid diagnostics should no longer appear when semantic highlighting is enabled.
+    ([pylance-release#491](https://github.com/microsoft/pylance-release/issues/491))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.79 to 1.1.81, including the following changes:
+
+-   [1.1.81](https://github.com/microsoft/pyright/releases/tag/1.1.81)
+    -   Bug Fix: Fixed bug in parser that caused incorrect errors in chains of comparison or "in"/"not in" operators. The expression "a == b == c" should be parsed as "a == (b == c)", but the code was previously parsing it as "(a == b) == c". This didn't matter in most cases, but it does when the types of a, b and c differ.
+        ([pylance-release#506](https://github.com/microsoft/pylance-release/issues/506))
+    -   Bug Fix: Fixed bug that resulted in incorrect errors when an instance variable with no type declaration was assigned an enum value. It was assumed to be of that literal enum value type rather than the wider enum type.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a class derived from another class that was instantiated from a custom metaclass.
+        ([pylance-release#507](https://github.com/microsoft/pylance-release/issues/507))
+    -   Bug Fix: Fixed bug that caused type errors when internal type cache was cleared. The code previously used parse node IDs to distinguish between types that are not created via class declarations (NamedTuple, type, NewType, etc.). Since node IDs change when a file is reparsed (due to a change), these IDs cannot be relied upon for type comparisons.
+    -   Enhancement: Added support for "typing" module aliases when checking for TYPE_CHECKING symbol in static boolean expressions.
+    -   Behavior Change: Removed recently-added "reportInvalidTypeVarUse" diagnostic rule and associated checks. After further discussion, we decided that there are legitimate cases where a TypeVar can appear only once in a function signature.
+-   [1.1.80](https://github.com/microsoft/pyright/releases/tag/1.1.80)
+    -   Bug Fix: Fixed bug that caused an incorrect error when `self.__class__` was used as the second argument to an `isinstance` call.
+    -   Bug Fix: Changed logic for function return type inference so "unbound" type is never propagated to callers. This eliminates incorrect and confusing errors.
+    -   Bug Fix: Fixed bug in type stub generator. It was not properly handling annotated variables (either those with PEP 593 annotations or older-style type comment annotations).
+        ([pylance-release#490](https://github.com/microsoft/pylance-release/issues/490))
+    -   Bug Fix: Fixed bug in completion provider that caused submodules within a namespace module not to be suggested within a "from x import y" statement.
+        ([pylance-release#359](https://github.com/microsoft/pylance-release/issues/359))
+    -   Bug Fix: Fixed misleading error message within "from x import y" statement where x was a namespace package and y was not found. The error was being reported as an "unresolved import x" rather than "unknown symbol y".
+    -   Bug Fix: Fixed bug in type evaluator that caused spurious errors related to variables used within "for" and "if" statements within a comprehension.
+    -   Bug Fix: Fixed bug that caused incorrect error to be reported when a recursive type alias was used in certain circumstances.
+    -   Enhancement: Improved type inference for tuples in circumstances where literals are used within a tuple expression and when tuple expressions are assigned to an expected type that is not a tuple but is a compatible type (such as Iterable).
+        ([pylance-release#487](https://github.com/microsoft/pylance-release/issues/487))
+    -   Bug Fix: Fixed bug that resulted in incorrect error about TypeVar being used incorrectly. The specific condition was when it was referenced within a method within a generic class and one of the method's parameters also referenced the same TypeVar.
+    -   Bug Fix: Fixed bug where declared variable with literal types in type arguments were being stripped of those literals when the variable was exported from a module.
+    -   Bug Fix: Fixed bug that caused duplicate error messages involving certain TypeVar assignments.
+    -   Enhancement: Added diagnostic check for dictionary unpack operator (\*\*) if the operand is not a mapping object.
+    -   Enhancement: Added new diagnostic rule "reportInvalidTypeVarUse" that controls reporting of TypeVars that appear only once in a function signature. By default it is off in basic type checking mode but on in strict mode.
+    -   Enhancement (from Pylance): Added support for increment text changes in language server interface. This will theoretically improve performance for edits in large source files.
+
 ## 2020.10.1 (14 October 2020)
 
 Notable changes:
