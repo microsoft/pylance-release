@@ -18,7 +18,6 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.79 to 1.1.81, i
         ([pylance-release#507](https://github.com/microsoft/pylance-release/issues/507))
     -   Bug Fix: Fixed bug that caused type errors when internal type cache was cleared. The code previously used parse node IDs to distinguish between types that are not created via class declarations (NamedTuple, type, NewType, etc.). Since node IDs change when a file is reparsed (due to a change), these IDs cannot be relied upon for type comparisons.
     -   Enhancement: Added support for "typing" module aliases when checking for TYPE_CHECKING symbol in static boolean expressions.
-    -   Behavior Change: Removed recently-added "reportInvalidTypeVarUse" diagnostic rule and associated checks. After further discussion, we decided that there are legitimate cases where a TypeVar can appear only once in a function signature.
 -   [1.1.80](https://github.com/microsoft/pyright/releases/tag/1.1.80)
     -   Bug Fix: Fixed bug that caused an incorrect error when `self.__class__` was used as the second argument to an `isinstance` call.
     -   Bug Fix: Changed logic for function return type inference so "unbound" type is never propagated to callers. This eliminates incorrect and confusing errors.
@@ -35,7 +34,6 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.79 to 1.1.81, i
     -   Bug Fix: Fixed bug where declared variable with literal types in type arguments were being stripped of those literals when the variable was exported from a module.
     -   Bug Fix: Fixed bug that caused duplicate error messages involving certain TypeVar assignments.
     -   Enhancement: Added diagnostic check for dictionary unpack operator (\*\*) if the operand is not a mapping object.
-    -   Enhancement: Added new diagnostic rule "reportInvalidTypeVarUse" that controls reporting of TypeVars that appear only once in a function signature. By default it is off in basic type checking mode but on in strict mode.
     -   Enhancement (from Pylance): Added support for increment text changes in language server interface. This will theoretically improve performance for edits in large source files.
 
 ## 2020.10.1 (14 October 2020)
