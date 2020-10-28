@@ -1,5 +1,35 @@
 # Changelog
 
+## 2020.10.3 (28 October 2020)
+
+Notable changes:
+
+-   Performance while in the "off" type checking mode has been improved (the default for Pylance).
+-   A performance regression related to the experimental `TypeGuard` type has been fixed, which should further improve overall performance.
+-   The bundled Django stubs have been updated to the latest version.
+    ([pylance-release#536](https://github.com/microsoft/pylance-release/issues/536))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.81 to 1.1.82, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Do not report errors for union alternative syntax (PEP 604) if evaluation of type annotation is postponed (either in a quote or via PEP 563).
+        ([pylance-release#513](https://github.com/microsoft/pylance-release/issues/513))
+    -   Bug Fix: Fixed bug in perf optimization for set, list, and dictionary type inference. The old code was failing to evaluate expressions associated with entries beyond 64, which meant that tokens were not classified correctly and type errors in these expressions were not reported.
+        ([pylance-release#518](https://github.com/microsoft/pylance-release/issues/518))
+-   [1.1.82](https://github.com/microsoft/pyright/releases/tag/1.1.82)
+    -   Bug Fix: Fixed internal error that occurs when the type evaluator encounters a circular dependency between a class decorator and the class that it decorates.
+    -   Bug Fix: Fixed bug in protocol matching logic that results in incorrect errors indicating a function type mismatch.
+    -   Perf Improvement: Conditionalized the logic for the reportPropertyTypeMismatch diagnostic check. It's somewhat expensive, so don't bother executing it if it's disabled.
+    -   Perf Improvement: Fixed performance regression introduced along with user-defined type guards.
+    -   Enhancement: Added support for reverse logical operators (`__ror__`, `__rand__`, etc.).
+    -   Bug Fix: Added code to handle the case where a class has a custom metaclass that handles logical or (the `__or__` method). Previous to this change, use of an `|` operator with classes was assumed to be a misuse of PEP 614 in Python versions prior to 3.10.
+        ([pylance-release#513](https://github.com/microsoft/pylance-release/issues/513))
+    -   Bug Fix: Fixed bug that resulted in an incorrect error when a list comprehension expression was used within a lambda and the expression referenced one or more of the lambda parameters.
+        ([pylance-release#520](https://github.com/microsoft/pylance-release/issues/520))
+    -   Bug Fix: Fixed bug that caused incorrect error to be reported for names referenced in global and nonlocal statements when those names were not declared in the outer scope.
+        ([pylance-release#526](https://github.com/microsoft/pylance-release/issues/526))
+        Bug Fix: Fixed bug that resulted in incorrect error when second argument of isinstance was a "type" or "Type" object.
+
 ## 2020.10.2 (21 October 2020)
 
 Notable changes:
