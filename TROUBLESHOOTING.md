@@ -47,6 +47,11 @@ If you are moving from the Microsoft Python Language Server over to Pylance, a g
 
 To use Pylance, you will need to be using VS Code version 1.48.0 or above.
 
+### Pylance does not start up, or shows an error on startup
+
+To use Pylance, you must be running an official build of VS Code. If you've verified that
+you are running an official build and are still running into issues, please file a bug report.
+
 ## Filing an issue
 
 When filing an issue, make sure you do the following:
