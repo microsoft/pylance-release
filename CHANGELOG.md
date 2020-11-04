@@ -1,5 +1,37 @@
 # Changelog
 
+## 2020.11.0 (4 November 2020)
+
+Notable changes:
+
+-   Common module aliases (such as `np`, `pd`, `plt`) are now available as completions, in addition to being suggested in quick fixes.
+-   Completions on lines containing the character `#` will now work correctly.
+    ([pylance-release#461](https://github.com/microsoft/pylance-release/issues/461))
+-   Completions for functions in import statements will no longer incorrectly add parentheses when `completeFunctionParens` is enabled.
+    ([pylance-release#320](https://github.com/microsoft/pylance-release/issues/320))
+-   The bundled Django stubs have been updated to the latest version.
+    ([pylance-release#212](https://github.com/microsoft/pylance-release/issues/212))
+-   Empty f-string expressions are now parsed correctly.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.82 to 1.1.83, including the following changes:
+
+-   [1.1.83](https://github.com/microsoft/pyright/releases/tag/1.1.83)
+    -   Bug Fix: Fixed bug in perf optimization for set, list, and dictionary type inference. The old code was failing to evaluate expressions associated with entries beyond 64, which meant that tokens were not classified correctly and type errors in these expressions were not reported.
+    -   Bug Fix: Do not report errors for union alternative syntax (PEP 604) if evaluation of type annotation is postponed (either in a quote or via PEP 563).
+    -   Bug Fix: Fixed bug that caused spurious errors when evaluating type annotations within certain circumstances.
+        ([pylance-release#513](https://github.com/microsoft/pylance-release/issues/513))
+    -   Bug Fix: Fixed bug that sporadically caused incorrect and confusing type errors such as "list is incompatible with List".
+        ([pylance-release#521](https://github.com/microsoft/pylance-release/issues/521))
+    -   Bug Fix: PEP 585 says that it should be possible to use `type` in place of `Type` within type annotations. Previously, this generated an error.
+    -   Behavior Change: Changed re-export logic for type stub and py.typed modules to honor the clarification that was recently added to PEP 484. Previously, any import that used an "as" clause was considered to be re-exported. Now, symbols are re-exported only if the "as" clause is redundant (i.e. it is of the form `import A as A` or `from A import X as X`).
+    -   Bug Fix: Fixed inconsistency in handling of imported symbols that have multiple untyped declarations within the target module. The inconsistency was between the two cases `import x, x.y` and `from x import y`. In the latter case the type resolution logic considered only the last symbol declaration in the target module, but in the former case it was considering all declarations and returning the union of all types.
+        ([pylance-release#545](https://github.com/microsoft/pylance-release/issues/545))
+    -   Bug Fix: Fixed bug in f-string parsing. It was generating an error for comma-separate list of expressions, which is legal.
+        ([pylance-release#551](https://github.com/microsoft/pylance-release/issues/551))
+    -   Bug Fix: Fixed inconsistency in type narrowing for `isinstance` and `issubclass` calls. Previously, the narrowing logic used the target class(es) if the source expression was of type Any but did not do the same when the source expression was a union type that included Any but all other subtypes were eliminated.
+        ([pylance-release#557](https://github.com/microsoft/pylance-release/issues/557))
+    -   Bug Fix: Added logic for `or` and `and` operators to handle the case where the left-hand operand is always falsy (in the case of `or`) or always truthy (in the case of `and`).
+
 ## 2020.10.3 (28 October 2020)
 
 Notable changes:
