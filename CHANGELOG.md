@@ -1,5 +1,49 @@
 # Changelog
 
+## 2020.11.1 (11 November 2020)
+
+Notable changes:
+
+-   Completions will no longer be offered in contexts where a new name is being typed, including class names, function names, parameter names, and import alias names. This also has the effect of hiding undesirable auto-import completions for test fixtures.
+    ([pylance-release#163](https://github.com/microsoft/pylance-release/issues/163))
+-   Completions will no longer incorrectly be offered inside of string literals.
+    ([pylance-release#383](https://github.com/microsoft/pylance-release/issues/383))
+-   Docstring formatting in signature help tooltips will now match hover and completion tooltips.
+    ([pylance-release#566](https://github.com/microsoft/pylance-release/issues/566))
+-   Tokens that come from the builtins now have a "builtin" semantic modifier for theming.
+    ([pylance-release#561](https://github.com/microsoft/pylance-release/issues/561))
+-   The "make Pylance your default language server" prompt will now hide permanently if "no" is selected.
+    ([pylance-release#568](https://github.com/microsoft/pylance-release/issues/568))
+-   The pandas stubs have been updated.
+    ([pylance-release#576](https://github.com/microsoft/pylance-release/issues/576))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.83 to 1.1.85, including the following changes:
+
+-   [1.1.85](https://github.com/microsoft/pyright/releases/tag/1.1.85)
+    -   Behavior Change: Changed diagnostic about first argument to `super` call to be part of the reportGeneralTypeIssues diagnostic rule so it is suppressed when type checking mode is set to "off".
+        ([pylance-release#589](https://github.com/microsoft/pylance-release/issues/589))
+    -   Bug Fix: Fixed bug that caused code within finally clause to be marked as unreachable if there was no except clause and the code within the try block always raised an exception.
+        ([pylance-release#592](https://github.com/microsoft/pylance-release/issues/592))
+    -   Bug Fix: Fixed bugs in ParamSpec logic. It was not properly handling the case where the target callable type contained keyword-only or positional-only parameter separators.
+    -   Bug Fix: Added support for `tuple` and `type` subscripts when `__future__` annotations is defined.
+    -   Bug Fix: Fixed bug that caused improper errors when using new-style union syntax with `from __future__ import annotations`.
+    -   Bug Fix: Worked around a reported bug in node 14+ on Linux where calls to fs.watch throw an exception when creating a recursive file watcher. The workaround is to catch the exception and proceed without a file watcher in place.
+    -   Enhancement: Updated typeshed stubs to the latest.
+-   [1.1.84](https://github.com/microsoft/pyright/releases/tag/1.1.84)
+    -   Bug Fix: Fixed parser crash when an f-string contained an empty expression.
+    -   Bug Fix: Fixed bug that caused diagnostics with "information" severity to be reported as "warnings" in the CLI version of pyright.
+    -   Bug Fix: Fixed recent regression in handling type evaluations for "and" and "or" operators. Short-circuiting evaluation was not handled correctly in some cases.
+    -   Bug Fix: Fixed bug in parser that caused expressions within f-strings to be handled incorrectly if they contained syntax errors.
+    -   Bug Fix: Fixed bug in parsing of annotated variable assignments. It was not allowing yield expressions on the right-hand side.
+    -   Enhancement: Added special-case logic to handle `isinstance` call when the first argument is a TypedDict and the second argument is a `dict` class. A TypedDict does not derive from `dict` from the perspective of type checking, but at runtime, `isinstance` returns True. This affects both type narrowing logic and checks for unnecessary `isinstance` calls.
+    -   Bug Fix: Fixed bug in type narrowing logic for expressions of the form "type(x) is y" or "type(x) is not y". The logic was incorrectly narrowing the type in the negative ("else") case. And in the positive case, it was not properly handling cases where x was a subclass of y.
+        ([pylance-release#572](https://github.com/microsoft/pylance-release/issues/572))
+    -   Bug Fix: Fixed bug that caused completion suggestions to be presented when typing a period within a comment on the first line of the file.
+    -   Enhancement: Improved signature help for data classes where default values are specified.
+        ([pylance-release#585](https://github.com/microsoft/pylance-release/issues/585))
+    -   Bug Fix: Fixed bug in NamedTuple logic that caused spurious errors when attempting to assign a NamedTuple to a Tuple with a compatible set of type arguments.
+
 ## 2020.11.0 (4 November 2020)
 
 Notable changes:
