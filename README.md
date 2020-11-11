@@ -146,6 +146,7 @@ Semantic colors can be customized in settings.json by associating the Pylance se
     - async
     - typeHint, typeHintComment
     - decorator
+    - builtin
 
 The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to. 
 
