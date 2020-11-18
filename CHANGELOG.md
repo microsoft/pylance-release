@@ -1,5 +1,45 @@
 # Changelog
 
+## 2020.11.2 (18 November 2020)
+
+Notable changes:
+
+-   Pylance now includes generated stubs for select compiled modules in `numpy`, `cv2`, and `lxml`. This should greatly improve usability when working with these libraries.
+    ([pylance-release#138](https://github.com/microsoft/pylance-release/issues/138), [pylance-release#150](https://github.com/microsoft/pylance-release/issues/150), [pylance-release#392](https://github.com/microsoft/pylance-release/issues/392))
+-   Pylance now offers an insiders program, which provides access to prerelease builds and features. Setting `"pylance.insidersChannel": "daily"` will check daily for updates.
+-   `__future__` is now properly suggested as an import.
+    ([pylance-release#539](https://github.com/microsoft/pylance-release/issues/539))
+-   Type aliases are now properly expanded in completion tooltips.
+    ([pylance-release#562](https://github.com/microsoft/pylance-release/issues/562))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.85 to 1.1.86, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug with type annotations that use a TypeVar with the new union syntax.
+    -   Behavior Change: Removed special-case code that eliminates a NoReturn from an async function.
+    -   Behavior Change: Changed behavior of NoReturn when it appears within unions. Previously, it was always filtered out of unions. It is now filtered out only in the inferred return type of a function. This allows NoReturn to be used in unions in other legitimate cases.
+    -   Bug Fix: Fixed bug that resulted in a false negative when a callable type with a kwargs parameter was assigned to a callable type without a kwargs or with a kwargs of a different type.
+-   [1.1.86](https://github.com/microsoft/pyright/releases/tag/1.1.86)
+    -   Enhancement (from Pylance): Improvements to completion provider and signature help provider.
+    -   Bug Fix: Allow `TypeAlias` to be used prior to Python 3.10 if imported from typing_extensions.
+    -   Enhancement: Added special-case handling for magic method `__class_getitem__`, which is implicitly a classmethod.
+    -   Enhancement: Added support for classes that include the `__class_getitem__` magic method to provide custom behaviors for subscripting.
+    -   Enhancement: Support detecting multiple site-packages directories in venvs. [Contribution by Truls Asheim]
+    -   Bug Fix: Fixed bug that caused incorrect type errors when dealing with magic methods on the tuple class.
+    -   Bug Fix: Fixed a confusing diagnostic message relating to incorrect method override.
+    -   Enhancement: Enforced that TypeVars being solved for in a TypeVar map match the expected scope.
+    -   Bug Fix: Fixed bug in synthesized `setdefault` method on TypedDict for required entries, which never use the default value.
+    -   Bug Fix: Fixed bug that resulted in an inappropriate error when a kwarg parameter was typed with a class-defined TypeVar (e.g. `**kwargs: _VT`).
+    -   Bug Fix: Made the check less strict for the use of covariant type vars within a function input parameter annotation. In particular, unions that contain covariant type vars are now permitted.
+    -   Enhancement: Add `__future__` module as import suggestion. [Contribution by cdce8p]
+        ([pylance-release#539](https://github.com/microsoft/pylance-release/issues/539))
+    -   Bug Fix: Fixed bug that caused the issubtype type narrowing logic to fail when used with a bound TypeVar T in combination with `Type[T]`.
+    -   Bug Fix: Don't add suggestions for 'with Y as [ ]'. [Contribution by cdce8p]
+    -   Enhancement: Type aliases are now expanded in completion provider text in the same way as the hover text. [Contribution by cdce8p]
+        ([pylance-release#562](https://github.com/microsoft/pylance-release/issues/562))
+    -   Enhancement: Improve handling of type aliases for auto-import. [Contribution by cdce8p]
+        ([pylance-release#606](https://github.com/microsoft/pylance-release/issues/606))
+
 ## 2020.11.1 (11 November 2020)
 
 Notable changes:
