@@ -36,6 +36,13 @@ See the [changelog](CHANGELOG.md) for the latest release.
 
 Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the settings.json file in your workspace, or edited through the Settings Editor UI.
 
+-   `pylance.insidersChannel`
+
+    -   Used to control the insiders download channel.
+    -   Available values:
+        -   `off` (default)
+        -   `daily`
+
 -   `python.analysis.typeCheckingMode`
 
     -   Used to specify the level of type checking analysis performed.
@@ -112,8 +119,7 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
-Semantic highlighting
-=====================
+# Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
 
@@ -131,30 +137,33 @@ With semantic highlighting:
 
 Semantic colors can be customized in settings.json by associating the Pylance semantic token types and modifiers with the desired colors.
 
-- Semantic token types
-    - class, enum
-    - parameter, variable, property, enumMember
-    - function, member
-    - module
-    - intrinsic
-    - magicFunction (dunder methods)
-    - selfParameter, clsParameter
+-   Semantic token types
 
-- Semantic token modifiers
-    - declaration
-    - readonly, static, abstract
-    - async
-    - typeHint, typeHintComment
-    - decorator
-    - builtin
+    -   class, enum
+    -   parameter, variable, property, enumMember
+    -   function, member
+    -   module
+    -   intrinsic
+    -   magicFunction (dunder methods)
+    -   selfParameter, clsParameter
 
-The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to. 
+-   Semantic token modifiers
+    -   declaration
+    -   readonly, static, abstract
+    -   async
+    -   typeHint, typeHintComment
+    -   decorator
+    -   builtin
+
+The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to.
 
 Example of customizing semantic colors in settings.json:
-```
+
+```json
 {
     "editor.semanticTokenColorCustomizations": {
-        "[One Dark Pro]": { // Apply to this theme only
+        "[One Dark Pro]": {
+            // Apply to this theme only
             "enabled": true,
             "rules": {
                 "magicFunction:python": "#ee0000",

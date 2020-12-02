@@ -1,5 +1,73 @@
 # Changelog
 
+## 2020.12.0 (2 December 2020)
+
+Notable changes:
+
+-   Extract method and extract variable code actions are available for preview in Pylance insiders (`"pylance.insidersChannel": "daily"`).
+-   Completion suggestions are now matched more fuzzily. For example, typing `lx` will match a completion for `logical_xor`, even though it does not contain the substring `lx`.
+    ([pylance-release#608](https://github.com/microsoft/pylance-release/issues/608))
+-   Auto-imports (both completions and quick fixes) will now make use of existing imports when possible. For example, an auto-import completion for `array` when `import numpy as np` is present will now complete to `np.array`, rather than adding `from numpy import array`.
+-   Auto-imports will now correctly insert a new import rather than reusing an import statement from a submodule.
+    ([pylance-release#646](https://github.com/microsoft/pylance-release/issues/646))
+-   Method override completions will now generate a `super()` call.
+    ([pylance-release#668](https://github.com/microsoft/pylance-release/issues/668))
+-   Completions for overriden methods will now show the correct signature.
+-   VS Code's "word based suggestions" (`editor.wordBasedSuggestion`) are now disabled by default in Python files to mitigate poor completions when Pylance specifies no completions are available.
+    ([pylance-release#604](https://github.com/microsoft/pylance-release/issues/604))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.86 to 1.1.91, including the following changes:
+
+-   [1.1.91](https://github.com/microsoft/pyright/releases/tag/1.1.91)
+    -   Enhancement: Updated to the latest typeshed stubs.
+    -   Bug Fix: Fixed bug in fstring parser that generated "unexpected token at end of string" errors if fstring debug (introduced in Python 3.8) was used in conjunction with string-formatting syntax and there was no space between the "=" and the ":".
+    -   Bug Fix: Fixed bug that caused a spurious error when defining a property setter when the property getter had no declared return type.
+    -   Bug Fix: Fixed bug in isinstance narrowing logic where it didn't properly preserve a TypeVar in the negative ("else") case.
+    -   Bug Fix: Fixed bug in type narrowing logic for member access expressions like "a.b.c". A narrowed type needs to be abandoned if any part of the expression is reassigned (e.g. `a.b = <expression>`).
+    -   Bug Fix: Fixed bug that resulted a "Never" type appearing as a type argument in an inferred function return type. "Never" should never be used as a type argument. It is now replaced by "Unknown" if it ever does appear.
+    -   Bug Fix: (from pylance): Fixed completion case where the completion item said one method, but hover said another once inserted.
+    -   Bug Fix: (from pylance): Reuse existing imports for auto-imports (e.g. if `import os.path` is present, `join` will use `os.path.join`).
+-   [1.1.90](https://github.com/microsoft/pyright/releases/tag/1.1.90)
+    -   Enhancement: Added support for type() call when argument contains a generic class instance.
+    -   Enhancement: Improved reportIncompatibleMethodOverride diagnostic check for property overrides. It now checks for missing fget, fset, fdel methods and the overridden method types for each of these.
+    -   Enhancement: Added special-case handling of overloaded `__init__` methods where the `self` parameter contains an annotation with a specialized version of the class. This is used in some typeshed stubs to influence the constructed object type when no additional information is available.
+    -   Bug Fix: Fixed bug in parser that resulted in incorrect errors when an unpack operator was used within an f-string expression.
+    -   Bug Fix: Fixed bug that resulted in incorrect errors when matching synthesized "cls" parameter type. This bug generally affected all TypeVars that were bound to a Type.
+    -   Enhancement: Improved type checking support for constrained TypeVars within function and class bodies. This was a significant change, so there's some risk of regressions or new false-positive errors. Please report any bugs you see.
+-   [1.1.89](https://github.com/microsoft/pyright/releases/tag/1.1.89)
+    -   New Feature: Added support for new reportUnsupportedDunderAll diagnostic rule. It checks for unsupported manipulations of `__all__`.
+    -   New Feature: Implemented new diagnostic rule reportUnusedCallResult that checks whether a call expression's results are consumed. If the results are None or Any, no diagnostic is produced.
+    -   Enhancement: Added support for isinstance and issubclass type narrowing when "cls" or "self" parameters are used in the second argument
+    -   Bug Fix: Fixed recent regression with TypeGuard type that caused spurious error when a bool value was return from a user-defined type guard function.
+    -   Bug Fix: Fixed bug in reportIncompatibleMethodOverride diagnostic check where it incorrectly reported an error if a derived class used overload functions on an overridden method.
+    -   Bug Fix: Fixed bug that caused incorrect binding when invoking a class method through an instance.
+    -   Bug Fix: Fixed handling of recursive type annotations for variables (e.g. "int: int"). In some specific situations this is allowed if the annotation refers to a symbol in an outer scope.
+    -   Bug Fix: Fixed several bugs related to constructor type inference when the expected type contained generic types with type arguments that contained type variables defined in a context outside of the constructor's call site.
+-   [1.1.88](https://github.com/microsoft/pyright/releases/tag/1.1.88)
+    -   Enhancement: This release includes a major update to TypeVar code. The type checker is now much more strict about how TypeVars are treated when analyzing the bodies of generic functions or methods within generic classes.
+    -   Bug Fix: Fixed bug in synthesis of comparison operators in dataclass. By default, these methods should not be synthesized unless `order=True` is passed to the `@dataclass` decorator.
+    -   Bug Fix: Fixed bug that caused incorrect specialization of a TypeVar when used in a descriptor class with a `__set__` method.
+    -   Bug Fix: Fixed incorrectly handling of generic type alias that is defined in terms of other generic type aliases.
+        ([pylance-release#636](https://github.com/microsoft/pylance-release/issues/636))
+    -   Bug Fix: Fixed bug that caused incorrect overload to be selected in cases where a named argument was used.
+    -   Enhancement: Improved signature help for calls to namedtuple constructor.
+        ([pylance-release#630](https://github.com/microsoft/pylance-release/issues/630))
+    -   Bug Fix: Added support for a generic method whose "self" parameter is annotated with a bound TypeVar and is then invoked using another bound TypeVar.
+    -   Bug Fix: Improved error reporting for assignments to protocols.
+    -   Enhancement: Added support for the instantiation of a class via a constructor when the type of the class is specified as a TypeVar.
+    -   Bug Fix: Fixed inappropriate error in strict mode when a named argument for a call expression begins with an underscore.
+    -   Bug Fix: Fixed bug that results in an incorrect type when a call to a function returns a generic type and the result is assigned to a variable with a declared type that includes a union.
+-   [1.1.87](https://github.com/microsoft/pyright/releases/tag/1.1.87)
+    -   Bug Fix: Fixed bug with type annotations that use a TypeVar with the new union syntax.
+    -   Behavior Change: Removed special-case code that eliminates a NoReturn from an async function.
+    -   Behavior Change: Changed behavior of NoReturn when it appears within unions. Previously, it was always filtered out of unions. It is now filtered out only in the inferred return type of a function. This allows NoReturn to be used in unions in other legitimate cases.
+    -   Bug Fix: Fixed bug that resulted in a false negative when a callable type with a kwargs parameter was assigned to a callable type without a kwargs or with a kwargs of a different type.
+    -   Enhancement (from Pylance): Changed fuzzy text matching algorithm for completion suggestions.
+    -   Bug Fix: Fixed bug whereby an assignment was not flagged as an error if the target type contains a type var and the source is concrete. This change generally makes the core type checker more strict about the use of type variables.
+    -   Enhancement: Added support for "eq" and "order" parameters in dataclass decorator as defined in PEP 557.
+    -   New Feature: Added new diagnostic rule "reportFunctionMemberAccess" that reports an attempt to access, set or delete non-standard attributes of function objects.
+
 ## 2020.11.2 (18 November 2020)
 
 Notable changes:
