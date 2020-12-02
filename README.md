@@ -89,7 +89,7 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Available rule to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
     -   Example:
 
-    ```json
+    ```jsonc
     {
         "python.analysis.diagnosticSeverityOverrides": {
             "reportUnboundVariable": "information",
@@ -159,7 +159,7 @@ The [scope inspector](https://code.visualstudio.com/api/language-extensions/synt
 
 Example of customizing semantic colors in settings.json:
 
-```json
+```jsonc
 {
     "editor.semanticTokenColorCustomizations": {
         "[One Dark Pro]": {
