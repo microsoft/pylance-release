@@ -187,6 +187,8 @@ Pylance leverages Microsoft's open-source static type checking tool, Pyright, to
 
 Code contributions are welcomed via the [Pyright](https://github.com/microsoft/pyright) repo.
 
+Pylance also makes use of some type stub files, either from typeshed, or some additional ones that we eventually hope to move either inline in the source packages or to typeshed. You can find and contribute to our work-in-progress type stubs at https://github.com/microsoft/python-type-stubs.
+
 For information on getting started, refer to the [CONTRIBUTING instructions](https://github.com/microsoft/pyright/blob/master/CONTRIBUTING.md).
 
 # Feedback
