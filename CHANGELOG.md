@@ -1,5 +1,54 @@
 # Changelog
 
+## 2020.12.1 (9 December 2020)
+
+Notable changes:
+
+-   Context managers that may suppress exceptions (such as `contextlib.suppress`) will no longer mark code after the `with` block as unreachable.
+    ([pylance-release#494](https://github.com/microsoft/pylance-release/issues/494))
+-   Various stack overflows have been fixed.
+    ([pylance-release#701](https://github.com/microsoft/pylance-release/issues/701))
+-   Stack traces in error messages should now provide more detailed information, aiding in issue reporting for internal errors and crashes.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.91 to 1.1.94, including the following changes:
+
+-   [1.1.94](https://github.com/microsoft/pyright/releases/tag/1.1.94)
+    -   Bug Fix: Fixed potential source of infinite recursion in type evaluator.
+    -   Behavior Change: Changed behavior of tuples to strip literals when converting the variadic list of type arguments into a single "effective" type argument. This means the expression `list((1,))` will now be evaluated as type `list[int]` rather than `list[Literal[1]]`.
+        ([pylance-release#697](https://github.com/microsoft/pylance-release/issues/697))
+    -   Bug Fix: Fixed bug in parser that generated an inappropriate syntax error when an annotated variable assignment included a star test list on the RHS with an unpack operator.
+        ([pylance-release#700](https://github.com/microsoft/pylance-release/issues/700))
+    -   Enhancement: Added support for context managers that are designed to suppress exceptions.
+    -   Bug Fix: Fix infinite recursion in logic that maps pyi files to py files.
+    -   Enhancement: Improved source maps for better stack traces, useful for bug reports.
+-   [1.1.93](https://github.com/microsoft/pyright/releases/tag/1.1.93)
+    -   Enhancement: Added support for TypeVar objects that are used outside of type annotations.
+    -   Bug Fix: Fixed bug that caused incorrect error when performing binary operations (arithmetics, comparisons, etc.) on classes that define corresponding magic methods that are instance methods. When performing the operation on the class, the magic methods in the metaclass should be used instead.
+        ([pylance-release#705](https://github.com/microsoft/pylance-release/issues/705))
+    -   Enhancement: Added support for frozen dataclasses. Errors are now reported if a frozen dataclass inherits from a non-frozen dataclass and if an attempt is made to set the member of a frozen dataclass.
+    -   Bug Fix: Added support for "bytes" type promotions for bytearray and memoryview.
+        ([pylance-release#692](https://github.com/microsoft/pylance-release/issues/692))
+    -   Bug Fix: Added support for static methods and class methods that are invoked on non-specialized generic classes where the arguments to the method provide sufficient context to fill in the missing class-level type arguments.
+    -   Behavior Change: Changed reportWildcardImportFromLibrary diagnostic rule so it doesn't apply to type stub files.
+    -   Bug Fix: Fixed bug that resulted in incorrect error when attempting to assign a constrained TypeVar to a union type that satisfied all of the constrained types.
+    -   Bug Fix: Added support for binary operator magic methods that operate on constrained TypeVars.
+    -   Bug Fix: Fixed the logic that determines whether a type can be assigned to another type when invariance rules are in effect - in particular when the destination is a union. Previously, the unions needed to match exactly. The new logic takes into account whether the destination union contains subtypes that are subclasses of each other.
+    -   Bug Fix: Fixed bug where None and Callable types could be assigned to "object" even when invariant rules were in effect. This allowed `List[None]` to be assigned to `List[object]`.
+-   [1.1.92](https://github.com/microsoft/pyright/releases/tag/1.1.92)
+    -   Bug Fix: Fixed bug in parser that resulted in the opening parenthesis ("(") in a parenthesized expression or tuple not being included in the parse node range.
+    -   Bug Fix: Fixed bug that could result in "unaccessed variable" error for variables that were referenced in argument expressions if there were other errors related to the call expression.
+    -   Bug Fix: Fixed bug in logic dealing with comment-style function annotations that resulted in spurious errors if "self" was used within an instance method that was so annotated.
+    -   Bug Fix: Fixed bug that caused errors when a hierarchy of dataclass classes used generic types for one or more dataclass members.
+    -   Bug Fix: Fixed bug in type checker where it allowed invariant type parameters to violate invariance if the destination was an "object" instance.
+    -   Bug Fix: Fixed off-by-one error in fstring parsing with debug variables that resulted in errors if the "=" was not preceded by a space.
+        ([pylance-release#686](https://github.com/microsoft/pylance-release/issues/686))
+    -   Bug Fix: Fixed bug in logic that validates the assignment of a callable type to a generic callable when one of the parameters is another callable.
+    -   Bug Fix: Fixed bug that affected generic type aliases that included callable types.
+    -   Bug Fix: Fixed bug in bidirectional type inference logic when RHS includes call that returns a generic type. The old logic was prepopulating the type associated with that TypeVar but prevented the type from being further narrowed. This resulted in incorrect errors with argument expressions in some cases.
+    -   Enhancement: Added PEP 604 support for unions passed as the second argument to isinstance and issubclass.
+    -   Enhancement: Improved error messages for binary operations that involve a TypeVar for one of the operands.
+    -   Enhancement: Updated the reportMissingTypeArgument diagnostic check to apply to bound types in TypeVar declarations.
+
 ## 2020.12.0 (2 December 2020)
 
 Notable changes:
