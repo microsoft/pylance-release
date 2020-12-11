@@ -1,5 +1,31 @@
 # Changelog
 
+## 2020.12.2 (11 December 2020)
+
+Notable changes:
+
+-   Extract method and variable refactorings are now enabled for all users.
+-   Binary files will no longer be mistakenly loaded as source code.
+    ([pylance-release#706](https://github.com/microsoft/pylance-release/issues/706))
+-   Various crashes and stack overflows have been fixed.
+    ([pylance-release#709](https://github.com/microsoft/pylance-release/issues/709), [pylance-release#717](https://github.com/microsoft/pylance-release/issues/717))
+
+In addition, Pylance's copy of Pyright has been updated, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Changed encoding of diagnostics reported through the LSP interface.
+    -   Enhancement: Added support for type arg lists specified in a tuple expression (like `Dict[(str, str)]`) which is a legal way of writing type annotations.
+    -   Bug Fix: Fixed infinite recursion due to a `__call__` method that returns an instance of the class that is being called.
+        ([pylance-release#709](https://github.com/microsoft/pylance-release/issues/709))
+    -   Bug Fix: Fixed bug that caused completion suggestions not to work for member accesses when the LHS of the expression was a type specified in the form `Type[X]`.
+        ([pylance-release#714](https://github.com/microsoft/pylance-release/issues/714))
+    -   Bug Fix: Fixed bug that resulted in an attempt to parse and bind a native library (binary file) resulting in long latencies and out-of-memory errors.
+        ([pylance-release#706](https://github.com/microsoft/pylance-release/issues/706))
+    -   Bug Fix: Fixed recent regression that causes a crash in certain circumstances when binding a method to an object or class in cases where that method doesn't have a "self" parameter but instead just has `*args` and `**kwargs` parameters.
+        ([pylance-release#717](https://github.com/microsoft/pylance-release/issues/717))
+    -   Bug Fix: Fixed bug that resulted in incorrect reporting of unreported variables or parameters when they are accessed within argument expressions in cases where an error is detected when analyzing a call expression.
+        ([pylance-release#719](https://github.com/microsoft/pylance-release/issues/719))
+
 ## 2020.12.1 (9 December 2020)
 
 Notable changes:
