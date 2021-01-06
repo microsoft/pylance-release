@@ -1,5 +1,97 @@
 # Changelog
 
+## 2021.1.0 (6 January 2021)
+
+Notable changes:
+
+-   Python files which do not have a `.py` or `.pyi` file extension are now supported.
+    ([pylance-release#739](https://github.com/microsoft/pylance-release/issues/739), [pylance-release#803](https://github.com/microsoft/pylance-release/issues/803), [pylance-release#810](https://github.com/microsoft/pylance-release/issues/810))
+-   Analysis performance has been improved in cases of deeply nested expressions.
+    ([pylance-release#590](https://github.com/microsoft/pylance-release/issues/590), [pylance-release#767](https://github.com/microsoft/pylance-release/issues/767))
+-   Numerous type checking error messages have been improved, including for `TypedDict`, type variable scoping, yields, and `ParamSpec` with overloads.
+-   Two diagnostics have been added, `reportInvalidTypeVarUse` and `reportUnusedCoroutine`.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.94 to 1.1.99, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused "Type" with no type argument not to be flagged as an error.
+    -   Enhancement: Changed pythonPlatform to accept a value of "All" in which case no particular platform will be used over the others.
+        ([pylance-release#794](https://github.com/microsoft/pylance-release/issues/794))
+    -   Bug Fix: Fixed bug that caused improper error when using "self" in a "raise ... from self" statement.
+        ([pylance-release#806](https://github.com/microsoft/pylance-release/issues/806))
+    -   Bug Fix: Fixed bug that caused false negative when using a generic type alias with no type arguments.
+-   [1.1.99](https://github.com/microsoft/pyright/releases/tag/1.1.99)
+    -   Enhancement: Improved error messages for expected TypeDicts. (Contribution from Sam Abey.)
+    -   Bug Fix: Fixed bug where an \*args or \*\*kwargs parameter could be specified by name in a function call.
+    -   Behavior Change: Changed behavior of kwargs parameter that has a generic (TypeVar) type annotation. Literals are now stripped in this case before assigning to the TypeVar.
+    -   Enhancement: Improved mechanism for overloaded `__init__` method that uses `self` parameter annotation to specify the result of a constructor. The new mechanism supports generic type arguments within the `self` annotation.
+    -   Bug Fix: Fixed bug that caused sporadic errors when modifying the builtins.pyi stub file.
+    -   Bug Fix: Fixed bug with overlapping overload detection. It was reporting an incorrect overlap when a different TypeVar (bound vs unbound) was used in two overloads.
+    -   Bug Fix: Fixed another false positive error related to overlapping overload methods with a TypeVar in a parameter annotation.
+    -   Bug Fix: Fixed bug that caused internal stack overflow when attempting to assign a class to a protocol that refers to itself.
+    -   Enhancement: Improved support for protocol matching for protocols that include properties. Getter, setter and deleter methods are now individually checked for presence and type compatibility, and generics are now supported.
+    -   Enhancement: Updated to latest typeshed stubs.
+-   [1.1.98](https://github.com/microsoft/pyright/releases/tag/1.1.98)
+    -   New Feature: Added new diagnostic rule "reportUnusedCoroutine" that reports an error if the result returned by an async function is not consumed (awaited, assigned to a variable, etc.). This detects and reports a common error when using async coroutines.
+    -   Enhancement: Improved error messages for invalid type annotation syntax usage.
+    -   Enhancement: Updated to the latest typeshed stubs.
+    -   Bug Fix: Fixed recent regression in error message for bound TypeVars that resulted in a confusing message.
+    -   Bug Fix: Fixed bug in error messages for parameter type incompatibility; reported parameter number off by one leading to confusing message.
+    -   Bug Fix: Fixed bug in type compatibility logic when the destination was a metaclass instance and the dest was a class that derived from that metaclass.
+    -   Bug Fix: Fixed bug that caused failure in protocol type matching when the protocol contained a method with an annotated "self" parameter.
+    -   Behavior Change: If a class derives from a protocol class explicitly, individual members are no longer type-checked. This improves performance of type evaluation in some cases.
+    -   Bug Fix: Fixed bug whereby the presence of a `__getattr__` method on a class with no `__init__` method generated an incorrect error when instantiating the class.
+    -   Enhancement: Implemented complete support for module-level `__getattr__` functions as described in PEP 562.
+    -   Behavior Change: Eliminated restriction that prevented the analysis of text files that don't end in ".py" or ".pyi".
+        ([pylance-release#739](https://github.com/microsoft/pylance-release/issues/739), [pylance-release#803](https://github.com/microsoft/pylance-release/issues/803), [pylance-release#810](https://github.com/microsoft/pylance-release/issues/810))
+-   [1.1.97](https://github.com/microsoft/pyright/releases/tag/1.1.97)
+    -   Enhancement: Improved type analysis performance in cases where an expression contains deeply-nested expressions that involve calls to overloaded functions or bidirectional type inference.
+    -   Bug Fix: Fixed bug in ParamSpec logic that affected the case where a generic function with specialized parameters was matched to the ParamSpec.
+    -   Bug Fix: Fixed bug where a union with a NoReturn subtype could have been generated when evaluating a union of iterable types.
+    -   Enhancement: Improved type narrowing logic for "a is b" narrowing in the case where b is a union that contains both literal and non-literal subtypes.
+    -   Enhancement: Added error condition for the situation where an overloaded function is used in conjunction with a ParamSpec.
+    -   Bug Fix: Fixed bug that resulted in a false negative error when performing type assignment checks for functions that contain unspecialized type variables.
+    -   Enhancement: Improved error messages that include type variables. The scope that defines the type variable is now included. This avoids confusing and seemingly-contradictory error messages like "type \_T cannot be assigned to type \_T".
+    -   Bug Fix: Fixed bug that caused type evaluator to generate different results if someone hovered over the name of a type variable within an index expression before the entire source file was analyzed.
+-   [1.1.96](https://github.com/microsoft/pyright/releases/tag/1.1.96)
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Behavior Change: Switched to LSP-native progress reporting rather than using custom progress reporting messages.
+    -   New Feature: Added a new diagnostic rule called "reportInvalidTypeVarUse" that flags errors when TypeVars are used incorrectly. In particular, it flags the use of a single instance of a TypeVar within a generic function signature.
+    -   Bug Fix: Fixed assertion (and associated crash) that results when an LS client asks the language server to open a non-Python file (i.e. one whose file name doesn't have a ".py" or ".pyi" extension). The server now ignores such requests rather than crashing.
+    -   Enhancement: Enhanced ParamSpec mechanism to support parameters that have default values.
+    -   Bug Fix: Fixed issue with variable expansion for environment variables used within settings.
+    -   Enhancement: Improved error message for yield type mismatch.
+    -   Performance Improvement: Added a heuristic to skip call-site return type inference if the number of arguments is above a threshold (6). This avoids long analysis times for complex unannotated functions.
+        ([pylance-release#729](https://github.com/microsoft/pylance-release/issues/729))
+    -   Bug Fix: Fixed bug in error message for tuple size mismatches in the case where the source tuple has indeterminate length and the dest has a specified length.
+    -   Bug Fix: Fixed incorrect assertion (which manifests as a runtime crash) when assigning to a type that is a generic class with no specified type arguments.
+    -   Enhancement: Added new error for a protocol class that derives from a non-protocol base class.
+    -   Behavior Change: Changed the logic for `Type` vs `type` such that `Type` (the capitalized form) is always used in cases where there is a type argument (such as `Type[int]` or `type[str]` and `type` is used in cases where the non-generic class `type` is intended. This allows `type` to be used in `isinstance` type narrowing.
+    -   Bug Fix: Fixed bug in function assignment logic in the case where the destination function has name-only parameters and the source has positional parameters that match those name-only parameters.
+    -   Behavior Change: Changed heuristic for when a decorator should be ignored for purposes of type checking. It was previously ignored if the application of the decorator resulted in an "Unknown" type. The new heuristic also ignores the application of the decorator if the resulting type is a union that includes an Unknown subtype. This situation occurs frequently with unannotated decorators where part of the result can be inferred but part cannot.
+        ([pylance-release#728](https://github.com/microsoft/pylance-release/issues/728))
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation when a relative import referenced a submodule with the same name as a symbol that was imported from that submodule if that submodule was later imported again within the same file (e.g. `from .foo import foo, from .foo import bar`).
+        ([pylance-release#750](https://github.com/microsoft/pylance-release/issues/750))
+    -   Enhancement: Added support for protocol callable types when performing bidirectional type inference for lambda expressions.
+        ([pylance-release#754](https://github.com/microsoft/pylance-release/issues/754))
+    -   Enhancement: Improved "isinstance" narrowing to better handle the case where the narrowed expression is a constrained TypeVar. It now preserves the constraint so the value can be assigned back to the TypeVar type.
+    -   Bug Fix: Fixed bug in "is None" and "is not None" type narrowing logic when dealing with recursive type aliases.
+-   [1.1.95](https://github.com/microsoft/pyright/releases/tag/1.1.95)
+    -   Behavior Change: Changed encoding of diagnostics reported through the LSP interface. The diagnostic rule (if applicable) is now reported in the "code" field, and a URL points to general documentation for diagnostic rules.
+    -   Enhancement: Added support for type arg lists specified in a tuple expression (like `Dict[(str, str)]`) which is a legal way of writing type annotations.
+    -   Bug Fix: Fixed infinite recursion due to a `__call__` method that returns an instance of the class that is being called.
+    -   Bug Fix: Fixed bug that caused completion suggestions not to work for member accesses when the LHS of the expression was a type specified in the form `Type[X]`.
+    -   Bug Fix: Fixed bug that resulted in an attempt to parse and bind a native library (binary file) resulting in long latencies and out-of-memory errors.
+    -   Enhancement: Improved error message for unknown named parameters for TypeVar constructor.
+    -   Bug Fix: Fixed recent regression that causes a crash in certain circumstances when binding a method to an object or class in cases where that method doesn't have a "self" parameter but instead just has `*args` and `**kwargs` parameters.
+    -   Bug Fix: Fixed bug that resulted in incorrect reporting of unreported variables or parameters when they are accessed within argument expressions in cases where an error is detected when analyzing a call expression.
+    -   Enhancement: Expand ${env:HOME} in settings. Thanks to @ashb for the contribution.
+    -   Bug Fix: Fixed bug that generated incorrect errors when a callable type included another callable type as an input parameter and the second callable type had generic parameter types.
+    -   Bug Fix: Fixed bug that caused a false negative when a default parameter value was assigned to a parameter with a generic type annotation.
+    -   Bug Fix: Fixed bug that caused incorrect error to be reported when applying logical operators ("|", "&" or not) to enum.Flag literals.
+        ([pylance-release#726](https://github.com/microsoft/pylance-release/issues/726))
+
 ## 2020.12.2 (11 December 2020)
 
 Notable changes:
