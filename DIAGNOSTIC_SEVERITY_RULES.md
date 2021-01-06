@@ -38,6 +38,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnknownVariableType | Diagnostics for variables that have an unknown type.  |
 | reportUnknownMemberType | Diagnostics for class or instance variables that have an unknown type. |
 | reportMissingTypeArgument | Diagnostics for when a generic class is used without providing explicit or implicit type arguments. |
+| reportInvalidTypeVarUse | Diagnostics for improper use of type variables in a function signature. |
 | reportCallInDefaultInitializer | Diagnostics for function calls within a default value initialization expression. Such calls can mask expensive operations that are performed at module initialization time. |
 | reportUnnecessaryIsInstance | Diagnostics for 'isinstance' or 'issubclass' calls where the result is statically determined to be always true or always false. Such calls are often indicative of a programming error. |
 | reportUnnecessaryCast | Diagnostics for 'cast' calls that are statically determined to be unnecessary. Such calls are sometimes indicative of a programming error. |
@@ -49,3 +50,4 @@ This doc details all available rules that can be customized using the `python.an
 | reportInvalidStubStatement | Diagnostics for statements that should not appear within a stub file. |
 | reportUnusedCallResult | Diagnostics for call expressions whose results are not consumed and are not None. |
 | reportUnsupportedDunderAll | Diagnostics for unsupported operations performed on `__all__`. |
+| reportUnusedCoroutine | Diagnostics for call expressions that return a Coroutine and whose results are not consumed. |
