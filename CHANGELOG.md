@@ -1,5 +1,59 @@
 # Changelog
 
+## 2021.1.1 (13 January 2021)
+
+Notable changes:
+
+-   The new "report issue" VS Code command can automatically fill out a new GitHub issue template for simpler bug reporting.
+    ([pylance-release#762](https://github.com/microsoft/pylance-release/issues/762))
+-   The PYTHONPATH environment variable is now supported. This requires a recent insiders build of the Python extension (or the yet-to-be-released January version).
+    ([pylance-release#275](https://github.com/microsoft/pylance-release/issues/275))
+-   Variables that are annotated but assigned a value of the wrong type will now use the annotated type rather than using the incorrect type (while in the "off" type checking mode, Pylance's default).
+    ([pylance-release#822](https://github.com/microsoft/pylance-release/issues/822))
+-   A number of crashes and performance issues have been fixed.
+    ([pylance-release#825](https://github.com/microsoft/pylance-release/issues/825))
+-   `TypedDict` keys are now suggested in index expression completions.
+    ([pylance-release#827](https://github.com/microsoft/pylance-release/issues/827))
+-   The semantic token types for class members and methods have been changed to `property` and `method` respectively, for consistency with the LSP spec and other languages in VS Code.
+-   Type stubs for SQLAlchemy are now bundled, improving completions, type checking, and other features.
+-   The bundled Django stubs have been updated to the latest version.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.99 to 1.1.101, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Added error for Callable that is missing a return type.
+    -   Behavior Change: Changed type analysis behavior when reportGeneralTypeIssues diagnostic rule is disabled and an incompatible type is assigned to a variable. Previously, the assigned type was retained in this case, but now the declared type is assumed (as it is when reportGeneralTypeIssues is enabled).
+        ([pylance-release#822](https://github.com/microsoft/pylance-release/issues/822))
+    -   Enhancement: Added support for completion suggestions within subscript for typed dict attribute names.
+-   [1.1.101](https://github.com/microsoft/pyright/releases/tag/1.1.101)
+    -   Bug Fix: Fixed false negative for "reportUnknownParameterType" diagnostic rule when all function parameters were unannotated.
+    -   Bug Fix: Fixed a couple of issues with TypeGuard. Previously, `TypeGuard` was implemented as an alias to `bool` which meant that `bool` was assignable to `TypeGuard` in all circumstances. Now it is special-cased to be assignable only in return statements.
+    -   Bug Fix: Fixed bug that caused definition provider to not fully resolve a submodule symbol in certain cases.
+    -   Enhancement: Added support for aliases of imported module "sys" when evaluating "sys.platform" and "sys.version".
+    -   Behavior Change: Suppressed "Covariant type variable cannot be used in parameter type" diagnostic in the case of an `__init__` method to match mypy behavior.
+    -   Bug Fix: Fixed regression that broke type inference for packages with no "py.typed" file and no stubs when "useLibraryCodeForTypes" was enabled.
+-   [1.1.100](https://github.com/microsoft/pyright/releases/tag/1.1.100)
+    -   Bug Fix: Fixed bug that caused "Type" with no type argument not to be flagged as an error.
+    -   Enhancement: Changed pythonPlatform to accept a value of "All" in which case no particular platform will be used over the others.
+    -   Bug Fix: Fixed bug that caused improper error when using "self" in a "raise ... from self" statement.
+    -   Bug Fix: Fixed bug that caused false negative when using a generic type alias with no type arguments.
+    -   Bug Fix: Added cache for logic that determines whether a context manager swallows exceptions (and hence acts like a try/except statement). This cache not only improves performance of code flow walks but also prevents infinite recursion in rare cases.
+    -   Behavior Change: Improved handling of unannotated decorator functions. If the decorator returns a function that accepts only \*args and \*\*kwargs (which is common), the type checker now assumes that the decorated function or method's signature is unmodified by the decorator. This preserves the original signature and docstring.
+        ([pylance-release#125](https://github.com/microsoft/pylance-release/issues/125))
+    -   Bug Fix: Fixed bug that caused types within a "finally" clause to be evaluated incorrectly in situations where the "try" and all "except" and "else" clauses returned, raised, or broke.
+    -   Enhancement: Changed error messages that refer to "named" parameters and arguments to "keyword", which is more standard for Python.
+    -   Bug Fix: Fixed bug in declaration provider where the declaration of a member wasn't properly resolved when the LHS of the member access was a call to a function that returns a `Type[X]`.
+        ([pylance-release#821](https://github.com/microsoft/pylance-release/issues/821))
+    -   Bug Fix: Fixed bug that manifest as a problem with enums but was actually a problem in handling the circular dependency between "type" and "object" classes (since "type" is an object and "object" is a type).
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation when a class was assigned to a generic protocol that was satisfied by the class's metaclass if the class also derived from a base class that also satisfied the same protocol.
+    -   Enhancement: Added code to test for missing annotation in `Annotated`.
+    -   Bug Fix: Fixed false negative where a union type was assigned to a constrained type variable. An error should be generated in this situation.
+    -   Enhancement: Added additional validation for TypeVar scoping. If an outer class defines the scope for a type var, functions and variables within an inner class cannot use a TypeVar of the same name.
+    -   Bug Fix: Improved handling of "py.typed" for namespace packages and packages with submodules.
+    -   Enhancement: Added support for `__index__` magic method when used with `__getitem__` or `__setitem__` magic methods.
+    -   Enhancement: Added support for matching modules against protocols as specified by PEP 544.
+    -   Bug Fix: Fix for missing docs in completion list due to only checking the setter for docs because its definition comes after the getter.
+
 ## 2021.1.0 (6 January 2021)
 
 Notable changes:
