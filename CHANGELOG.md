@@ -1,5 +1,57 @@
 # Changelog
 
+## 2021.1.2 (20 January 2021)
+
+Notable changes:
+
+-   Completions for method overrides in classes without a parent class will no longer generate unnecessary `super()` calls.
+-   Signature help tooltips will now work when the closing parenthesis is missing.
+-   Code in `context.surpress` blocks should no longer be unintentionally grayed out in some cases.
+    ([pylance-release#494](https://github.com/microsoft/pylance-release/issues/494))
+-   Methods prefixed with a single underscore are now correctly checked for incompatible overrides.
+    ([pylance-release#843](https://github.com/microsoft/pylance-release/issues/843))
+-   An internal error related to NewType when used with Protocols has been fixed.
+    ([pylance-release#825](https://github.com/microsoft/pylance-release/issues/825))
+-   `@final` and `Final` checks will now ignore private class members and no longer ignore members prefixed with a single underscore when checking for redeclarations.
+    ([pylance-release#725](https://github.com/microsoft/pylance-release/issues/725))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.101 to 1.1.103, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in import resolver where a namespace package was chosen over a traditional package if the former had a shorter name.
+        ([pylance-release#853](https://github.com/microsoft/pylance-release/issues/853))
+    -   Enhancement: Added support for `__call__` method overloads when assigning a callable object to a callable type.
+    -   Enhancement: Added error for a subscripted type annotation that involves a quoted expression in the LHS of the subscript. This generates runtime errors.
+    -   Enhancement: Enhanced reportIncompatibleMethodOverride diagnostic check to support overrides that have `*args` and `**kwargs` parameters.
+    -   Behavior Change: Changed error message about quoted type annotations with non-quoted subscripts to be conditional based on stubs and Python version. This will be supported at runtime in Python 3.10.
+-   [1.1.103](https://github.com/microsoft/pyright/releases/tag/1.1.103)
+    -   Bug Fix: Suppressed "symbol is unbound" error when used in a `del` statement, since this is legal.
+    -   Enhancement: Enhanced --verifytypes command so it can now accept a module path within a package. Type analysis is limited to the specified module and its submodules.
+    -   Bug Fix: Fixed bug that caused "--verifytypes" feature to report missing return type annotations for all property getters within a class if only one of them was missing a return type annotation.
+    -   Enhancement: Added missing error logic to handle the case where a type variable is subscripted in a type expression. This isn't supported currently in the Python type system.
+    -   Enhancement: Improved signature help in case where right parenthesis is missing.
+    -   Enhancement: Added error for incorrect use of list expression for type arguments.
+-   [1.1.102](https://github.com/microsoft/pyright/releases/tag/1.1.102)
+    -   Enhancement: Added error for Callable that is missing a return type.
+    -   Behavior Change: Changed type analysis behavior when reportGeneralTypeIssues diagnostic rule is disabled and an incompatible type is assigned to a variable. Previously, the assigned type was retained in this case, but now the declared type is assumed (as it is when reportGeneralTypeIssues is enabled).
+    -   Enhancement: Added support for completion suggestions within subscript for typed dict attribute names.
+    -   Behavior Change: Change string literals to use "constant" type when displayed in completion suggestion lists.
+    -   Behavior Change: Changed logic for detecting overrides of Final member variables by subclasses. Symbols with double underscores are now exempt from this check, since they are considered private and are name-mangled.
+        ([pylance-release#725](https://github.com/microsoft/pylance-release/issues/725))
+    -   Bug Fix: Fixed bug in logic that detects overrides of @final methods. The logic was not handling the case where a private (single underscore) method was marked final.
+        ([pylance-release#725](https://github.com/microsoft/pylance-release/issues/725))
+    -   Enhancement: Updated typeshed stubs to latest.
+    -   Bug Fix: Fixed regression in code that handles context managers that suppress exceptions.
+        ([pylance-release#494](https://github.com/microsoft/pylance-release/issues/494))
+    -   Bug Fix: Fixed bug that resulted in infinite recursion (and an internal error) when NewType was used with a protocol class.
+        ([pylance-release#825](https://github.com/microsoft/pylance-release/issues/825))
+    -   Bug Fix: Fixed reportIncompatibleMethodOverride diagnostic check so it doesn't ignore incompatible protected methods (those whose names start with a single underscore).
+        ([pylance-release#843](https://github.com/microsoft/pylance-release/issues/843))
+    -   Enhancement: Added support for "reveal_locals()" call to reveal all of the symbols within the current scope.
+    -   Bug Fix: Fixed internal error resulting from an assignment expression located within a list comprehension scope which is contained within a class scope.
+    -   Enhancement: Augmented type completeness JSON output to include alternate public names of exported symbols. For example, if a symbol "foo" is declared in module "a.b.c" and is also re-exported from "a", then the main name of the symbol is "a.b.c.foo", but it has an alternate name of "a.foo".
+    -   Enhancement: Improved "partially unknown type" error messages within type completeness report.
+
 ## 2021.1.1 (13 January 2021)
 
 Notable changes:
