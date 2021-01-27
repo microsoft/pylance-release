@@ -1,5 +1,65 @@
 # Changelog
 
+## 2021.1.3 (27 January 2021)
+
+Notable changes:
+
+-   Deleting an entire folder in the workspace will now correctly retrigger analysis.
+-   Analysis performance has been improved in the case of deeply nested expressions with calls to overloaded functions.
+-   Import resolution should now pick the correct module when both a namespace module and a traditional module have the same name in the search paths.
+    ([pylance-release#859](https://github.com/microsoft/pylance-release/issues/859))
+-   The variable override compatibility check will now correclty ignore private class members.
+    ([pylance-release#863](https://github.com/microsoft/pylance-release/issues/863))
+-   A number of crashes and analysis bugs have been fixed.
+-   The default setting for indexing in the insiders build has been temporarily changed to `false` to pin down potential performance regressions in the feature. It can still be manually enabled with `"python.analysis.indexing": true`.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.103 to 1.1.106, including the following changes:
+
+-   [1.1.106](https://github.com/microsoft/pyright/releases/tag/1.1.106)
+    -   Bug Fix: Added missing check for empty f-string expression.
+    -   Bug Fix: Fixed a bug that resulted in incorrect bidirectional type inference when the source was a call to a constructor and the destination (expected) type was a recursive type alias that includes a union with only some subtypes that match the constructed type.
+        ([pylance-release#721](https://github.com/microsoft/pylance-release/issues/721))
+    -   Bug Fix: Fixed two issues in the import resolution logic. First, it was returning a namespace module if it found one in the workspace path or extraPaths even if a traditional (non-namespace) module satisfied the import from the sys.path. The interpreter searches all paths and always prefers a traditional module if it can find it. Second, it was resolving a namespace module if a traditional module only partially resolved the import path. The real interpreter always prefers a traditional module even if it partially resolves the path (in which case the full import fails).
+        ([pylance-release#859](https://github.com/microsoft/pylance-release/issues/859))
+    -   Behavior Change: When too few type arguments are provided for a generic class specialization, this diagnostic is now handled via reportGeneralTypeIssues rather than reportMissingTypeArgument. The latter is reserved for cases where type arguments are omitted completely.
+    -   Enhancement: Improved type narrowing logic for isinstance and issubclass so they better handle the case where the class passed in the second argument is a type variable.
+-   [1.1.105](https://github.com/microsoft/pyright/releases/tag/1.1.105)
+    -   Enhancement: Added missing check for \*\* used in argument expressions. The expression after the \*\* must be a mapping with str keys.
+    -   Enhancement: Added missing check for a name-only parameter appearing in a signature after a "\*args: P.args" ParamSpec parameter.
+    -   Enhancement: Improved error message for non-keyword parameter that follows a "\*" parameter.
+    -   Enhancement: Added missing check for positional argument count when a simple positional argument appears after a \*args argument.
+    -   Enhancement: Added missing checks for illegal usage of positional parameters when calling a function defined with ParamSpec and Concatenate.
+    -   Enhancement: Added missing check for use of keyword arguments in a call to an inner function that uses P.args and P.kwargs defined by a ParamSpec.
+    -   Bug Fix: Fixed false positive warning relating to single use of a type variable within a signature when that type variable is a ParamSpec, and it is also referenced in "P.args" or "P.kwargs" annotations.
+    -   Enhancement: Added missing PEP 612 support for functions that take a parameter with a callable type that includes a ParamSpec as well as \*args: P.args and \*\*kwargs: P.kwargs parameters.
+    -   Bug Fix: Fixed false positive error related to use of "ClassVar" when it is used in a member access expression like "typing.ClassVar".
+        ([pylance-release#876](https://github.com/microsoft/pylance-release/issues/876))
+    -   Enhancement: Improved performance for deeply nested expressions that involve calls to overloaded functions.
+    -   Bug Fix: Fixed crash when "()" is used as a type argument for a class that doesn't accept variadic type parameters.
+-   [1.1.104](https://github.com/microsoft/pyright/releases/tag/1.1.104)
+    -   Bug Fix: Fixed bug in import resolver where a namespace package was chosen over a traditional package if the former had a shorter name.
+    -   Enhancement: Added support for `__call__` method overloads when assigning a callable object to a callable type.
+    -   Enhancement: Added error for a subscripted type annotation that involves a quoted expression in the LHS of the subscript. This generates runtime errors.
+    -   Enhancement: Enhanced reportIncompatibleMethodOverride diagnostic check to support overrides that have `*args` and `**kwargs` parameters.
+    -   Enhancement: Improved completion suggestions to better handle super calls in base class methods.
+    -   Bug Fix: Fixed bug that affected the case where a class variable has a declared type in a base class, and a subclass assigns a value to that class variable but doesn't (re)declare its type. In this case, the type of the expression assigned within the base class should use the expected type declared in the base class for type inference.
+        ([pylance-release#861](https://github.com/microsoft/pylance-release/issues/861))
+    -   Enhancement: Added missing error logic to handle the case where a type variable is used in the LHS of a member access expression. This isn't supported currently in the Python type system.
+    -   Enhancement: Improved error checking and reporting for NewType (for unions, literals, callables, protocol classes, and type variables).
+    -   Enhancement: Added error check for an attempt to instantiate a literal (`Literal[1]()`).
+    -   Bug Fix: Fixed bug in TypeVar constraint solving logic. If an "Any" or "Unknown" type is being assigned to a constrained TypeVar, it should result in "Any" or "Unknown" rather than the first constrained type.
+    -   Enhancement: Added check for multiple functions declared within the same scope that have the same name, with the final one overwriting the earlier ones. This check is suppressed for overloaded functions and property setters/deleters.
+        ([pylance-release#865](https://github.com/microsoft/pylance-release/issues/865))
+    -   Enhancement: Improved the reportIncompatibleVariableOverride diagnostic check so it ignores symbols with private names (i.e. start with double underscores).
+        ([pylance-release#863](https://github.com/microsoft/pylance-release/issues/863))
+    -   Bug Fix: Changed hover text to use the last declaration of a symbol rather than the first declaration to determine which type category text (e.g. "(module)" or "(class)") in the hover text.
+        ([pylance-release#867](https://github.com/microsoft/pylance-release/issues/867))
+    -   Bug Fix: Fixed bug that caused error when invoking the definition provider on an unresolved module import.
+    -   Bug Fix: Fixed bug in logic that infers symbol types that resulted in "unbound" types to be reported incorrectly in certain rare circumstances.
+        ([pylance-release#864](https://github.com/microsoft/pylance-release/issues/864))
+    -   Bug Fix: Fixed a crash in the "--verifytypes" feature of the CLI.
+    -   Bug Fix: Fixed bug in file watching logic so it properly handles cases where an entire folder is deleted.
+
 ## 2021.1.2 (20 January 2021)
 
 Notable changes:
