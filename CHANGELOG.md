@@ -1,5 +1,43 @@
 # Changelog
 
+## 2021.2.0 (3 February 2021)
+
+Notable changes:
+
+-   Docstring formatting has been greatly improved, and now better supports indented regions (such as parameter blocks in numpy/pandas docs), nested lists (such as those in argparse), and epydoc (used in OpenCV).
+    ([pylance-release#41](https://github.com/microsoft/pylance-release/issues/41), [pylance-release#48](https://github.com/microsoft/pylance-release/issues/48), [pylance-release#83](https://github.com/microsoft/pylance-release/issues/83), [pylance-release#601](https://github.com/microsoft/pylance-release/issues/601), [pylance-release#696](https://github.com/microsoft/pylance-release/issues/696))
+-   The creation and deletion of temporary files should no longer trigger reanalysis.
+    ([pylance-release#905](https://github.com/microsoft/pylance-release/issues/905))
+-   A regression that affected pkgutil-style namespace packages has been fixed.
+    ([pylance-release#892](https://github.com/microsoft/pylance-release/issues/892))
+-   Pylance now supports PEP 637 (indexing with keyword arguments) and PEP 646 (variadic generics). These PEPs are still in the draft phase (targeting Python 3.10) and may change before being finalized.
+-   Pylance's copy of typeshed has been updated, including support for its new directory layout.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.106 to 1.1.108, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Added perf optimization that avoids reallocation of special form classes (like Protocol and Literal) every time they're used. Since instance of the type is now cached and reused.
+    -   Enhancement: Added some performance optimizations to handle cases where there are many overloads for a function (>100). Previous code hit n^2 analysis times where n is number of overloads.
+-   [1.1.108](https://github.com/microsoft/pyright/releases/tag/1.1.108)
+    -   Behavior change: Changed type inference logic for binary expressions of the form `x or []` so `[]` uses the type of `x` to inform its type.
+    -   Bug Fix: Fixed bug in the way a specialized variadic type alias is printed (for error messages, hover text, etc.).
+    -   Enhancement: Added support for subscript index lists that contain a trailing comma (e.g. `a[0,]`). The subscript in this case is a tuple and is not valid for most objects, so it should generate an error.
+    -   Enhancement: Improved parse error recovery for empty subscripts (e.g. `a[]`). Started to add support for PEP 637.
+    -   Enhancement: Improved consistency of error messages.
+    -   New Feature: Added support for PEP 637 (keyword and unpacked arguments in subscripts). This PEP is still in the draft phase and may change before being finalized.
+    -   New Feature: Added a way for the "verifytypes" feature to ignore partially-unknown types imported from external packages. To use this feature, append a "!" to the end of the package name provided after the "--verifytypes" option.
+-   [1.1.107](https://github.com/microsoft/pyright/releases/tag/1.1.107)
+    -   Bug Fix: Fixed cyclical type resolution with TypeVar.
+    -   Behavior Change: Updated typeshed stubs to new directory layout.
+    -   Bug Fix: Fixed false positive error in try/except/finally statement. Call expressions are now assumed to possibly result in raised exceptions, and finally clauses are assumed to be exception targets.
+    -   Bug Fix: Fixed regression in import resolution where the first portion of the import path matches multiple namespace packages.
+        ([pylance-release#892](https://github.com/microsoft/pylance-release/issues/892))
+    -   New Feature: Added initial support for PEP 646 (variadic type variables). This PEP is still in the draft stage and is likely to change before it is ratified.
+    -   Enhancement: Added check for duplicate keyword arguments that map to \*\*kwargs parameter.
+    -   Enhancement: Added support for class properties, which are now supported in Python 3.9.
+    -   Behavior: Eliminated false positive errors for unbound variables that are targets of a for loop iterator and used after the for loop. This change can result in some false negatives.
+        ([pylance-release#496](https://github.com/microsoft/pylance-release/issues/496))
+
 ## 2021.1.3 (27 January 2021)
 
 Notable changes:
