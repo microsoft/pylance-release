@@ -1,5 +1,10 @@
 # Changelog
 
+## 2021.2.2 (11 February 2021)
+
+This is a hotfix release, reverting a change in 2021.2.1 which was intended to fix file watching for non-workspace folders, but instead led to "too many files open" messages on macOS.
+([pylance-release#936](https://github.com/microsoft/pylance-release/issues/936))
+
 ## 2021.2.1 (10 February 2021)
 
 Notable changes:
