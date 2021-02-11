@@ -1,5 +1,50 @@
 # Changelog
 
+## 2021.2.1 (10 February 2021)
+
+Notable changes:
+
+-   Go-to-definition now brings you to source files (e.g. `.py` files), and a new "go-to-declaration" option brings you to stub files (`.pyi`). If either would otherwise return no result, Pylance will bring you to whichever files are available.
+    ([pylance-release#65](https://github.com/microsoft/pylance-release/issues/65))
+-   Pylance now correctly handles file change events outside of the workspace, triggering reanalysis on actions such as `pip install`. Environments stored in the workspace were not affected by this bug.
+    ([pylance-release#923](https://github.com/microsoft/pylance-release/issues/923))
+-   Some potentially nondeterministic behavior in `NoReturn` inference has been fixed, which could potentially lead to code being greyed out as unreachable.
+    ([pylance-release#248](https://github.com/microsoft/pylance-release/issues/248))
+-   A bug that could lead to execution of `json.py` in the workspace root and invalid entries in `sys.path` has been fixed. Thanks to [David Dworken](https://daviddworken.com) for reporting this issue.
+-   The bundled Django and SQLAlchemy stubs have been updated to their latest versions.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.108 to 1.1.109, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Expanded reportUnusedCallResult diagnostic check to also check for expressions of the form `await <call expression>`.
+    -   Bug Fix: Fixed a bug in isinstance type narrowing logic where the type of the second argument to isinstance is type `Type[T]` and the first argument is a union of types that includes type `T`.
+-   [1.1.109](https://github.com/microsoft/pyright/releases/tag/1.1.109)
+    -   Enhancement: Added some performance optimizations to handle cases where there are many overloads for a function (>100). Previous code hit n^2 analysis times where n is number of overloads.
+    -   Enhancement: Added perf optimization that avoids reallocation of special form classes (like Protocol and Literal) every time they're used. Since instance of the type is now cached and reused.
+    -   Enhancement (from Pylance): Improved formatting of docstrings in hover text, completion suggestions, and signature help.
+    -   Enhancement (from Pylance): Added better performance metrics.
+    -   Bug Fix (from Pylance): Improved logic to ignore temp files created by code formatters like black.
+    -   Bug Fix: Fixed "possibly unbound" false positive error in try/except/else/finally statement in the special case where a "bare except" clause is used.
+        ([pylance-release#913](https://github.com/microsoft/pylance-release/issues/913))
+    -   Bug Fix: Replaced logic that detects whether a function's inferred type is "NoReturn" — and specifically whether its implementation is a "raise NotImplementedError". The old logic depended results that varied depending on the order in which types were evaluated and was therefore nondeterministic.
+        ([pylance-release#248](https://github.com/microsoft/pylance-release/issues/248))
+    -   Bug Fix: Fixed false negative where type expressions used as arguments to TypedDict or NamedTuple constructors are not correctly checked for incompatibility with older versions of Python when they contain `|` or use PEP 585 types.
+        ([pylance-release#918](https://github.com/microsoft/pylance-release/issues/918))
+    -   Behavior Change: Changed PEP 585 violations (e.g. using `list[int]` rather than `List[int]`) to be unconditional errors rather than diagnostics controlled by reportGeneralTypeIssues diagnostic rule. That way, they appear even when type checking is disabled.
+        ([pylance-release#916](https://github.com/microsoft/pylance-release/issues/916), [pylance-release#917](https://github.com/microsoft/pylance-release/issues/917))
+    -   Bug Fix: Reverted recent change in for/else statement logic because it introduced a regression.
+    -   Behavior Change: Changed the `reportUnboundVariable` default severity from "warning" to "none" when typeCheckingMode is "off". There were too many complaints of false positives from users who have no interest in type checking.
+        ([pylance-release#919](https://github.com/microsoft/pylance-release/issues/919))
+    -   Enhancement: When a redundant form of a from .. import statement is used (e.g. `from x import foo as foo`), always mark the imported symbol as accessed because it is assumed that it is being re-exported.
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation when a return type in a generic function used a Callable with Concatenate and a ParamSpec.
+    -   Bug Fix: Fixed bug in code that prints types (e.g. in error messages and hover text) that resulted in duplicate types in a union when typeCheckingMode was "off".
+        ([pylance-release#920](https://github.com/microsoft/pylance-release/issues/920))
+    -   Enhancement: Updated code that prints function types (e.g. for error messages and hover text) to include unioned return types in parentheses to distinguish between `() -> (int | str)` and `() -> int | str`.
+    -   Bug Fix: Fixed formatting of usage text in CLI. Fix contributed by @fannheyward.
+    -   Bug Fix: Fixed bug that caused problems when the type `ellipsis` was used in a type stub instead of `...`.
+        ([pylance-release#925](https://github.com/microsoft/pylance-release/issues/925))
+    -   Bug Fix: Fixed recent regression in handling of isinstance second parameter.
+
 ## 2021.2.0 (3 February 2021)
 
 Notable changes:
