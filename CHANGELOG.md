@@ -1,5 +1,47 @@
 # Changelog
 
+## 2021.2.3 (17 February 2021)
+
+Notable changes:
+
+-   PEP 634 ("match") is now supported, including parser and type checking support. This feature will be available in Python 3.10.
+-   Completion performance has been improved when the completion list contains a large number of items, which is common when indexing is enabled (`"python.analysis.indexing": true`) and many auto-imports are suggested.
+-   Indexing has been re-enabled in the insiders build.
+-   The bundled Django stubs have been updated to their latest version.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.109 to 1.1.112, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Improved type narrowing for mapping patterns used in structural pattern matching when the subject expression type contains a typed dictionary.
+    -   Enhancement: Improved negative-case type narrowing for capture patterns. Because capture patterns capture anything, the remaining type is "Never"
+-   [1.1.112](https://github.com/microsoft/pyright/releases/tag/1.1.112)
+    -   Bug Fix: Fixed false negative when PEP 585 type is used in a type alias or other cases where postponed evaluation is not possible.
+        ([pylance-release#953](https://github.com/microsoft/pylance-release/issues/953))
+    -   Bug Fix: Fixed regression that resulted in error when "match" is used in expressions but is mistaken for a pattern-matching statement.
+    -   Bug Fix: Fixed schema for "python.analysis.logLevel" setting. The default value was specified incorrectly. Thanks to Rafał Chłodnicki for this fix.
+    -   Bug Fix: Fixed a bug that caused a false positive when a TypeVar is bound to a generic protocol class.
+    -   Bug Fix: Fixed a bug that caused a false positive when a boolean operator was applied to a type variable and the corresponding magic method used an explicit type annotation for the "self" parameter.
+    -   Enhancement: Added a new diagnostic check for out-of-range indexes for tuples that have known lengths.
+    -   Enhancement: Added limited support for negative type narrowing in pattern matching. For example, if the type of the subject expression is bool and the matching pattern is `False | x`, the type of `x` will be inferred to be `True`.
+    -   Bug Fix: Fixed bug that affected generic type aliases that contained Callable types that are parameterized by a type variable.
+    -   Enhancement: Extended abstract method checks to Protocol classes even though they don't explicitly derive from ABCMeta.
+    -   Bug Fix: Fixed bug in type narrowing for class patterns in "case" statements.
+-   [1.1.111](https://github.com/microsoft/pyright/releases/tag/1.1.111)
+    -   New Feature: Implemented PEP 634 support for structural pattern matching. This new PEP was just accepted, and the functionality will appear in the next alpha release of Python 3.10.
+    -   Bug Fix: Fixed bug that caused a false positive error when declaring a class within a local scope when the symbol is nonlocal or global.
+        ([pylance-release#950](https://github.com/microsoft/pylance-release/issues/950))
+    -   Enhancement: Improved handling of unpacked arguments when the type is a union of known-length tuples.
+-   [1.1.110](https://github.com/microsoft/pyright/releases/tag/1.1.110)
+    -   Bug Fix: Fixed a bug in isinstance type narrowing logic where the type of the second argument to isinstance is type `Type[T]` and the first argument is a union of types that includes type `T`.
+    -   Enhancement: Expanded reportUnusedCallResult diagnostic check to also check for expressions of the form `await <call expression>`.
+    -   Bug Fix (from Pylance): Changed language server to set the working directory before attempting to execute script to retrieve sys.paths.
+    -   Behavior Change (from Pylance): Separated behavior of "go to definition" and "got to declaration". The former tries to take you to the source, whereas the latter takes you to the stub file.
+    -   Bug Fix: Changed binding logic to not assume that an assignment to a simple name can generate an exception. This fixes a reported false positive error in a type narrowing case.
+    -   Enhancement: Added proper error check for the use of an unpack operator (\*) when used outside of a tuple.
+    -   Bug Fix: Avoid generating a diagnostic for reporUnknownMemberType if the member access expression is used as a call argument and is a generic class that is missing type arguments. This case was already special-cased for reportUnknownArgumentType to handle common cases like `isinstance(x, list)`, but it was resulting in errors for `isinstance(x, re.Pattern)`.
+    -   Bug Fix: Fixed a hole in the detection of unspecified type arguments for the Tuple and tuple classes.
+    -   Enhancement: Added support for generic classes that are parameterized by ParamSpecs, as allowed in PEP 612.
+
 ## 2021.2.2 (11 February 2021)
 
 This is a hotfix release, reverting a change in 2021.2.1 which was intended to fix file watching for non-workspace folders, but instead led to "too many files open" messages on macOS.
