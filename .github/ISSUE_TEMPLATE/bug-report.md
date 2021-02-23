@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: 'Create a report to help us improve. Auto fill reports with Pylance: Repor Issue command'
+about: 'Create a report to help us improve. Auto fill reports with __Pylance: Report Issue__ command'
 title: ''
 labels: ''
 assignees: ''
