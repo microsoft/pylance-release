@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: 'Create a report to help us improve. Consider using the "Pylance: Report Issue" command to fill this out automatically.'
+about: 'Create a report to help us improve. Use the "Pylance: Report Issue" command (via command palette) to fill this out most of this information automatically.'
 title: ''
 labels: ''
 assignees: ''
