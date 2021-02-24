@@ -12,7 +12,7 @@ This repository is for providing feedback and documentation on the Pylance langu
 
 # Features
 
-![ screencast ](screencap.gif)
+<img src=images/all-features.gif>
 
 Pylance provides some awesome features for Python 3, including:
 
