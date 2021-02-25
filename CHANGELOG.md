@@ -1,5 +1,62 @@
 # Changelog
 
+## 2021.2.4 (24 February 2021)
+
+Notable changes:
+
+-   The mapping of stub files to source files has been greatly improved. Go-to-definition and doc strings should now work for a much wider range of code.
+    ([pylance-release#809](https://github.com/microsoft/pylance-release/issues/809), [pylance-release#949](https://github.com/microsoft/pylance-release/issues/949))
+-   Index expression type narrowing is now supported. For example, a check like `if some_tuple[1] is not None` will cause future uses of `some_tuple[1]` to not be `None`, without needing to narrow a temporary variable.
+-   Auto-import completion performance has been improved.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.112 to 1.1.114, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed false positive bug where "class not runtime subscriptable" error was reported even if in a type stub.
+    -   Enhancement: Implemented command-line switches for pythonplatform and pythonversion. These are overridden by pyrightconfig.json settings.
+    -   Enhancement: Added support for comments and trailing comments within pyrightconfig.
+    -   Enhancement: Updated to latest typeshed stubs.
+    -   Bug Fix: Fixed false positive error that incorrectly complained about the use of `Annotated` as a class with no type arguments.
+    -   Bug Fix: Fixed false positive error when using bidirectional inference of dictionary expression where the expected type key and/or value types contain literals.
+-   [1.1.114](https://github.com/microsoft/pyright/releases/tag/1.1.114)
+    -   Enhancement: Improve source mapper (the code that maps symbols found in stub files to the corresponding code in ".py" files) to handle more cases.
+    -   Enhancement: Added diagnostic error for try statement that has no except or finally statement.
+    -   New Feature: Added "reportOverlappingOverload" diagnostic rule, splitting out a few checks that were previously in the "reportGeneralTypeIssue" rule. This allows for finer-grained control over these overload checks.
+    -   Behavior Change: Added a few additional names that can be used for "cls" parameter without triggering diagnostic. These variants are reasonable and are used within some typeshed stubs.
+    -   Enhancement: Added TypeVarTuple definition to typings.pyi stub.
+    -   Enhancement: Updated TypeVarTuple logic to detect and report an error when a tuple of unknown length is bound to an unpacked TypeVarTuple. This is illegal according to the latest version of PEP 646.
+    -   Enhancement: Special-cased the `__init_subclass__` method in the completion provider so it is offered as a suggestion even though there is no @classmethod decorator present. This symbol is unfortunately inconsistent from all other class methods in that it doesn't require a @classmethod decorator for some reason.
+        ([pylance-release#972](https://github.com/microsoft/pylance-release/issues/972))
+    -   Behavior Change: Changed logic for attributes marked `ClassVar` to allow writes from an instance of the class as long as the type of the attribute is a descriptor object.
+    -   Bug Fix: Fixed a hole in type comparison logic for TypeVars that could have theoretically resulted in incorrect aliasing of types.
+    -   Bug Fix: Fixed bug that caused false positive when import statement targeted a symbol that had a nonlocal or global name binding.
+        ([pylance-release#977](https://github.com/microsoft/pylance-release/issues/977))
+    -   Behavior Change: Enhanced method override compatibility logic to allow instance and class methods to pass generic bound types for `self` and `cls`.
+    -   New Feature: Added support for ".pth" files (often used for editable installs) when using the "venv" configuration option in pythonconfig.json.
+    -   Bug Fix: Fixed bug whereby import symbol “A” in the statement “from . import A” was not considered a public symbol in a py.typed source file, but it should be.
+    -   Enhancement: Improved handling of enum classes. If such a class is defined in a ".py" file, variables defined in the class with type annotations but no assignment are now considered instance variables within each enum instance, whereas variables assigned within the enum class are assumed to be members of the enumeration. This is consistent with the way the EnumMeta metaclass works. In stub files, type annotations without assignments are still assumed to be members of the enumeration, since that's the convention used in typeshed and other stubs.
+    -   Enhancement: Added check for parameter names when comparing functions. Parameter names that do not begin with an underscore must match in name. This also affects method override checks and protocol matching checks.
+    -   Bug Fix: Fix potential infinite recursion in source mapping, crash in doc strings
+-   [1.1.113](https://github.com/microsoft/pyright/releases/tag/1.1.113)
+    -   Bug Fixes: Improved support for PEP 634 (Structured Pattern Matching):
+        -   Improved negative-case type narrowing for capture patterns. Because capture patterns capture anything, the remaining type is "Never".
+        -   Improved type narrowing for mapping patterns used in structural pattern matching when the subject expression type contains a typed dictionary.
+        -   Added code to detect and report cases where irrefutable patterns are used within an "or" pattern and are not the last entry.
+        -   Added logic to verify that all "or" subpatterns target the same names as specified in PEP 634.
+        -   Added code to detect the case where a case statement without a guard expression uses an irrefutable pattern but is not the final case statement. This is disallowed according to PEP 634.
+        -   Fixed bug in parser that resulted in incorrect text ranges for parenthetical patterns.
+    -   Bug Fix: Improved performance for completion suggestions, especially when large numbers of suggestions are returned.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Enhancement: Enabled postponed type annotation evaluation by default for Python 3.10.
+    -   Bug Fix: Fixed bug that caused a false positive when a bound TypeVar was used to access a class method that was annotated with a bound TypeVar for the "cls" parameter.
+    -   Bug Fix: Fixed bug that caused index expressions to be printed incorrectly when they appeared in error messages.
+    -   Enhancement: Added type narrowing support for index expressions that use a numeric (integral) literal subscript value.
+    -   Enhancement: Improved the logic that determines whether a call expression within the code flow graph is a "NoReturn" call. It now provides better handling of unions when evaluating the call type.
+        ([pylance-release#967](https://github.com/microsoft/pylance-release/issues/967))
+    -   Enhancement: Added support for parenthesized list of context managers in "with" statement for Python 3.10.
+    -   Bug Fix: Fixed bug that prevented the use of a generic type alias defined using a PEP 593-style "Annotated" with a bare TypeVar.
+
 ## 2021.2.3 (17 February 2021)
 
 Notable changes:
