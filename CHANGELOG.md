@@ -1,5 +1,72 @@
 # Changelog
 
+## 2021.3.0 (3 March 2021)
+
+Notable changes:
+
+-   Method docstrings are now inherited from parent classes.
+    ([pylance-release#550](https://github.com/microsoft/pylance-release/issues/550), [pylance-release#877](https://github.com/microsoft/pylance-release/issues/877))
+-   The matplotlib and PIL stubs have been updated to be more complete and correct.
+    ([pylance-release#73](https://github.com/microsoft/pylance-release/issues/73), [pylance-release#420](https://github.com/microsoft/pylance-release/issues/420), [pylance-release#462](https://github.com/microsoft/pylance-release/issues/462), [pylance-release#716](https://github.com/microsoft/pylance-release/issues/716), [pylance-release#994](https://github.com/microsoft/pylance-release/issues/994))
+-   Parentheses in `with` statements will no longer be flagged as invalid.
+    ([pylance-release#999](https://github.com/microsoft/pylance-release/issues/999))
+-   A case where the same auto-import may be suggested more than once has been fixed.
+-   Files ending in `.git` will now be ignored in file watcher events. These files are created by some tools and cause reanalysis on change.
+-   Partial stub packages (defined in PEP 561) are now supported.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.114 to 1.1.117, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed crash that occurred when a function was declared within a local scope but when the function's symbol was previous declared "global" or "nonlocal" within that scope.
+    -   Bug Fix: Fixed bug in logic that verifies exception type in "raise" statement. It was not properly handling generic types that were bound to BaseException.
+        ([pylance-release#1003](https://github.com/microsoft/pylance-release/issues/1003))
+-   [1.1.117](https://github.com/microsoft/pyright/releases/tag/1.1.117)
+    -   Enhancement: Extended check that detects redeclared functions and methods to also report redeclared properties within a class.
+    -   Bug Fix: Fixed crash in parser that occurs when malformed index expression is parsed.
+    -   Enhancement: Improved error message for certain type incompatibilities.
+    -   Bug Fix: Fixed bug in logic that determines whether a function type is assignable to another function type. It was not properly handling the case where the destination had a \*\*kwargs parameter and the source had an unmatched keyword parameter.
+    -   Enhancement: Added new check to ensure that the type signature of a function with overloads is the superset of all of its overload signatures.
+    -   Enhancement: Improved consistency of error messages by standardizing on "incompatible" rather than "not compatible".
+    -   Bug Fix: Fixed bug in handling of `type(x)` call that resulted in false positive errors.
+    -   Behavior Change: Changed the logic that determines whether a variable assignment is an implicit type alias definition. If there is an explicit type annotation (other than the use of the PEP 612 TypeAlias), it is no longer considered a type alias. This is consistent with the rules mypy uses.
+    -   Bug Fix: Fixed a bug in the logic for inferring "cls" parameter that resulted in incorrect type evaluations.
+    -   Enhancement: Added check to detect inappropriate use of variables (that are not type aliases) within type annotations.
+    -   Bug Fix: Fixed bug in type compatibility logic that permitted a type of `Type[Any]` to be assigned to type `None`.
+    -   New Feature: Implemented support for PEP 655: Marking individual TypedDict items as required or potentially-missing. This PEP is still under development, so the spec could change.
+-   [1.1.116](https://github.com/microsoft/pyright/releases/tag/1.1.116)
+    -   Enhancement: Improved type inference logic for tuple expressions that contain unpacked tuples.
+        ([pylance-release#991](https://github.com/microsoft/pylance-release/issues/991))
+    -   Bug Fix: Fixed bug that resulted in unknown types within stubs when a forward reference was made within a type alias definition.
+    -   Bug Fix: Fixed bug in bidirectional type inference logic for unpack operator.
+    -   Bug Fix: Fixed bug in assignment type narrowing for index expressions. The narrowed type was always evaluated as "None" rather than the assigned type.
+        ([pylance-release#992](https://github.com/microsoft/pylance-release/issues/992))
+    -   Bug Fix: Fixed bug in assignment type narrowing that was triggered when the RHS and LHS were both union types and the RHS contained an `Any`.
+        ([pylance-release#993](https://github.com/microsoft/pylance-release/issues/993))
+    -   Enhancement: Added diagnostic check for a call expression that appears within a type annotation. This was previously not flagged as an error.
+    -   Bug Fix: Fixed false negative bug in the "reportOverlappingOverload" diagnostic check. It was not correctly detecting overlapping overloads when one of the parameters in the earlier overload was annotated with at TypeVar.
+    -   Bug Fix: Fixed bug in logic that compares the type compatibility of two functions. In particular, if the source function contains a keyword argument and the dest function does not contain a keyword argument of the same name bug contains a \*\*kwargs, the types must match.
+    -   Enhancement: Added support for overloaded `__init__` method that annotates the `self` parameter with a generic version of the class being constructed.
+    -   Behavior Change: Added a few exemptions for the reportInvalidTypeVarUse check. In particular, constrained TypeVars, bound TypeVars used as type arguments, and any TypeVar used as a type argument to a generic type alias are exempt from this check. There are legitimate uses for all of these cases.
+    -   Bug Fix: Fixed recent regression in type assignment check logic that broke certain cases where the destination and source were both unions that contained type variables.
+    -   Behavior Change: Changed behavior when evaluating type of symbol within type stubs. Previously forward references were allowed only for class types. Now, forward references are allowed (and no code flow analysis is employed) for all symbols. The new behavior is consistent with mypy's.
+    -   Enhancement: Added new diagnostic check for an overloaded function without an implementation within a source (.py) file. Fixed a bug in the diagnostic check for a single overload when an implementation is present.
+    -   Bug Fix: Fixed bug in the parsing of "with" statements where the "with item" starts with an open parenthesis.
+    -   Enhancement: Added "collections.defaultdict" to the list of classes that does not support runtime subscripting in versions of Python prior to 3.9.
+        ([pylance-release#1001](https://github.com/microsoft/pylance-release/issues/1001))
+    -   Behavior Change: Changed behavior of type inference for empty list (`[]`) and empty dict (`{}`) expressions. They were previously inferred to be `List[Any]` and `Dict[Any, Any]`, but they are now inferred as `List[Unknown]` and `Dict[Unknown, Unknown]`. This affects strict mode type checking, where partially-unknown types are reported as errors. This change may require some explicit type annotations within strictly-typed code.
+-   [1.1.115](https://github.com/microsoft/pyright/releases/tag/1.1.115)
+    -   Bug Fix: Fixed false positive bug where "class not runtime subscriptable" error was reported even if in a type stub.
+    -   New Feature: Implemented command-line switches for pythonplatform and pythonversion. These are overridden by pyrightconfig.json settings.
+    -   New Feature: Added support for comments and trailing comments within pyrightconfig.json.
+    -   Enhancement: Updated to latest typeshed stubs.
+    -   Enhancement (from Pylance): Improve auto-import performance.
+    -   Enhancement (from Pylance): Added extra perf tracking.
+    -   Bug Fix: Fixed false positive error that incorrectly complained about the use of `Annotated` as a class with no type arguments.
+    -   Bug Fix: Fixed false positive error when using bidirectional inference of dictionary expression where the expected type key and/or value types contain literals.
+    -   Bug Fix: Fixed bug that resulted in wildcard imports (i.e. imports the form `from x import *`) to import symbols from the target that were not meant to be externally visible. This bug occurred only when the imported module had no `__all__` symbol defined.
+    -   Bug Fix: Fixed bug in validation of constrained types in TypeVars. Subtypes of constrained types should be allowed.
+
 ## 2021.2.4 (24 February 2021)
 
 Notable changes:
