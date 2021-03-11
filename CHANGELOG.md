@@ -1,5 +1,76 @@
 # Changelog
 
+## 2021.3.1 (10 March 2021)
+
+Notable changes:
+
+-   Import resolution performance has been improved, which significantly reduces overall analysis times (30% in some projects).
+-   Hover tooltips for overloaded functions will now place each overload on its own line. This matches the existing completion tooltip. Additionally, signatures which may appear too wide in a tooltip are now separated by extra newlines to visually distinguish them.
+    ([pylance-release#612](https://github.com/microsoft/pylance-release/issues/612))
+-   `if`/`elif` chains without `else` clauses can now completely narrow variables. For example, it's possible to verify that an enum value has been exhaustively checked against all possible values without a "default" case. This feature is only active in annotated functions.
+-   Symlinks are now generally supported.
+    ([pylance-release#131](https://github.com/microsoft/pylance-release/issues/131))
+-   Angle brackets in docstring inline code blocks are no longer incorrectly escaped.
+    ([pylance-release#816](https://github.com/microsoft/pylance-release/issues/816))
+-   PEP 464 support (variadic generics) has been updated to match the current state of the PEP. This PEP is not yet accepted, but is targeting Python 3.10.
+-   TypedDict support has been updated to allow for narrowing dict members. For example, checking `if "a" in d` will now recognize `d["a"]` as a safe operation.
+-   When indexing is enabled (`"python.analysis.indexing": true`), auto-import completions will no longer include indexer results from user code (as this negatively impacted performance); only auto-imports in code referenced from currently open files will be offered. We are looking for feedback about the indexing feature; please file an issue if you have enabled indexing and this affects your workflow.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.117 to 1.1.120, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a bug that generated a false positive error when a function (or other callable) was assigned to a Hashable protocol.
+        ([pylance-release#1027](https://github.com/microsoft/pylance-release/issues/1027))
+-   [1.1.120](https://github.com/microsoft/pyright/releases/tag/1.1.120)
+    -   Bug Fix: Fixed type evaluation bug that resulted in the incorrect inference of an exception type within an "except X as Y" clause when the expression X was a bound TypeVar.
+    -   Enhancement: Improved detection and error reporting for class definitions that depend on themselves (illegal cyclical dependency). Previously, pyright failed in ways that were difficult to diagnose.
+    -   Enhancement: Added support for symbolic links in import resolver both for resolution of ".pth" files and for imports themselves.
+    -   Behavior Change: Removed support for "venv" entry in execution environments since this never really worked. Clarified in documentation that import resolution within an execution environment is not transitive.
+    -   Bug Fix: Fixed bug in completion provider that caused class variables not be included as suggestions as members for the "cls" parameter in a class method.
+        ([pylance-release#1026](https://github.com/microsoft/pylance-release/issues/1026))
+    -   Enhancement: Added error check for access to non-required fields in a TypedDict using a subscript with a literal string field name. Added support for "narrowing" of a TypedDict class based on guard expression of the form "S in D" where S is a string literal name of a non-required field. Improved the synthesized "get" method on a TypedDict for non-required fields; it now returns an `Optional[T]` (where T is the defined type for that field) rather than just T.
+    -   Enhancement: Updated to the latest typeshed stubs.
+    -   Enhancement: Added error check for a "yield" or "yield from" statement used within a list comprehension. This generates a runtime syntax error.
+-   [1.1.119](https://github.com/microsoft/pyright/releases/tag/1.1.119)
+    -   Bug Fix: Fixed bug in type evaluator that caused some diagnostics to be suppressed unintentionally and in a non-deterministic manner (based on the order in which types were evaluated).
+    -   Enhancement: Added a heuristic to disable the "implied else" analysis if the code is within a function that has no input parameter annotations. This mitigates the performance overhead of "implied else narrowing".
+    -   Enhancement: When a function decorator is applied and the decorator returns a function that has no docstring, copy the docstring from the decorated function.
+    -   Enhancement: Changed inference logic for constructors to allow synthesized type for `cls` to retain its generic form when instantiated, so the expression `cls()` will remain generic.
+    -   Bug Fix: Fixed false positive "metaclass conflict" error that occurs when the metaclass has an unknown class type in its class hierarchy.
+    -   Bug Fix: Fixed bug in type evaluator when dealing with a bound TypeVar. The constraint solver wasn't properly handling the `Type[T]` statement in all cases.
+    -   Bug Fix: Fixed recent regression in CLI where partial stub packages were not applied correctly.
+    -   Enhancement: Eliminate duplicate python search paths, eliminating the need to search the same path more than once on every import resolution.
+    -   Bug Fix: Fixed crash in logic that handles partial type stub merging. The crash occurs when a search path points to a file (e.g. a zip file) rather than a directory.
+        ([pylance-release#1021](https://github.com/microsoft/pylance-release/issues/1021))
+    -   Enhancement: Added support in PEP 646 when the unpacked TypeVarTuple is not at the end of the type parameter list. This allows for suffixing when matching type arguments against type parameters and when matching TypeVarTuple parameters in a Callable.
+    -   Enhancement: Added better error reporting for reveal_type and reveal_locals calls.
+    -   Enhancement: Added file system caching to import resolver for performance reasons.
+    -   Bug Fix: Fixed bug in type-printing logic for tuples. When typeCheckingMode is "off", type arguments are supposed to be displayed if they are not all "Any" or "Unknown", but they were omitted always.
+    -   Bug Fix: Fixed bug that caused type evaluation behavior that depends on (including, possibly, false positive errors) when evaluating subexpressions within a case statement.
+    -   Enhancement (from Pylance): Fix HTML escaping in code blocks.
+        ([pylance-release#816](https://github.com/microsoft/pylance-release/issues/816))
+    -   Behavior Change: Exempt ParamSpec from "single use of TypeVar within function signature" check.
+    -   Enhancement: Improved error reporting for ParamSpec misuse.
+-   [1.1.118](https://github.com/microsoft/pyright/releases/tag/1.1.118)
+    -   Bug Fix: Fixed bug in logic that verifies exception type in "raise" statement. It was not properly handling generic types that were bound to BaseException.
+    -   New Feature: Add --ignoreexternal CLI flag for use with --verifytypes feature. (Contribution by Vlad Emelianov)
+    -   Enhancement: The --verifytypes output now includes file paths in the report. (Contribution by Vlad Emelianov)
+    -   Bug FIx: Fixed crash that occurred when a function was declared within a local scope but when the function's symbol was previous declared "global" or "nonlocal" within that scope.
+    -   Enhancement (from Pylance): Method and class docstrings now inherit from parent classes if docstrings are missing in child class.
+    -   Enhancement (from Pylance): Improved support for partial stubs (where py.typed file includes "partial" as per PEP 561).
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation for member access expressions when the member was a descriptor object and the base type was a variable containing a reference to the class.
+    -   Bug Fix: Fixed bug in document symbol provider that caused incorrect range to be returned for classes and functions.
+        ([pylance-release#1010](https://github.com/microsoft/pylance-release/issues/1010))
+    -   Enhancement: Improved tracking of incomplete types (those that have not yet been fully established because of recursive type dependencies within the code flow graph).
+    -   New Feature: Added logic for if/elif chains that contain no else clause but completely narrow one or more variables.
+    -   Behavior Change: Changed behavior of TypeVar constraint solver to eliminate literal types (widening them to their associated type) when solving for TypeVars, unless a literal type was explicitly provided (e.g. using explicit specialization like `List[Literal[1, 2, 3]]`).
+    -   Behavior Change: Changed reportOverlappingOverload to be an error in strict mode.
+    -   Bug Fix: Fixed bug in logic that determines whether one callable type can be assigned to another. It wasn't taking into account the positional-only parameter separator (`/`).
+        ([pylance-release#1017](https://github.com/microsoft/pylance-release/issues/1017))
+    -   Bug Fix: Fixed a bug in conditional type narrowing that narrows based on descriminated member variable types. It was being over aggressive in narrowing in the negative ("else") case when the type of the member was a union of literal types.
+    -   Bug Fix: Fixed false positive error that occurred when setting or deleting the member of an object where that member's type is defined by a parent class and is generic but is specialized by a child class.
+
 ## 2021.3.0 (3 March 2021)
 
 Notable changes:
