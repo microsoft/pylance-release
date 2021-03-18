@@ -1,5 +1,75 @@
 # Changelog
 
+## 2021.3.2 (17 March 2021)
+
+Notable changes:
+
+-   Completions for class property overrides are now supported.
+    ([pylance-release#1054](https://github.com/microsoft/pylance-release/issues/1054))
+-   Editable installs are now supported.
+    ([pylance-release#78](https://github.com/microsoft/pylance-release/issues/78))
+-   Module members appearing in `__all__` are now always suggested in auto-imports, regardless of their name.
+    ([pylance-release#703](https://github.com/microsoft/pylance-release/issues/703))
+-   Completions offered within stub files will now correctly show symbols available in the current file, rather than only the stub's "externally visible" symbols.
+    ([pylance-release#685](https://github.com/microsoft/pylance-release/issues/685))
+-   A bug in symlink support (introduced in the previous release) has been fixed. Some code paths were not correctly handling symlinked directories.
+    ([pylance-release#1031](https://github.com/microsoft/pylance-release/issues/1031))
+-   Imports of the form `from . import X` now work correctly in non-`__init__.py` files.
+    ([pylance-release#1050](https://github.com/microsoft/pylance-release/issues/1050))
+-   Analysis performance has been improved some code patterns with many inferred variables and deeply nested loops.
+    ([pylance-release#1049](https://github.com/microsoft/pylance-release/issues/1049))
+-   Python 3.10 `match` support has been updated to support unparenthesized pattern subject lists.
+    ([pylance-release#1044](https://github.com/microsoft/pylance-release/issues/1044))
+-   Type aliases can now be defined within the class scope.
+    ([pylance-release#1043](https://github.com/microsoft/pylance-release/issues/1043))
+-   The bundled Django, matplotlib, and pandas stubs have been updated to fix several bugs and missing members.
+    ([pylance-release#780](https://github.com/microsoft/pylance-release/issues/780), [pylance-release#792](https://github.com/microsoft/pylance-release/issues/792), [pylance-release#850](https://github.com/microsoft/pylance-release/issues/850), [pylance-release#1037](https://github.com/microsoft/pylance-release/issues/1037))
+-   When indexing is enabled (`"python.analysis.indexing": true`), auto-import quick fixes will now include results from user code. This was disabled in the previous release; completions from indexed user code are still not offered.
+    ([pylance-release#1055](https://github.com/microsoft/pylance-release/issues/1055))
+-   Pylance no longer needs to copy files at startup for cross-platform support, which should improve startup time.
+-   The hover tooltip now separates the type from the docstring with a horizontal line, matching the completion tooltip.
+-   Stubs for `scipy`'s compiled modules are now included, which should improve performance and completion quality.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.120 to 1.1.122, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in handling of "Final" type annotation with no specified type argument (e.g. "x: Final = 4").
+    -   Enhancement: Added support for inferring type of subscripted tuple when subscript is a negative integer literal.
+    -   Bug Fix: Fixed recent regression where `super(A, self).x` did not return an unknown type if class `A` had a class in its MRO that had an unknown type.
+    -   Bug Fix: Allow lowercase `tuple` type to be subscripted in versions of Python prior to 3.9 if it is within a quoted annotation.
+        ([pylance-release#1056](https://github.com/microsoft/pylance-release/issues/1056))
+-   [1.1.122](https://github.com/microsoft/pyright/releases/tag/1.1.122)
+    -   Bug Fix: Fixed false positive error in constructor method with an input parameter annotated with a class-scoped TypeVar and with a default value.
+    -   Enhancement: Improved performance of type analysis for certain code patterns that involve inferred types of variables that are used in deeply nested loops and chains of updates. In one such example, this change reduced the analysis time from ~17000ms to ~200ms.
+    -   Bug Fix: Fixed bug in the handling of the `owner` parameter for the `__get__` method in a descriptor class. The type evaluator was using an `Any` type rather than the proper class type in this case.
+    -   Bug Fix: Updated TypeVar constraint solver so it tracks a "narrow bound" and "wide bound" for each TypeVar as they are being solved. This fixes several subtle bugs.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Behavior Change: Added new top-level "extraPaths" config option for pythonconfig.json that specifies the default extraPaths to use when no execution environments apply to a file. Changed settings logic to use the new default extraPaths mechanism for the "python.analysis.extraPaths" setting.
+        ([pylance-release#1053](https://github.com/microsoft/pylance-release/issues/1053))
+    -   Bug Fix: Fixed bug related to the handling of `from . import X` statement located in a file other than `__init__.py`. When used outside of an `__init__.py` file, this import looks for the `__init__.py` and imports the requested symbol `X` from it rather than looking for a submodule `X`.
+        ([pylance-release#1050](https://github.com/microsoft/pylance-release/issues/1050))
+    -   Enhancement: Improved completion provider's handling of method overrides so it properly handles properties.
+        ([pylance-release#1054](https://github.com/microsoft/pylance-release/issues/1054))
+    -   Enhancement (from pylance): Add lowercased items from `__all__` in auto-imports.
+    -   Bug Fix: Fixed bug in constraint solver that occurs when a constrained TypeVar is used in conjunction with a protocol that has a contravariant TypeVar.
+-   [1.1.121](https://github.com/microsoft/pyright/releases/tag/1.1.121)
+    -   Bug Fix: Fixed a bug that generated a false positive error when a function (or other callable) was assigned to a Hashable protocol.
+    -   Enhancement (from pylance): Made auto-imports lazy for better completion suggestion performance.
+    -   Enhancement (from pylance): Improved readability of hover text for functions and methods with overloaded signatures.
+    -   Bug Fix: Fixed false positive error when using an instance or class variable defined within a Protocol class within a method in that same class. The previous logic was based on a misinterpretation of a sentence in PEP 544.
+    -   Bug Fix: Fixed false positive error in type checker when dealing with two types that are both unions and both contain constrained type variables.
+    -   Bug Fix: Fixed improper handling of symlinks used in editable installs. This affected auto-import functionality.
+    -   Bug Fix: Fixed recent regression that caused crash in hover provider.
+    -   Bug Fix (from pylance): Fixed issue that caused editable installs to require a restart of the language server before their effects were visible.
+    -   Bug Fix: Fixed false positive error during TypeVar constraint solving in the case where the same TypeVar is used in both the form T and `Type[T]` in the same signature.
+    -   Enhancement: Improved support for enums. The Python spec indicates that attributes that start and end with an underscore are not treated as enum members, nor are attributes that are assigned a descriptor object.
+    -   Enhancement: Added support for inferring the "value" and "name" fields of an enum.
+    -   Bug Fix: Added support for unparenthesized pattern subject lists in match statement.
+        ([pylance-release#1044](https://github.com/microsoft/pylance-release/issues/1044))
+    -   Bug Fix: Fixed false positive error related to a type alias declared within a class.
+        ([pylance-release#1043](https://github.com/microsoft/pylance-release/issues/1043))
+
 ## 2021.3.1 (10 March 2021)
 
 Notable changes:
