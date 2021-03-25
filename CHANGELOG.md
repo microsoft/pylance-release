@@ -1,5 +1,57 @@
 # Changelog
 
+## 2021.3.3 (24 March 2021)
+
+Notable changes:
+
+-   Recursive symlinks in the workspace should no longer cause a hang.
+    ([pylance-release#1070](https://github.com/microsoft/pylance-release/issues/1070), [pylance-release#1078](https://github.com/microsoft/pylance-release/issues/1078))
+-   An error about a missing "typings" folder will no longer appear at the default log level.
+    ([pylance-release#1075](https://github.com/microsoft/pylance-release/issues/1075))
+-   pygame stubs are no longer bundled. pygame 2.0 (released October 2020) and above include high-quality types.
+    ([pylance-release#758](https://github.com/microsoft/pylance-release/issues/758))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.122 to 1.1.125, including the following changes:
+
+-   [1.1.125](https://github.com/microsoft/pyright/releases/tag/1.1.125)
+    -   Bug Fix: Disabled the "always False comparison" check for expressions like "sys.platform == 'win32'" because they can vary depending on environment.
+    -   Enhancement: Added error check for a class that attempts to derive from NamedTuple and other base classes. This is not supported and will generate runtime exceptions.
+    -   Enhancement: Improved type checking for generators. Fixed several false negatives and false positives relating to "yield from" expressions.
+    -   Enhancement: Changed special-case logic for `self` annotations used with `__init__` methods to accommodate new usages in typeshed stubs.
+    -   Enhancement: Updated typeshed stubs to latest.
+    -   Bug Fix: Fixed bug in TypeVar constraint solver that resulted in a false positive when using the built-in "filter" method with the "os.path.exists" callback.
+    -   Bug Fix: Fixed bug where "comparison chaining" was not being appropriately applied to expressions that contained "is", "is not", "in" and "not in" operators in a chain (e.g. "1" in "1" == "1").
+    -   Enhancement: Added smarter handling of empty lists (`[]`) and dicts (`{}`). Previously, these were inferred to have types `list[Unknown]` and `dict[Unknown, Unknown]`, respectively. They are now provided with a known type if the variable is assigned a known list or dict type along another code path.
+    -   Bug Fix (from pylance): Made hover text, signature help, and completion suggestions show function docstring using same code.
+    -   Bug Fix (from pylance): Fixed issue with partial stub files in cases where a stub file is found but no corresponding source (.py) file is found.
+-   [1.1.124](https://github.com/microsoft/pyright/releases/tag/1.1.124)
+    -   Bug Fix: Fixed bug where a keyword parameter with a generic type (a TypeVar) and a default value of "..." caused the TypeVar to be assigned a value of "Any".
+    -   Bug Fix: Fixed recent regression that caused certain diagnostics to be suppressed when calling a constructor with an expected type.
+    -   Enhancement: Added missing check indicated in PEP 589 for TypedDict fields that override a parent class field by the same name with a different type.
+    -   Bug Fix: Added support for TypeVar where the bound or constrained types are literals.
+    -   Enhancement: Updated typeshed stubs.
+    -   Bug Fix: Fixed bug that resulted in false negatives when a generic class was used within a subscript (e.g. within the type argument of another type) and no type arguments were specified for the generic class. This also resulted in such types not properly getting default values. For example, in the expression `Union[int, Callable]`, the `Callable` was not being interpreted as `Callable[..., Unknown]`.
+    -   Enhancement: Improved error message for partially-unknown lambda type.
+    -   Bug Fix: Fixed a bug in the logic for inferring the type of list expressions when the expected type is "object".
+    -   Bug Fix: Improved handling of bidirectional inference for call expressions when the expected type contains a union of literals and the function returns a generic type.
+    -   Enhancement: Added new check for a common source of bugs where an equals operator within an if statement compares two values whose literal types do not overlap and will therefore never evaluate to True.
+-   [1.1.123](https://github.com/microsoft/pyright/releases/tag/1.1.123)
+    -   Bug Fix: Fixed bug in handling of "Final" type annotation with no specified type argument (e.g. "x: Final = 4").
+    -   Enhancement: Added support for inferring type of subscripted tuple when subscript is a negative integer literal.
+    -   Bug Fix: Fixed recent regression where `super(A, self).x` did not return an unknown type if class `A` had a class in its MRO that had an unknown type.
+    -   Bug Fix: Fixed false positive error due to constraint solver's handling of a TypeVar used within a Callable parameter that is matched to a function parameter annotated with another TypeVar.
+    -   Enhancement: Improved handling of literals within constraint solver when used with bidirectional type inference.
+    -   Bug Fix: Fixed bug that caused false positive error when a generic call expression was used for an argument to an overloaded function and TypeVar matching errors were reported.
+        ([pylance-release#1063](https://github.com/microsoft/pylance-release/issues/1063))
+    -   Enhancement: Deferred resolution of metaclass during class type resolution to improve compatibility with code generated by mypy-protobuf, which contains cyclical dependencies.
+    -   Bug Fix: Fixed bug in declaration provider that caused declaration of class variables to not be resolved correctly when accessed via a `cls` parameter in a class method.
+        ([pylance-release#1064](https://github.com/microsoft/pylance-release/issues/1064))
+    -   Bug Fix: Fixed bug in symbol resolution when a local class mirrors the name of a class in typing (e.g. `List`) but is not imported from typing and is used in a context where it is forward declared without quotes.
+    -   Bug Fix (from pylance): Avoid recursing infinitely when searching for source files when there is a cyclical symlink present.
+    -   Bug Fix: Fixed type inference for "yield" expressions. The previous code was using the same logic for "yield" and "yield from".
+    -   Enhancement: Added check to determine if type variables in generic protocols use the appropriate variance.
+    -   Performance Improvement: Limited "implied else type narrowing" to expressions that have declared types. It's too expensive to infer types.
+
 ## 2021.3.2 (17 March 2021)
 
 Notable changes:
