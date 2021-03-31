@@ -1,5 +1,51 @@
 # Changelog
 
+## 2021.3.4 (31 March 2021)
+
+Notable changes:
+
+-   Broken symlinks in the workspace should no longer cause crashes.
+    ([pylance-release#1102](https://github.com/microsoft/pylance-release/issues/1102))
+-   Completion performance when IntelliCode is enabled has been improved.
+-   The bundled matplotlib stubs have been updated.
+-   Method override completions while editing a stub will no longer include `super()` calls, and instead add the correct `...` body.
+-   Auto-import completions and quick fixes will now more correctly handle import blocks that have been split onto multiple lines.
+    ([pylance-release#1097](https://github.com/microsoft/pylance-release/issues/1097))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.125 to 1.1.127, including the following changes:
+
+-   [1.1.127](https://github.com/microsoft/pyright/releases/tag/1.1.127)
+    -   Bug Fix: Fixed bug in type evaluator that resulted in suppressed errors and evaluations when the evaluation of a lambda expression resulted in some form of recursion (e.g. it references a symbol that depends on the return result of the lambda).
+        ([pylance-release#1096](https://github.com/microsoft/pylance-release/issues/1096))
+    -   Enhancement: Added "reportTypedDictNotRequiredAccess" diagnostic rule and split out diagnostics that pertain specifically to unguarded accesses to non-required TypedDict keys.
+    -   Bug Fix: Changed type of `__path__` variable in module from `List[str]` to `Iterable[str]`.
+        ([pylance-release#1098](https://github.com/microsoft/pylance-release/issues/1098))
+    -   Bug Fix: Fixed bug that resulted in a runtime crash within the type checker when a protocol class inherits from another protocol class that is not generic (like "Sized").
+        ([pylance-release#1101](https://github.com/microsoft/pylance-release/issues/1101))
+    -   Enhancement: Added better heuristics to auto-complete insertion logic so it honors single-symbol-per-line and multi-symbol-per-line formats of "from x import a" statements.
+        ([pylance-release#1097](https://github.com/microsoft/pylance-release/issues/1097))
+    -   Enhancement: Implemented a new check to validate that annotated types for "self" and "cls" parameters are supertypes of their containing classes.
+    -   Bug Fix (from pylance): Fixed bug that resulted in crashes when a broken symlink was encountered.
+        ([pylance-release#1102](https://github.com/microsoft/pylance-release/issues/1102))
+    -   Bug Fix: Fixed recent regression that resulted in false positives when checking the type of a "self" parameter within a metaclass when the type annotation was of the form `Type[T]`.
+    -   Enhancement: Added minimal support for "@no_type_check" decorator. It does not suppress errors, but it doesn't generate an error itself.
+    -   Enhancement: Added support for PEP 612 ParamSpecs to be used as type parameters for generic classes and generic type aliases. Previously, they were allowed only in the specialization of `Callable`.
+    -   Enhancement: Added out-of-bounds access check for index operations where the indexed type is a tuple object with known length and the index value is a negative integer literal value.
+    -   Bug Fix: Fixed bugs in the handling of PEP 487 `__init_subclass__`. The logic was using the `__init_subclass__` defined in the class itself rather than its base classes.
+    -   Enhancement: Added special-case handling for generic functions that return a `Callable` with generic parameters. The change allows for callers to pass type variables to the function and then have the resulting `Callable` provide a TypeVar scope for those variables.
+    -   Bug Fix (from pylance): Fixed bugs relating to partial type stub packages.
+-   [1.1.126](https://github.com/microsoft/pyright/releases/tag/1.1.126)
+    -   Bug Fix: Fixed bug that affected the use of the `tuple` constructor. It was not properly updating the variadic type arguments. This resulted in false negatives for the resulting type.
+        ([pylance-release#1085](https://github.com/microsoft/pylance-release/issues/1085))
+    -   Bug Fix: Fixed bug that resulted in false negatives because diagnostics generated while analyzing a constructor call were suppressed.
+        ([pylance-release#1087](https://github.com/microsoft/pylance-release/issues/1087), [pylance-release#1088](https://github.com/microsoft/pylance-release/issues/1088), [pylance-release#1104](https://github.com/microsoft/pylance-release/issues/1104))
+    -   Enhancement: Improved stub generator to print "x = ..." rather than include the RHS expression if `x` is not a type alias.
+    -   Enhancement: Added special-case handling for assignments of the form `x: List[A] = [a] * y` (the multiply operator on a list). This specific idiom is commonly used to initialize a list with None values.
+    -   Performance: Added perf improvements that help when dealing with unions that contain many tuples. Improved TypeVar constraint solver to better handle the case where a type is widened to include hundreds of subtypes, thus grinding performance to a halt. This occurs in one of the modules in pytorch.
+    -   Enhancement: Rewrote package type verifier based on feedback from users. Its error messages are now much clearer, it distinguishes between "exported symbols" and "other referenced symbols", it properly handles properties, and it omits warnings about missing docstrings by default (can be overridden with "--verbose" setting).
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation for a constructor call when the class's `__new__` method returns an instance of a different class.
+        ([pylance-release#1092](https://github.com/microsoft/pylance-release/issues/1092))
+
 ## 2021.3.3 (24 March 2021)
 
 Notable changes:
