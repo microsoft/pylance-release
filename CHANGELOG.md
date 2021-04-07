@@ -1,5 +1,58 @@
 # Changelog
 
+## 2021.4.0 (7 April 2021)
+
+Notable changes:
+
+-   `lxml.etree` (and other compiled modules) should no longer be mistakenly marked as unresolved in some cases.
+    ([pylance-release#392](https://github.com/microsoft/pylance-release/issues/392))
+-   A bug in a performance optimization for `__all__` involving `py.typed` libraries has been fixed. This issue manifested as auto-imports using an unwanted path (e.g. `fastapi.param_functions.Query` instead of `fastapi.Query`).
+    ([pylance-release#774](https://github.com/microsoft/pylance-release/issues/774))
+-   Signature help in broken code will now more correctly signatures and parameters.
+    ([pylance-release#1128](https://github.com/microsoft/pylance-release/issues/1128))
+-   A regression in namespace package handling has been fixed.
+    ([pylance-release#1132](https://github.com/microsoft/pylance-release/issues/1132))
+-   The default setting for indexing in the insiders build has been temporarily changed to `false` as we continue to analyze and improve its performance. It can still be manually enabled with `"python.analysis.indexing": true`.
+-   The bundled matplotlib stubs have been updated.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.127 to 1.1.129, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in type narrowing logic when the narrowed expression contained an assignment expression (walrus operator). It was not properly narrowing the target of the assignment expression.
+    -   Bug Fix: Fixed bug in "isinstance" type narrowing support when the first argument is a type (e.g. a class or `Type[T]`) and the second argument is `type` (or a tuple that contains `type`).
+    -   Bug Fix: Fixed bug in "isinstance" type narrowing logic where it didn't properly handle protocol classes that support runtime checking.
+-   [1.1.129](https://github.com/microsoft/pyright/releases/tag/1.1.129)
+    -   Enhancement: Added configuration option "strictSetInference" which is analogous to "strictListInference" and "strictDictionaryInference" but specifically for set expressions.
+    -   Enhancement: Tweaked heuristic in constraint solver to prefer types that have no "unknown" element to those that do.
+    -   Enhancement: Improved the handling of TypeVar matching when the source and dest types are both unions, the types are being compared with invariant constraints, and the dest contains a TypeVar.
+    -   Enhancement: Fixed misleading error message for "unsupported `__all__` operations".
+    -   Enhancement: Improved error message for dataclass fields.
+    -   Bug Fix: Fixed bug that caused inconsistent type evaluation for type annotations based on order of evaluation. It was triggered in some cases by the semantic highlighting feature.
+        ([pylance-release#1121](https://github.com/microsoft/pylance-release/issues/1121))
+    -   Bug Fix: Fixed bug in the function type compatibility logic. If the source has a `*args` or `**kwargs` parameter but the dest does not, the function should still be assignable.
+    -   Behavior Change: Changed the logic that searches for a config file. It currently searches from the current working directory all the way up the folder hierarchy. This makes sense only for a command-line tool, not for a language server. The latter already knows the project root, and we should look only in that directory for a config file.
+    -   Bug Fix: Fixed bug in signature help provider where its heuristics were causing it to return a bad response when the insertion point was immediately after a comma and a call expression preceded the comma.
+        ([pylance-release#1128](https://github.com/microsoft/pylance-release/issues/1128))
+    -   Bug Fix: Added support for an import edge case where a module's `__init__.py` file is apparently importing from itself but intends instead to import from one of its submodules.
+    -   Bug Fix: Fixed bug in namespace import resolution. When there are multiple import search matches, the import resolver needs to take into account the individual symbols specified in the import statement.
+        ([pylance-release#1132](https://github.com/microsoft/pylance-release/issues/1132))
+    -   Bug Fix: Fixed a bug whereby call expressions within a type annotation were flagged as errors but not evaluated, which meant that symbols referenced within them were not marked as accessed.
+    -   Enhancement: Updated typeshed stubs to the latest.
+-   [1.1.128](https://github.com/microsoft/pyright/releases/tag/1.1.128)
+    -   Bug Fix: Fixed bug in argument-matching code that produced false positive errors when a keyword argument corresponded to a positional-only argument name but should have been matched to a \*\*kwargs parameter instead.
+        ([pylance-release#1109](https://github.com/microsoft/pylance-release/issues/1109))
+    -   Bug Fix: Fixed bug in bidirectional type inference logic for list and dict expressions when expected type included a type varaible.
+    -   Bug Fix: Disabled the "self" annotation checks for overloaded methods because the self annotation can be used as a legitimate filter for overloads.
+    -   Enhancement: Improved bidirectional type inference for set expressions so it better handles unions in expected type.
+    -   Bug Fix: Improved TypeVar constraint solver so it provides a better solution when a TypeVar is constrained first by a contravariant wide bound in a first argument and then a subsequent argument relies on bidirectional type inference with a covariant or invariant use of the same TypeVar.
+    -   Bug Fix: Fixed bug that caused a crash in the type checker when a protocol class inherited from a generic non-protocol class.
+    -   Enhancement: Added check for a class that inherits from Generic to ensure that all type variables are included in the Generic subscript list.
+    -   Bug Fix: Fixed regression in handling expressions of the form `[x] * y`. Some previously-added special-case code to handle the `[None] * n` case was too general.
+    -   Enhancement: Changed printed types to fully expand type aliases in error messages where that additional detail is needed — namely, for "partially unknown" messages. This makes for verbose types, but without the expansion, it can be very difficult to determine which part of the type is unknown.
+    -   Bug Fix: Fixed false positive error in type compatibility check where the destination type is `Type[Any]` and the source type is `Type[x]` where x is anything (including `Any`).
+    -   Enhancement: Added exemption to the overlapping overload check for the `__get__` method. Other type checkers (namely mypy) exempt this method also.
+
 ## 2021.3.4 (31 March 2021)
 
 Notable changes:
