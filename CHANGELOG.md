@@ -1,5 +1,37 @@
 # Changelog
 
+## 2021.4.1 (14 April 2021)
+
+Notable changes:
+
+-   Source mapping has been greatly improved. Notably, in more recent versions of numpy (1.20+), docstrings and navigation should work for many more symbols.
+    ([pylance-release#855](https://github.com/microsoft/pylance-release/issues/855))
+-   The `yield` keyword will no longer be duplicated in completions.
+    ([pylance-release#1137](https://github.com/microsoft/pylance-release/issues/1137))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.129 to 1.1.130, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Changed logic that detects generator functions to accommodate yield statements that are provably unreachable in the code flow.
+    -   Behavior Change: Changed dataclass logic to not enforce ordering of fields with defaults vs those without if `init=False` is specified.
+    -   Enhancement: Extended method override check to include dundered methods (other than constructors).
+-   [1.1.130](https://github.com/microsoft/pyright/releases/tag/1.1.130)
+    -   Bug Fix: Fixed bug in type narrowing logic when the narrowed expression contained an assignment expression (walrus operator). It was not properly narrowing the target of the assignment expression.
+    -   Bug Fix: Fixed bug in "isinstance" type narrowing support when the first argument is a type (e.g. a class or `Type[T]`) and the second argument is `type` (or a tuple that contains `type`).
+    -   Bug Fix: Fixed bug in "isinstance" type narrowing logic where it didn't properly handle protocol classes that support runtime checking.
+    -   Enhancement (from Pylance): Improved docstring formatting in hover text.
+    -   Behavior Change: Suppressed "access to non-required key" diagnostic if the access is performed within a try block.
+        ([pylance-release#1145](https://github.com/microsoft/pylance-release/issues/1145))
+    -   Bug Fix: Fixed bug in 'callable' type narrowing logic. It wasn't properly handling type variables.
+    -   Enhancement: Implemented new diagnostic rule "reportUnnecessaryComparison". It checks for "==" and "!=" comparisons where the LHS and RHS types have no overlap and the LHS has no `__eq__` overload. This new diagnostic rule is off by default in normal type checking mode but is on in strict mode.
+    -   Bug Fix: Fixed false positive error that occurred when file started with "from typing import Collection". This was due to mishandling of a cyclical dependency in the typeshed classes.
+    -   Enhancement: Improved bidirectional type inference for expressions that involve the pattern `[<list elements>] * <expression>`.
+    -   Bug Fix: Fixed false positive error relating to the use of parentheses in "with" statement when using Python 3.9.
+        ([pylance-release#999](https://github.com/microsoft/pylance-release/issues/999))
+    -   Bug Fix: Fixed bug in type evaluation of async functions that are not generators but have a declared return type of AsyncGenerator. The actual return type needs to be wrapped in a Coroutine in this case.
+        ([pylance-release#1140](https://github.com/microsoft/pylance-release/issues/1140))
+    -   Bug Fix: Suppressed diagnostic check for `Subscript for class "X" will generate runtime exception` when it's used in a PEP 526-style variable type annotation. Apparently the exception occurs only when used in other contexts like parameter and return type annotations.
+
 ## 2021.4.0 (7 April 2021)
 
 Notable changes:
