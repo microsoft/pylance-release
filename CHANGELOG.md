@@ -1,5 +1,55 @@
 # Changelog
 
+## 2021.4.2 (21 April 2021)
+
+Notable changes:
+
+-   A number of CPU and memory improvements have been made, which should lead to faster initial startup, faster analysis, and lower peak memory usage.
+-   A partial stub for scikit-learn has been included, which should fix many classes (such as `MinMaxScalar`).
+    ([pylance-release#1139](https://github.com/microsoft/pylance-release/issues/1139))
+-   A number of crashes have been fixed.
+    ([pylance-release#1072](https://github.com/microsoft/pylance-release/issues/1072))
+-   `self`/`cls`, parameters in abstract methods, parameters in `Protocol` definitions, and parameters in function overloads will no longer be marked as "not accessed" and grayed out.
+    ([pylance-release#194](https://github.com/microsoft/pylance-release/issues/194))
+-   The bundled matplotlib stubs have been updated.
+-   Pylance's copy of typeshed has been updated. Stubs that are marked as Python 2 only are no longer included.
+-   Interpreter paths are now correctly queried when the selected interpreter is PyPy.
+-   Indexing has been re-enabled in the insiders build.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.130 to 1.1.133, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Implemented first cut at generalized support for dataclass transforms.
+-   [1.1.133](https://github.com/microsoft/pyright/releases/tag/1.1.133)
+    -   Bug Fix: Fixed bug that resulted in a false positive error within type checker when a constrained TypeVar was used in a lambda callback.
+    -   Bug Fix: Fixed bug in type variable constraint solver that resulted in false positive error in certain cases involving bidirectional type inference with unknown (or missing) type arguments.
+        ([pylance-release#1168](https://github.com/microsoft/pylance-release/issues/1168))
+    -   Enhancement: Reduced memory consumption of tokenizer for string literal tokens.
+    -   Enhancement: Improved performance of type analyzer in cases where certain type checking diagnostic rules are disabled.
+    -   Enhancement: Improved startup time of pyright by eliminating redundant calls to Python interpreter to retrieve import resolution paths.
+    -   Behavior Change: Automatically mark parameters as accessed (so they don't appear as "grayed out") in the following circumstances: 1) it is a self parameter in an instance method, 2) it is a cls parameter in a class method, 3) it is a parameter in a method marked abstract, 4) it is a parameter in a method that is part of a protocol class, 5) it is a parameter in an overload signature.
+        ([pylance-release#194](https://github.com/microsoft/pylance-release/issues/194))
+    -   Bug Fix: Fixed incompatibility with pypy when retrieving import resolution paths from the configured Python interpreter.
+    -   Enhancement: Added diagnostic for `__init__` method that does not have a return type of `None`.
+    -   Enhancement: Configuration settings can now be stored in a pyproject.toml file. If both pyproject.toml and pyrightconfig.json are both present, the latter takes precedent.
+-   [1.1.132](https://github.com/microsoft/pyright/releases/tag/1.1.132)
+    -   Bug Fix: Fixed regression that caused incorrect reporting of "parameter name mismatch" errors for overrides of dundered methods.
+-   [1.1.131](https://github.com/microsoft/pyright/releases/tag/1.1.131)
+    -   Bug Fix: Changed logic that detects generator functions to accommodate yield statements that are provably unreachable in the code flow.
+    -   Behavior Change: Changed dataclass logic to not enforce ordering of fields with defaults vs those without if `init=False` is specified.
+    -   Enhancement: Extended method override check to include dundered methods (other than constructors).
+    -   Bug Fix (from pylance): Removed duplicate "yield" suggestion in completion list.
+    -   Enhancement (from pylance): Improved logic that maps type stubs to corresponding source files.
+    -   Enhancement: Added support for implicit `__annotations__` symbol at the module level.
+        ([pylance-release#1161](https://github.com/microsoft/pylance-release/issues/1161))
+    -   Enhancement: Updated to the latest typeshed stubs. Removed third-party stubs for that were marked as Python 2 only (enum34, fb303, futures, ipaddress, kazoo, openssl-python, pathlib2, pymssql, Routes, scribe, tornado).
+    -   Enhancement: Added support for `type(None)` within isinstance type narrowing.
+    -   Bug Fix: When providing a completion suggestion for an async method override, an "await" operator is now added in the generated return expression.
+    -   Bug Fix: Fixed false positive error in argument/parameter matching logic for function calls that occurs when a keyword argument targets a parameter that can be either positional or keyword and a spread operator is used in an earlier argument.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a constrained TypeVar type was passed through the "isinstance" type narrowing logic and then used as an operand in a binary operation.
+        ([pylance-release#1165](https://github.com/microsoft/pylance-release/issues/1165))
+    -   Bug Fix: Fixed several bugs that caused type checker crash in certain cases.
+
 ## 2021.4.1 (14 April 2021)
 
 Notable changes:
