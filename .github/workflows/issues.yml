@@ -1,4 +1,6 @@
 name: issue-automation
+permissions:
+  issues: write
 
 on:
   issues:
