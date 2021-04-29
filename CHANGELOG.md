@@ -1,5 +1,55 @@
 # Changelog
 
+## 2021.4.3 (29 April 2021)
+
+Notable changes:
+
+-   The bundled native module stubs for sklearn, numpy, and pandas have been updated.
+-   Markdown-style links in docstrings will now be passed through as-is to tooltips.
+-   Docstrings for all compiled standard library modules (such as `math`, `sys`, and `time`) are now supported.
+    ([pylance-release#465](https://github.com/microsoft/pylance-release/issues/465))
+-   Docstrings in signature help tooltips will now show the same docstrings as completion and hover tooltips.
+-   Overload matching has been changed to more closely match matching in other type checkers.
+    ([pylance-release#549](https://github.com/microsoft/pylance-release/issues/549), [pylance-release#1111](https://github.com/microsoft/pylance-release/issues/1111))
+-   A number of bugs that could cause potentially nondeterministic behavior when semantic highlighting is enabled have been fixed.
+    ([pylance-release#1180](https://github.com/microsoft/pylance-release/issues/1180), [pylance-release#1181](https://github.com/microsoft/pylance-release/issues/1181))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.133 to 1.1.136, including the following changes:
+
+-   [1.1.136](https://github.com/microsoft/pyright/releases/tag/1.1.136)
+    -   Bug Fix: Fixed bug in diagnostic check for contravariant type variables used in a return type annotation that resulted in a false negative.
+        ([pylance-release#1190](https://github.com/microsoft/pylance-release/issues/1190))
+    -   Enhancement: Added minimal support for `*` and `**` parameter annotations within function annotation comments.
+        ([pylance-release#1191](https://github.com/microsoft/pylance-release/issues/1191))
+    -   Behavior Change: Modified algorithm for invariant union type assignments to avoid n^2 behavior.
+    -   Bug Fix: Fixed a false positive error that occurs when a class uses itself as a type argument for one of its base classes and that base class uses a bound type variable.
+    -   Enhancement: Added logic to skip the normal `__new__` constructor evaluation if the class is created by a metaclass with a custom `__call__` method.
+    -   Bug Fix: Fixed bug in TypedDict type narrowing (for containment of non-required fields) that resulted in a false positive error when a narrowed type was later used.
+    -   Bug Fix: Fixed bug in type variable constraint solver that resulted in a confusing false positive error in circumstances involving contravariant type variables (e.g. when dealing with callback protocols) and a combination of `Type[T]` and `T` within the callback signature.
+    -   Enhancement (from pylance): Improved formatting of doc strings in tool tips.
+-   [1.1.135](https://github.com/microsoft/pyright/releases/tag/1.1.135)
+    -   Behavior Change: Changed behavior of function overload evaluation to more closely match the behavior of other type checkers. Notably, if one or more argument have union types, they are expanded, and each combination of argument union subtypes can use different overloads.
+    -   Bug Fix: Fixed bug that caused false positive error when assigning a function with no position-only marker to a function with a position-only marker.
+        ([pylance-release#1187](https://github.com/microsoft/pylance-release/issues/1187))
+    -   Enhancement: Added support for call arguments whose types are constrained type variables and must be constrained to a particular subtype during call evaluation because the LHS of the call imposes such constraints.
+        ([pylance-release#1182](https://github.com/microsoft/pylance-release/issues/1182))
+    -   Enhancement: Added support for special cases of class pattern matching as described in PEP 634.
+    -   Enhancement: Added support for auto generation of `__match_args__` class variable for dataclass and named tuples.
+    -   Enhancement: Added support for type narrowing of the subject expression within a "match" statement based on the matched pattern.
+    -   Bug Fix: Fixed bug in type analyzer that resulted in a false positive error when a return type annotation included a generic class but omitted the type arguments.
+-   [1.1.134](https://github.com/microsoft/pyright/releases/tag/1.1.134)
+    -   Enhancement: Implemented first cut at generalized support for dataclass transforms.
+    -   Behavior Change: Allow NoReturn return type annotation for `__init__` method.
+    -   Bug Fix: Fixed bug in completion provider that resulted in no valid completion suggestions at the end of a "from x import a, " statement.
+        ([pylance-release#673](https://github.com/microsoft/pylance-release/issues/673))
+    -   Bug Fix: Fixed bug in type checker that led to a false positive when assigning a function to a callable type and the source contained unannotated parameters.
+    -   Bug Fix: Fixed numerous bugs that result in occasional type evaluation errors, some of which appear to be somewhat non-deterministic.
+        ([pylance-release#1180](https://github.com/microsoft/pylance-release/issues/1180), [pylance-release#1181](https://github.com/microsoft/pylance-release/issues/1181))
+    -   Bug Fix: Fixed bug in type evaluator that caused incorrect type evaluation for annotated parameter types in some cases.
+    -   Bug Fix: Fixed a bug in the type checker that resulted in a false positive error when using "|" (union) operator in parameter type annotations in some cases.
+    -   Bug Fix: Changed binder logic for "from .a import x" statements in `__init__.py`. Implicit import of ".a" is performed only in cases where there is a single dot. For example, "from .a.b import x" does not implicitly import ".a.b".
+        ([pylance-release#234](https://github.com/microsoft/pylance-release/issues/234))
+
 ## 2021.4.2 (21 April 2021)
 
 Notable changes:
