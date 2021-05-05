@@ -1,5 +1,49 @@
 # Changelog
 
+## 2021.5.0 (5 May 2021)
+
+Notable changes:
+
+-   A number of CPU and memory improvements have been made, improving indexing, docstring conversion, and peak memory usage.
+-   Pylance insiders will now be automatically enabled when Python insiders is enabled. This can be overridden by explicitly setting `pylance.insidersChannel`.
+-   Docstring support for compiled standard library modules (such as `math`, `sys`, and `time`) now handles module docstrings.
+-   The bundled stubs for pandas and PIL have been updated.
+    ([pylance-release#556](https://github.com/microsoft/pylance-release/issues/556), [pylance-release#660](https://github.com/microsoft/pylance-release/issues/660), [pylance-release#769](https://github.com/microsoft/pylance-release/issues/769), [pylance-release#779](https://github.com/microsoft/pylance-release/issues/779))
+-   The "report issue" command can now be run in any file, including Jupyter notebooks.
+    ([pylance-release#1207](https://github.com/microsoft/pylance-release/issues/1207))
+-   A number of crashes have been fixed.
+    ([pylance-release#1211](https://github.com/microsoft/pylance-release/issues/1211), [pylance-release#1218](https://github.com/microsoft/pylance-release/issues/1218), [pylance-release#1219](https://github.com/microsoft/pylance-release/issues/1219))
+-   Python 3.10's new `match` and `case` keywords will now be highligted as keywords when semantic tokenization is enabled.
+    ([pylance-release#1215](https://github.com/microsoft/pylance-release/issues/1215))
+-   Assignment expressions in the class scope are no longer incorrectly disallowed.
+    ([pylance-release#1213](https://github.com/microsoft/pylance-release/issues/1213))
+-   Completions are no longer incorrectly provided in the string portion of f-strings.
+    ([pylance-release#1226](https://github.com/microsoft/pylance-release/issues/1226))
+-   Pylance's copy of typeshed has been updated.
+    ([pylance-release#1216](https://github.com/microsoft/pylance-release/issues/1216))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.136 to 1.1.137, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in handling special-case types in typing.pyi or typing_extensions.pyi. The RHS of the assignment was not being evaluated, so symbols referenced in the RHS were not be marked as accessed.
+-   [1.1.136](https://github.com/microsoft/pyright/releases/tag/1.1.136)
+    -   Bug Fix: Fixed bug in type inference of dictionary, list and set expressions when they contain classes or class instances that are apparently the same type but internally appear different because they are "pseudo-generic". Pseudo-generic classes are those that have no type annotations in the `__init__` method and are treated internally as generics to improve type inference.
+    -   Bug Fix: Fixed bug that caused false positive error when assigning `Type[Any]` to `type`.
+    -   Bug Fix: Fixed false positive error when assignment expression (i.e. walrus operator) is used within a class scope.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Behavior Change: When in "outputjson" mode, the CLI now output log information to stderr.
+    -   Enhancement: Add match and case keywords to completion provider.
+    -   Bug Fix: Fixed regression that caused runtime assertion (and crash) in some rare circumstances.
+    -   Performance: Eliminated O(n\*m) behavior when testing type compatibility of a union with n subtypes and a union of m subtypes when those subtypes contain mostly literals.
+    -   Performance: Moved checks for string literal errors (unsupported escape characters, etc.) from binder to checker for performance reasons.
+    -   Performance: Improved performance of string token value unescape logic by handling the common cases (no format string and no escape characters) using a fast path.
+    -   Bug Fix (from Pylance): Fixed bug in file watching logic for config files.
+    -   Performance (from Pylance): Reduced work done during parsing and binding related to doc string handling.
+    -   Enhancement (from Pylance): Improved document symbol provider symbol type information.
+    -   Behavior Change: Removed PEP 563 (deferred type annotation) behavior as default for Python 3.10, since the PEP was deferred.
+    -   Bug Fix: Fixed bug in completion provider that caused completions to be provided when pressing "." within the string literal portion of an f-string.
+    -   Performance (from Pylance): Provided special-case code paths in parser and binder to speed up symbol indexing operations.
+
 ## 2021.4.3 (29 April 2021)
 
 Notable changes:
@@ -1023,7 +1067,7 @@ Notable changes:
     ([pylance-release#646](https://github.com/microsoft/pylance-release/issues/646))
 -   Method override completions will now generate a `super()` call.
     ([pylance-release#668](https://github.com/microsoft/pylance-release/issues/668))
--   Completions for overriden methods will now show the correct signature.
+-   Completions for overridden methods will now show the correct signature.
 -   VS Code's "word based suggestions" (`editor.wordBasedSuggestion`) are now disabled by default in Python files to mitigate poor completions when Pylance specifies no completions are available.
     ([pylance-release#604](https://github.com/microsoft/pylance-release/issues/604))
 -   Pylance's copy of typeshed has been updated.
