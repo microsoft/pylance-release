@@ -15,4 +15,4 @@ However, a substantial portion of Pylance’s source code is open source via the
 Pylance is licensed for use in Microsoft products and services only, so can only be used on official Microsoft builds of Visual Studio Code and GitHub Codespaces.
 
 ### What telemetry and user data do you collect? Can I opt out?
-You can read about how we use collect and use telemetry [here](https://code.visualstudio.com/docs/getstarted/telemetry). Information on how to view the telemetry that is sent is [here](https://code.visualstudio.com/docs/getstarted/telemetry#_output-channel-for-telemetry-events). You can read about how we use collect and use telemetry, including how to disable it [here](https://code.visualstudio.com/docs/getstarted/telemetry).
+You can read about how we use collect and use telemetry [here](https://code.visualstudio.com/docs/getstarted/telemetry). You can read about how we use collect and use telemetry, including how to disable it [here](https://code.visualstudio.com/docs/getstarted/telemetry).
