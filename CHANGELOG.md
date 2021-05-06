@@ -1,5 +1,9 @@
 # Changelog
 
+## 2021.5.1 (6 May 2021)
+
+This is a hotfix release, fixing raw format strings ([pylance-release#1241](https://github.com/microsoft/pylance-release/issues/1241)) and handling language server settings changes available in the next Python extension release.
+
 ## 2021.5.0 (5 May 2021)
 
 Notable changes:
