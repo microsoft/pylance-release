@@ -11,7 +11,7 @@ Pylance is the default language support for [Python in Visual Studio Code](https
 1. Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) from the marketplace. Pylance will be installed as an optional extension.
 1. Open a Python (.py) file and the Pylance extension will activate.
 
-Note: If you've previously set a language server and want to try Pylance, make sure you've set `"python.languageServer": "Default" or "Pylance"` in your settings.json file using the text editor.
+Note: If you've previously set a language server and want to try Pylance, make sure you've set `"python.languageServer": "Default" or "Pylance"` in your settings.json file using the text editor, or using the Settings Editor UI.
 
 # Features
 
