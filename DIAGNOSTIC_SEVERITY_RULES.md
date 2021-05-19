@@ -51,6 +51,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUndefinedVariable | Diagnostics for undefined variables. |
 | reportUnboundVariable | Diagnostics for unbound and possibly unbound variables. |
 | reportInvalidStubStatement | Diagnostics for statements that should not appear within a stub file. |
+| reportIncompleteStub | Diagnostics for the use of a module-level `_getattr__` function, indicating that the stub is incomplete. | 
 | reportUnusedCallResult | Diagnostics for call expressions whose results are not consumed and are not None. |
 | reportUnsupportedDunderAll | Diagnostics for unsupported operations performed on `__all__`. |
 | reportUnusedCoroutine | Diagnostics for call expressions that return a Coroutine and whose results are not consumed. |

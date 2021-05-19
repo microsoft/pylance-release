@@ -1,5 +1,86 @@
 # Changelog
 
+## 2021.5.3 (19 May 2021)
+
+Notable changes:
+
+-   A number of CPU and memory improvements have been made, improving parsing, indexing, and overall performance.
+-   Libraries which indicate that they are `py.typed` will now be correctly preferred over typeshed, following PEP 561. This allows the use of the types in well-typed libraries such as the newly-released Flask 2.0, PyJWT, and tornado, improving completions, hover, navigation, and the type checking experience.
+    ([pylance-release#1197](https://github.com/microsoft/pylance-release/issues/1197))
+-   Auto-imports now require the first character to match before fuzzy matching is applied, which reduces the number of unwanted completions and greatly improves performance when indexing is enabled.
+-   Extract method now supports extracting comments.
+    ([pylance-release#1262](https://github.com/microsoft/pylance-release/issues/1262))
+-   Variable names using supplementary characters are now supported.
+    ([pylance-release#1286](https://github.com/microsoft/pylance-release/issues/1286))
+-   Tables in docstrings are now supported.
+-   Incompatible type diagnostics will now fully qualify type names if the incompatible types have the same short name.
+    ([pylance-release#1306](https://github.com/microsoft/pylance-release/issues/1306))
+-   A bug which caused some imports from `pywin32` to not be resolved has been fixed.
+    ([pylance-release#1423](https://github.com/microsoft/pylance-release/issues/1423))
+-   Added stubs for pywin32, openpyxl.
+    ([pylance-release#947](https://github.com/microsoft/pylance-release/issues/947), [pylance-release#1423](https://github.com/microsoft/pylance-release/issues/1423))
+-   The bundled stubs for django and pandas have been updated.
+-   File watcher events from `.git` directories will no longer trigger reanalysis.
+    ([pylance-release#1282](https://github.com/microsoft/pylance-release/issues/1282))
+-   The import resolver now supports typeshed's VERSIONS file, which indicates which versions of Python each standard library module is available.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.137 to 1.1.141, including the following changes:
+
+-   [1.1.141](https://github.com/microsoft/pyright/releases/tag/1.1.141)
+    -   Enhancement: Improved "is None" and "is not None" type narrowing logic for constrained TypeVars that include `None` as one of the constraints.
+    -   Enhancement: Improved error message for illegal character in token and surrogate character codes combinations that are not allowed in identifiers.
+    -   Enhancement: Added support for more surrogate character ranges that I didn't realize existed when I added the initial support.
+    -   Behavior change: Don't prefer py.typed libraries when the execution environment is typeshed.
+    -   Bug Fix: Fixed bug in signature help provider where it was not properly handling a call with a type `Type[T]`.
+    -   Bug Fix: Fixed bug in code that handles "super" call when a `cls` variable is passed as the first argument.
+    -   Bug Fix: Changed the way the current parameter index is specified in signature help to better conform to LSP standard.
+    -   Enhancement: Improved the "X is incompatible with Y" error message in the case where types X and Y have the same short name. In this case, the fully-qualified names will be used to provide clarity.
+    -   Bug Fix: Fixed bug that resulted in false positive when generic type was used for iterable within a list comprehension.
+    -   Bug Fix: Fixed bug that resulted in incorrect errors when using a TypeVar imported from another file and referenced using a member access expression (e.g. `typing.AnyStr`).
+    -   Enhancement: Added support for `defaults` argument in `namedtuple` constructor, which marks the rightmost input parameters to the resulting named tuple as having default values.
+    -   Behavior change (from pylance): Filter auto-imports more strictly to reduce the number of completions returned. Matches require at least the first character to match before fuzzy matching is applied.
+    -   Enhancement (from pylance): Add support for tables in docstrings.
+-   [1.1.140](https://github.com/microsoft/pyright/releases/tag/1.1.140)
+    -   Bug Fix: Fixed bug that caused parameters in overloaded functions not to be marked as accessed, as was intended.
+    -   Bug Fix: Fixed false negative when the same name was defined in both an outer and inner function and referenced in the inner function prior to being assigned.
+    -   Enhancement: Added support for identifiers that contain Unicode characters that require two UTF16 character codes (surrogates). This allows identifiers to use characters in the Unicode blocks for Egyptian Hieroglyphs, Linear B Ideograms, Cuneiform, Phoenician, etc.
+    -   Enhancement: Added new diagnostic rule "reportIncompleteStub", which reports a diagnostic for a module-level `__getattr__` function in a type stub, indicating that it's incomplete. This check was previously part of the "reportUnknownMemberType" diagnostic rule.
+    -   Behavior Change: Disabled support for keyword arguments in subscript expressions because PEP 637 was rejected.
+    -   Bug Fix: Fixed bug in the type specialization for ParamSpec when the return type contains no generics.
+    -   Bug Fix: Changed TypeGuard behavior to evaluate the return type of a call expression that invokes a type guard function to be 'bool' rather than 'TypeGuard[T]'.
+    -   Behavior Change: Changed TypeGuard behavior to allow a type guard function to be passed as a callback that expects the return type to be bool.
+    -   Bug Fix: Removed explicit check for Python 3.10 when using ParamSpec. It's possible to use it with older versions of Python if importing from `typing_extensions`.
+    -   Bug Fix: Fixed bug that caused a false positive error when applying a subscript operation on a TypeVar.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when the second argument to `isinstance` or `issubclass` was a union that included both a single type and a tuple of types.
+        ([pylance-release#1294](https://github.com/microsoft/pylance-release/issues/1294))
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Enhancement: Added support in typeshed VERSIONS file for submodules.
+-   [1.1.139](https://github.com/microsoft/pyright/releases/tag/1.1.139)
+    -   Enhancement: Updated typeshed to the latest.
+    -   Enhancement: Added support for typeshed VERSION file, which indicates which stdlib modules are available in each version of Python.
+    -   Bug Fix: Fixed bug that resulted in symbols being inappropriately marked "unaccessed" when they were accessed within a keyword argument used within a class declaration.
+        ([pylance-release#1272](https://github.com/microsoft/pylance-release/issues/1272))
+    -   Bug Fix: Fixed false positive error when a dataclass declares an instance variable but a subclass redeclares a class variable of the same name.
+    -   Bug Fix: Fixed type narrowing bug with 'isinstance' checks that involve protocol classes. The bug resulted in false positive errors with the reportUnnecessaryIsInstance check.
+    -   Enhancement: Added support for callback protocols that use overloaded `__call__` methods.
+        ([pylance-release#1276](https://github.com/microsoft/pylance-release/issues/1276))
+    -   Enhancement (from pylance): Improved performance of tokenizer's handling of string literals.
+    -   Bug Fix (from pylance): Ignore updates to ".git" file so they don't trigger reanalysis.
+    -   Bug Fix: Fixed false positive error in check for overload implementation consistency when one of the overloaded methods in a generic class provides an explicit type annotation for "self" or "cls" but the implementation does not.
+    -   Enhancement: Improved "is None" and "is not None" type narrowing logic to handle constrained TypeVar that includes None as one of the constraints.
+    -   Bug Fix: Fixed false positive error when a `__getattr__` method is present. The previous logic was assuming that `__getattr__` could provide a magic method value (e.g. for `__add__`).
+        ([pylance-release#1252](https://github.com/microsoft/pylance-release/issues/1252))
+    -   Bug Fix: Prefer py.typed libraries over typeshed for consistency with PEP 561.
+    -   Bug Fix: Improved validation for function calls where the function signature includes keyword arguments without default values that are not directly matched by keyword arguments but are matched by a **kwargs argument. In this situation, the type of the **kwargs values should be verified to be compatible with the type of the keyword parameters.
+    -   Bug Fix: Fixed bug in lambda type evaluation for lambdas that use an \*args parameter. The parameter type was not being transformed into a tuple, as it should have been.
+        ([pylance-release#1284](https://github.com/microsoft/pylance-release/issues/1284))
+    -   Enhancement: Improved diagnostic message for constant redefinition to make it clear that the symbol is assumed to be constant because its name is uppercase.
+-   [1.1.138](https://github.com/microsoft/pyright/releases/tag/1.1.138)
+    -   Bug Fix: Fixed bug in handling special-case types in typing.pyi or typing_extensions.pyi. The RHS of the assignment was not being evaluated, so symbols referenced in the RHS were not be marked as accessed.
+    -   Bug Fix: Changed special-case handling of "overload" definition in typying.pyi stub. New versions of this stub have changed the definition from an object to a function.
+    -   Bug Fix: Fixed recent regression in handling of f-strings that are also raw.
+
 ## 2021.5.2 (13 May 2021)
 
 Pylance has reached stable and is officially out of public preview! (https://aka.ms/announcing-pylance-stable)
@@ -34,7 +115,7 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.136 to 1.1.137,
 
 -   Unreleased in Pyright, but included in Pylance:
     -   Bug Fix: Fixed bug in handling special-case types in typing.pyi or typing_extensions.pyi. The RHS of the assignment was not being evaluated, so symbols referenced in the RHS were not be marked as accessed.
--   [1.1.136](https://github.com/microsoft/pyright/releases/tag/1.1.136)
+-   [1.1.137](https://github.com/microsoft/pyright/releases/tag/1.1.137)
     -   Bug Fix: Fixed bug in type inference of dictionary, list and set expressions when they contain classes or class instances that are apparently the same type but internally appear different because they are "pseudo-generic". Pseudo-generic classes are those that have no type annotations in the `__init__` method and are treated internally as generics to improve type inference.
     -   Bug Fix: Fixed bug that caused false positive error when assigning `Type[Any]` to `type`.
     -   Bug Fix: Fixed false positive error when assignment expression (i.e. walrus operator) is used within a class scope.
