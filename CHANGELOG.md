@@ -1,5 +1,55 @@
 # Changelog
 
+## 2021.5.4 (26 May 2021)
+
+Notable changes:
+
+-   Auto-import quick fixes now more closely match auto-import completions.
+    ([pylance-release#1250](https://github.com/microsoft/pylance-release/issues/1250))
+-   TypedDict support has been improved, supporting `**kwargs` unpacking checks and tagged union narrowing.
+    ([pylance-release#374](https://github.com/microsoft/pylance-release/issues/374), [pylance-release#1328](https://github.com/microsoft/pylance-release/issues/1328), [pylance-release#1240](https://github.com/microsoft/pylance-release/issues/1240))
+-   A bug that led to infinite recursion has been fixed.
+    ([pylance-release#1315](https://github.com/microsoft/pylance-release/issues/1315))
+-   Memory usage when indexing is enabled has been improved.
+-   The bundled stubs for pandas have been updated.
+-   The bundled stubs now include partial stubs for `gym`.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.141 to 1.1.144, including the following changes:
+
+-   [1.1.144](https://github.com/microsoft/pyright/releases/tag/1.1.144)
+    -   Bug Fix: Changed CLI to not use process.exit() but instead return normally. The previous code sometimes resulted in truncated output.
+    -   Enhancement: Added error for keyword-only parameter separator or position-only parameter separator appearing in a function signature after an "\*args" parameter. This will result in a runtime error.
+        ([pylance-release#1341](https://github.com/microsoft/pylance-release/issues/1341))
+    -   Enhancement: Improved error message for missing \*\*kwargs parameter when assigning one function to another.
+    -   Bug Fix: Fixed bug in logic that converts a type into a text representation. It wasn't properly adding the scope for a ParamSpec in certain circumstances, so instead of outputting `P@scope`, it was outputting `P`.
+    -   Bug Fix: Fixed bug in specialization of generic class that contains only one type variable that is a ParamSpec.
+    -   Bug Fix: Fixed bugs that prevented ParamSpec annotations `P.args` and `P.kwargs` from working properly when the annotation was in quotes.
+    -   Bug Fix: Fixed false positive error in check for inappropriate use of contravariant type var in return type annotation. It should not generate an error when the contravariant type var is part of a union.
+    -   Enhancement: Improved error message consistency for for "cannot assign to None" condition.
+-   [1.1.143](https://github.com/microsoft/pyright/releases/tag/1.1.143)
+    -   Bug Fix: Added missing recursion check that resulted in stack overflow in type evaluator.
+        ([pylance-release#1315](https://github.com/microsoft/pylance-release/issues/1315))
+    -   Enhancement: Added support for unpacked dictionary argument in function calls when the unpacked expression is a TypedDict.
+        ([pylance-release#374](https://github.com/microsoft/pylance-release/issues/374), [pylance-release#1328](https://github.com/microsoft/pylance-release/issues/1328))
+    -   Enhancement: Improved error message for the case where positional-only parameters are used in a function and a caller does not provide enough arguments.
+    -   Bug Fix: Improved logic for argument matching for call expressions where the call includes keyword-only parameters and the call expression includes an unpacked list argument.
+        ([pylance-release#1319](https://github.com/microsoft/pylance-release/issues/1319))
+    -   Bug Fix: Fixed bug in type evaluation of list comprehensions when literal types were involved. The literal types were being widened to their associated non-literal types.
+    -   Enhancement: Improved `isinstance` type narrowing logic to accommodate the case where the first argument to `isinstance` is a module and the second argument is a runtime-checkable protocol class.
+    -   Bug Fix: Fixed regression that caused false positive in the case where a `Callable` type was used that defined its own TypeVar scope and was later matched against a `self` parameter in an instance method.
+    -   Enhancement: Enhanced "reportIncompatibleVariableOverride" diagnostic check so it applies to instance variables defined within a method (e.g. `self.var: str = ""`) in addition to class variables.
+    -   Enhancement: Added type narrowing support for index expressions where the index value is a string literal.
+    -   Enhancement: Added support for "tagged union" type narrowing when the conditional expression is of the form `x[K] == V` or `x[K] != V` where `x` is a union of TypedDict objects and `K` is a literal str key value that refers to a field with a literal type and `V` is a literal value.
+        ([pylance-release#1240](https://github.com/microsoft/pylance-release/issues/1240))
+-   [1.1.142](https://github.com/microsoft/pyright/releases/tag/1.1.142)
+    -   Bug Fix: Fixed false negative (missing error) due to bug in dictionary expression bidirectional type inference logic when the expected type included a union.
+    -   Enhancement: Added support for subscript expressions that contain slices when applied to tuples with known lengths.
+    -   Bug Fix: Fixed false negative condition where a protocol class was treated as a callback protocol even though it included members other than `__call__`.
+    -   Bug Fix: Fixed false positive error when a builtin symbol was used in a file but later redeclared within the module scope.
+        ([pylance-release#1320](https://github.com/microsoft/pylance-release/issues/1320))
+    -   Bug Fix: Fixed bug in "expression printer" which is used in some error messages. It was not properly preserving parentheses for binary operation expressions.
+    -   Bug FIx: Fixed false positive error for "missing type arguments" that was surfaced when changes were made within typeshed's types.pyi stub.
+
 ## 2021.5.3 (19 May 2021)
 
 Notable changes:
