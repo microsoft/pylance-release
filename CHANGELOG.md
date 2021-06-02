@@ -1,5 +1,52 @@
 # Changelog
 
+## 2021.6.0 (2 June 2021)
+
+Notable changes:
+
+-   Libraries installed via egg/zip files are now supported (including `transformers` installed via `conda`).
+    ([pylance-release#1260](https://github.com/microsoft/pylance-release/issues/1260))
+-   Unannotated decorators are now treated as no-ops, rather than using type inference and potentially obscuring the signature of the function they decorate.
+-   Files that were referenced but unopened will no longer be mistakenly reanalyzed when opened.
+-   Tables in docstrings are now better spaced.
+-   The bundled stubs for django have been updated.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.144 to 1.1.146, including the following changes:
+
+-   [1.1.146](https://github.com/microsoft/pyright/releases/tag/1.1.146)
+    -   Enhancement: Updated to the latest version of typeshed stubs.
+    -   Behavior Change: Updated `reportIncompatibleVariableOverride` to avoid reporting an error when a class variable is reassigned a value in a base class without declaring its type.
+    -   Bug Fix: Fixed false positive error indicating that a type alias is a variable. This results when a type alias refers to a union and that union is reformed when losing the original type alias.
+    -   Enhancement: Added optimization for union creation where all subtypes are the same. This optimization commonly reduces the need to create new types during code flow operations. It also retains type alias info more faithfully.
+    -   Enhancement: Added support for `__qualname__` and `__module__` attributes within a class body.
+        ([pylance-release#1376](https://github.com/microsoft/pylance-release/issues/1376))
+    -   Behavior Change: Changed call expression evaluation logic to not skip return type inference when there are errors detected during argument expression evaluation. This was previously added as an optimization, but it was leading to confusing results in some cases.
+    -   Enhancement: Enhanced logic to detect unannotated decorator functions and treat them as no-ops rather than using return type inference, which often leads to incorrect and confusing results for decorators.
+    -   Bug Fix: Fixed bug in pattern matching logic for class patterns where the class uses properties or descriptors for the targeted attributes.
+    -   Enhancement (from pylance): Added support for libraries packages as zip/egg containers.
+-   [1.1.145](https://github.com/microsoft/pyright/releases/tag/1.1.145)
+    -   Bug Fix: Fixed bug that resulted in the incorrect type when bidirectional type inference (an "expected type") was used in conjunction with the `tuple()` constructor.
+        ([pylance-release#1359](https://github.com/microsoft/pylance-release/issues/1359))
+    -   Behavior Change: Changed logic to avoid reanalyzing a file when it is opened in the editor if we have already analyzed it and the file contents are the same as before.
+    -   Bug Fix: Improved handling of call expressions where the call is a union and some of the subtypes return NoReturn and others do not.
+    -   Behavior Change: Changed the logic that validates the assignment to instance variables that are marked `Final`. Previously, only one such assignment was allowed even if it was within an `__init__` method. It now allows an arbitrary number of assignments (conditional or otherwise) as long as they occur within an `__init__` method.
+    -   Enhancement: Enhanced "reportIncompatibleVariableOverride" diagnostic check to detect the case where a base class declares a class variable and a child class tries to override it with an instance variable or vice versa.
+    -   Bug Fix: Added logic to handle the case where a dataclass subclass overrides a member of its parent class with a ClassVar and another dataclass then subclasses from the child.
+    -   Enhancement: Enhanced type stub generator so it doesn't emit "object" as base class, since that's implied in Python 3.x.
+    -   Enhancement: Enhanced type stub generator to emit inferred function and method return types as comments.
+    -   Behavior Change: Removed false positive error reported for a "bare" `raise` statement outside of an `except` clause.
+        ([pylance-release#1365](https://github.com/microsoft/pylance-release/issues/1365))
+    -   Bug Fix: Changed type variable constraint solver to preserve literal types when matching type arguments from other class types. In other cases, it typically "strips" the literal, widening the type to a str, int, etc. This change allows proper type evaluation in certain cases where a literal type is specified in a type annotation, such as with `Set[Literal["foo"]]`.
+    -   Bug Fix: Fixed bug in code flow engine where it was sometimes evaluating the wrong type when cycles occurred in type dependencies.
+        ([pylance-release#1356](https://github.com/microsoft/pylance-release/issues/1356))
+    -   Bug Fix: Fixed bug that can result in a crash when indexing a file that includes a nested function or lambda that is used for type inference.
+    -   Enhancement: Improved detection and reporting of illegal type alias recursion cases — e.g. when a possible type alias refers to a function that uses the type alias in parameter or return type annotations.
+    -   Enhancement: Changed type printer to include a "\*" after a type if it is conditionally associated with a TypeVar constraint.
+    -   Bug Fix: Augmented type checking logic for generator expressions to allow `await` keyword even though enclosing function isn't async. Also allowed generator expression to be evaluated as `AsyncGenerator` rather normal `Generator`.
+        ([pylance-release#1348](https://github.com/microsoft/pylance-release/issues/1348))
+    -   Enhancement: Changed the way conditional constraints are tracked in the type evaluator. This is a significant change that simplifies the logic and handles some cases that the old approach did not.
+
 ## 2021.5.4 (26 May 2021)
 
 Notable changes:
