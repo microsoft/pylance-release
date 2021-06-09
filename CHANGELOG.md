@@ -1,5 +1,51 @@
 # Changelog
 
+## 2021.6.1 (9 June 2021)
+
+Notable changes:
+
+-   Search paths returned by the Python interpreter are now normalized according to the case provided by the OS.
+    ([pylance-release#1375](https://github.com/microsoft/pylance-release/issues/1375))
+-   An error related to file watcher creation will no longer appear.
+    ([pylance-release#1392](https://github.com/microsoft/pylance-release/issues/1392))
+-   Pylance will no longer crash at startup when an invalid zip or egg file are present in the workspace.
+    ([pylance-release#1397](https://github.com/microsoft/pylance-release/issues/1397))
+-   Match/case statements will now be checked for exhaustiveness.
+    ([pylance-release#1380](https://github.com/microsoft/pylance-release/issues/1380))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.146 to 1.1.148, including the following changes:
+
+-   [1.1.148](https://github.com/microsoft/pyright/releases/tag/1.1.148)
+    -   Enhancement: Improved type narrowing of subject expression in a match statement when none of the case statements match the pattern and the code falls through the bottom of the match.
+    -   Enhancement: Added support for pattern matching exhaustion detection in cases where there is not an explicit irrefutable pattern present.
+        ([pylance-release#1380](https://github.com/microsoft/pylance-release/issues/1380))
+    -   Bug Fix: Fixed recent regression that resulted in false positive errors when attempting to instantiate `tuple` or `type` directly.
+    -   Enhancement: Improved type checking for classes that are assigned to `Callable` types. Previously, type incompatibilities were not reported if the `__init__` or `__new__` methods were overloaded within the class.
+        ([pylance-release#1400](https://github.com/microsoft/pylance-release/issues/1400))
+    -   Bug Fix: Fixed bug that caused parser error when handling a carriage return within a triple-quoted inner string within an outer triple-quoted f-string.
+        ([pylance-release#1401](https://github.com/microsoft/pylance-release/issues/1401))
+    -   Bug Fix: Fixed bug that resulted in false positive error when second argument to `NewType` call contained a `Type` object.
+        ([pylance-release#1406](https://github.com/microsoft/pylance-release/issues/1406))
+    -   Bug Fix: Fixed recent regression that resulted in a false positive error when instantiating a variable of type `Type[T]` where `T` was a protocol class.
+    -   Bug Fix: Fixed bug in type printer that resulted in double parentheses around return type expressions when they involved unions.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using generic `Type[T]` in a function parameter in overload validation.
+        ([pylance-release#1407](https://github.com/microsoft/pylance-release/issues/1407))
+    -   Bug Fix: Fixed bug in type checker relating to constrained type variables that combine non-union and union constraints.
+        ([pylance-release#1412](https://github.com/microsoft/pylance-release/issues/1412))
+    -   Bug Fix: Fixed bug in type checker when handling Final variables assigned at the class level. PEP 591 indicates that they should be treated as though they are annotated as ClassVar even though they are not.
+    -   Bug Fix: Fixed a bug in the type checker relating to the use of a specialized generic class that is parameterized by a ParamSpec.
+-   [1.1.147](https://github.com/microsoft/pyright/releases/tag/1.1.148)
+    -   Enhancement: Added check for an attempt to instantiate a protocol class. This causes a runtime error.
+    -   Behavior Change: Closed a hole in type narrowing for "in" operator when used with TypedDict. It can eliminate types from a union only if the type is marked final.
+    -   Enhancement: Changed type printer to handle recursion differently — most notably when dealing with recursive type aliases. If it is asked to expand type aliases, it now expands only the first level of a given type alias, so if there's recursion, it will use the type alias name the second time it is encountered rather than continuing to expand it.
+    -   Enhancement: Changed `reveal_type` and `reveal_locals` to expand type aliases in their output.
+    -   Bug Fix: Fixed bug that resulted in incorrect type checking behavior when a type annotation involved a tuple with literal elements.
+    -   Bug Fix: Fixed bug that affected the handling of a function decorator that uses ParamSpec when applied to a classmethod or staticmethod.
+    -   Enhancement: Added diagnostic for an attempt to instantiate a special type like a Union, Callable, or Optional.
+    -   Bug Fix: Improved support for generic functions that annotate a parameter and a return type with a union that includes a TypeVar. In such cases, the TypeVar may not be matched during constraint solving.
+    -   Enhancement: Improved hover text for type variables and param specs by updating the label so they are not shown simply as type aliases.
+    -   Enhancement: Updated to the latest typeshed stubs.
+
 ## 2021.6.0 (2 June 2021)
 
 Notable changes:
