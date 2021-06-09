@@ -34,7 +34,7 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.146 to 1.1.148,
         ([pylance-release#1412](https://github.com/microsoft/pylance-release/issues/1412))
     -   Bug Fix: Fixed bug in type checker when handling Final variables assigned at the class level. PEP 591 indicates that they should be treated as though they are annotated as ClassVar even though they are not.
     -   Bug Fix: Fixed a bug in the type checker relating to the use of a specialized generic class that is parameterized by a ParamSpec.
--   [1.1.147](https://github.com/microsoft/pyright/releases/tag/1.1.148)
+-   [1.1.147](https://github.com/microsoft/pyright/releases/tag/1.1.147)
     -   Enhancement: Added check for an attempt to instantiate a protocol class. This causes a runtime error.
     -   Behavior Change: Closed a hole in type narrowing for "in" operator when used with TypedDict. It can eliminate types from a union only if the type is marked final.
     -   Enhancement: Changed type printer to handle recursion differently — most notably when dealing with recursive type aliases. If it is asked to expand type aliases, it now expands only the first level of a given type alias, so if there's recursion, it will use the type alias name the second time it is encountered rather than continuing to expand it.
