@@ -1,5 +1,40 @@
 # Changelog
 
+## 2021.6.2 (16 June 2021)
+
+Notable changes:
+
+-   Pylance will now offer completions inside dictionary key context if that dictionary was defined in the current scope.
+-   The bundled stubs now include partial stubs for sympy.
+    ([pylance-release#1388](https://github.com/microsoft/pylance-release/issues/1388), [pylance-release#946](https://github.com/microsoft/pylance-release/issues/946))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.148 to 1.1.149, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Changed reportPrivateUsage diagnostic check to suppress the check when method or attribute comes from a type stub file. It is presumably part of the public interface contract in this case and not a private or protected member.
+        ([pylance-release#1454](https://github.com/microsoft/pylance-release/issues/1454))
+    -   Bug Fix: Fixed bug that caused class docString not to appear in signature help when invoking constructor for classes with synthesized constructor methods (e.g. dataclass or namedtuple).
+        ([pylance-release#640](https://github.com/microsoft/pylance-release/issues/640))
+    -   Bug Fix: Fixed false positive errors relating to unions created from a `Type[T]` type
+        ([pylance-release#1422](https://github.com/microsoft/pylance-release/issues/1422))
+    -   Enhancement: Return empty completionList for Ellipsis
+-   [1.1.149](https://github.com/microsoft/pyright/releases/tag/1.1.149)
+    -   Bug Fix (from pylance): Fixed crash that can occur when a library is installed in the form of a zip file, and that zip file is malformed.
+        ([pylance-release#1421](https://github.com/microsoft/pylance-release/issues/1421))
+    -   Bug Fix: Fixed bug that caused false positive error when using a generic type alias as a constructor call.
+    -   Enhancement: Added check for illegal use of "async" keyword. The Python interpreter generates a syntax error if it is used outside of an async function.
+    -   Enhancement: Tweaked heuristics in constraint solver for dealing with matching of TypeVar T for the type expression `Union[T, SomeClass[T]]`. There are two valid solutions if the argument is type `SomeClass-[X]`, but the "simpler" solution (`T = X`) should be preferred over the more complex (`T = SomeClass[X]`).
+    -   Bug Fix: Fixed bug in type checker related to the use of a TypeVar or ParamSpec within an inner function when it is already bound to an outer function but used only within that outer function's return type a nnotation.
+    -   Bug Fix: Added error handling for very large source files. This situation is now detected earlier so we don't attempt to load the file contents and crash the language server in the process.
+        ([pylance-release#1426](https://github.com/microsoft/pylance-release/issues/1426))
+    -   Behavior Change: Added logic to convert `Type[A | B]` into `Type[A] | Type[B]`, which avoids violating assumptions elsewhere in the type checker.
+    -   Enhancement: Updated to the latest version of typeshed, which includes support for ParamSpec in contextlib's contextmanager function.
+        ([pylance-release#516](https://github.com/microsoft/pylance-release/issues/516))
+    -   Bug Fix: Fixed bug in type checker that occurred in some cases when a generic function returned `Type[T]`. In some cases where an input parameter also had an annotation of `Type[T]`, the "solved" type was wrapped in `Type` twice (e.g. `Type[Type[int]]`).
+        ([pylance-release#1437](https://github.com/microsoft/pylance-release/issues/1437))
+    -   Bug Fix: Fixed bug in type evaluator that occurred when calling a constructor of type `Type[T]` where `T` is a constrained TypeVar.
+    -   Bug Fix: Fixed bug that resulted in an import being marked as unaccessed if it was accessed within a class declaration but was also redeclared within the class scope.
+
 ## 2021.6.1 (9 June 2021)
 
 Notable changes:
