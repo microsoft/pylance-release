@@ -1,5 +1,61 @@
 # Changelog
 
+## 2021.6.3 (23 June 2021)
+
+Notable changes:
+
+-   Absolute imports of local files are now supported in "open file" mode.
+-   Extract method/variable will now also trigger a rename on the newly generated symbol.
+-   Pylance will now auto-close triple quoted strings.
+-   Dictionary key completions that contain non-alpha characters will now work correctly.
+    ([pylance-release#1460](https://github.com/microsoft/pylance-release/issues/1460))
+-   Completions on nested TypedDicts will now work correctly.
+    ([pylance-release#1485](https://github.com/microsoft/pylance-release/issues/1485))
+-   The bundled stubs for matplotlib, django, openpyxl, and pandas have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.149 to 1.1.152, including the following changes:
+
+-   [1.1.152](https://github.com/microsoft/pyright/releases/tag/1.1.152)
+    -   Bug Fix: Fixed false positive error involved in the instantiation of `type(self)()` within an abstract class.
+    -   Bug Fix: Fixed parser bug that caused completion provider to not work correctly when completing relative imports ending in a dot.
+        ([pylance-release#1479](https://github.com/microsoft/pylance-release/issues/1479))
+    -   Bug Fix: Fixed bug that led to false positive error related to dictionary unpacking when the argument type is a type variable.
+        ([pylance-release#1463](https://github.com/microsoft/pylance-release/issues/1463))
+    -   Bug Fix: Fixed false positive error when using `del` keyword with a tuple expression.
+        ([pylance-release#1480](https://github.com/microsoft/pylance-release/issues/1480))
+    -   Bug Fix: Fixed bug in completion provider where it was interpreting prior quotes incorrectly when completing a typed dictionary key, most easily reproducible when using nested typed dictionaries.([pylance-release#1485](https://github.com/microsoft/pylance-release/issues/1485))
+    -   Bug Fix: Eliminated false positive error for `Final` when it doesn't include a type argument.
+    -   Bug Fix: Fixed several possible causes of stack overflow crashes in the type evaluator.
+        ([pylance-release#1464](https://github.com/microsoft/pylance-release/issues/1464))
+    -   Bug Fix (from pylance): Fixed bug in completion provider related to dictionary key completions that contain non-alpha characters.
+        ([pylance-release#1460](https://github.com/microsoft/pylance-release/issues/1460))
+    -   Bug Fix: Fixed false positive error when `super()` was used in a static or class method and the target function in the base class had an annotated cls parameter.
+        ([pylance-release#1488](https://github.com/microsoft/pylance-release/issues/1488))
+-   [1.1.151](https://github.com/microsoft/pyright/releases/tag/1.1.151)
+    -   Enhancement: Added support for metaclasses that support the `__getitem__`, `__setitem__` and `__delitem__` magic methods, allowing classes that derive from these metaclasses to be used in index expressions.
+    -   Bug Fix: Fixed bug that caused dataclass usage to break in Python 3.6 and older when using the polyfill library.
+    -   Enhancement: Added conditional type support for `__setitem__` so a value with a type defined by a constrained TypeVar can be assigned to an index expression.
+    -   Bug Fix: Fixed bug that caused a crash in the tokenizer when encountering a string literal that is extremely long (>100K in length).
+    -   Bug Fix: Fixed bug caused by a variable assignment with a list expression on the RHS that was interpreted temporarily as a type alias declaration. Added more sanity checking on the type of the assigned expression for type aliases.
+    -   Bug Fix: Fixed type evaluation bug where `Callable` is used to annotate an input parameter, and the `Callable` return type is a union that contains a type variable.
+    -   Bug Fix: Fixed bug in constraint solver relating to replacement of return type of the form T when matching was performed against Type[T].
+    -   Enhancement: Added support for `__builtins__` module symbol symbol.
+    -   Enhancement: Added support for type narrowing conditional expressions of the form `a is False`, `a is True`, `a is not False` and `a is not True`.
+-   [1.1.150](https://github.com/microsoft/pyright/releases/tag/1.1.150)
+    -   Enhancement: Avoid completion suggestions when typing an ellipsis. (Thanks to contribution from Marc Mueller.)
+    -   Bug Fix: Fixed false positive errors relating to unions created from a `Type[T]` type.
+        ([pylance-release#1468]https://github.com/microsoft/pylance-release/issues/1468))
+    -   Bug Fix: Fixed bug that caused class docString not to appear in signature help when invoking constructor for classes with synthesized constructor methods (e.g. dataclass or namedtuple).
+    -   Behavior Change: Changed `reportPrivateUsage` diagnostic check to suppress the check when method or attribute comes from a type stub file. It is presumably part of the public interface contract in this case and not a private or protected member.
+        ([pylance-release#1478](https://github.com/microsoft/pylance-release/issues/1478))
+    -   Enhancement: Added completion suggestion support for dictionary key names.
+    -   Bug Fix: Fixed bug in type evaluator that resulted in incorrect type in certain cases when evaluating function with declared return type of `Type[T]`.
+        ([pylance-release#1462](https://github.com/microsoft/pylance-release/issues/1462))
+    -   Bug Fix: Fixed false positive error that occurred when evaluating a binary operation provided by a metaclass when the LHS or RHS type was a `Type[T]`.
+    -   Behavior Change: In basic type checking mode, enabled the following diagnostic checks by default: reportOptionalSubscript, reportOptionalMemberAccess, reportOptionalCall, reportOptionalIterable, reportOptionalContextManager, and reportOptionalOperand.
+    -   Bug Fix: Fixed crashing bug in document symbol provider when handling import statements.
+    -   Bug Fix: Fixed type evaluation bug that affected the specialization of a generic type alias that includes a bound TypeVar.
+
 ## 2021.6.2 (16 June 2021)
 
 Notable changes:
