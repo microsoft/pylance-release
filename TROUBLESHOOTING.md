@@ -54,8 +54,8 @@ you are running an official build and are still running into issues, please file
 
 ### WSL does not refresh on package updates
 
-If you are using Pylance in a WSL environment, make sure your workspace is located under a WSL folder (/home/...) and not shared with windows (/mtn/...)
-see issues (https://github.com/microsoft/pylance-release/issues/1443#issuecomment-867863124, https://github.com/microsoft/vscode-remote-release/issues/5000)
+If you are using Pylance in a WSL environment, make sure your workspace is located under a WSL folder (`/home/...`) and not shared with Windows (`/mnt/...`).
+See issues [#1443](https://github.com/microsoft/pylance-release/issues/1443#issuecomment-867863124) and [vscode-remote-release#5000](https://github.com/microsoft/vscode-remote-release/issues/5000).
 
 ## Filing an issue
 
