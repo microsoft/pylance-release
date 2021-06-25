@@ -52,6 +52,11 @@ To use Pylance, you will need to be using VS Code version 1.51 or above.
 To use Pylance, you must be running an official build of VS Code. If you've verified that
 you are running an official build and are still running into issues, please file a bug report.
 
+### WSL does not refresh on package updates
+
+If you are using Pylance in a WSL environment, make sure your workspace is located under a WSL folder (/home/...) and not shared with windows (/mtn/...)
+see issue https://github.com/microsoft/vscode-remote-release/issues/5000
+
 ## Filing an issue
 
 When filing an issue, make sure you do the following:
