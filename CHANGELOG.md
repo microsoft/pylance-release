@@ -1,5 +1,51 @@
 # Changelog
 
+## 2021.7.0 (6 July 2021)
+
+Notable changes:
+
+-   An "add to extraPaths" quick fix for unresolved imports has been added, which suggests and adds potential paths `python.analysis.extraPaths`.
+-   Support for the undocumented "mspythonconfig.json" config file name has been removed. This was previously available as an alternative to "pyrightconfig.json", but we've decided to standardize on the latter.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.152 to 1.1.155, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Updated to the latest version of typeshed
+    -   Bug Fix: Fixed false positive error with f-string format specifier that contains an expression within braces and also a colon specifier.
+        ([pylance-release#1522](https://github.com/microsoft/pylance-release/issues/1522))
+    -   Bug Fix: Fixed false positive error related to an escape sequence (backslash) used in an f-string format specifier.
+    -   Bug Fix: Fixed false positive error related to member access of optional type.
+-   [1.1.155](https://github.com/microsoft/pyright/releases/tag/1.1.155)
+    -   Bug Fix: Fixed recent regression that resulted in false positive errors when a class declaration used both `Type[X]` and `X` in its specialization of base classes.
+    -   Bug Fix: Fixed false positive error related to `isinstance` narrowing of a non-constrained TypeVar.
+    -   Bug Fix: Changed encoding of literals in error messages to avoid including raw (unescaped) special characters in output.
+    -   Behavior Change: Increased maximum source file size from 16MB to 32MB.
+        ([pylance-release#1520](https://github.com/microsoft/pylance-release/issues/1520))
+    -   Enhancement: Improved formatting of error messages that include expressions — specifically when the expression includes an empty dict ("{}").
+    -   Bug Fix: Fixed false positive error for the case where a function with positional/keyword parameters is assigned to a callback protocol that accepts only keyword parameters.
+    -   Enhancement: Added support for member access expressions for the `None` object.
+    -   Enhancement: Added support for `isinstance` and `issubclass` type narrowing where the variable type and the test type have no apparent relationship. The type evaluator synthesizes a class that is a subclass of both types — effectively an "intersection" of the two.
+        ([pylance-release#1499](https://github.com/microsoft/pylance-release/issues/1499))
+    -   Behavior Change: Modified `reportUnnecessaryIsInstance` diagnostic to never report always-false conditions because the type checker no longer generates such conditions.
+        ([pylance-release#1496](https://github.com/microsoft/pylance-release/issues/1496))
+-   [1.1.154](https://github.com/microsoft/pyright/releases/tag/1.1.154)
+    -   Removed support for undocumented "mspythonconfig.json" config file name. This was previously available as an alternative to "pyrightconfig.json", but we've decided to standardize on the latter.
+    -   Bug Fix: Changed logic for "overload missing implementation" check to not require an implementation within a protocol class.
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Bug Fix: Fixed confusing error message when file or directory is specified on command line but is excluded by the "exclude" section of the config file.
+    -   Behavior Change: Exempt classes from `__slots__` check if they explicitly declare an empty slots. This is commonly used for mix-in classes that are compatible with slotted classes.
+    -   Internal Change: This version of pyright includes a significant change within the type evaluator that simplifies the code and eliminates a major source of bugs related to the handling of `Type[X]` type annotations.
+-   [1.1.153](https://github.com/microsoft/pyright/releases/tag/1.1.153)
+    -   Bug Fix: Fixed type evaluation bug where `Callable` is used to annotate an input parameter, and the `Callable` return type is a union that contains a type variable and the type variable is used within a nested function.
+    -   Bug Fix: Fixed bug in "isinstance" type narrowing logic and in the "unnecessary isinstance" diagnostic check when the type being narrowed is a runtime-checkable protocol instance.
+    -   Bug Fix: Fixed bug in type evaluator that resulted in a false positive error when a `__getattr__` was supplied in a metaclass, and it returned a generic callable type.
+        ([pylance-release#1481](https://github.com/microsoft/pylance-release/issues/1481))
+    -   Enhancement: Added validation for assignment of instance variables that are not declared in `__slots__`.
+    -   Enhancement: Added check for class variables that conflict with an instance variable declared in `__slots__` within a class.
+    -   Behavior Change: When displaying overloaded functions in hover text, filter out the implementation signature.
+        ([pylance-release#1498](https://github.com/microsoft/pylance-release/issues/1498))
+    -   Bug Fix: Fixed bug in code flow engine that caused incorrect type evaluation of complex expression that appears multiple times within a function in contexts where `isinstance` type narrowing generates different types for the same expression.
+
 ## 2021.6.3 (23 June 2021)
 
 Notable changes:
