@@ -1,5 +1,9 @@
 # Changelog
 
+## 2021.7.2 (7 July 2021)
+
+This is a hotfix release, fixing a completion regression introduced in 2021.6.3.
+
 ## 2021.7.1 (6 July 2021)
 
 Notable changes:
