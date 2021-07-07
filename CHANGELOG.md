@@ -1,5 +1,11 @@
 # Changelog
 
+## 2021.7.1 (6 July 2021)
+
+Notable changes:
+
+-   The bundled PIL stubs have been removed, as they have been merged into typeshed's Pillow stubs.
+
 ## 2021.7.0 (6 July 2021)
 
 Notable changes:
