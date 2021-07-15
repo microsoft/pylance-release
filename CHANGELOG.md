@@ -1,5 +1,9 @@
 # Changelog
 
+## 2021.7.4 (15 July 2021)
+
+This is a hotfix release, fixing an error message that could appear when the "add to extraPaths" code action was used.
+
 ## 2021.7.3 (14 July 2021)
 
 Notable changes:
