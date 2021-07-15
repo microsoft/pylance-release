@@ -1,5 +1,39 @@
 # Changelog
 
+## 2021.7.3 (14 July 2021)
+
+Notable changes:
+
+-   Fixed bug that caused diagnostics from an open file not to be cleared after closing that file if it was not saved.
+    ([pylance-release#1514](https://github.com/microsoft/pylance-release/issues/1514))
+-   Fixed document highlight regression when selecting a class attribute.
+    ([pylance-release#1500](https://github.com/microsoft/pylance-release/issues/1500))
+-   Dictionary key completions now support non-string literals.
+    ([pylance-release#1493](https://github.com/microsoft/pylance-release/issues/1493))
+-   The bundled stubs for django and pandas have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.155 to 1.1.156, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused diagnostics from an open file not to be cleared after closing that file if it was not saved.
+        ([pylance-release#1514](https://github.com/microsoft/pylance-release/issues/1514))
+    -   Bug Fix: Fixed recent regression in type evaluator that occurs when a generic (non-specialized) type is assigned to another generic type and the type parameter(s) for the generic type are invariant.
+        ([pylance-release#1526](https://github.com/microsoft/pylance-release/issues/1526))
+    -   Enhancement: Improved handling of isinstance type narrowing logic when the type being narrowed is a callable
+    -   Enhancement: Added support for ParamSpec's within a Protocol, which is supported in Python 3.10.
+    -   Enhancement: Improved support for callable type narrowing in cases where the type is a non-callable instance, but a subtype could be callable.
+    -   Bug Fix: Fixed false positive error when calling an object that has an Any in its inheritance chain.
+-   [1.1.156](https://github.com/microsoft/pyright/releases/tag/1.1.156)
+    -   Bug Fix: Fixed false positive error related to member access of optional type.
+    -   Bug Fix: Fixed false positive error related to an escape sequence (backslash) used in an f-string format specifier.
+    -   Bug Fix: Fixed false positive error with f-string format specifier that contains an expression within braces and also a colon specifier.
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Bug Fix: Fixed false positive error when evaluating a subscript (index) operation with an index value that is a union type and an overloaded `__getitem__` method that requires union expansion.
+    -   Enhancement: Added new check for a function overload that contains an implementation.
+    -   Enhancement: Added special-case handling for addition of two tuples that have known lengths.
+    -   Bug Fix: Fixed bug in check that detects improper variance for type variables used within generic protocols. Class or instance variables within a generic protocol must use invariant type variables.
+    -   Enhancement: Improved heuristics for type matching when source and dest types are unions and invariance is being enforced — specifically in the case where the destination union type includes generic types.
+
 ## 2021.7.2 (7 July 2021)
 
 This is a hotfix release, fixing a completion regression introduced in 2021.6.3.
