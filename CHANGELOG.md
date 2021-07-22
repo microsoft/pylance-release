@@ -1,5 +1,45 @@
 # Changelog
 
+## 2021.7.5 (22 July 2021)
+
+Notable changes:
+
+-   Triple-quote closing now works correctly in LiveShare with multiple cursors.
+    ([pylance-release#1583](https://github.com/microsoft/pylance-release/issues/1583))
+-   A parser bug with f-strings containing nested strings has been fixed.
+    ([pylance-release#1584](https://github.com/microsoft/pylance-release/issues/1584))
+-   A new "reportUninitializedInstanceVariable" diagnostic check looks for instance variables that are not initialized in the class body or constructor.
+-   The bundled stubs for django and pandas have been updated.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.156 to 1.1.157, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Changed type checking logic for functions to allow a function with a return result of `NoReturn` to match against any other return type.
+    -   Bug Fix: Fixed false positive error in parser dealing with f-strings with string literals within the f-string expression that, in turn, have quotes within the string literal.
+    -   Bug Fix: Fixed bug in TypeVar matching logic that allowed `Type[T]` to be matched against an instance of a type.
+    -   Bug Fix: Fixed false positive error related to the use of the Final keyword when annotating attributes within a dataclass.
+        ([pylance-release#1574](https://github.com/microsoft/pylance-release/issues/1574))
+    -   Enhancement: Added support for nested callables that use a ParamSpec at each level.
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Enhancement: Updated docs for reportUnsupportedDunderAll.
+    -   Enhancement: Added new diagnostic check (controlled by the existing "reportUnsupportedDunderAll" config switch) that reports an issue with a name specified in `__all__` if that symbol does not exist at the module level.
+    -   Bug Fix: Fixed handling of generic type aliases with missing type arguments used in type annotations when the type alias itself is a member access expression.
+        ([pylance-release#1565](https://github.com/microsoft/pylance-release/issues/1565))
+-   [1.1.157](https://github.com/microsoft/pyright/releases/tag/1.1.157)
+    -   Bug Fix: Fixed false positive error when calling an object that has an `Any` in its inheritance chain.
+    -   Enhancement: Improved support for `callable` type narrowing in cases where the type is a non-callable instance, but a subtype could be callable.
+    -   Enhancement: Improved handling of `callable` type narrowing when the type involves a constrained type variable.
+    -   Enhancement: Added support for ParamSpec's within a Protocol, which is supported in Python 3.10.
+    -   Enhancement: Improved handling of `isinstance` type narrowing logic when the type being narrowed is a callable.
+    -   Bug Fix: Fixed recent regression in type evaluator that occurs when a generic (non-specialized) type is assigned to another generic type and the type parameter(s) for the generic type are invariant.
+    -   Bug Fix: Fixed bug that caused diagnostics from an open file not to be cleared after closing that file if it was not saved.
+    -   Enhancement (from pylance): Improved completion suggestions for literals when used as dictionary keys.
+    -   New Feature: Implemented "reportUninitializedInstanceVariable" diagnostic check that looks for instance variables that are not initialized in the class body or constructor.
+    -   Bug Fix: Fixed false positive error due to bug in constraint solver related to the handling of `Type[T]` when `T` is a constrained type variable.
+    -   Bug Fix: Fixed false positive error related to the use of a recursive type alias when `from __future__ import annotations` was in effect.
+    -   Bug Fix: Fixed false negative related to augmented assignment expressions when operand was a union type and a subset of the union subtypes were not supported for the operation.
+
 ## 2021.7.4 (15 July 2021)
 
 This is a hotfix release, fixing an error message that could appear when the "add to extraPaths" code action was used.
