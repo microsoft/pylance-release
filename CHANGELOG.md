@@ -1,5 +1,39 @@
 # Changelog
 
+## 2021.7.6 (28 July 2021)
+
+Notable changes:
+
+-   PEP 258 style "attribute docstrings" are now supported.
+    ([pylance-release#1576](https://github.com/microsoft/pylance-release/issues/1576))
+-   Attribute assignments that use reserved keywords now correctly cause a parser error.
+-   A number of bugs that caused crashes in certain circumstances have been fixed.
+    ([pylance-release#1597](https://github.com/microsoft/pylance-release/issues/1597))
+-   The bundled stubs for django and pandas have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.157 to 1.1.158, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Added a new log error for the case where enumeration of files within the workspace is taking longer than 10 seconds.
+    -   Bug Fix: Fixed several bugs that caused crashes (dereference of undefined variable) in certain circumstances.
+    -   Bug Fix: Fixed bug in parser where it was too permissive in allowing keywords to be used as identifiers. The Python interpreter is less permissive, so pyright's parser should match.
+    -   Enhancement: Added PEP 570 to the list of supported type features.
+    -   Enhancement: Added support in literal comparison type narrowing to filter out comparisons to "None" in positive case.
+    -   Bug Fix: Fixed bug that could lead to an internal stack overflow when a generic value was used as an argument for a function or class decorator.
+        ([pylance-release#1597](https://github.com/microsoft/pylance-release/issues/1597))
+-   [1.1.158](https://github.com/microsoft/pyright/releases/tag/1.1.158)
+    -   Bug Fix: Fixed handling of generic type aliases with missing type arguments used in type annotations when the type alias itself is a member access expression.
+    -   Enhancement: Added new diagnostic check (controlled by the existing "reportUnsupportedDunderAll" config switch) that reports an issue with a name specified in `__all__` if that symbol does not exist at the module level.
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Enhancement: Added support for nested callables that use a ParamSpec at each level.
+    -   Bug Fix: Fixed false positive error related to the use of the `Final` keyword when annotating attributes within a dataclass.
+    -   Bug Fix: Fixed bug in TypeVar matching logic that allowed Type[T] to be matched against an instance of a type.
+    -   Behavior Change: Changed type checking logic for functions to allow a function with a return result of `NoReturn` to match against any other return type.
+    -   Bug Fix: Fixed false positive error in parser dealing with f-strings with string literals within the f-string expression that, in turn, have quotes within the string literal.
+    -   Enhancement: Added support for "attribute docstrings" (defined in PEP 258) in completion provider.
+        ([pylance-release#1576](https://github.com/microsoft/pylance-release/issues/1576))
+    -   Bug Fix: Fixed bug in type analyzer related to a TypeVar with a bound type that is a union.
+
 ## 2021.7.5 (22 July 2021)
 
 Notable changes:
