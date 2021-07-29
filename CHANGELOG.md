@@ -1,5 +1,10 @@
 # Changelog
 
+## 2021.7.7 (28 July 2021)
+
+This is a hotfix release, fixing a tokenizer bug that caused identifiers called "constructor" to be mishandled.
+([pylance-release#1618](https://github.com/microsoft/pylance-release/issues/1618))
+
 ## 2021.7.6 (28 July 2021)
 
 Notable changes:
