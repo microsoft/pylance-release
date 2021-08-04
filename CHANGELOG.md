@@ -1,5 +1,37 @@
 # Changelog
 
+## 2021.8.0 (4 Aug 2021)
+
+Notable changes:
+
+-   Performance of completions for huggingface/transformers has been improved by adding partial stubs. ([pylance-release#1258](https://github.com/microsoft/pylance-release/issues/1258))
+-   Variable renaming now works in open file mode. ([pylance-release#1300](https://github.com/microsoft/pylance-release/issues/1300))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.158 to 1.1.159, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in x is None type narrowing logic when x was typed as `object`.
+    -   Bug Fix: Fixed false positive that occurs when defining an abstract dataclass and one of its fields refers to the class itself in its type annotation.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed bug that prevented "rename symbol" from working when in single file mode. Rather than failing, it will now perform a rename only within a single file. ([pylance-release#1300](https://github.com/microsoft/pylance-release/issues/1300))
+    -   Enhancement: Updated the "type(x) is y" type narrowing logic to handle the negative case when the class type is "final".
+-   [1.1.159](https://github.com/microsoft/pyright/releases/tag/1.1.159)
+    -   Bug Fix: Fixed bug that could lead to an internal stack overflow when a generic value was used as an argument for a function or class decorator.
+    -   Enhancement: Added support in literal comparison type narrowing to filter out comparisons to "None" in positive case.
+    -   Bug Fix: Fixed bug in parser where it was too permissive in allowing keywords to be used as identifiers. The Python interpreter is less permissive, so pyright's parser should match.
+    -   Bug Fix: Fixed several bugs that caused crashes (dereference of undefined variable) in certain circumstances.
+    -   Enhancement: Added a new log error for the case where enumeration of files within the workspace is taking longer than 10 seconds.
+    -   Bug Fix: Fixed bug in tokenizer which treated 'constructor' as a keyword.
+    -   Bug Fix: Fixed bug in "type(x) is y" type narrowing logic to handle the case where x is an instance of a generic class.
+    -   Enhancement: Added check for illegal trailing comma in "from x import y," statement. This generates a syntax error at runtime.
+    -   Enhancement: Added check for illegal use of "Protocol" as a type argument.
+    -   Enhancement: Implemented new check for a class that is decorated with `@final` but does not implement all abstract methods from abstract classes that it derives from.
+    -   Enhancement: Added check for inappropriate use of `ClassVar` that will generate runtime exceptions.
+    -   Enhancement: Added logic to enforce protocol mismatches if a member in the protocol is marked "Final" and the class is not (or vice versa).
+    -   Behavior Change: Modified assignment type narrowing for index expressions so it applies only to built-in types. This eliminates incorrect type inference when using a class that has assymetric `__setitem__` and `__getitem__` methods.
+    -   Enhancement: Fixed false positive error when `@property` is combined with `@functools.cache`.
+
 ## 2021.7.7 (28 July 2021)
 
 This is a hotfix release, fixing a tokenizer bug that caused identifiers called "constructor" to be mishandled.
