@@ -1,5 +1,47 @@
 # Changelog
 
+## 2021.8.1 (11 Aug 2021)
+
+Notable changes:
+
+-   More literal completions are now supported. ([pylance-release#1497](https://github.com/microsoft/pylance-release/issues/1497))
+-   The bundled pandas stubs have been updated.
+-   Pylance's copy of typeshed has been updated.
+-   Creating new file in open file mode no longer causes a hang.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.159 to 1.1.161, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed false positive error caused by inappropriate method binding for instance methods.
+    -   Bug Fix: Fixed regression that affected type narrowing of subscript expressions for TypedDict objects.
+    -   Enhancement: Improved "implied else" code flow logic to handle nested "implied else" constructs.
+    -   Enhancement: Improved match statement code flow logic to handle the case where a pattern is exhausted prior to the last case statement.
+    -   Enhancement: Added support for unpacking of objects that derive from known-length tuples. This includes named tuples. ([pylance-release#1658](https://github.com/microsoft/pylance-release/issues/1658))
+-   [1.1.161](https://github.com/microsoft/pyright/releases/tag/1.1.161)
+    -   Bug Fix: Fixed bug in declaration provider that caused declaration not to be found when it referred to a metadata method.
+    -   Bug Fix: Fixed bug that resulted in a false when evaluating nested lambdas (i.e. a lambda that returns a lambda).
+    -   Enhancement: Added support for bidirectional type inference for assignment expressions where the LHS is an index expression that indexes into a TypedDict instance. ([pylance-release#1645](https://github.com/microsoft/pylance-release/issues/1645))
+    -   Enhancement: Added support for new type narrowing pattern for discriminating among tuples. The pattern is `V[I] == L` or `V[I] != L` where `I` is an integer literal, `L` is another literal value, `V` is a tuple with a known length and a type at index `I` that is declared as a literal type.
+    -   Enhancement: Improved logging for import failures. The previous code was printing the same log message for both stub and non-stub package resolution attempts which resulted in seemingly redundant messages.
+    -   Enhancement: Added heuristic to allow proper inference of list expressions when used as the RHS operand in an expression of the form `my_list + [x]`.
+    -   Bug Fix: Fixed a bug that was masking some error messages when multiple errors were reported for the same range and their message started with the same 25 characters.
+    -   Enhancement: Changed method and attribute override compatibility checks to check for inappropriate overrides of all base classes in the multi-inheritance case. Previously, this check used MRO, so some override mismatches were left unreported if they were obscured by another base class. The change also affects `@final` checks. ([pylance-release#1495](https://github.com/microsoft/pylance-release/issues/1495))
+    -   Enhancement: Added support for descriptor protocols defined on metaclasses.
+    -   Bug Fix: Fixed a bug that caused methods in generic classes to be specialized twice when accessed through a member access expression.
+    -   Bug Fix: Fixed false positive error when accessing `__name__` instance variable in a class that derives from `type`.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+-   [1.1.160](https://github.com/microsoft/pyright/releases/tag/1.1.160)
+    -   Enhancement: Updated the "type(x) is y" type narrowing logic to handle the negative case when the class type is "final".
+    -   Bug Fix: Fixed bug that prevented "rename symbol" from working when in single-file mode. Rather than failing, it will now perform a rename only within a single file.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed false positive that occurs when defining an abstract dataclass and one of its fields refers to the class itself in its type annotation.
+    -   Bug Fix: Fixed bug in `x is None` type narrowing logic when `x` was typed as `object`.
+    -   Bug Fix: Fixed bug that verified that a protocol class used within an isinstance call is runtime_checkable. It was skipping this check when the first argument to isinstance was an Any or Unknown type.
+    -   Bug Fix: Fixed bug where a union of Literal[False] and Literal[True] were being coalesced into bool inappropriately in the case where they were conditional types that came from a constrained TypeVar.
+    -   Bug Fix: Removed the assumption that all top-level modules in typeshed third-party stubs are unique. The typeshed folder structure allows multiple packages to have the same top-level module.
+    -   Bug Fix: Fixed bug in the handling of generic recursive type aliases.
+    -   Enhancement: Implemented support for new Python 3.10 dataclass features: `kw_only` parameter for `dataclass` and `field` and `KW_ONLY` separator. ([pylance-release#1626](https://github.com/microsoft/pylance-release/issues/1626))
+
 ## 2021.8.0 (4 Aug 2021)
 
 Notable changes:
