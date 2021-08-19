@@ -1,5 +1,42 @@
 # Changelog
 
+## 2021.8.2 (19 Aug 2021)
+
+Notable changes:
+
+-   Attribute doc strings are now supported in hover tooltips.
+-   Diagnostics and other language features now work in untitled files and files manually marked as Python.
+-   The "remove unused imports" code action now handles multiple statements on the same line properly. ([pylance-release#1547](https://github.com/microsoft/pylance-release/issues/1547))
+-   Support for native modules stored in `dist-packages` has been improved, including `numpy` when installed globally on Debian-based Linux distributions.
+-   Support for `cv2` has been improved. ([pylance-release#1339](https://github.com/microsoft/pylance-release/issues/1339)), ([pylance-release#1609](https://github.com/microsoft/pylance-release/issues/1609))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.161 to 1.1.162, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed false positive error relating to the use of a `*P.args` or `**P.kwargs` parameter as an iterable value (where `P` is a `ParamSpec`).
+    -   Bug Fix: Fixed false positive error due to incomplete tracking of incomplete types during code flow evaluation.
+    -   Bug Fix: Fixed bug with ParamSpec matching in the case where the matched function contains parameters with default values or `*args` / `**kwargs`;
+    -   Bug Fix: Fixed false positive error that results when defining a property setter within an abstract base class and the property setter references a type that has a circular reference to the class. ([pylance-release#1683](https://github.com/microsoft/pylance-release/issues/1683))
+    -   Bug Fix: Fixed a false positive error when handling `*args` and `**kwargs` arguments when the function contains `*P.args` and `**P.kwargs` parameters.
+    -   Bug Fix: Fixed comparison operators so they use the proper opposite when looking for a type match. For example, the opposite of `__lt__` is `__ge__` rather than `__gt__`.
+    -   Bug Fix: Fixed bug that caused inappropriate type narrowing if a comparison operator was used within an argument for a call expression which was, in turn, used within an `if` condition expression.
+    -   Enhancement: Sort imports by import symbol type when auto-imports are applied. ([pylance-release#1675](https://github.com/microsoft/pylance-release/issues/1675))
+-   [1.1.162](https://github.com/microsoft/pyright/releases/tag/1.1.162)
+    -   Enhancement: Added support for unpacking of objects that derive from known-length tuples. This includes named tuples.
+    -   Enhancement: Improved match statement code flow logic to handle the case where a pattern is exhausted prior to the last case statement.
+    -   Enhancement: Improved "implied else" code flow logic to handle nested "implied else" constructs.
+    -   Bug Fix: Fixed regression that affected type narrowing of subscript expressions for TypedDict objects.
+    -   Bug Fix: Fixed false positive error caused by inappropriate method binding for instance methods.
+    -   Enhancement (from pylance): Added more support in completion provide for literal expressions.
+    -   Bug Fix: Changed registration of language server to allow for URI types other than files. This allows pyright to be activated when an untitled file is identified as a python source file.
+    -   Bug Fix: Fixed false positive error when assigning to a subscript expression where the base type is a TypedDict.
+    -   Bug Fix: Fixed false positive error when "\*P.args" parameter (where P is a ParamSpec) is passed as an argument to another function that accepts "P.args".
+    -   Bug Fix: Added support for member access expressions where the attribute contains a class whose metaclass implements a descriptor protocol.
+    -   Bug Fix: Fixed crash due to infinite recursion when a protocol class included a property getter that returned an instance of the same protocol class. ([pylance-release#1671](https://github.com/microsoft/pylance-release/issues/1671))
+    -   Enhancement: Improved the readability of error messages related to protocol type mismatches.
+    -   Bug Fix (from pylance): Fixed diagnostics for source files that are not on disk (e.g. "untitled" new documents).
+    -   Enhancement (from pylance): Added support for attribute docstrings in hover text.
+
 ## 2021.8.1 (11 Aug 2021)
 
 Notable changes:
