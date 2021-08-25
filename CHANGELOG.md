@@ -1,5 +1,38 @@
 # Changelog
 
+## 2021.8.3 (25 Aug 2021)
+
+Notable changes:
+
+-   A bug that prevented navigation to directory-based eggs has been fixed. ([pylance-release#1685](https://github.com/microsoft/pylance-release/issues/1685)))
+-   Corrupt eggs and zips will no longer cause a crash. ([pylance-release#1692](https://github.com/microsoft/pylance-release/issues/1692))
+-   Triple quote auto-close has been disabled for multi-line selections. ([pylance-release#1716](https://github.com/microsoft/pylance-release/issues/1716))
+-   The bundled stubs for django and pandas have been updated.
+-   pth files in directories in extraPaths will now be processed for additional paths. ([pylance-release#1709](https://github.com/microsoft/pylance-release/issues/1709))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.162 to 1.1.163, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed false positive error when assigning an Any value to a member of an object that has a `__set__` method.
+    -   Enhancement: Eliminated confusing error message when nested argument expression contains a type error. ([pylance-release#1705](https://github.com/microsoft/pylance-release/issues/1705))
+    -   Enhancement: Improved bidirectional inference logic for lambda expressions to better handle the situation where the "expected type" is a union that contains multiple callable types.
+    -   Enhancement: Suppressed the "obscured symbol" diagnostic check when the name of the symbol is `_`. This symbol is used in the single dispatch pattern documented in PEP 443.
+-   [1.1.163](https://github.com/microsoft/pyright/releases/tag/1.1.163)
+    -   Bug Fix: Fixed false positive error relating to the use of a `*P.args` or `**P.kwargs` parameter as an iterable value (where `P` is a `ParamSpec`).
+    -   Bug Fix: Fixed false positive error due to incomplete tracking of incomplete types during code flow evaluation.
+    -   Bug Fix: Fixed bug with ParamSpec matching in the case where the matched function contains parameters with default values or `*args` / `**kwargs`;
+    -   Bug Fix: Fixed false positive error that results when defining a property setter within an abstract base class and the property setter references a type that has a circular reference to the class.
+    -   Bug Fix: Fixed a false positive error when handling *args and \*\*kwargs arguments when the function contains *P.args and \*\*P.kwargs parameters.
+    -   Behavior Change (from Pylance): When inserting new auto-import symbol, sort by symbol type to match isort default behavior.
+    -   Bug Fix: Fixed comparison operators so they use the proper opposite when looking for a type match. For example, the opposite of `__lt__` is `__ge__` rather than `__gt__`.
+    -   Bug Fix: Fixed bug that caused inappropriate type narrowing if a comparison operator was used within an argument for a call expression which was, in turn, used within an `if` condition expression.
+    -   Behavior Change: Changed the interpretation of a "callback protocol" to encompass protocols that include a `__call__` method in addition to other attributes.
+    -   Bug Fix: Fixed false positive error related to `with` statements with an expression enclosed in single parentheses. ([pylance-release#1670](https://github.com/microsoft/pylance-release/issues/1670))
+    -   Bug Fix: Fixed bug in type var matching when the a `cls` parameter is annotated with type `Type[T]` and `T` is bound to a protocol class.
+    -   Bug Fix: Fixed bug that resulted in `# type: ignore` comments to be ignored in the event that we hit the heap high-water mark and emptied internal caches.
+    -   Enhancement: Updated to latest version of typeshed stubs.
+
 ## 2021.8.2 (19 Aug 2021)
 
 Notable changes:
