@@ -1,5 +1,54 @@
 # Changelog
 
+## 2021.9.0 (1 September 2021)
+
+Notable changes:
+
+-   Docstrings for the `decimal` module are now supported.
+    ([pylance-release#1350](https://github.com/microsoft/pylance-release/issues/1350)))
+-   The `None`, `True`, `False`, and `__debug__` builtin constants are now correctly colorized within quoted type annotations.
+    ([pylance-release#1039](https://github.com/microsoft/pylance-release/issues/1039)))
+-   Completions for keywords that aren't available in the currently selected version of Python will no longer be offered.
+    ([pylance-release#1724](https://github.com/microsoft/pylance-release/issues/1724)))
+-   Import completions will no longer include imports which will not resolve if accepted.
+    ([pylance-release#1046](https://github.com/microsoft/pylance-release/issues/1046)))
+-   The bundled stubs for pandas have been updated.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.163 to 1.1.165, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a false positive error (and crash) when a walrus operator (assignment expression) is used within a list comprehension which is passed as an argument to a function decorator.
+        ([pylance-release#1745](https://github.com/microsoft/pylance-release/issues/1745)))
+-   [1.1.165](https://github.com/microsoft/pyright/releases/tag/1.1.165)
+    -   Bug Fix: Fixed false positive error due to incorrect type of the `__doc__` instance variable. It should be `str | None`, but it was hard-coded to be `str`.
+    -   Bug Fix: Fixed a bug that resulted in a false positive type error when an instance variable's type depended on itself in a circular reference within a loop.
+    -   Bug Fix: Fixed false positive error when a binary operation uses `None` on the LHS and the RHS is a type that accepts `None` to a reverse operator overload method.
+    -   Bug Fix: Improved logic that determines whether a type is iterable. The old logic didn't support unions of iterable types.
+    -   Bug Fix: Improved handling of call expressions to functions that return NoReturn.
+    -   Bug Fix: Fixed bug in recently-added type check for inherited class variable type. The check was not properly specializing the base class type.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Enhancement: Added performance optimization for code flow analysis within loops.
+        ([pylance-release#1686](https://github.com/microsoft/pylance-release/issues/1686)))
+    -   Enhancement (from Pylance): Don't offer keywords as completion suggestions if they are not valid for the currently-selected version of Python.
+    -   Enhancement: Added check for subscripted form of `asyncio.Task` when used in certain contexts prior to Python 3.9 that generate runtime exceptions.
+-   [1.1.164](https://github.com/microsoft/pyright/releases/tag/1.1.164)
+    -   Bug Fix: Fixed false positive error when assigning an `Any` value to a member of an object that has a `__set__` method.
+    -   Enhancement: Eliminated confusing error message when nested argument expression contains a type error.
+    -   Enhancement: Improved bidirectional inference logic for lambda expressions to better handle the situation where the "expected type" is a union that contains multiple callable types.
+    -   Behavior Change: Suppressed the "obscured symbol" diagnostic check when the name of the symbol is `_`. This symbol is used in the single dispatch pattern documented in PEP 443.
+    -   Bug Fix (from Pylance): Support eggs that are not in zip files but are instead in folders.
+    -   Enhancement (from Pylance): Support pth file in extra paths.
+    -   Bug Fix: Fixed false positive error when a constrained TypeVar is used as the second argument to an isinstance or subclass call.
+        ([pylance-release#1730](https://github.com/microsoft/pylance-release/issues/1730)))
+    -   Bug Fix: Fixed false positive error that occurs when a `@final` class derives from an abstract base class that defines no abstract methods.
+        ([pylance-release#1732](https://github.com/microsoft/pylance-release/issues/1732)))
+    -   Bug Fix: Fixed false positive error related to overload implementation checks when the return type of the implementation contains a Tuple annotation with a TypeVar as a type argument.
+    -   Enhancement: Added special-case handling for `tuple[()]` type when determining the iterated type. In this case, it can be safely evaluated as `Never`.
+        ([pylance-release#1736](https://github.com/microsoft/pylance-release/issues/1736)))
+    -   Enhancement: Improved error reporting for assignments to class variable assignments within a child class where the assigned value doesn't match the type of the same-named class variable declared in a parent class.
+        ([pylance-release#1726](https://github.com/microsoft/pylance-release/issues/1726)))
+
 ## 2021.8.3 (25 Aug 2021)
 
 Notable changes:
