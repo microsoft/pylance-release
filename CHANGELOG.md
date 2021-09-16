@@ -1,5 +1,54 @@
 # Changelog
 
+## 2021.9.2 (16 September 2021)
+
+Notable changes:
+
+-   Method override completions now correctly include default parameters.
+    ([pylance-release#869](https://github.com/microsoft/pylance-release/issues/869))
+-   PEP 258 style attribute docstrings now work on type aliases.
+    ([pylance-release#1815](https://github.com/microsoft/pylance-release/issues/1815))
+-   Parenthesized expressions are now better handled in hover, document highlight, and semantic highlighting.
+    ([pylance-release#591](https://github.com/microsoft/pylance-release/issues/591))
+-   A number of errors and inconsistencies with unrooted environments (like open file mode) have been fixed.
+    ([pylance-release#1586](https://github.com/microsoft/pylance-release/issues/1586))
+-   The docstring for `os.path.splitext` is now correctly handled.
+    ([pylance-release#1408](https://github.com/microsoft/pylance-release/issues/1408))
+-   The bundled stubs for pandas have been updated.
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.166 to 1.1.169, including the following changes:
+
+-   [1.1.169](https://github.com/microsoft/pyright/releases/tag/1.1.169)
+    -   Bug Fix: Improved type narrowing logic for `a is b` pattern where `a` is `self` (or a bound TypeVar) and `b` is an enum literal.
+    -   Bug Fix: Updated reportIncompatibleMethodOverride diagnostic check to special-case dict key names that overlap with method names in the `_TypedDict` class.
+    -   Bug Fix: Improved handling of attribute accesses for classes that inherit from `Any` or an unknown class.
+    -   Enhancement: Added optimization that reduces the time it takes to perform code flow analysis in the presence of if/elf/else statements, try statements, with statements, and ternary expressions.
+    -   Bug Fix: Fixed bug that caused false positive when a bound TypeVar is bound to an instantiable class (e.g. `Type[X]`).
+        ([pylance-release#1808](https://github.com/microsoft/pylance-release/issues/1808))
+-   [1.1.168](https://github.com/microsoft/pyright/releases/tag/1.1.168)
+    -   Bug Fix: Fixed inconsistency in the constraint solver with respect to literal types. They were being retained for most classes but not for tuples.
+        ([pylance-release#1802](https://github.com/microsoft/pylance-release/issues/1802))
+    -   Bug Fix: Fixed bug in parser that resulted in a false negative when a `for` keyword (in either a `for` statement or a list comprehension) was followed immediately by `in` keyword.
+        ([pylance-release#1805](https://github.com/microsoft/pylance-release/issues/1805))
+    -   Behavior Change: Enforce PEP 484 rules for symbols that are imported by a stub file but are not meant to be re-exported. These symbols are no longer resolved when accessed outside of the module, nor are they included in completion suggestions or other language service providers.
+    -   Behavior Change: Modified logic for private symbols (whose names begin with an underscore) exported from a stub file or a py.typed source file; if the symbol is explicitly included in `__all__` it is not considered private.
+    -   Enhancement: Added reportPrivateImportUsage diagnostic rule, which reports usage of a symbol from a py.typed library that is not intended to be re-exported by the library's author. The rule is on by default in basic type checking mode but can be disabled. Completion provider no longer offers these symbols as completion suggestions.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation when co-dependent variables were assigned in a loop using tuple assignments (e.g. `a, b = b, a + 1`).
+    -   Bug Fix: Improved `isinstance` and `issubclass` support to handle the case where the type of the second argument is a union where the subtypes includes both tuples of class types and non-tuples.
+        ([pylance-release#1809](https://github.com/microsoft/pylance-release/issues/1809))
+    -   Enhancement: Updated typeshed to latest version
+-   [1.1.167](https://github.com/microsoft/pyright/releases/tag/1.1.167)
+    -   Bug Fix: Fixed regression that caused a false positive error when an overload implementation annotates a parameter with a union that includes a type variable.
+    -   Enhancement: Added support for type annotations that are enclosed in triple quotes.
+    -   Bug Fix: Fixed false positive error when a class declaration inherits from `Protocol` and `Generic`.
+    -   Bug Fix: Fixed bug that resulted in a missed error (false negative) when comparing an overload implementation with an overload signature that uses a generic return type.
+    -   Enhancement: Added support for a `super()` call made within a class method or instance method where the `cls` or `self` parameter is explicitly annotated (e.g. with a bound type variable).
+    -   Enhancement: Extended isinstance type narrowing logic to support `Callable`.
+    -   Enhancement (contribution from Matt Hillsdon): Reduced cascading parser errors when a colon is omitted before an indented code block.
+    -   Bug Fix: Fixed incorrect type evaluation for ternary, list and dictionary expressions in certain cases where the expression is within a loop.
+    -   Bug Fix: Fixed bug in control flow engine that resulted in incomplete types in certain cases that involved loops and circular type dependencies.
+
 ## 2021.9.1 (8 September 2021)
 
 Notable changes:
