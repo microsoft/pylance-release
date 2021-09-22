@@ -1,5 +1,45 @@
 # Changelog
 
+## 2021.9.3 (22 September 2021)
+
+Notable changes:
+
+-   A number of IntelliCode bugs have been fixed, including cases where starred entries would disappear when more code is typed.
+    ([pylance-release#89](https://github.com/microsoft/pylance-release/issues/89))
+-   Signature help should no longer trigger when typing a parenthesis in a string.
+    ([pylance-release#1677](https://github.com/microsoft/pylance-release/issues/1677))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.169 to 1.1.170, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in TypeVarTuple support that prevented the use of an unpacked TypeVarTuple within a type argument list for types other than Tuple or Union.
+    -   Bug Fix: Fixed bug in synthesized `__new__` method for NamedTuple class that caused the constructor of subclasses of the NamedTuple to construct the base class.
+    -   Bug Fix: Fixed bug where a class whose constructor is unannotated was allowed to have explicit generic type arguments.
+        ([pylance-release#1859](https://github.com/microsoft/pylance-release/issues/1859))
+    -   Behavior Change: Changed type evaluation behavior for protected instance variables (those that begin with a single underscore) and are assigned a literal value. Previously, the literal type was retained if the `reportPrivateUsage` was enabled. This caused various problems. It was a bad idea because type evaluations should not differ based on diagnostic reporting switches.
+    -   Enhancement: Added logic to report a diagnostic if an instance variable is assigned only via an augmented assignment expression.
+        ([pylance-release#1858](https://github.com/microsoft/pylance-release/issues/1858))
+-   [1.1.170](https://github.com/microsoft/pyright/releases/tag/1.1.170)
+    -   Bug Fix (from Pylance): Handle unrooted execution environments (e.g., open file mode), preventing various crashes and oddities.
+    -   Bug Fix (from Pylance): Generate default values in method overload signatures. Previously, we didn't include them, which generated the wrong signature.
+    -   Bug Fix (from Pylance): Use attribute docstrings for type aliases in completion and hover.
+    -   Bug Fix (from Pylance): Modify parser to change the range of parenthesized expressions to their contents. This improves the ranges returned in hovers, document highlight, etc.
+    -   Bug Fix: Improved member access logic to more faithfully match the Python interpreter's behavior when the member is assigned through a class, that member is a class itself, and that class has a metaclass that implements a descriptor protocol. It appears that the interpreter does not call through to the metaclass's `__set__` method in this case, even though it does call its `__get__` method when the member is accessed in the same circumstance.
+    -   Enhancement: Extended reportCallInDefaultInitializer diagnostic check to disallow list, set or dict expressions in default argument expression.
+    -   Bug Fix: Improved `isinstance` and `issubclass` narrowing to handle open-ended tuples passed as the second argument.
+    -   Bug Fix: Fixed false positive error when `namedtuple` constructor is called with a list of field names that includes dynamic (non-literal) expressions.
+        ([pylance-release#1832](https://github.com/microsoft/pylance-release/issues/1832))
+    -   Bug Fix: Fixed false positive error where an exception class (as opposed to an exception object) is used in a "from" clause in a "raise" statement.
+    -   Enhancement: Added support for ParamSpec matching when used within a callback protocol. PEP 612 is unclear on whether this should be supported, by pyre (the reference implementation for the PEP) does support it.
+    -   Bug Fix: Fixed false negative error in parser where it did not correctly detect a syntax error when a walrus operator was used in a ternary operator condition expression.
+        ([pylance-release#1838](https://github.com/microsoft/pylance-release/issues/1838))
+    -   Bug Fix: Fixed bug that resulted in false negative when bidirectional type inference involved an "expected type" of Any and the type being evaluated was a call expression that returned a generic object as a return value.
+    -   Bug Fix: Fixed infinite recursion bug in hover provider when a symbol referred to both a locally-defined class and an imported symbol.
+    -   Bug Fix: Fixed bug that resulted in false positive when using unpack operator with `self` when `self` refers to a named tuple or a tuple with known length.
+    -   Behavior Change: Allow symbols that are not explicitly re-exported from a stub to be imported into another stub. This change is required to support recent updates to typeshed.
+    -   Enhancement: Updated typeshed stubs to the latest.
+
 ## 2021.9.2 (16 September 2021)
 
 Notable changes:
