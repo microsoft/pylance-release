@@ -1,5 +1,50 @@
 # Changelog
 
+## 2021.9.4 (29 September 2021)
+
+Notable changes:
+
+-   Completion is now supported for TypedDict keys and values. Thanks to Robert Cragie for this contribution!
+-   Variables captured by lambdas and functions are now narrowed when they are known to not be reassigned.
+    ([pylance-release#261](https://github.com/microsoft/pylance-release/issues/261), [pylance-release#1016](https://github.com/microsoft/pylance-release/issues/1016))
+-   Auto-imports no longer incorrectly add to `*` import lines.
+    ([pylance-release#1679](https://github.com/microsoft/pylance-release/issues/1679))
+-   The "Add Optional to Type Annotation" quick fix no longer fails to run.
+    ([pylance-release#1873](https://github.com/microsoft/pylance-release/issues/1873))
+-   Pylance's copy of typeshed has been updated.
+    ([pylance-release#1872](https://github.com/microsoft/pylance-release/issues/1872))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.170 to 1.1.172, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a false positive error with the new union syntax when the LHS expression is an Any or Unknown type.
+        ([pylance-release#1886](https://github.com/microsoft/pylance-release/issues/1886))
+    -   Bug Fix: Fixed bug in ParamSpec specialization code that can occur when using a generic type alias with a ParamSpec.
+    -   Bug Fix: Fixed false positive error when assigning a callable to a callback protocol that includes a ParamSpec.
+-   [1.1.172](https://github.com/microsoft/pyright/releases/tag/1.1.172)
+    -   Enhancement: Added completion suggestion support for TypedDict keys and values. Thanks to Robert Cragie for this contribution!
+    -   Behavior Change: Changed behavior of reportInvalidTypeVarUse diagnostic check to flag bound type variables used as type arguments within return type annotations.
+    -   Enhancement: Implemented code that applies type narrowing to local variables and parameters when they are captured by an inner-scoped lambda or function and the variable or parameter is not reassigned after the lambda or function along any code flow paths.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed a bug in ParamSpec handling that resulted in false positives when a callable type containing a ParamSpec was assigned to another callable type containing a ParamSpec.
+    -   Enhancement (from pylance): Improved handling of type checking when files are opened in "single file" mode, rather than opening a project root directory.
+    -   Enhancement (from pylance): Implemented heuristic for detecting import roots within a project. Previously, these all needed to be specified through "extraPaths" settings, but now pyright is smarter about locating these directories automatically.
+    -   Bug Fix: Fixed false positive error when a generic class with a ParamSpec type parameter implements a descriptor protocol.
+-   [1.1.171](https://github.com/microsoft/pyright/releases/tag/1.1.171)
+    -   Bug Fix: Fixed bug in TypeVarTuple support that prevented the use of an unpacked TypeVarTuple within a type argument list for types other than Tuple or Union.
+    -   Bug Fix: Fixed bug in synthesized `__new__` method for NamedTuple class that caused the constructor of subclasses of the NamedTuple to construct the base class.
+    -   Bug Fix: Fixed bug where a class whose constructor is unannotated was allowed to have explicit generic type arguments.
+    -   Behavior Change: Changed type evaluation behavior for protected instance variables (those that begin with a single underscore) and are assigned a literal value. Previously, the literal type was retained if the `reportPrivateUsage` was enabled. This caused various problems. It was a bad idea because type evaluations should not differ based on diagnostic reporting switches.
+    -   Enhancement: Added logic to report a diagnostic if an instance variable is assigned only via an augmented assignment expression.
+    -   Bug Fix (from pylance): Fixed bug in parser that resulted in incorrect text range for relative module names in import statements.
+    -   Bug Fix: Improved inference of generator statements that involve `await` statements to conform to the runtime behavior of the CPython intepreter.
+    -   Bug Fix: Fixed bug that caused inconsistent handling of dataclasses that use the `@dataclass` decorator and derive from abstract base classes.
+    -   Bug Fix: Fixed bug that caused yield expression to be evaluated as "unknown" in some cases when it was contained within a loop.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation for expressions within an `await` statement under some circumstances.
+        ([pylance-release#1869](https://github.com/microsoft/pylance-release/issues/1869))
+    -   Behavior Change: Changed code that converts types to textual representation to prepend a tilde ("~") character for the inferred type of a "self" or "cls" parameter.
+    -   Enhancement: Updated typeshed stubs to the latest.
+
 ## 2021.9.3 (22 September 2021)
 
 Notable changes:
