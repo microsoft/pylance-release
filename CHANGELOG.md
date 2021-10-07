@@ -1,5 +1,51 @@
 # Changelog
+## 2021.10.0 (6 October 2021)
 
+Notable changes:
+
+-   Return type inference is now skipped for high-complexity unannotated functions, which prevents hangs in `sympy`, `scipy`, and other unannotated libraries.
+    ([pylance-release#946](https://github.com/microsoft/pylance-release/issues/946), [pylance-release#1890](https://github.com/microsoft/pylance-release/issues/1890), [pylance-release#1895](https://github.com/microsoft/pylance-release/issues/1895))
+-   The bundled stubs for pandas have been updated.
+-   Pylance's copy of typeshed has been updated.
+    ([pylance-release#1909](https://github.com/microsoft/pylance-release/issues/1909))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.173 to 1.1.175, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Enhancement: Added support for "bare" ClassVar annotations.
+    -   Enhancement: Bumped pyright's default Python version from 3.9 to 3.10.
+    -   Behavior Change: Exempted check for unsafe access to TypedDict key if it's within a context manager. It was previously exempted if included in a `try` block, but some prefer to use a context manager to catch exceptions.
+-   [1.1.175](https://github.com/microsoft/pyright/releases/tag/1.1.175)
+    -   This is a "hot fix" release that addresses two regressions introduced in 1.1.174.
+    -   Bug Fix: Reverted a change that broke the use of generic dataclass types.
+    -   Bug Fix: Reverted a change that resulted in a false positive error when subclassing an Enum base class that defined no enumerated values.
+-   [1.1.174](https://github.com/microsoft/pyright/releases/tag/1.1.174)
+    -   Behavior Change: Modified import resolution logic to handle namespace stub packages. This case isn't explicitly covered by PEP 561, but there is a proposal to amend the PEP to clarify how to handle this case.
+    -   Bug Fix: Fixed bug that resulted in a false negative when dealing with types that are conditioned on constrained or bound TypeVars.
+    -   Bug Fix: Fixed bug that affected a missing type argument for a ParamSpec type parameter. It should be an Unknown type.
+    -   Bug Fix: Fixed bug that resulted in an `Unknown` type appearing in a type evaluation for an unannotated variable that is modified in a loop.
+    -   Enhancement: Added error reporting for an attempt to subclass an Enum class and a duplicate definition of enum members.
+    -   Enhancement: Improved error reporting for index expressions used for non-generic classes.
+    -   Enhancement: Fixed performance issue in stub generation code that caused stub generation to take longer than needed.
+    -   Enhancement: Added performance improvement that skips return type inference for functions whose parameters are not annotated and have a "code flow complexity" beyond a certain threshold.
+        ([pylance-release#946](https://github.com/microsoft/pylance-release/issues/946), [pylance-release#1890](https://github.com/microsoft/pylance-release/issues/1890), [pylance-release#1895](https://github.com/microsoft/pylance-release/issues/1895))
+    -   Bug Fix: Fixed bug the resulted in a false positive when an overloaded function is passed as an argument to a function that accepts a callable parameter using generics.
+    -   Bug Fix: Fixed a false positive error when a class with an overloaded constructor is passed as an argument to a callable parameter.
+    -   Bug Fix: Fixed bug in type var matching logic that resulted in a false positive when using a generic class that conforms to a generic protocol and uses that protocol within its own method signatures.
+        ([pylance-release#1807](https://github.com/microsoft/pylance-release/issues/1807))
+-   [1.1.173](https://github.com/microsoft/pyright/releases/tag/1.1.173)
+    -   Bug Fix: Fixed a false positive error with the new union syntax when the LHS expression is an Any or Unknown type.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug in ParamSpec specialization code that can occur when using a generic type alias with a ParamSpec.
+    -   Bug Fix: Fixed false positive error when assigning a callable to a callback protocol that includes a ParamSpec.
+    -   Bug Fix: Fixed bug that resulted in unbound variable condition not being reported if it was in a loop and was assigned conditionally.
+    -   Bug Fix: Fixed bug relating to the use of an `Any` type argument corresponding to a ParamSpec type parameter.
+        ([pylance-release#1892](https://github.com/microsoft/pylance-release/issues/1892))
+    -   Bug Fix: Fixed a false positive error when using a generic descriptor class that is parameterized by the `self` or `cls` parameter of the class that allocates the descriptor.
+    -   Enhancement: Added check for inappropriate use of a field annotated with `InitVar`.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when a protocol class used generic type parameters scoped to a method.
+   
 ## 2021.9.4 (29 September 2021)
 
 Notable changes:
