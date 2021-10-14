@@ -40,6 +40,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnknownLambdaType | Diagnostics for input or return parameters for lambdas that have an unknown type. |
 | reportUnknownVariableType | Diagnostics for variables that have an unknown type.  |
 | reportUnknownMemberType | Diagnostics for class or instance variables that have an unknown type. |
+| reportMissingParameterType | Diagnostics for parameters that are missing a type annotation. |
 | reportMissingTypeArgument | Diagnostics for when a generic class is used without providing explicit or implicit type arguments. |
 | reportInvalidTypeVarUse | Diagnostics for improper use of type variables in a function signature. |
 | reportCallInDefaultInitializer | Diagnostics for function calls within a default value initialization expression. Such calls can mask expensive operations that are performed at module initialization time. |
