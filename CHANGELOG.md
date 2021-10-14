@@ -1,4 +1,56 @@
 # Changelog
+## 2021.10.1 (14 October 2021)
+
+Notable changes:
+
+-   A bug in the import completion that prevented some absolute imports from being suggested has been fixed.
+-   Variables named `match` no longer cause a parser error when used in a slice expression.
+    ([pylance-release#1911](https://github.com/microsoft/pylance-release/issues/1911))
+-   `TypedDict` completions now work correctly in `dict` literals with more than one key-value pair.
+    ([pylance-release#1920](https://github.com/microsoft/pylance-release/issues/1920)
+-   The bundled stubs for pandas, django and openpyxl have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.176 to 1.1.178, including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Added support for an unpacked tuple assignment within an instance method when the source of the assignment is the `self` parameter.
+-   [1.1.178](https://github.com/microsoft/pyright/releases/tag/1.1.178)
+    -   Bug Fix: Fixed false positive error that occurred when importing a symbol in a `from x import y` statement that referred to a chain of imports and was eventually resolved to a native library (e.g. ".pyd" or ". so" file).
+    -   Bug Fix: Added missing check for type compatibility between callables where the destination type includes a default argument for a parameter but the source type does not.
+    -   Bug Fix: Fixed bug that caused incorrect evaluation of inferred return type based on inferred type of unannotated "self" or "cls" parameter.
+        ([pylance-release#1927](https://github.com/microsoft/pylance-release/issues/1927))
+    -   Enhancement: Added support for "narrowing" of TypedDict instances on assignment when the TypedDict defines entries that are not required but are supplied.
+        ([pylance-release#1926](https://github.com/microsoft/pylance-release/issues/1926))
+    -   Behavior Change: Changed the interpretation of a property declared within a protocol class. It was previously interpreted only as a property (i.e. classes compatible with the protocol must implement a property of the same name). Compatible classes are now able to declare an attribute whose type is compatible with the property getter. Access to the property from the protocol class as a class variable is no longer allowed.
+        ([pylance-release#1915](https://github.com/microsoft/pylance-release/issues/1915))
+    -   Enhancement: Improved error message for improper use of a module as a type argument.
+    -   Bug Fix: Fixed a bug in import resolution logic that resulted in incorrect resolution of a symbol in the presence of wildcard imports that allowed for multiple resolution paths, some of them cyclical. Pyright previously gave up when it detected a cycle rather than using a different (non-cyclical) resolution path.
+    -   Bug Fix: Improved parser's detection of "match" as a soft keyword versus some other usage of a symbol named "match".
+        ([pylance-release#1911](https://github.com/microsoft/pylance-release/issues/1911))
+    -   Bug Fix: Fixed bug that resulted in a false negative when a TypedDict value was assigned to a protocol that included attributes that matched the TypedDict keys.
+    -   Bug Fix: Fixed bug that resulted in false positive when a function is used in an `==` or `!=` binary expression.
+    -   Bug Fix (from pylance): Fixed bug in import completions for parent directory resolution.
+-   [1.1.177](https://github.com/microsoft/pyright/releases/tag/1.1.177)
+    -   Bug Fix: Fixed bug in stub generation logic. It wasn't properly handling module paths with more than a single ".", such as "google.cloud.storage".
+    -   Bug Fix: Fixed false positive error in certain cases where type variable was bound to a union.
+    -   Enhancement: Implemented check for an attempt to subclass an Enum class that defines one or more enumerated values. This condition generates a runtime exception.
+    -   Enhancement: Type aliases in the printed form of a union type are retained when aliased types are combined in a union.
+    -   Bug Fix: Fixed bug in completion provider's handling of key completions for TypedDicts.
+        ([pylance-release#1920](https://github.com/microsoft/pylance-release/issues/1920))
+    -   Bug Fix: Fixed false positive type evaluation error when constrained TypeVar is assigned to a union that contains a compatible constrained TypeVar.
+    -   Bug Fix: Added code to work around the circular definition found in the typeshed stub that defines the os.scandir function.
+        ([pylance-release#1918](https://github.com/microsoft/pylance-release/issues/1918))
+-   [1.1.176](https://github.com/microsoft/pyright/releases/tag/1.1.176)
+    -   Enhancement: Exempted check for unsafe access to TypedDict key if it's within a context manager. It was previously exempted if included in a `try` block, but some prefer to use a context manager to catch exceptions.
+    -   Behavior Change: Bumped pyright's default Python version from 3.9 to 3.10.
+    -   Enhancement: Added support for "bare" `ClassVar` annotations.
+    -   Enhancement: Updated to the latest version of typeshed stubs.
+    -   Enhancement: Added new "--warnings" command-line option that generates an exit code of 1 if one or more warnings are emitted. By default, only errors generate an exit code of 1.
+    -   Bug Fix: Fixed bug that resulted in a "unknown member of module" error if the member referred to a submodule that was imported privately from another module but that submodule was also explicitly imported. For example, if a module imports both `a` and `a.b` and then uses the symbol `a.b.c`.
+    -   Enhancement: Added new diagnostic check "reportMissingParameterType" that checks for function and method input parameters that are missing a type annotation.
+    -   Enhancement: Added support for new type guard pattern: `x[I] is None` and `x[I] is not None` where `x` is a tuple or union of tuples with known lengths and entry types and `I` is an integer.
+    -   Enhancement: Enhanced the stub generation logic to emit `__all__ = ...` and `__all__ += ...` statements when they appear in the module scope and are not within a conditional (if/else) block.
+
 ## 2021.10.0 (6 October 2021)
 
 Notable changes:
