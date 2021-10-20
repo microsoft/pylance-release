@@ -1,4 +1,42 @@
 # Changelog
+
+## 2021.10.2 (20 October 2021)
+
+Notable changes:
+
+-   A bug related to missing completions inside lists and tuples has been fixed.
+    ([pylance-release#1302](https://github.com/microsoft/pylance-release/issues/1302))
+-   The bundled stubs for django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.179 to 1.1.180 including the following changes:
+
+-   [1.1.180](https://github.com/microsoft/pyright/releases/tag/1.1.180)
+    -   Bug Fix: Fixed bug that resulted in a false positive error when a generic class used a specialized version of itself parameterized with one of its own type parameters.
+    -   Bug Fix: Fixed recent regression where imported symbols that were ultimately resolved with a native library (e.g. a ".pyd" or ".so" file) were incorrectly resolved as a module rather than an Unknown type.
+        ([pylance-release#2446](https://github.com/microsoft/pylance-release/issues/2446))
+    -   Bug Fix: Fixed a type evaluation regression that caused type arguments to be incorrectly determined when calling a constructor and passing a callable that is generic.
+    -   Enhancement: Added broader support for context managers in with statements which swallow exceptions. Thanks to Rik de Graaff for this contribution.
+        ([pylance-release#1945](https://github.com/microsoft/pylance-release/issues/1945))
+    -   Bug Fix: Added missing error condition for walrus operator used within a type annotation expression.
+    -   Bug Fix: Fixed bug in pattern matching type evaluation where `bytearray` was matched against a sequence pattern even though PEP 634 explicitly excludes this case.
+    -   Enhancement: Added support for sequence pattern match type narrowing when the subject type is a simple "object".
+    -   Enhancement: Added support for type narrowing of enums when using pattern matching.
+    -   Enhancement: Added error reporting for usage of type aliases within class pattern matching statements that generate runtime exceptions.
+    -   Behavior Change: Changed the printed type of a ParamSpec signature to avoid the use of synthesized parameter names "\_\_p0", etc. Instead, the parameter names are omitted in the signature consistent with the emerging standard for the improved callable syntax.
+    -   Enhancement: Added support for explicit specialization of generic classes that include a ParamSpec. This is defined in PEP 612 but was previously missing.
+    -   Bug Fix: Fixed bug in check for generator return type. A diagnostic was meant to be generated if the declared return type was incorrect for a generator.
+-   [1.1.179](https://github.com/microsoft/pyright/releases/tag/1.1.179)
+    -   Enhancement: Added support for an unpacked tuple assignment within an instance method when the source of the assignment is the `self` parameter.
+    -   Bug Fix: Fixed false positive error in protocol variance check (in the `reportInvalidTypeVarUse` diagnostic rule) when a protocol class used a ParamSpec.
+    -   Bug Fix: Fixed bug that caused false positive errors when generic callback protocol class used a ParamSpec and a `__call__` method with only two parameters consisting of `P.args` and `P.kwargs`.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using a generic callback protocol with a ParamSpec where the `__call__` method included a positional-only marker prior to the `P.args` and `P.kwargs` parameters.
+    -   Bug Fix: Fixed a bug that results in false positive error when assigning a source union type to a destination union type.
+    -   Bug Fix: Fixed an internal crash that was caused by infinite recursion.
+    -   Bug Fix: Fixed bug in completion provider that resulted in inappropriate suggestions when typing arguments within a class declaration.
+    -   Bug Fix: Changed type logic for sequence pattern matching to produce `list` rather than `tuple` for star subpatterns. This matches the runtime behavior in Python 3.10.
+    -   Enhancement: Added support for name expressions in `with` statements where the name refers to a variable or parameter with a declared type that corresponds to a context manager class that swallows exceptions.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when a generic class used a specialized version of itself parameterized with one of its own type parameters.
+
 ## 2021.10.1 (14 October 2021)
 
 Notable changes:
@@ -97,7 +135,7 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.173 to 1.1.175,
     -   Bug Fix: Fixed a false positive error when using a generic descriptor class that is parameterized by the `self` or `cls` parameter of the class that allocates the descriptor.
     -   Enhancement: Added check for inappropriate use of a field annotated with `InitVar`.
     -   Bug Fix: Fixed bug that resulted in a false positive error when a protocol class used generic type parameters scoped to a method.
-   
+
 ## 2021.9.4 (29 September 2021)
 
 Notable changes:
