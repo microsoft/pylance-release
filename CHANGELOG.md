@@ -1,5 +1,40 @@
 # Changelog
 
+## 2021.10.3 (27 October 2021)
+
+Notable changes:
+
+-   Analysis performance has been improved for large and complicated functions, such as those in `scipy` and `sympy`.
+    ([pylance-release#1964](https://github.com/microsoft/pylance-release/issues/1964))
+-   Pylance's copy of typeshed has been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.181 to 1.1.182 including the following changes:
+
+-   [1.1.182](https://github.com/microsoft/pyright/releases/tag/1.1.182)
+    -   Enhancement: Implemented missing check for a write to a Final instance or class variable outside of the class implementation.
+    -   Enhancement: Added missing check for an attempt to write to a named tuple attribute, which generates a runtime exception.
+        ([pylance-release#1976](https://github.com/microsoft/pylance-release/issues/1976))
+    -   Bug Fix: Fixed bug that resulted in a false positive when a function returned a callable type that included a parameter with a union type that included an unsolved type variable.
+    -   Bug Fix: Improved handling of intersection types produced as part of `isinstance` or `issubclass` type narrowing when the source variable is a type variable. The creation of the intersection type was incorrectly eliminating the association with the type variable, so the narrowed type was no longer seen as compatible with the TypeVar.
+    -   Enhancement: Added check for `Union` when only one type argument is provided and it is not an unpacked variadic type variable.
+    -   Bug Fix: Fixed bug in "--ignoreexternal" option used with package type verification. It was not correctly ignoring all externally-imported symbols that had unknown or partially-unknown types.
+    -   Enhancement: Updated typeshed stubs to latest.
+    -   Bug Fix: Fixed false positive error when a constrained TypeVar T and Type[T] were both used in the same function signature.
+-   [1.1.181](https://github.com/microsoft/pyright/releases/tag/1.1.181)
+    -   Enhancement (from pylance): Improved completion suggestions when typing within a list expression.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug in type printing logic where it incorrectly displayed captured ParamSpec signature with "/" or "\*" parameters.
+    -   Bug Fix: Fixed bug that caused false positive error when assigning one callback protocol to another when both protocols are generic and parameterized with a ParamSpec.
+    -   Bug Fix (from pylance): Fixed regression with "--watch" option in command-line version of pyright.
+    -   Behavior Change (from pylance): Increase max file size to 50 MB, matching VS Code.
+    -   Enhancement: Improved logic for isinstance and issubclass type narrowing when the filter class's type arguments can be determined from the type arguments of the subject type.
+    -   Enhancement: Improved type narrowing logic for class pattern matching when the matched class's type arguments can be determined from the type arguments of the subject type.
+    -   Bug Fix: Fixed bug that resulted in an incorrect type evaluation for a binary operator that acts upon a bound TypeVar.
+    -   Performance: Reduced the max number of nested call-site return type inference evaluations from 3 to 2. This can be extremely expensive in some code bases, such as with scipy, and it was leading to a poor user experience.
+        ([pylance-release#1964](https://github.com/microsoft/pylance-release/issues/1964))
+    -   Performance: Improved analyzer performance for code that contains thousands of statements with tens of thousands of call statements within a single function or module. This is found in some test modules within the sympy library.
+    -   Enhancement: Added "--skipunannotated" option for command-line version of pyright. If specified, pyright skips type analysis of functions and methods that have no parameter or return type annotations. Return types of functions are also never inferred from the function implementation. This matches the default behavior of mypy and allows for more efficient analysis of complex code bases that are only partially annotated.
+
 ## 2021.10.2 (20 October 2021)
 
 Notable changes:
