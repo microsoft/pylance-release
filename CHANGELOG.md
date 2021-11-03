@@ -1,5 +1,49 @@
 # Changelog
 
+## 2021.11.0 (3 November 2021)
+
+Notable changes:
+
+-   Enum member values are now appear before other enum class members in completions.
+    ([pylance-release#1977](https://github.com/microsoft/pylance-release/issues/1977))
+-   Type mismatch errors involving tuples are now more descriptive.
+    ([pylance-release#2020](https://github.com/microsoft/pylance-release/issues/2020))
+-   Pylance's copy of typeshed has been updated.
+-   The bundled stubs for django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.183 to 1.1.184 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Improved signature help for the constructor of classes that define a `__new__` method but no `__init__` method, such as the `zip` class. The previous logic was always preferring the `__init__`, which is supplied by the `object` class, which all classes derive from. ([pylance-release#1912](https://github.com/microsoft/pylance-release/issues/1912))
+    -   Bug Fix: Fixed bug in stub generation code that resulted in an error if a stub was requested for a submodule in a package that includes an `__init__.py` file in the same directory as the submodule source file. ([pylance-release#2013](https://github.com/microsoft/pylance-release/issues/2013))
+    -   Bug Fix: Fixed overflow.
+    -   Enhancement: Increased stack trace limit from default to 256 in pyright VS Code extension to facilitate debugging of stack overflow errors.
+    -   Enhancement: Added special-case support for the **self** attribute of a bound method.
+    -   Bug Fix: Fixed a bug in the handling of reveal_type that caused hover text within the argument to be displayed as `Unknown` in some circumstances. ([pylance-release#2024](https://github.com/microsoft/pylance-release/issues/2024))
+    -   Enhancement: Improved readability of diagnostic message for type mismatch when assigning to a tuple expression. ([pylance-release#2020](https://github.com/microsoft/pylance-release/issues/2020))
+    -   Enhancement: Added support in completion provide for enum members. They are now properly identified as such and prioritized higher in the completion list than other non-member symbols. ([pylance-release#1977](https://github.com/microsoft/pylance-release/issues/1977))
+    -   Bug Fix: Fixed bug in completion provider where it was not properly handling binding to classes, which left parameter types unspecialized in some cases. It was already properly handling binding to objects (class instances), so this was a straightforward extension.
+-   [1.1.184](https://github.com/microsoft/pyright/releases/tag/1.1.184)
+    -   Bug Fix: Fixed false positive error when a class used within as a TypeVar `bound` argument is a "pseudo generic" class, one whose constructor is unannotated. ([pylance-release#2017](https://github.com/microsoft/pylance-release/issues/2017))
+    -   Bug Fix: Changed type evaluator to elide `NoReturn` from union generated from `or` or `and` operator.
+    -   Enhancement: Improved error handling for the `Generic` special form. Eliminated false positive error when `Generic` is used in certain legitimate ways within a function.
+    -   Enhancement: Improved error messages for call expressions that involve overloaded functions. ([pylance-release#1982](https://github.com/microsoft/pylance-release/issues/1982))
+    -   Enhancement: Implemented optimization that reduces analysis time and memory usage by generating a diagnostic message (which often involve converting types to a textual representation) only if the caller is interested in the diagnostic message.
+    -   Enhancement: Added support for "Self" type documented in draft PEP: https://docs.google.com/document/d/1ujuSMXDmSIOJpiZyV7mvBEC8P-y55AgSzXcvhrZciuI/edit.
+    -   Enhancement: Added support for trace logging of type evaluation from the command line when both `--stats` and `--verbose` are specified.
+    -   Bug Fix: Fixed bug that resulted in the incorrect type evaluation when a property was defined on a metaclass and accessed through a class with that metaclass.
+-   [1.1.183](https://github.com/microsoft/pyright/releases/tag/1.1.183)
+    -   Bug Fix: Fixed bug in handling of the recently-added "--skipunannotated" command-line flag.
+    -   Bug Fix: Fixed a recent regression that resulted in a false positive error when `Union` was used with no type arguments outside of a type annotation. [pylance-release#2014](https://github.com/microsoft/pylance-release/issues/2014))
+    -   Enhancement: Extended support for bidirectional type inference for functions that have a generic return type and the "expected type" is a generic class with type arguments that include literal types.
+    -   Enhancement: Expanded support for bidirectional type checking for function call expressions where the return type of the function includes a TypeVar that also appears within a function parameter and that parameter is a callable.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation for a generic function that returns a specialized class that uses a `Concatenate` in one of the type arguments.
+    -   Bug Fix: Fixed bug that caused the type of `super().__new__(cls)` to be evaluated incorrectly.
+    -   Bug Fix: Changed type evaluator to elide `NoReturn` from union generated from ternary operator. ([pylance-release#2008](https://github.com/microsoft/pylance-release/issues/2008))
+    -   Bug Fix: Fixed a bug that allowed a function to be assigned to a (non-protocol) class if that class defined a `__call__` method. This should be allowed only for protocol classes.
+    -   Bug Fix: Fixed a bug that allowed a function to be assigned to a protocol class if it defined a `__call__` method but also defined additional methods or attributes. ([pylance-release#2006](https://github.com/microsoft/pylance-release/issues/2006))
+    -   Behavior Change: Changed text representation of inferred type of `self` and `cls` parameters to `Self@ClassName`. This is more consistent with the emerging standard for an explicit `Self` type.
+
 ## 2021.10.3 (27 October 2021)
 
 Notable changes:
