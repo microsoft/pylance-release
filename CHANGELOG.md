@@ -1,5 +1,45 @@
 # Changelog
 
+## 2021.11.1 (10 November 2021)
+
+Notable changes:
+
+-   Bug fix: Fixed semantic token bug involving file opened and closed repeatedly in a short period times.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.185 to 1.1.186 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed missing diagnostic when a Self parameter was assigned to a `Concatenate[X, P]` where `X` is a type that is incompatible with `Self`.
+    -   Enhancement: Modified the check for function declaration redefinitions to allow for same-signature overrides in cases where the declarations are not within the same statement suite (e.g. one in the "if" and the other in the "else" block).
+    -   Enhancement: Changed isTypeSame function to handle functions whose signatures include position-only parameters. Also added support for inferred return types and eliminated the check for declaration parity. This allows two function types to be deemed the same even if they originate from different declarations.
+    -   Enhancement: Changed Callable special form to include a position-only marker at the end of the parameter list. Changed type printer to omit the `/` if it is unnecessary.
+    -   Bug Fix: Fixed false positive error when assigning type T | Any to type T. ([pylance-release#2054](https://github.com/microsoft/pylance-release/issues/2054))
+-   [1.1.186](https://github.com/microsoft/pyright/releases/tag/1.1.186)
+    -   Enhancement: Added checks for incorrect runtime usage of a UnionType object.
+    -   Enhancement: Added more complete type checks involving the use of a default argument for a generic parameter in a constructor.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when accessing members from a `type` instance or a `Type[T]`.
+    -   Bug Fix: Fixed false positive error related to heuristics employed in bidirectional type inference for calls when the expected type comprises a union and the return type of the call is a union that includes Any and a type variable.
+    -   Enhancement: Added support for `slots` parameter to dataclass, a new feature added in Python 3.10.
+    -   Bug Fix: Fixed regression that caused a false positive error related to incorrect usage of a type variable within a type alias definition.
+    -   Bug Fix: Fixed incorrect handling of client-initiated progress reporting for "onReferences" and "onExecuteCommand" handlers in language server.
+-   [1.1.185](https://github.com/microsoft/pyright/releases/tag/1.1.185)
+    -   Bug Fix: Fixed bug in completion provider where it was not properly handling binding to classes, which left parameter types unspecialized in some cases. It was already properly handling binding to objects (class instances), so this was a straightforward extension.
+    -   Enhancement: Added support in completion provide for enum members. They are now properly identified as such and prioritized higher in the completion list than other non-member symbols. ([pylance-release#1977](https://github.com/microsoft/pylance-release/issues/1977))
+    -   Enhancement: Improved readability of diagnostic message for type mismatch when assigning to a tuple expression. ([pylance-release#2020](https://github.com/microsoft/pylance-release/issues/2020))
+    -   Bug Fix: Fixed a bug in the handling of `reveal_type` that caused hover text within the argument to be displayed as `Unknown` in some circumstances. ([pylance-release#2024](https://github.com/microsoft/pylance-release/issues/2024))
+    -   Enhancement: Added special-case support for the `__self__` attribute of a bound method.
+    -   Bug Fix: Fixed bug that resulted in stack overflow.
+    -   Bug Fix: Fixed bug in stub generation code that resulted in an error if a stub was requested for a submodule in a package that includes an `__init__.py` file in the same directory as the submodule source file. ([pylance-release#2013](https://github.com/microsoft/pylance-release/issues/2013))
+    -   Enhancement: Improved signature help for the constructor of classes that define a `__new__` method but no `__init__` method, such as the `zip` class. The previous logic was always preferring the `__init__`, which is supplied by the `object` class, which all classes derive from. ([pylance-release#1912](https://github.com/microsoft/pylance-release/issues/1912))
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when assigning one ParamSpec to another ParamSpec.
+    -   Bug Fix: Fixed bug that resulted in false positive "reportUnknownMemberType" error when using a generic class within a class pattern.
+    -   Bug Fix: Added missing diagnostic check for illegal type argument lists that include a ParamSpec when the type parameter list includes a ParamSpec.
+    -   Enhancement: Added missing keyword "with" from completion provider. ([pylance-release#2042](https://github.com/microsoft/pylance-release/issues/2042))
+    -   Bug Fix: Fixed bug in type promotion logic that resulted in false positive. It wasn't properly handling subclasses of promotable types (like 'int', which can be promoted to 'float').
+    -   Enhancement: Improved bidirectional type inference for call expressions. The logic now handles the case where the return type of the callable is a generic type that is not an exact match for the expected type but is assignable to the expected type.
+    -   Enhancement: Added support for explicit type aliases (PEP 613) within class scopes. A proposed amendment to PEP 613 will make this legal.
+    -   Enhancement: Added check for a class-scoped generic type alias that uses a class-scoped TypeVar. This is now flagged as an error.
+
 ## 2021.11.0 (3 November 2021)
 
 Notable changes:
