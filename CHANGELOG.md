@@ -1,5 +1,35 @@
 # Changelog
 
+## 2021.11.2 (17 November 2021)
+
+Notable changes:
+
+    -   Intellicode context now includes collections.
+    -   Pylance's copy of typeshed has been updated.
+    -   The bundled stubs have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.186 to 1.1.187 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug in type evaluator that resulted in false positive error in strict mode. Type of call argument expression was incorrectly reported as partially unknown in some cases.
+    -   Bug Fix: Fixed style issue.
+    -   Bug Fix: Fixed bug in ParamSpec logic that resulted in false positive when a TypeVar was used as within a Concatenate expression.
+    -   Bug Fix: Fixed bug in ParamSpec type evaluation that caused a false positive error when assigning a callable with a `Concatenate` to another `ParamSpec`.
+    -   Bug Fix: Fixed crash in completion provider.
+    -   Bug Fix: Fixed issue that caused import resolution failures for certain submodules of `google.cloud`.
+-   [1.1.187](https://github.com/microsoft/pyright/releases/tag/1.1.187)
+    -   Bug Fix: Fixed false positive error when assigning type `T | Any` to type `T`.
+        ([pylance-release#2054](https://github.com/microsoft/pylance-release/issues/2054))
+    -   Behavior Change: Changed `Callable` special form to include a position-only marker at the end of the parameter list. Changed type printer to omit the `/` if it is unnecessary.
+    -   Behavior Change: Modified the check for function declaration redefinitions to allow for same-signature overrides in cases where the declarations are not within the same statement suite (e.g. one in the "if" and the other in the "else" block).
+    -   Bug Fix: Fixed missing diagnostic when a Self parameter was assigned to a `Concatenate[X, P]` where `X` is a type that is incompatible with `Self`.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when a specialized generic class with a `__call__` method uses a ParamSpec and is assigned to a `Callable` that is also parameterized with a ParamSpec.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug that resulted in hover text for symbols used within a default argument expression to sometimes be displayed as "Unknown".
+        ([pylance-release#2064](https://github.com/microsoft/pylance-release/issues/2064))
+    -   Bug Fix: Fixed regression in handling of callback protocols that define a `__name__` attribute, which is common to all functions.
+    -   Behavior Change: Added support for upcoming change in typing.pyi in the way that the `NoReturn` symbol is declared.
+
 ## 2021.11.1 (10 November 2021)
 
 Notable changes:
