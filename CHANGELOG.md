@@ -1,5 +1,70 @@
 # Changelog
 
+## 2021.12.0 (2 December 2021)
+
+Notable changes:
+
+-   Pylance now supports Go to Type Definition.
+-   Performance of Find All References and Rename Symbol has been improved for large workspaces.
+    ([pylance-release#2109](https://github.com/microsoft/pylance-release/issues/2109))
+-   Pylance's copy of typeshed has been updated.
+-   The bundled stubs for django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.188 to 1.1.191 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Improved heuristics that are intended to choose the simplest type when more than one solution is possible for a set of type variables.
+    -   Bug Fix: Fixed regression introduced in previous check-in related to type stubs that use symbol names that overlap with builtins symbols.
+    -   Behavior Change: Modified symbol resolution involving a quoted (forward-declared) type annotation that references a symbol in the global (module) or builtins namespaces. The previous implementation didn't match the runtime behavior of `typing.get_type_hints`.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a `__new__` method has its own type variables that are not scoped to its corresponding class.
+    -   Enhancement: Updated command-line documentation for consistency.
+-   [1.1.191](https://github.com/microsoft/pyright/releases/tag/1.1.191)
+    -   Bug Fix: Fixed bug in synthesized `__match_args__` type for dataclass, which shouldn't include any keyword-only fields. Thanks to @HKGx for this contribution.
+    -   Bug Fix: Added special-casing to suppress "partially unknown type" diagnostic within member access expressions when they are used to access non-specialized generic classes within an argument expression. There are legitimate uses of partially unknown types in this case (e.g. in "isinstance" calls).
+    -   Behavior Change: Exempted class symbol `__weakref__` from type completeness check since its type is well defined by the Python spec.
+    -   Behavior Change: Changed reportPropertyTypeMismatch to be disabled by default in all diagnostic modes.
+    -   Bug Fix: Fixed a hole in the check for partially-unknown types. Generic type aliases that are not specialized or are partially specialized (i.e. only some type arguments are specified) should trigger this check.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using class pattern matching with type variables.
+    -   Bug Fix: Fixed bug in "--ignoreexternal" mode of "--verifytypes" feature. It was not properly flagging errors when the type was external (and known) but the type arguments were partially unknown.
+    -   Enhancement: Enhanced truthy/falsy type narrowing pattern to handle classes that contain a `__bool__` method that always returns True or False.
+    -   Enhancement: Changed parse error messages related to unclosed parentheses, braces and brackets so they are reported at the location of the starting token to better match the new Python 3.10 parse error reporting behavior.
+        ([pylance-release#2118](https://github.com/microsoft/pylance-release/issues/2118))
+-   [1.1.190](https://github.com/microsoft/pyright/releases/tag/1.1.190)
+    -   Bug Fix: Fixed bug that caused false positive when evaluating type compatibility between two TypedDict types that are structurally the same but have different declarations. PEP 589 indicates that these should be treated as compatible types.
+    -   Bug Fix: In the case where a type annotation is an illegal form (e.g. a variable or a function), the annotation should evaluate to an Unknown type.
+    -   Enhancement: Added support for async functions that return `NoReturn` type.
+    -   Bug Fix: Fixed bug that prevented error when a generator function returned an inappropriate type if that type was a subclass of `Iterable`.
+        ([pylance-release#2127](https://github.com/microsoft/pylance-release/issues/2127))
+    -   Bug Fix: Fixed bug that resulted in unreported Unknown type in strict mode when the type was evaluated as part of a call to an overloaded function in some circumstances.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Improved check for inconsistent use of tabs and spaces to catch a previously-unreported case that generates runtime errors.
+    -   Bug Fix: Added a type consistency check for TypedDicts which are otherwise compatible except that one is marked @final and the other is not.
+    -   Behavior Change: Changed reportUnusedVariable diagnostic check to exempt variables whose names begin with an underscore.
+    -   Behavior Change: Changed logic that determines whether a function should be exempt from return type consistency checks. If a function or method contains only a docstring but no `...`, it is no longer exempt (unless it is an `@overload`).
+-   [1.1.189](https://github.com/microsoft/pyright/releases/tag/1.1.189)
+    -   Bug Fix: Fixed regression relating to type inference for non-generic classes that have unannotated constructors (so-called "pseudo-generic classes").
+    -   Bug Fix: Fixed crash that occurred when specializing a class with a TypeVarTuple and failing to provide a type argument for the TypeVarTuple type parameter.
+    -   Bug Fix: Fixed recent regression in import resolver that caused a local import to no longer be preferred over an installed module by the same name.
+    -   Bug Fix: Fixed bug that caused incorrect type evaluation of parameter with implied Optional type based on `None` default argument value when `strictParameterNoneValue` setting is false.
+        ([pylance-release#2091](https://github.com/microsoft/pylance-release/issues/2091))
+    -   Enhancement: Added checks for illegal forms of `Literal` type arguments.
+    -   Bug Fix: Fixed false positive error when using a union type expression in an `isinstance` or `issubclass` call on Python 3.10.
+    -   Bug Fix: Fixed bug in code flow engine that caused incorrect determination of node reachability in cases where an unannotated function recursively called itself.
+    -   Bug Fix: Fixed a hole in the type checking logic for TypedDict classes. It was not properly handling the invariant case.
+    -   Behavior Change: Made illegal assignment target checks unconditional so they are not gated by reportGeneralTypeIssues. These should be treated more like parse errors than type checking errors.
+-   [1.1.188](https://github.com/microsoft/pyright/releases/tag/1.1.188)
+    -   Bug Fix: Fixed issue that caused import resolution failures for certain submodules of `google.cloud`.
+    -   Bug Fix: Fixed crash in completion provider.
+    -   Bug Fix: Fixed bug in ParamSpec type evaluation that caused a false positive error when assigning a callable with a `Concatenate` to another `ParamSpec`.
+    -   Bug Fix: Fixed bug in ParamSpec logic that resulted in false positive when a TypeVar was used as within a Concatenate expression.
+    -   Bug Fix: Fixed bug in type evaluator that resulted in false positive error in strict mode. Type of call argument expression was incorrectly reported as partially unknown in some cases.
+    -   Bug Fix: Fixed bug that resulted in a false positive when a tuple with known element types is used as an unpacked argument in a call to a function that uses position-only parameters.
+        ([pylance-release#2083](https://github.com/microsoft/pylance-release/issues/2083))
+    -   Bug Fix: Fixed type checking hole (false negative) in certain circumstances involving loop constructs and variables whose types are modified within these loops. This bug fix also has a positive performance impact when analyzing functions with complex code flow graphs.
+        ([pylance-release#1979](https://github.com/microsoft/pylance-release/issues/1979))
+    -   Bug Fix: Fixed issue that caused CLI version of pyright to use incorrect Python interpreter to discover the Python version when no "pythonVersion" configuration setting was supplied.
+    -   Enhancement: Implemented diagnostic check for a `ClassVar` declaration that uses a type variable. PEP 526 explicitly states that this is not allowed.
+
 ## 2021.11.2 (17 November 2021)
 
 Notable changes:
