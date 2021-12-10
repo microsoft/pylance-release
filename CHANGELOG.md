@@ -1,5 +1,52 @@
 # Changelog
 
+## 2021.12.1 (9 December 2021)
+
+Notable changes:
+-   Pylance now supports smart selection (shift + alt + rightArrow/leftArrow)
+-   Pylance's copy of typeshed has been updated.
+-   The bundled stubs for django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.192 to 1.1.194 including the following changes:
+
+-   [1.1.194](https://github.com/microsoft/pyright/releases/tag/1.1.194)
+    -   Bug Fix: Fixed inconsistency in definition provider where it would sometimes fail to go to a declaration if the symbol was not re-exported from a type stub or "py.typed" module.
+    -   Enhancement: Added support for explicit specialization of generic type aliases that include a ParamSpec.
+    -   Bug Fix: Fixed bug that resulted in the import resolution paths retrieved from the currently-selected Python interpreter to omit the working directory if it happens to be in the "sys.path" list.
+    -   Bug Fix: Fixed bug in specialization of callable type where the return type includes the expansion (unpacking) of a variadic type variable.
+    -   Enhancement: Improved handling of `x in y` type guard to handle the case where `y` is a tuple.
+    -   Bug Fix: Fixed a bug that caused type narrowing to fail in certain cases when the "X in Y" type guard pattern was used.
+    -   Bug Fix: Fixed bug that resulted in false positive when a variable was modified in a loop that employed conditional type narrowing and was also used as a member access expression.
+    -   Bug Fix: Fixed a bug whereby an explicit TypeAlias definition that includes a generic type with no explicit type arguments was not assuming `Unknown` for those type arguments. For example, `A: TypeAlias = list` should assume that `A` is equivalent to `list[Unknown]`.
+    -   Enhancement: Added a missing diagnostic for an attempt to specialize a class that has already been specialized. This can occur in the case of a type alias, such as `A = list[int], A[int]`.
+    -   Enhancement: Added code to support `__qualname__` in class definitions.
+    -   Bug Fix: PEP 484 indicates that `Type[Any]` should be interpreted as equivalent to `type`, but the previous code was treating it as `Any`.
+    -   Enhancement: Added error check for the use of a generic class as a metaclass.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when a dictionary literal was passed to a constructor of a generic subclass of dict.
+-   [1.1.193](https://github.com/microsoft/pyright/releases/tag/1.1.193)
+    -   Bug Fix: Fixed incorrect type evaluation for symbols that are modified within a context manager block that is nested within a try/except statement.
+    -   Enhancement: Updated to the latest typeshed stubs. Note that type stubs for several third-party packages were recently removed from typeshed: click, flask, jinja2, markupsafe, werkzeug.
+    -   Bug Fix: Fixed bug that resulted in "unknown" type evaluation for variables assigned in a loop using a tuple assignment pattern.
+        ([pylance-release#2140](https://github.com/microsoft/pylance-release/issues/2140))
+    -   Bug Fix: Fixed bug in TypeVar solver where Self type was being incorrectly replaced with its concrete form in some cases.
+    -   Bug Fix: Fixed bug that resulted in TypeVar not being solved in some circumstances involving recursive types.
+    -   Bug Fix: Fixed a bug in the handling of generic classes whose implementation includes another instantiation of itself using the original type parameters as type arguments for the nested instantiation.
+    -   Bug Fix: Fixed a bug in the handling of generic classes whose implementation includes another instantiation of itself using the original type parameters as type arguments for the nested instantiation.
+    -   Enhancement: Enhanced reportIncompatibleMethodOverride diagnostic check to also detect incompatible methods defined by two classes that are used as base classes in a multiple-inheritance derived class.
+-   [1.1.192](https://github.com/microsoft/pyright/releases/tag/1.1.192)
+    -   Enhancement: Sped up "find reference" by performing a quick text search for the reference symbol and avoiding additional work for that file if there is no chance of finding a reference within it.
+    -   Bug Fix: Fixed misleading error message involving a type mismatch within the TypeVar constraint solver. The source and destination types were reversed.
+    -   Bug Fix: Fixed a bug in ternary expression type evaluation that resulted in a false positive error. It was not properly handling the case where the condition was statically determined to be false or true.
+    -   Enhancement: Improved error message for unknown or partially-unknown type arguments in package type verifier.
+    -   Bug Fix: Added missing check in package type verifier for generic type aliases with missing type arguments.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a `__new__` method has its own type variables that are not scoped to its corresponding class.
+    -   Bug Fix: Changed behavior of symbol resolution involving a quoted (forward-declared) type annotation that references a symbol in the global (module) or builtins namespaces. The previous implementation didn't match the runtime behavior of `typing.get_type_hints`.
+    -   Bug Fix: Improved heuristics that are intended to choose the simplest type when more than one solution is possible for a set of type variables.
+    -   Enhancement: Added support for class-based definition of "NewType", which will appear in a new version of typeshed stubs soon.
+    -   Bug Fix: Added missing check in function type compatibility checks for the case where the source type contains position-only parameters but the destination type does not.
+    -   Bug Fix: Added support for synthesized `__hash__` method for dataclass and dataclass_transform.
+    -   Bug Fix: Fixed bug that resulted in false positive parse error when using "/" parameter in type stub when pythonVersion was prior to Python 3.8.
+
 ## 2021.12.0 (2 December 2021)
 
 Notable changes:
