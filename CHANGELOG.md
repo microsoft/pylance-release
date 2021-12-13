@@ -1,8 +1,37 @@
 # Changelog
 
+## 2021.12.2 (13 December 2021)
+
+Notable changes:
+
+-   Bug Fix: Fixed false positive when using a generic type alias that refers to a class with a `__getitem__` method.
+    ([pylance-release#2161](https://github.com/microsoft/pylance-release/issues/2161))
+    ([pylance-release#2169](https://github.com/microsoft/pylance-release/issues/2169))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.194 to 1.1.195 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Changed class pattern matching behavior to support narrowing of Any or `Unknown`, exempting this case from the general "never narrow Any" rule.
+    -   Behavior Change: Modified behavior for assignment-based type narrowing when the target of the assignment references an "asymmetric" descriptor or property, one where the setter accepts a different value type than the getter returns. When this is detected, assignment-based type narrowing is no longer applied.
+    -   Enhancement: Added support for Python 3.11 StrEnum.
+-   [1.1.195](https://github.com/microsoft/pyright/releases/tag/1.1.195)
+    -   Bug Fix: Fixed bug in handling of `__slots__`. Entries listed in `__slots__` apply only to instance variables, not to class variables.
+    -   Bug Fix: Fixed false positive error with reportUnnecessaryComparison diagnostic rule when one of the two operands is `type` or `Type[Any]` and the other is a class.
+    -   Bug Fix: Fixed false positive when using a generic type alias that refers to a class with a `__getitem__` method.
+        ([pylance-release#2161](https://github.com/microsoft/pylance-release/issues/2161))
+        ([pylance-release#2169](https://github.com/microsoft/pylance-release/issues/2169))
+    -   Enhancement: Implemented support for type guards that based on "aliased conditional expressions". For details and examples, refer to https://github.com/microsoft/pyright/blob/main/docs/type-concepts.md#aliased-conditional-expression.
+    -   Bug Fix: Fixed a bug that caused a false positive error under certain circumstances where a function return type annotation referred to a forward-declared symbol and `from __future__ import annotations` was in effect.
+        ([pylance-release#2157](https://github.com/microsoft/pylance-release/issues/2157))
+    -   Enhancement: Added error for an attempt to call a module, which generates an exception at runtime.
+    -   Bug Fix: Fixed bug related to ParamSpec specialization when the signature has zero parameters.
+    -   Behavior Change: Changed type completeness report (the "--verifytypes" feature) to exempt symbols that derive from "**slots**" entries.
+    -   Enhancement: Improved `isinstance` type narrowing when the original type is a generic class with a TypeVar as a type argument and the second argument to `isinstance` is a generic subclass of the original type. The type argument is now properly retained.
+
 ## 2021.12.1 (9 December 2021)
 
 Notable changes:
+
 -   Pylance now supports smart selection (shift + alt + rightArrow/leftArrow)
 -   Pylance's copy of typeshed has been updated.
 -   The bundled stubs for django have been updated.
