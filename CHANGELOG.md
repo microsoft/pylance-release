@@ -1,5 +1,117 @@
 # Changelog
 
+## 2022.1.0 (5 January 2022)
+
+Notable changes:
+
+-   Enhancement: Improved untitled file support
+
+    In addition, Pylance's copy of Pyright has been updated from 1.1.196 to 1.1.204 including the following changes:
+
+-   [1.1.204](https://github.com/microsoft/pyright/releases/tag/1.1.204)
+    -   Behavior Change: Added special-cased handling for `__slots__` and `__class_getitem__` in protocol matching logic.
+    -   Enhancement: Improved bidirectional type inference for lambdas with default argument values.
+    -   Enhancement: Improved heuristics for when constraint solver should prefer literals over non-literals when solving a TypeVar in the case of bidirectional inference when assigning to a callable type.
+    -   Enhancement: Added support for unpacking of tuples in type annotations (part of PEP 646).
+    -   Bug Fix: Fixed bug that resulted in false positive error when a `Literal` was used within a Python-2 style type annotation comment.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug in "x is None" type guard logic. It wasn't preserving conditional types if x was a TypeVar.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a constrained TypeVar was checked against a particular constraint in an `isinstance` type guard.
+    -   Bug Fix: Fixed a bug in the logic for assignment-based type narrowing that resulted in the wrong narrowed type if the declared type of the destination expression contained a union and the source contained a TypeVar.
+-   [1.1.203](https://github.com/microsoft/pyright/releases/tag/1.1.203)
+    -   Happy New Year everyone!
+    -   Bug Fix: Fixed false positive error when `Optional` is used outside of a type annotation with no type arguments.
+    -   Enhancement: Added provisional support for "asserting type guard functions", those that return a type of `TypeGuard[X, NoReturn]`.
+    -   Enhancement: Added support for type narrowing in pattern classes based on the absence of an attribute (or a pattern mismatch of an attribute) if the class in question is marked `@final`.
+    -   Behavior Change: Changed the behavior for wildcard imports when the target module defines `__all__` in a way that pyright cannot understand. Previously, the wildcard import didn't import any symbols in this case. Now, it imports all symbols from the target module.
+    -   Enhancement: Added support for undocumented behavior of functools.partial whereby it allows keyword parameters to be overridden by the caller even though they are already supplied in the `partial` decorator.
+    -   Behavior Change: Changed the reportImplicitStringConcatenation diagnostic check to not flag concatenated strings if they are contained within enclosing parentheses.
+    -   Bug Fix: Fixed bug that caused `__hash__` function not to be synthesized for frozen pydantic models when using `dataclass_transform`.
+    -   Enhancement: Enhanced the "aliased conditional" type narrowing capability to accommodate multiple assignments of the variable used within the aliased conditional as long as the variable isn't reassigned between the the aliased conditional assignment and the conditional check that uses the aliased value.
+    -   Enhancement: Added support for `bool(x)` type guard.
+    -   Bug Fix: Fixed several bugs that prevented type narrowing to work correctly when conditional expression included an assignment expression.
+    -   Enhancement: Added check for member access expressions that access a member of a protocol class directly from the class. In this case, the member must be declared as a ClassVar.
+    -   Enhancement: Improved "x in y" type narrowing logic to better handle literal types in the iterable value y.
+    -   Behavior Change: Adjusted heuristics for assignment-based type narrowing. If the RHS type contains an unsolved TypeVar and the LHS (declared) type is concrete, do not apply type narrowing in this case.
+    -   Bug Fix: Fixed bug that resulted in unreported type violation (false negative) when an inner function with a ParamSpec used a concatenated parameter but the outer function's return type did not.
+    -   Enhancement: Added support for new type narrowing pattern: `len(x) == L` and `len(x) != L` where `x` is a tuple or union of tuples and `L` is a literal integer value.
+-   [1.1.202](https://github.com/microsoft/pyright/releases/tag/1.1.202)
+    -   Enhancement: Added check for class patterns for special builtin types (like int, float, etc.). These class patterns accept at most a single sub-pattern as an argument, and it must be positional.
+    -   Bug Fix: Fixed type compatibility bug that allowed `Literal[1]` to be assignable to `type` when it should not be.
+    -   Bug Fix: Fixed bug that caused "unnecessary isinstance" check to emit a false positive diagnostic when second argument was `Literal[1]`.
+    -   Enhancement: Improved heuristics for determining preferred TypeVar match when matching against a union that includes a TypeVar.
+    -   Enhancement: Added provisional support for two-argument form of TypeGuard to support negative narrowing cases.
+    -   Bug Fix: Fixed bug in hover provider that caused docstrings not to appear for callable types that were generated from a callable with a ParamSpec.
+    -   Bug Fix: Fixed a bug that resulted in a missing type error when a generic function returned a Callable type that used a TypeVar in its parameter types.
+    -   Bug Fix: Fixed regression that resulted in a crash under certain circumstances where a `finally` clause was used in a generic function that used constrained TypeVars.
+-   [1.1.201](https://github.com/microsoft/pyright/releases/tag/1.1.201)
+    -   Enhancement: Added code to detect except clauses that are unreachable because their exception types are already handled by previous except clauses.
+    -   Enhancement: Added type validation for custom metaclass keyword parameters specified in the metaclass's `__new__` method.
+    -   Enhancement: Added type validation logic for dataclass `__post_init__` method.
+    -   Bug Fix: Fixed bug that results in false positive error when class declaration arguments are evaluated out of order.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Enhancement: Added support for `Required` and `NotRequired` type annotations in alternative syntax form of TypedDict.
+    -   Behavior Change: Changed overload implementation consistency check so it doesn't require the implementation to include a `NoReturn` if one of the overload signatures returns a `NoReturn`.
+    -   Bug Fix: Fixed a bug that resulted in a false positive in the overlapping overload check, specifically when a later overload used a type variable in a parameter annotation.
+    -   Enhancement: Added type checking support for functools.total_ordering.
+-   [1.1.200](https://github.com/microsoft/pyright/releases/tag/1.1.200)
+    -   "The Christmas Edition"
+    -   Enhancement: Added type checking support for functools.partial. This advanced support does not work with overloads or argument lists that include list or dictionary unpack operators.
+    -   Bug Fix: Fixed a bug that resulted in a ParamSpec used within a generic function from becoming `Unknown` in some circumstances.
+    -   Bug Fix: Fixed a bug that resulted in an incorrect specialized return type in certain cases involving ParamSpecs.
+    -   Bug Fix: Fixed bug that can result in incorrect type evaluations when a keyword argument name is evaluated first when hovering over it.
+    -   Behavior Change: Added special-case handling to accommodate assignment of a method that differs only in the Self parameter.
+    -   Enhancement: Added logic to preserve function doc strings for a ParamSpec when it captures the signature of a function with a doc string. This is useful for decorators.
+-   [1.1.199](https://github.com/microsoft/pyright/releases/tag/1.1.199)
+    -   Bug Fix: Fixed bug that resulted in false positive error when class constructor is invoked with more than one argument and the class's metaclass has a custom `__call__` method.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed recent regression that resulted in false positive when assigning a `Type[Proto]` to `Type[Proto]`.
+    -   Enhancement: Added type checking for class constructor calls when the class has a metaclass with a custom `__call__` method.
+    -   Bug Fix: Fixed a bug that resulted in an incorrect type inference when assigning to a list that includes an unpacked target variable.
+    -   Enhancement: Improved handling of call expressions that have a `NoReturn` type. In particular, the logic now handles constructors, `__call__` methods, inferred symbol types, and symbol import chains.
+    -   Bug Fix: Fixed bug that resulted in infinite recursion in certain cases when an aliased conditional expression was used.
+    -   Bug Fix: Fixed bug in type evaluator that masked certain type errors when assigning a concrete type to a class TypeVar type.
+    -   Bug Fix: Fixed bug that caused false positive when passing a generic function callback as an argument to another generic function.
+-   [1.1.198](https://github.com/microsoft/pyright/releases/tag/1.1.198)
+    -   Enhancement: Added support for exception group syntax introduced in PEP 654.
+    -   Bug Fix: Fixed bug that resulted in false positive errors when using a TypeVar within the new callable syntax within a function declaration.
+    -   Enhancement: Added missing check mandated by PEP 544, which disallows an assignment of a class type to a Type[Proto] if the class type is a protocol itself.
+    -   Enhancement: Added support for class types that satisfy protocols. This is specifically allowed in PEP 544 in the section titled "Type[] and class objects vs protocols".
+    -   Enhancement: Added support for assigning a param spec to a `...` signature, since the latter is the `Any` equivalent for ParamSpecs.
+    -   Behavior Change: Changed type logic to allow `type` to be assigned to `Type[T]`. In this case, `type` is treated the same as `Type[Any]`, so `T` receives a value of `Any`.
+    -   Enhancement: Added support for `__getattr__` and `__getattribute__` overloads that are typed with a literal str representing the attribute name.
+    -   Bug Fix: Fixed bug in handling of callable syntax when a TypeVar, ParamSpec or TypeVarTuple was used outside of an appropriate scope. No error was emitted in this case.
+    -   Bug Fix: Fixed a bug in the handling of the new callable syntax when it's used with an "async" keyword. The resulting return type should be `Awaitable` rather than `Coroutine`.
+    -   Behavior Change: Changed the behavior of the new callable syntax to not accept `...` with other parameters. After further discussion on the typing-sig, the consensus is that supporting this will cause confusion.
+    -   Bug Fix: Fixed a false negative (missing) error when a method within a generic class was annotated to return a generic type of itself.
+    -   Enhancement: Added logic to handle the case where a declared return type of a function includes a constrained TypeVar and a return statement is guarded by a conditional check that guarantees that the constraint is met on that code path.
+    -   Enhancement: Improved error message (and reduced cascading errors) for the case where a variable is incorrectly used as the LHS of a subscript expression within a type annotation.
+-   [1.1.197](https://github.com/microsoft/pyright/releases/tag/1.1.197)
+    -   Bug Fix: Fixed bug in type narrowing code for literal enums. It wasn't correctly handling the edge case where the enum class has no enumerated members.
+    -   Bug Fix: Fixed bug in type narrowing logic for comparisons to literals that involve enums declared in a type stub. It was incorrectly narrowing the type to `Never` in the negative (else) case.
+    -   Bug Fix: Fixed bug in type evaluator that resulted in incomplete (Unknown) types when variable types depend on each other within a loop and one of the expressions involves an unpack operator.
+    -   Bug Fix: Fixed bug in protocol TypeVar variance validation. Thanks to @Azureblade3808 for this contribution.
+    -   Enhancement: Added support for ellipsis type argument for a generic alias that uses a ParamSpec.
+    -   Bug Fix: Fixed bug that caused false positives when assigning a function to a generic class or callback protocol that is parameterized with a ParamSpec that is specialized using an ellipsis.
+    -   Bug Fix: Fixed several bugs where `Type[None]` was incorrectly treated as compatible with `None` and vice versa.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when `Required` or `NotRequired` special forms were used with no type arguments in contexts where they are used as runtime class names rather than type annotations.
+    -   Behavior Change: Changed text representation of callables to more closely match the syntax introduced in PEP 677 including the use of "..." to represent "any parameters" and "\*\*P" to represent a ParamSpec.
+    -   Bug Fix: Fixed error in pyrightconfig JSON schema, which duplicated a couple of IDs.
+    -   Bug Fix: Fixed bug that caused crash in type analyzer when a TypeVar of the same name was declared twice in the same scope with constraints in one case and without in the other.
+    -   Enhancement: Added support for draft PEP 677: callable type syntax.
+-   [1.1.196](https://github.com/microsoft/pyright/releases/tag/1.1.196)
+    -   Enhancement: Added support for Python 3.11 StrEnum.
+    -   Behavior Change: Modified behavior for assignment-based type narrowing when the target of the assignment references an "asymmetric" descriptor or property, one where the setter accepts a different value type than the getter returns. When this is detected, assignment-based type narrowing is no longer applied.
+    -   Behavior Change: Changed class pattern matching behavior to support narrowing of `Any` or `Unknown`, exempting this case from the general "never narrow Any" rule.
+    -   Behavior Change: Modified behavior of overload matching when unpacked argument is present and the unpacked iterator is a type that doesn't provide any length information. In this case, overload matching will prefer an overload that includes a `*args` parameter rather than individual positional parameters.
+    -   Enhancement: Added check for a module used as a type annotation, which is not permitted.
+    -   Enhancement: Improved `isinstance` type narrowing logic to retain type arguments in cases where the corresponding type parameter is bound or constrained.
+    -   Bug Fix: Fixed bug that resulted in a false positive error indicating that an overload isn't compatible with its implementation when the overload includes a callable parameter with a type variable as a parameter.
+    -   Bug Fix: Fixed a bug in type evaluation of a `Final` class variable that has no explicit type but is assigned a literal value.
+    -   Bug Fix: Fixed a bug that resulted in incorrect type evaluations when a generic class using a ParamSpec was explicitly specialized using a `Concatenate` in the type argument, as in `A[Concatenate[int, P]]`.
+    -   Bug Fix: Fixed a bug that resulted in incorrect type resolution when evaluating mutually-dependent variables within a loop where one of the expressions involved a call to a constructor with an unpacked argument.
+    -   Bug Fix: Fixed false positive error with reportUnnecessaryIsInstance diagnostic check with the provided class is dynamic.
+
 ## 2021.12.2 (13 December 2021)
 
 Notable changes:
