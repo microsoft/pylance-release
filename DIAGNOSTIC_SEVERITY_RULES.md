@@ -33,6 +33,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportConstantRedefinition | Diagnostics for attempts to redefine variables whose names are all-caps with underscores and numerals. |
 | reportIncompatibleMethodOverride | Diagnostics for methods that override a method of the same name in a base class in an incompatible manner (wrong number of parameters, incompatible parameter types, or incompatible return type). |
 | reportIncompatibleVariableOverride | Diagnostics for class variable declarations that override a symbol of the same name in a base class with a type that is incompatible with the base class symbol type. |
+| reportInconsistentConstructor | Diagnostics when an `__init__` method signature is inconsistent with a `__new__` signature. The default value for this setting is 'none'. |
 | reportOverlappingOverload | Diagnostics for function overloads that overlap in signature and obscure each other or have incompatible return types. |
 | reportInvalidStringEscapeSequence | Diagnostics for invalid escape sequences used within string literals. The Python specification indicates that such sequences will generate a syntax error in future versions. |
 | reportUnknownParameterType | Diagnostics for input or return parameters for functions or methods that have an unknown type. |
@@ -57,3 +58,4 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnusedCallResult | Diagnostics for call expressions whose results are not consumed and are not None. |
 | reportUnsupportedDunderAll | Diagnostics for unsupported operations performed on `__all__`. |
 | reportUnusedCoroutine | Diagnostics for call expressions that return a Coroutine and whose results are not consumed. |
+| reportUnnecessaryTypeIgnoreComment | Diagnostics for a '# type: ignore' comment that would have no effect if removed. |
