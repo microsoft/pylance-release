@@ -1,5 +1,67 @@
 # Changelog
 
+## 2022.1.1 (12 January 2022)
+
+Notable changes:
+
+-   Enhancement: Added LSP support for code folding ranges
+    ([vscode-codebasics-folding](https://code.visualstudio.com/docs/editor/codebasics#_folding))
+-   Enhancement: Added support for USERNAME and VIRTUAL_ENV shell variables in vscode settings.
+    ([pylance-release#2221](https://github.com/microsoft/pylance-release/issues/2221))
+-   Enhancement: Improved completion provider suggestions for static members.
+    ([pylance-release#1318](https://github.com/microsoft/pylance-release/issues/1318))
+-   Enhancement: "add import" suggestions now suggest exact matches with higher priority.
+    ([pylance-release#297](https://github.com/microsoft/pylance-release/issues/297))
+-   Enhancement: Improved override function completions around positional and keyword only parameters.
+    ([pylance-release#711](https://github.com/microsoft/pylance-release/issues/711))
+-   Behavior Change: Always enable stdlib indexing if possible. This will allow users to use 'auto import' and 'add import' in open single file mode.
+    ([pylance-release#1765](https://github.com/microsoft/pylance-release/issues/1765))
+-   Bug Fix: Pylance is not working on vscode.dev/github.dev.
+    ([pylance-release#2235](https://github.com/microsoft/pylance-release/issues/2235))
+
+    In addition, Pylance's copy of Pyright has been updated from 1.1.205 to 1.1.208 including the following changes:
+
+-   [1.1.208](https://github.com/microsoft/pyright/releases/tag/1.1.208)
+    -   Enhancement (from pylance): Added support for USERNAME and VIRTUAL_ENV shell variables in ".env" file.
+    -   Enhancement (from pylance): Improved completion provider suggestions for static members.
+    -   Bug Fix: Reverted check for base classes that use variables. It was too disruptive, so another approach is needed.
+-   [1.1.207](https://github.com/microsoft/pyright/releases/tag/1.1.207)
+    -   Bug Fix: Fixed bug that results in false positive error when a function signature captured by a ParamSpec includes an \*args or \*\*kwargs parameter.
+    -   Bug Fix: Fixed bug that resulted in false positive error and unclear error message with the reportIncompatibleMethodOverride check.
+    -   Behavior Change: Changed type analysis of `def` statements to insert implicit `/` parameter (a position-only parameter separator) when one or more parameter names start with double underscores.
+    -   Bug Fix: Fixed a bug that resulted in no error being emitted when an `await` keyword was used with a `Generator` object.
+    -   Bug Fix: Fixed bug that resulted in false positive error when accessing a staticmethod or classmethod from a protocol class.
+    -   Bug Fix: Fixed bug that prevented a file-level override of `reportUnnecessaryTypeIgnoreComment` from working correctly.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when adding a 'staticmethod' or 'classmethod' decorator to an already-decorated method.
+    -   Enhancement: Updated typeshed stubs to latest.
+    -   Enhancement: Improved check for index values for tuples to handle unions of tuples.
+    -   Enhancement: Added new diagnostic check `reportInconsistentConstructor` that checks for inconsistent input signatures between `__new__` and `__init__` methods.
+    -   Bug Fix: Added a check for base classes specified in a class declaration that is not a concrete class but instead a variable (dynamic) type.
+-   [1.1.206](https://github.com/microsoft/pyright/releases/tag/1.1.206)
+    -   Bug Fix: Fixed a bug in the logic that determines whether a call expression is a "NoReturn". In particular, the logic wasn't handling the case where the call was to the constructor of a class that had a custom metaclass that defined a `__call__` method.
+        ([pylance-release#2224](https://github.com/microsoft/pylance-release/issues/2224))
+    -   Bug Fix: Fixed regression that caused a false positive error when attempting to invoke constructor for a class derived from `ctypes.Structure`. This class uses a custom metaclass with a custom `__getattr__` method.
+    -   Bug Fix: Updated heuristics in type variable constraint solver to better handle literals in the case where bidirectional type inference is being used.
+    -   Enhancement: Updated `dataclass_transform` support so it applies to both metaclasses and base classes to conform to the latest version of the specification.
+    -   Bug Fix: Fixed bug that resulted in false positive errors when dealing with protocol classes that referred to themselves internally.
+    -   Bug Fix: Fixed bug in `reportIncompatibleMethodOverride` diagnostic check where it omitted an error if an overridden method had a decorator applied.
+    -   Bug Fix: Fixed a bug in the type evaluation of the two-argument for of `super()` when the second argument is a class instance and the call is made from within a class or static method.
+        ([pylance-release#2230](https://github.com/microsoft/pylance-release/issues/2230))
+    -   Behavior Change: Added implied position-only parameter separator for `Concatenate` operator.
+    -   Enhancement: Added new diagnostic check `reportUnnecessaryTypeIgnoreComment` that emits a diagnostic when a `# type: ignore` comment has no effect.
+    -   Bug Fix: Fixed several bugs in type var constraint solver related to functions that have parameters that are callable that have parameters that are callable.
+-   [1.1.205](https://github.com/microsoft/pyright/releases/tag/1.1.205)
+    -   Enhancement: Improved type narrowing for `x.y == L` pattern to also support `x.y is L` if `L` is a `bool` or enum literal.
+    -   Bug Fix: Fixed regression that resulted in a false positive error when assigning an empty tuple to a declared type that involved an unbounded tuple.
+    -   Bug Fix: Fixed bug that causes a crash due to infinite recursion.
+    -   Bug Fix: Fixed recent regression that resulted in a crash when using a zero-length tuple as a function argument.
+    -   Bug Fix: Fixed bug that resulted in the first parameter of a local function declared within a method to be interpreted as a "self" parameter.
+    -   Bug Fix: Fixed bug that resulted in a false positive when using a decorator that applies to a method and provides a type for the parameter corresponding to "self".
+    -   Bug Fix: Fixed bug in tokenizer that resulted in a missing error when the first statement in a source file is preceded by whitespace.
+    -   Enhancement: Updated typeshed stubs to latest.
+    -   Bug Fix: Fixed bug that resulted in false positive error when a ParamSpec was bound to a generic function with some unresolved TypeVars.
+    -   Behavior Change: Changed behavior of type alias declarations that use a generic class or alias in the RHS without any subscripts or unions. These are treated as unspecialized aliases, whereas they were previously specialized with `Any` type arguments.
+
 ## 2022.1.0 (5 January 2022)
 
 Notable changes:
