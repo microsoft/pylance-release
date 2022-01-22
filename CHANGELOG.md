@@ -1,5 +1,74 @@
 # Changelog
 
+## 2022.1.3 (21 January 2022)
+
+Notable changes:
+
+-   Enhancement: Add folding for f-strings, dicts, and #regions.
+-   Enhancement: Adding `"python.analysis.indexing"` to the config. Index installed third party libraries and user files for language features such as auto-import, add import, workspace symbols, etc.
+    ([pylance-release#291](https://github.com/microsoft/pylance-release/issues/291))
+    ([pylance-release#1288](https://github.com/microsoft/pylance-release/issues/1288))
+    ([pylance-release#2261](https://github.com/microsoft/pylance-release/issues/2261))
+-   Enhancement: Better support for docstrings on overload functions. example numpy.random.choice
+    ([pylance-release#2243](https://github.com/microsoft/pylance-release/issues/2243))
+-   Enhancement: Import completions no longer show builtin symbols
+-   Enhancement: Implemented a new diagnostic check "reportMissingSuperCall" that checks for `__init__`, `__init_subclass__`, `__enter__` and `__exit__` methods that fail to call through to their parent classes' methods of the same name. This is a common source of bugs. The check is disabled by default. We may eventually enable it by default in strict mode, but we want to get feedback before doing so.
+
+    In addition, Pylance's copy of Pyright has been updated from 1.1.209 to 1.1.212 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+
+    -   Bug Fix: Fixed bug that resulted in crash due to infinite recursion.
+    -   Bug Fix: Fixed bug that resulted in a false positive when accessing a field in a base class that provides a `__getattr__` method and is use in conjunction with another base class.
+        main
+    -   Enhancement: For not-required TypedDict fields, added a second synthesized overload for the two-parameter form of `get` that specifies the type of the second parameter is the same type as the field value. The other overload allows this second parameter to be of a different type.
+    -   Enhancement: Updated documentation to cover the new # pyright: basic comment.
+
+-   [1.1.212](https://github.com/microsoft/pyright/releases/tag/1.1.212)
+    -   Bug Fix: Fixed bug that resulted in false positive when one or more sources of types in TypeVar solving was unknown.
+    -   Bug Fix: Fixed bug that resulted in a crash if a `TypedDict` class was derived from another `TypedDict` class and the base class had zero fields defined.
+    -   Enhancement: Added support for `# pyright: basic` comment to enable basic type checking in a file.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when determining whether method overrides for a multi-inheritance chain are compatible.
+    -   Bug Fix: Fixed bug that resulted in a false positive when using bidirectional inference with a constructor with complex set of covariant, invariant, and contravariant type parameters.
+    -   Enhancement: Improved logic for `type(x) is y` type narrowing pattern so it handles the case where `x` is `Any`.
+        ([pylance-release#2896](https://github.com/microsoft/pylance-release/issues/2896))
+-   [1.1.211](https://github.com/microsoft/pyright/releases/tag/1.1.211)
+    -   Enhancement: Added support for very large integer literals (both in the tokenizer/parser and in the type system for Literals).
+    -   Bug Fix: Fixed bug where call to async function that returns `NoReturn` was treated as a "no-return" function even though it wasn't awaited.
+    -   Enhancement: Added check for class or instance variables that are declared but not assigned in a protocol class and not assigned in a concrete class that explicitly derives from the protocol class.
+    -   Bug Fix: Fixed bug in type narrowing logic for `isinstance` calls where the input value includes a `Callable` and the class list includes a class that is not a runtime-checkable protocol class. In this case, the `Callable` should not be removed in the negative ("else") case even if the class defines a compatible `__call__` method.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when assigning a value to a TypedDict with not-required keys when that key had previously been assigned a literal value that narrowed the type.
+    -   Behavior Change: Reverted recent change to TypedDict where the single-argument form of `get` was removed for not-required fields. This caused problems because there is a fallback overload that accepted this case still.
+    -   Behavior Change: Changed `reportUnknownArgumentType` diagnostic check to be suppressed if the argument is an empty list or dict that comes from a `[]` or `{}` expression. While these types do technically contain `Unknown` type arguments, they are not unsafe, so reporting a diagnostic here is just noise.
+    -   Behavior Change: Changed the implementation of `reveal_type` so it no longer returns a literal string type but now accepts optional keyword arguments `expected_text` and `expected_type`. The return type of `reveal_type` is now the same as the type of the first argument, making it consistent with mypy's implementation of `reveal_type`.
+    -   Enhancement: Modified error messages for Required and NotRequired for clarity.
+    -   Bug Fix: Fixed bug in parser that resulted in a false negative error when using an assignment expression within a subscript. This is allowed in the grammar as of Python 3.10.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed internal crash caused by infinite recursion.
+    -   Bug Fix: Fixed bug that caused a crash in functools.partial special-case logic.
+    -   Bug Fix: Fixed bug in type evaluation of index expressions that involve a recursive type alias in the subscript. Also improved text version of expanded types that include recursive type aliases.
+-   [1.1.210](https://github.com/microsoft/pyright/releases/tag/1.1.210)
+    -   Behavior Change: Removed support for two-argument form of `TypeGuard` including support for "type asserts". The feedback on this idea was relatively negative.
+    -   Enhancement: Added provisional support for a proposed `StrictTypeGuard` feature. For details, refer to [this discussion](https://github.com/python/typing/discussions/1013).
+    -   Enhancement: Added support for old-style (pre-await) coroutines.
+    -   Bug Fix: Fixed a bug that resulted in a false positive in cases involving bidirectional type inference with an expected callable type where one or more of the parameter types was a tuple with non-literal element types and the provided argument was a tuple with a literal value.
+    -   Bug Fix: Improved limit check for literal math.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug that results in false positive when using a `super().__init__` call within a metaclass `__init__` method.
+    -   Bug Fix: Fixed bug that results in a false positive error when using `yield` within the outermost iterator of a list comprehension.
+    -   Bug Fix: Fixed a bug that resulted in a false positive when importing `OrderedDict` from `typing_extensions`. Added a mechanism for loading typeshed modules on demand within the type evaluator, - Enhancement: Added improved checks for size mismatches when unpacking known-length iterables into a list target (like `[a, b] = (1, 2, 3)`).
+    -   Behavior Change: Changed the `setdefault` method generated for TypedDict classes so it accepts only literal key values. Fixed a bug in the `get` method generated for TypedDict classes so it accepts arbitrary values for the default value parameter.
+        ([pylance-release#2256](https://github.com/microsoft/pylance-release/issues/2256))
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation when using a generic type alias that consists of a union of multiple type variables that are filled with the same type when the type alias is specialized.
+    -   Behavior Change: Modified the `reportMissingSuperCall` diagnostic based on feedback. It now emits an error for classes that include an `__init__` and don't call through to `super().__init__` even if that class derives from `object`, unless it's marked `@final`.
+-   [1.1.209](https://github.com/microsoft/pyright/releases/tag/1.1.209)
+    -   Enhancement: Added support for "literal math" for certain unary and binary operations where the operands are all the same literal class types (str, bytes, int, or bool). For example, `Literal[0, 1]` + `Literal[1, 2]` results in type `Literal1, 2, 3]`.
+    -   Enhancement: Implemented a new diagnostic check "reportMissingSuperCall" that checks for `__init__`, `__init_subclass__`, `__enter__` and `__exit__` methods that fail to call through to their parent classes' methods of the same name. This is a common source of bugs. The check is disabled by default. We may eventually enable it by default in strict mode, but we want to get feedback before doing so.
+    -   Behavior Change: Changed text output of CLI version to use the word "information" rather than "info" for consistency with JSON output.
+    -   Bug Fix: Fixed bug that resulted in a crash if `Self` was used in a type argument within a method decorator.
+    -   Behavior Change: Changed behavior to allow `Self` to appear within a `ClassVar` type.
+    -   Bug Fix: Fixed bug that resulted in an incorrect type evaluation when `Self` was used as a return type annotation for a property or class property.
+
 ## 2022.1.1 (12 January 2022)
 
 Notable changes:

@@ -35,6 +35,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportIncompatibleVariableOverride | Diagnostics for class variable declarations that override a symbol of the same name in a base class with a type that is incompatible with the base class symbol type. |
 | reportInconsistentConstructor | Diagnostics when an `__init__` method signature is inconsistent with a `__new__` signature. |
 | reportOverlappingOverload | Diagnostics for function overloads that overlap in signature and obscure each other or have incompatible return types. |
+| reportMissingSuperCall | Diagnostics for `__init__`, `__init_subclass__`, `__enter__` and `__exit__` methods in a subclass that fail to call through to the same-named method on a base class. |
 | reportInvalidStringEscapeSequence | Diagnostics for invalid escape sequences used within string literals. The Python specification indicates that such sequences will generate a syntax error in future versions. |
 | reportUnknownParameterType | Diagnostics for input or return parameters for functions or methods that have an unknown type. |
 | reportUnknownArgumentType | Diagnostics for call arguments for functions or methods that have an unknown type. |
