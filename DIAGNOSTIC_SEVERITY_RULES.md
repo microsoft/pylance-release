@@ -60,3 +60,4 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnsupportedDunderAll | Diagnostics for unsupported operations performed on `__all__`. |
 | reportUnusedCoroutine | Diagnostics for call expressions that return a Coroutine and whose results are not consumed. |
 | reportUnnecessaryTypeIgnoreComment | Diagnostics for a '# type: ignore' comment that would have no effect if removed. |
+| reportMatchNotExhaustive | Diagnostics for a 'match' statement that does not provide cases that exhaustively match against all potential types of the target expression. |
