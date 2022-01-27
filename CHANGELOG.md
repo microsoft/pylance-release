@@ -1,5 +1,62 @@
 # Changelog
 
+## 2022.1.5 (27 January 2022)
+
+Notable changes:
+
+-   Behavior Change: Changed folding of classes and functions to fold at the line containing the function or class name.
+-   Enhancement: Updated to requied node 14 and vscode 1.63.1
+-   Enhancement: Added new diagnostic check "reportMatchNotExhaustive" which reports cases where a `match` statement doesn't exhaustively cover all cases.
+-   Enhancement: Added option to disable "Go to symbol in workspace"
+    ([pylance-release#2236](https://github.com/microsoft/pylance-release/issues/2236))
+
+-   In addition, Pylance's copy of Pyright has been updated from 1.1.213 to 1.1.215 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Changed the logic that infers a NoReturn type to avoid inferring symbol types. This was causing a bunch of extra work to be performed in complex unannotated code bases like sklearn.
+    -   Enhancement: Updated type inference documentation to eliminate a statement that was leading to some confusion.
+    -   Bug Fix: Fixed a bug that resulted in unknown types in member access expressions to go unreported with `reportUnknownMemberType` was enabled. This occurred when the member access expression was located within a subscript of an index expression.
+    -   Bug Fix: Fixed recent regression that resulted in a crash (stack overflow) in the code flow engine.
+-   [1.1.215](https://github.com/microsoft/pyright/releases/tag/1.1.215)
+    -   Bug Fix: Fixed bug that resulted in crash when extremely large integer literals are encountered.
+        ([pylance-release#2279](https://github.com/microsoft/pylance-release/issues/2279))
+    -   Bug Fix: Fixed bug that caused "extraPaths" specified for individual execution environment to be combined for all execution environments if a default "extraPaths" was also specified in the same config file.
+    -   Bug Fix: Fixed handling of `NoReturn` type, which should act like `Never` in that both are considered "bottom types" and are assignable to any other type.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Enhancement: Added new diagnostic check "reportMatchNotExhaustive" which reports cases where a `match` statement doesn't exhaustively cover all cases.
+    -   Enhancement: Added support for unpack operator for tuples used within type arguments. Support for this new syntax will appear in Python 3.11.
+    -   Bug Fix: Added code in parser to detect obscenely deep parse subtrees containing binary and unary operations. These were sometimes leading to crashes in the binder and type evaluator. The parser now replaces them with error parse nodes and reports an error to the user.
+    -   Bug Fix: Added recursion check in type guard logic to address stack overflow issue seen in telemetry.
+    -   Bug Fix: Fixed bug that produces a false positive when attempting to assign a value of type `Type[NoneType]` to `Type[None]`. These are equivalent, so the assignment should be allowed.
+    -   Enhancement: Enhanced parser to detect and report a runtime error that occurs when using a generator expression without surrounding parens as an argument within a call expression when more than one argument or a trailing comma is present.
+    -   Bug Fix: Fixed a bug that resulted in a false positive when a member access expression targeted an attribute that was returned by a `__getattr__` method that returns a descriptor object. The old logic was binding the descriptor to the object, but that's inconsistent with the way things work at runtime.
+        ([pylance-release#2282](https://github.com/microsoft/pylance-release/issues/2282))
+    -   Enhancement: Improved analysis of `finally` block and the code that comes after the `finally` block so type narrowing performed within the `finally` block in the fall-through case is preserved.
+    -   Enhancement: Added support for `Final` and `ClassVar` annotations embedded within `Annotated`. Runtime support has recently been added for this case.
+    -   Enhancement: Added support for `InitVar` that is wrapped in `Annotated`. Support is being added for this in the runtime.
+    -   Enhancement: Added special-case handling for methods declared as returning a `Generator`, `AsyncGenerator` or `AwaitableGenerator` that do not contain a yield statement. This special case applies only to methods declared in stub files, an abstract method, or a protocol definition with no code.
+        ([pylance-release#2287](https://github.com/microsoft/pylance-release/issues/2287))
+    -   Bug Fix: Improved support for custom subclasses of the builtin `property` class. Previously, the special-case handling in place for `property` were not handling these custom subclasses well, and this resulted in several false positive errors and incorrect type evaluations.
+-   [1.1.214](https://github.com/microsoft/pyright/releases/tag/1.1.214)
+    -   A regression was introduced in the 1.1.213 release that has the potential of impacting many pyright users, so I decided to do a quick update.
+    -   Bug Fix: Reverted change from previous release that caused incorrect type evaluations and false positive errors in certain situations involving bidirectional type inference with call expressions.
+    -   Enhancement: Updated typeshed stubs to latest.
+-   [1.1.213](https://github.com/microsoft/pyright/releases/tag/1.1.213)
+    -   Behavior Change: For not-required TypedDict fields, added a second synthesized overload for the two-parameter form of `get` that specifies the type of the second parameter is the same type as the field value. The other overload allows this second parameter to be of a different type.
+    -   Bug Fix: Fixed bug that resulted in a false positive when accessing a field in a base class that provides a `__getattr__` method and is use in conjunction with another base class.
+    -   Bug Fix: Fixed bug that resulted in crash due to infinite recursion.
+    -   Bug Fix: Fixed a bug in the logic that detects duplicate enum members that resulted in a false positive when an enum class has other instance variables that are not enum members.
+    -   Bug Fix: Added special-case handling for instance variables in a dataclass that are marked `Final`. Previously, these were flagged as an error because there was no explicit value assigned to them, but the synthesized `__init__` method implicitly initializes them.
+    -   Enhancement: Added check for a class that derives from a protocol class where the protocol declares a method with an empty implementation, and the subclass doesn't provide a concrete implementation of the same-named method.
+    -   Bug Fix: Fixed a bug that resulted in a false positive type evaluation error when using bidirectional type analysis for a call expression and the return type of the call contained a union of a TypeVar and another type and the expected type contained a union with at least one literal type.
+    -   Bug Fix: Fixed bug that resulted in confusing error message when dataclass field was annotated with `Self` and then the class was subclassed.
+    -   Enhancement: Improved the logic that handles instantiation of a custom metaclass when the name of the new class is passed as a string literal to the metaclass constructor.
+    -   Enhancement: Improved the bidirectional type inference logic for lambdas to handle the case where one or more of the matching parameter types was a TypeVar.
+    -   Bug Fix: Fixed a bug in the parser that resulted in a false negative when using an assignment expression (walrus operator) in the `if` clause of a list comprehension with no surrounding parentheses.
+    -   Enhancement: Added support for bidirectional type inference when an `await` operator is used in an expression.
+    -   Bug Fix: Fixed a bug in the logic that handles classes that are constructed from custom metaclasses.
+    -   Enhancement: Added provisional support for the proposed "typing.reveal_type" call.
+
 ## 2022.1.3 (21 January 2022)
 
 Notable changes:
