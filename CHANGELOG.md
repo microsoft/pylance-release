@@ -1,5 +1,42 @@
 # Changelog
 
+## 2022.2.0 (2 February 2022)
+
+Notable changes:
+
+-   Enhancement: Improve perf when python.analysis.indexing is on by only re-indexing user files that are directly changed. ([pylance-release#1368](https://github.com/microsoft/pylance-release/issues/1368))
+-   Bug Fix: Fixed Pandas stubs to allow passing `NamedAgg` to `aggregate` and `agg`. ([pylance-release#2180](https://github.com/microsoft/pylance-release/issues/2180))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.215 to 1.1.217 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Added support for bidirectional type inference for `yield` statements.
+    -   Enhancement: Allow `--watch` to be used in conjunction with `--outputjson` command-line options.
+-   [1.1.217](https://github.com/microsoft/pyright/releases/tag/1.1.217)
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when passing an `*args` argument typed as an unpacked TypeVarTuple to a function that includes an unpacked TypeVarTuple parameter.
+    -   Enhancement: Added special-case bidirectional type inference for the right operand of the "|" and "|=" operators (with an expected type based on the left operand). This supports the case where the left operand is a TypedDict and the right operand is a dict expression that conforms to the TypedDict type. ([pylance-release#2300](https://github.com/microsoft/pylance-release/issues/2300))
+    -   Bug Fix: Fixed a bug in the reportIncompatibleMethodOverride check that resulted in false positive errors when both the base class and child methods have overloads but the base class does not have an - implementation and the child class does.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed a bug that results in false positive errors when a `ClassVar` type declaration appears within an `Annotated`.
+    -   Bug Fix: Added special-case handling of `Generic` base types to match the (undocumented) runtime behavior. Without this special-case handling, pyright reports that "a consistent method ordering cannot be found" in some cases where the runtime does not.
+    -   Bug Fix: Fixed bug that is leading to some crashes that appear in the telemetry.
+    -   Bug Fix: Added recursion detection for wildcard import lookups during code flow.
+    -   Bug Fix: Fixed a bug that caused a type alias of `Any` to be evaluated as `Unknown` if defined within a py.typed library.
+    -   Performance: Improved performance when analyzing types that involve some forms of recursive type aliases.
+    -   Enhancement: Added support for typing_extensions.Never and typing.Never type and unified the underlying handling of Never and NoReturn, which are synonyms.
+    -   Enhancement: Improved type stub generation code to emit definitions for TypeVar, TypeVarTuple, ParamSpec and NewType.
+    -   Behavior Change: Changed heuristics for matching two union types when the destination union includes a combination of concrete types and one or more type variables. This case involves some heuristics in the constraint solver because multiple solutions are possible.
+    -   Bug Fix: Fixed a bug that resulted in a false positive when assigning to a field in a dataclass that is annotated with a Callable type.
+-   [1.1.216](https://github.com/microsoft/pyright/releases/tag/1.1.216)
+    -   Bug Fix: Fixed recent regression that resulted in a crash (stack overflow) in the code flow engine.
+    -   Bug Fix: Fixed a bug that resulted in unknown types in member access expressions to go unreported with `reportUnknownMemberType` was enabled. This occurred when the member access expression was located within a subscript of an index expression.
+    -   Performance: Changed the logic that infers a NoReturn type to avoid inferring symbol types. This was causing a bunch of extra work to be performed in complex unannotated code bases like sklearn.
+    -   Performance: Fixed performance issue in parser for deeply-nested parenthesized expressions. ([pylance-release#2299](https://github.com/microsoft/pylance-release/issues/2299))
+    -   Bug Fix: Fixed bug in callable type compatibility logic. It was not properly handling some edge cases where a keyword parameter in the source and destination had an incompatible type if one or both of the types were specialized.
+    -   Bug Fix: Fixed a bug that resulted in false positives when specializing a callback protocol with a TypeVarTuple when the callback protocol also contained one or more keyword parameters that were generic.
+    -   Bug Fix: Fixed a bug in the protocol invariance checking logic. It wasn't properly handling protocols that used a TypeVarTuple as a type parameter that wasn't last (right-most) in the type parameter list.
+    -   Behavior Change: Changed import resolution order to more closely match PEP 561. Typeshed stdlib type stubs are now resolved later in the import resolution process, after all local modules and modules within the python environment.
+
 ## 2022.1.5 (27 January 2022)
 
 Notable changes:
@@ -10,7 +47,7 @@ Notable changes:
 -   Enhancement: Added option to disable "Go to symbol in workspace"
     ([pylance-release#2236](https://github.com/microsoft/pylance-release/issues/2236))
 
--   In addition, Pylance's copy of Pyright has been updated from 1.1.213 to 1.1.215 including the following changes:
+In addition, Pylance's copy of Pyright has been updated from 1.1.213 to 1.1.215 including the following changes:
 
 -   Unreleased in Pyright, but included in Pylance:
     -   Enhancement: Changed the logic that infers a NoReturn type to avoid inferring symbol types. This was causing a bunch of extra work to be performed in complex unannotated code bases like sklearn.
@@ -71,7 +108,7 @@ Notable changes:
 -   Enhancement: Import completions no longer show builtin symbols
 -   Enhancement: Implemented a new diagnostic check "reportMissingSuperCall" that checks for `__init__`, `__init_subclass__`, `__enter__` and `__exit__` methods that fail to call through to their parent classes' methods of the same name. This is a common source of bugs. The check is disabled by default. We may eventually enable it by default in strict mode, but we want to get feedback before doing so.
 
-    In addition, Pylance's copy of Pyright has been updated from 1.1.209 to 1.1.212 including the following changes:
+In addition, Pylance's copy of Pyright has been updated from 1.1.209 to 1.1.212 including the following changes:
 
 -   Unreleased in Pyright, but included in Pylance:
 
@@ -145,7 +182,7 @@ Notable changes:
 -   Bug Fix: Pylance is not working on vscode.dev/github.dev.
     ([pylance-release#2235](https://github.com/microsoft/pylance-release/issues/2235))
 
-    In addition, Pylance's copy of Pyright has been updated from 1.1.205 to 1.1.208 including the following changes:
+In addition, Pylance's copy of Pyright has been updated from 1.1.205 to 1.1.208 including the following changes:
 
 -   [1.1.208](https://github.com/microsoft/pyright/releases/tag/1.1.208)
     -   Enhancement (from pylance): Added support for USERNAME and VIRTUAL_ENV shell variables in ".env" file.
@@ -194,7 +231,7 @@ Notable changes:
 
 -   Enhancement: Improved untitled file support
 
-    In addition, Pylance's copy of Pyright has been updated from 1.1.196 to 1.1.204 including the following changes:
+In addition, Pylance's copy of Pyright has been updated from 1.1.196 to 1.1.204 including the following changes:
 
 -   [1.1.204](https://github.com/microsoft/pyright/releases/tag/1.1.204)
     -   Behavior Change: Added special-cased handling for `__slots__` and `__class_getitem__` in protocol matching logic.
@@ -416,7 +453,7 @@ In addition, Pylance's copy of Pyright has been updated from 1.1.188 to 1.1.191 
     -   Bug Fix: Improved check for inconsistent use of tabs and spaces to catch a previously-unreported case that generates runtime errors.
     -   Bug Fix: Added a type consistency check for TypedDicts which are otherwise compatible except that one is marked @final and the other is not.
     -   Behavior Change: Changed reportUnusedVariable diagnostic check to exempt variables whose names begin with an underscore.
-    -   Behavior Change: Changed logic that determines whether a function should be exempt from return type consistency checks. If a function or method contains only a docstring but no `...`, it is no longer exempt (unless it is an `@overload`).
+    -   Behavior Change: Changed logic that determines whether a function should be exempt from return type consistency checks. If a function or method contains only a docstring but no `...`, it is no longer exempt (unless it is an `@overload`). ([pylance-release#2111](https://github.com/microsoft/pylance-release/issues/2111))
 -   [1.1.189](https://github.com/microsoft/pyright/releases/tag/1.1.189)
     -   Bug Fix: Fixed regression relating to type inference for non-generic classes that have unannotated constructors (so-called "pseudo-generic classes").
     -   Bug Fix: Fixed crash that occurred when specializing a class with a TypeVarTuple and failing to provide a type argument for the TypeVarTuple type parameter.
