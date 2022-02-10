@@ -1,5 +1,57 @@
 # Changelog
 
+## 2022.2.1 (9 February 2022)
+
+Notable changes:
+
+-   Performance: Only index workspaces that have open files. ([pylance-release#2270](https://github.com/microsoft/pylance-release/issues/2270))
+-   Performance: Exclude folders whose names start with "." from indexing.
+-   Performance: Delay indexing of libraries until 10 minutes after last edit.
+-   Performance: Added partial seaborn stub.
+-   Performance: Added colors API to matplotlib stub.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.217 to 1.1.220 including the following changes:
+
+-   [1.1.220](https://github.com/microsoft/pyright/releases/tag/1.1.220)
+    -   Behavior Change: Changed the type narrowing logic for truthy and falsy conditions to exempt protocol classes.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation of an `or` binary operator when the same expression was used in the LHS and RHS and was always truthy.
+    -   Bug Fix: Fixed bug that resulted in the incorrect evaluation of a type resulting from a call to a constructor for an explicitly-specialized generic class in the case where that class implements neither a `__new__` nor an `__init__` method.
+    -   Enhancement: Improved error message for descriptor and property setters.
+    -   Bug Fix: Fixed a bug in PEP 646 unpacked tuple support where `*args` could not be annotated with `*tuple` type.
+    -   Bug Fix: Fixed a false negative in the handling of dataclasses that contain fields with default orders before fields without default values in the case where an `__init__` is already defined on the class.
+    -   Bug Fix: Fixed bug that results in false positive error when using a PEP 677 callable arrow syntax within a quoted type on Python 3.10 or older.
+    -   Bug Fix: Fixed a bug in the code that prints types to text. It was not properly handling the case where a callable contains a synthesized \*args parameter with a type that isn't unpacked.
+    -   Bug Fix: Fixed false negative where type annotations beginning with "\*" were not properly flagged as a syntax error.
+    -   Improved support for matching of TypeVarTuple when used with \*args parameter.
+    -   Bug Fix: Added missing check for a TypeVarTuple value that is not unpacked when passed as an argument.
+-   [1.1.219](https://github.com/microsoft/pyright/releases/tag/1.1.219)
+    -   Enhancement: Updated typeshed stubs to latest version.
+    -   Bug Fix: Fixed a bug that results in a false positive error when using a `Self` return type for an `__aenter__` method.
+    -   Bug Fix: Fixed false positive error when `P.args` or `P.kwargs` parameter type annotation is wrapped in `Annotated`.
+    -   Bug Fix: Fixed bug that caused false negative when evaluating a recursive type alias involving a tuple.
+    -   Bug Fix: Fixed a bug in the bidirectional type inference logic for list, set and dictionary expressions when that affected certain cases where the expected type contained a union.
+    -   Bug Fix: Fixed bug that resulted in false negative when using a recursive type alias with dictionary, list or set expressions.
+    -   Bug Fix: Fixed bug that resulted in the inappropriate generation of an Unknown type (and therefore false positive errors in strict mode) when using bidirectional type inference with a function that accepts a generic callable parameter.
+    -   Bug Fix: Improved detection of NoReturn calls within code flow graph. In particular, the code now handles the case where the LHS of the call expression is a member access expression and the LHS of that expression is a local variable whose type needs to be inferred.
+    -   Enhancement: Added better error handling and reporting for dataclass_transform.
+    -   Bug Fix: Fixed bug that caused crash when handling bigint literal values.
+    -   Bug Fix: Added missing check for a dataclass field that is declared with a default value in a base class but then overridden with one that doesn't include a default value in a child class. At runtime, it still acts as though it has a default value, which is inherited from the base class.
+    -   Bug Fix: Fixed bug that prevented the "--verifytypes" feature from working with namespace packages.
+    -   Bug Fix: Added missing check for improper use of `Unpack` when used in some contexts.
+-   [1.1.218](https://github.com/microsoft/pyright/releases/tag/1.1.218)
+    -   Enhancement: Allow "--watch" to be used in conjunction with "--outputjson" command-line options.
+    -   Enhancement: Added support for bidirectional type inference for `yield` statements. The expected type is based on the first type argument in a `Generator` or `AsyncGenerator` return type annotation.
+    -   Enhancement: Added the ability to add new symbols to `builtins` by simply adding a type stub file named `__builtins__.pyi` locally. ([pylance-release#1383](https://github.com/microsoft/pylance-release/issues/1383)), ([pylance-release#2103](https://github.com/microsoft/pylance-release/issues/2103))
+    -   Bug Fix: Fixed a bug that led to a false positive error when handling bidirectional type inference for tuple expressions when the expected type was a union that contained multiple tuple subtypes.
+    -   Bug Fix: Fixed a bug that resulted in a false negative when a list comprehension was used within a class body and referenced a class-scoped variable in a subexpression other than the first iterable. This also fixes a similar bug where a lambda was used within a class body and referenced a class-scoped variable in its return expression. These now property generate errors, reflecting the runtime behavior.
+    -   Bug Fix: Fixed a bug that resulted in incorrect type inference for positional parameters used in class patterns if the corresponding class was defined in a "py.typed" library and it defined a `__match_args__` symbol with no annotation. ([pylance-release#2327](https://github.com/microsoft/pylance-release/issues/2327))
+    -   Bug Fix: Fixed bug in stub generator that caused it to omit import statements with multi-part names (e.g. `import a.b.c`) even though there was a reference within the generated stub to the imported module.
+    -   Enhancement: Extended type narrowing for class pattern matching so it supports narrowing in the negative case when arguments are present and when the pattern class is generic.
+    -   Bug Fix: Fixed a bug that resulted in a false negative when a `*args` parameter was used in conjunction with a `*` keyword-only separator parameter. This generates a syntax error at runtime.
+    -   Bug Fix: Fixed a false positive error when `TypeGuard` was used without a type argument in a runtime manner (outside of a type annotation).
+    -   Bug Fix: Fixed recent regression that results in false positive errors detected in the `reportUnknownParameterType` diagnostic check when the function includes a parameter with a double underscore name indicating that it's positional-only.
+    -   Enhancement: Improved signature help and hover text for synthesized `__init__` dataclass method when a parameter uses a field descriptor with a default value.
+
 ## 2022.2.0 (2 February 2022)
 
 Notable changes:
