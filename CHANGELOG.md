@@ -1,5 +1,48 @@
 # Changelog
 
+## 2022.2.3 (16 February 2022)
+
+Notable changes:
+
+-   Bug Fix: Pandas stubs fixes.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.220 to 1.1.222 including the following changes:
+
+-   [1.1.222](https://github.com/microsoft/pyright/releases/tag/1.1.222)
+    -   Bug Fix: Fixed bug that resulted in false positive when using a recursive type alias with a generic dataclass constructor.
+    -   Bug Fix: Fixed a bug that results in a false negative when handling a function parameter that is annotated with a function-scoped TypeVar and has a default argument value.
+    -   Behavior Change: Changed the handling of `reveal_type` so it participates in bidirectional type inference when used within a larger expression.
+    -   Bug Fix: Fixed long-standing bug in logic that applies config file settings for diagnostic rule severity levels. The bug caused all settings overrides to be ignored if a pyrightconfig.json file was present. The new logic applies the default values, then the settings overrides, then the pyrightconfig.json file values. The change also simplifies the code, which was getting a bit unmaintainable.
+    -   Enhancement: Extended `dataclass_transform` to support `transform_descriptor_types` parameter.
+    -   Enhancement: Added support for an unpacked TypedDict as a type annotation for a `*kwargs` parameter.
+    -   Bug Fix: Improved the `type(x) is y` type narrowing logic to handle the case where `y` is a TypeVar or Self type.
+    -   Bug Fix: Fixed bug in match statement type narrowing. It wasn't properly handling the negative type narrowing case for class patterns when the subject expression was a bound TypeVar or Self type.
+    -   Bug Fix: Fixed a bug related to the `__eq__` method (and other order methods) that are synthesized for a dataclass. The parameter name was incorrect. It should be `other`.
+    -   Bug Fix: Added support for NFKC normalization of identifiers as specified in the Python lexical specification.
+-   [1.1.221](https://github.com/microsoft/pyright/releases/tag/1.1.221)
+    -   Behavior Change (from Pylance): Auto-exclude any folder under workspace starting with a period.
+    -   Bug Fix: Fixed a bug in type narrowing for `match` statement. It was not properly handling `None` literal patterns when narrowing in the negative case.
+    -   Bug Fix: Fixed bug that leads to a false positive error when using a class whose constructor doesn't contain any type annotations. Pyright treats such classes as though they are generic to help with inference of instance variables initialized in the constructor, but it shouldn't enforce the variance of the under-the-cover type variables.
+    -   Bug Fix: Fixed bug that resulted in a false positive when evaluating certain list comprehensions where the subexpressions had interdependencies.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when evaluating type compatibility between two callables that included an `*args` parameter plus a set of keyword-only parameters. ([pylance-release#2370](https://github.com/microsoft/pylance-release/issues/2370))
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Enhancement: Added support for PEP 675 (arbitrary literal strings).
+    -   Bug Fix: Added support for multiple unpack operators in a tuple list without parentheses when used in the RHS of a for statement. This was a grammar change introduced in Python 3.9. ([pylance-release#2371](https://github.com/microsoft/pylance-release/issues/2371))
+    -   Enhancement: Improved completions for class member access when the member variable in a child class is unannotated but a parent class provides an annotation. In this case, we should use the type information from the annotated symbol.
+    -   Behavior Change: Changed the behavior of the package type verifier so it does not flag unannotated class or instance variables if a parent class provides a type annotation for a variable of the same name. The type is inherited in this case. Also updated the library guidance to reflect this change.
+    -   Bug Fix: Fixed bug that resulted in an incorrect type evaluation when handling a `namedtuple` call with a second parameter that is dynamic (not statically known).
+    -   Enhancement: Improved support for `namedtuple` when the second argument is a tuple of string literals. It's more common to pass a list of string literals, but tuples should work as well.
+    -   Bug Fix: Reverted a recent bug fix that caused significant performance degradations and crashes under some circumstances. ([pylance-release#2373](https://github.com/microsoft/pylance-release/issues/2373), [pylance-release#2387](https://github.com/microsoft/pylance-release/issues/2387), [pylance-release#2391](https://github.com/microsoft/pylance-release/issues/2391))
+    -   Enhancement: Added special-case check for new callable syntax used within a quoted annotation passed as a bound or constraint argument to a TypeVar constructor.
+    -   Bug Fix: Improved symbol resolution of module imports within the code flow engine when determining whether a context manager swallows exceptions or a callable returns NoReturn.
+    -   Performance: Mitigated performance issue that results when doing a type compatibility check between two distinct recursive type aliases.
+    -   Bug Fix: Fixed incorrect type evaluation when evaluating a constructor call with bidirectional type inference when the expected type is generic.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation when a generic class with constrained type parameters was explicitly specialized with a subclass of one of the constrained types.
+
+## 2022.2.2 (11 February 2022)
+
+This release was not published.
+
 ## 2022.2.1 (9 February 2022)
 
 Notable changes:
