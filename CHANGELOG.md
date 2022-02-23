@@ -1,5 +1,34 @@
 # Changelog
 
+## 2022.2.4 (23 February 2022)
+
+Notable changes:
+
+-   Enhancement: Several improvements in Pandas stubs (Thanks to @Dr-Irv and @sjdemartini)
+-   Behavior Change: Changed `strictParameterNoneValue` to default to true rather than false. This reflects the updated guidance in PEP 484, which indicates that type checkers should not assume that a default argument of `None` should imply an `Optional` type.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.222 to 1.1.224 including the following changes:
+
+-   [1.1.224](https://github.com/microsoft/pyright/releases/tag/1.1.224)
+    -   Bug Fix: Improved NoReturn return call inference when the callable type evaluates to a partial Any or Unknown.
+    -   Bug Fix: Improved heuristics related to NoReturn detection when dealing with certain libraries that attempt to import another package within a `try` statement but provide a "dummy implementation" in an `except` clause. In this situation, we should use the declaration within the `try` block and ignore the one in the `except` clause. ([pylance-release#2402](https://github.com/microsoft/pylance-release/issues/2402))
+    -   Bug Fix: Fixed buggy assert in type evaluator that resulted in some crashes.
+    -   Behavior Change: Changed `strictParameterNoneValue` to default to true rather than false. This reflects the updated guidance in PEP 484, which indicates that type checkers should not assume that a default argument of `None` should imply an `Optional` type.
+    -   Enhancement: If CLI version of pyright is run without providing arguments to certain commands, a failure is detected and reported. Thanks to Martin Fischer for this contribution.
+    -   Bug Fix: Fixed performance regression due to a recent change in the code flow engine when attempting to evaluate whether call is a NoReturn.
+    -   Enhancement: Added support for parameter type inference based on annotated base class method signatures and on default argument expressions.
+    -   Bug Fix: Fixed recent regression that caused unnecessary reanalysis when closing a file when using pyright as an LSP. The regression also sometimes resulted in unexpected errors from reanalyzed files including diagnostics about unaccessed variables.
+-   [1.1.223](https://github.com/microsoft/pyright/releases/tag/1.1.223)
+    -   Bug Fix: Fixed a bug in negative type narrowing logic for value patterns in `match` statement.
+    -   Behavior Change: Removed provisional support for PEP 677 (Alternate Call Syntax) because the proposal was rejected by the Python steering council.
+    -   Bug Fix: Fixed a bug that led to incorrect type evaluation in the "implied else" code flow path.
+    -   Bug Fix: Improved support for functions or methods that return a context manager that swallow exceptions, such as `pytest.raises`.
+    -   Behavior Change: Modified `reportIncompatibleVariableOverride` check to permit a ClassVar in the base class to be overridden by a compatible class declaration in a child class.
+    -   Bug Fix: Fixed a bug in the type evaluator that led to false positives when assigning a function type to another function type and the source contained parameters annotated with literal types and the dest contained corresponding parameters annotated with TypeVars.
+    -   Bug Fix: Fixed bug in the handling of wildcard imports. If the target module doesn't contain a dunder all definition, the resulting imported symbol list should exclude names that start with a single underscore.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using a TypeVarTuple in a `classmethod`.
+    -   Behavior Change: Changed heap overflow detection to use a dynamic value based on available memory rather than a hard-coded size. For the pyright VS Code extension, changed the default "max heap size" from 1.7GB to 3.0GB on 32-bit systems. On 64-bit systems, this value appears to already be a higher value (4GB), and it doesn't appear to get overridden by the lower number.
+
 ## 2022.2.3 (16 February 2022)
 
 Notable changes:
