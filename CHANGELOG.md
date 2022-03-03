@@ -1,5 +1,41 @@
 # Changelog
 
+## 2022.3.0 (3 March 2022)
+
+Notable changes:
+
+-   Enhancement: Django and SQLAlchemy stubs have been updated to their latest versions.
+-   Enhancement: Pandas stubs updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.225 to 1.1.226 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Extended conditional types to function and constructor calls where one or more arguments is a conditional type.
+-   [1.1.226](https://github.com/microsoft/pyright/releases/tag/1.1.226)
+    -   Bug Fix: Improved parser to detect extremely deep chains of call expressions that can crash the type evaluator.
+    -   Bug Fix: Fixed bug that resulted in false positive error when detecting overlapping method overloads when the overloads use a class-scoped TypeVar.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when validating type compatibility between two functions with nested Concatenate and ParamSpec usage.
+    -   Bug Fix: Fixed a bug in the code flow graph relating to "with" statements that are nested within a "try" statement when the context manager does not swallow exceptions but instead forwards them to the outer except clause.
+    -   Enhancement: Improved error message for binary and unary operations when an expected type (bidirectional inference) is present.
+    -   Bug Fix: Fixed a performance issue that caused long analysis times for some code flow graphs that involve deeply nested loops and many interdependent variables.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when assigning a value of type `type | Any` to type `type[T]`.
+    -   Bug Fix: Fixed a bug that resulted in false positive errors when assigning a value to class variable that contains a generic descriptor object.
+    -   Enhancement: Improved the error message for a call expression where a keyword argument and a positional argument target the same parameter.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+-   [1.1.225](https://github.com/microsoft/pyright/releases/tag/1.1.225)
+    -   Bug Fix: Added missing checks for an attempt to modify a variable that has been marked "Final" using a means other than a simple assignment statement. This includes augmented assignments, tuple assignments, for statements, with statements, assignment expressions, etc.
+    -   Behavior Change: Modified parameter type inference logic to not infer a parameter's type based on the default argument value if the value is a tuple, list, set or dict.
+    -   Enhancement: Improved type evaluation of `type(x)` to handle the case where `x` is a union type.
+    -   Bug Fix: Fixed bug that caused false negative when a class defined a `__getattr__` method but no `__getitem__` method and a subscript expression was used with a class instance.
+    -   Bug Fix: Fixed a bug in the logic that determines whether a class that derives from a protocol implements all of the functions and variables within that protocol. It wasn't considering mix-in classes.
+    -   Bug Fix: Fixed regression in "finally" type analysis that allowed type violation errors to go unreported in finally clauses.
+    -   Behavior Change: Changed the behavior of type evaluator when it encounters an unannotated symbol within a "py.typed" source file. Previously, it did not fall back on type inference and instead evaluated the type as "Unknown". It now falls back on type inference but internally marks the type as "ambiguous". Added logic to detect "likely ambiguous inferences".
+    -   Behavior Change: Updated package type verifier to differentiate between "unknown" and "ambiguous" types.
+    -   Bug Fix: Fixed a bug in type evaluator that resulted in a crash when a function signature contains a "\*\*" parameter with no name.
+    -   Bug Fix: Fixed a bug that resulted in a crash due to infinite recursion.
+    -   Bug Fix: Enhanced parser to detect extremely deep parse trees created from index or member access expressions. The parser now emits an error rather than allowing the type evaluator to crash (with a stack overflow) in such situations.
+    -   Enhancement: Updated typeshed stubs to the latest.
+
 ## 2022.2.4 (23 February 2022)
 
 Notable changes:
