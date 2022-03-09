@@ -1,5 +1,42 @@
 # Changelog
 
+## 2022.3.1 (9 March 2022)
+
+Notable changes:
+
+-   Enhancement: The bundled native module stubs for sklearn, scipy, and pandas have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.226 to 1.1.228 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Improved solution to stack overflow and fixed another potential theoretical source based on code review.
+-   [1.1.228](https://github.com/microsoft/pyright/releases/tag/1.1.228)
+    -   Bug Fix: Improved "reportUnnecessaryComparison" diagnostic check so it catches more cases.
+    -   Performance: Fixed performance bug that was causing a significant slowdown when evaluating highly nested call expressions especially when there are argument errors in the innermost expressions.
+        ([pylance-release#2366](https://github.com/microsoft/pylance-release/issues/2366))
+    -   Enhancement: Extended support for narrowing of index expressions to include those with negative subscripts, such as `a[-1]`. This is supported for all supported type guard patterns.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using `typing.Self` in an inner function defined within an outer method.
+    -   Enhancement: Added negative type narrowing support for sequence patterns in match statements.
+    -   Bug Fix: Fixed a bug in negative type narrowing for class patterns in match statements when the class in the class pattern is one of the designated "special built-in classes" specified in PEP 634 and a class argument is specified.
+    -   Bug Fix: Fixed a bug that resulted in incorrect TypeVar resolution when the TypeVar was used in a `Type[T]` type expression, was constrained, and two of the constraints overlapped in type.
+    -   Bug Fix: Fixed an edge case in the code flow engine that theoretically could result in incorrect type evaluation.
+    -   Bug Fix: Fixed a bug in the code flow engine that resulted in inconsistent type evaluation depending on order of evaluation in some cases where a variable is modified in a loop.
+        ([pylance-release#2324](https://github.com/microsoft/pylance-release/issues/2324))
+    -   Bug Fix: Fixed bug that resulted in a stack overflow when evaluating unions with large numbers of subtypes.
+-   [1.1.227](https://github.com/microsoft/pyright/releases/tag/1.1.227)
+    -   Enhancement: Extended conditional types to function and constructor calls where one or more arguments is a conditional type.
+    -   Bug Fix: Fixed a bug that resulted in incorrect type inference when assigning `()` to a variable with an explicit type declaration of `tuple[()]`.
+    -   Bug Fix: Fixed bug that results in incorrect type evaluation when an `if` statement is not paired with an `else` and the condition expression uses a `not` paired with an `and` or `or`.
+    -   Bug Fix: Fixed bug that caused a class that derives from `NamedTuple` to not conform to the `Hashable` protocol.
+    -   Behavior Change: Changed override detection to always use an overload implementation if present.
+        ([pylance-release#2430](https://github.com/microsoft/pylance-release/issues/2430))
+    -   Behavior Change: Fixed bug that caused symbols in unreachable code to be ignored in "Rename Symbol" and "Find all References" operations.
+        ([pylance-release#2431](https://github.com/microsoft/pylance-release/issues/2431))
+    -   Bug Fix: Fixed bug that resulted in a false positive when `cls` was used as an argument to a dynamic `type` creation call.
+    -   Enhancement: Improved error message for overload that doesn't match its implementation.
+    -   Bug Fix: Added code to avoid an attempt to analyze a function if its code flow complexity is too high. This reduces the likelihood of a stack overflow within the type evaluator. If a function or module is too complex, a diagnostic is now emitted to tell the developer that full analysis is suspended for that execution scope.
+    -   Bug Fix: Improved reportIncompatibleMethodOverride diagnostic check, including fixes for a few false positives and false negatives and improvements to diagnostic messages.
+
 ## 2022.3.0 (3 March 2022)
 
 Notable changes:
