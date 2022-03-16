@@ -30,7 +30,7 @@ jobs:
         run:
           python -m pip install ghreport
 
-      - name: Generate daily report
+      - name: Generate report
         run:
           mkdir -p reports
           ghreport -o reports/report%a.html microsoft pylance-release ${{ secrets.GITHUB_TOKEN }}
