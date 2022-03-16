@@ -1,8 +1,6 @@
 name: 'Generate Daily Report'
 
 on:
-  issue_comment:
-    types: [created]
   schedule:
     - cron: '0 5 * * *'
 
