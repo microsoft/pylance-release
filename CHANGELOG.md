@@ -1,5 +1,49 @@
 # Changelog
 
+## 2022.3.2 (16 March 2022)
+
+Notable changes:
+
+-   Enhancement: Updated Pandas stubs
+-   Bug Fix: Removed duplicate SQLAlchemy stubs due to them now being in typeshed.
+-   Enhancement: Allow auto import customization
+    ([pylance-release#2312](https://github.com/microsoft/pylance-release/issues/2312))
+-   Enhancement: Allow `Rename` on excluded files
+    ([pylance-release#2468](https://github.com/microsoft/pylance-release/issues/2468))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.228 to 1.1.230 including the following changes:
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Behavior Change: Moved a couple of type-related diagnostics under the reportGeneralTypeIssues diagnostic rule rather than reporting them unconditionally.
+        ([pylance-release#2482](https://github.com/microsoft/pylance-release/issues/2482))
+    -   Bug Fix: Fixed false negative for the reportIncompatibleMethodOverride diagnostic check. It was not detecting the case where the base method used keyword parameters but
+        the override method used position-only parameters.
+-   [1.1.230](https://github.com/microsoft/pyright/releases/tag/1.1.230)
+    -   Bug Fix: Fixed a bug that resulted in a false positive "reportMissingParameterType" error when using an old-style double underscore parameter name to indicate position-only parameter.
+    -   Bug Fix: Handled the special case where an `Any` expression is bound to a ParamSpec giving it default parameters.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when using a dictionary unpack operator `**` with an instance of a class that satisfied the `SupportsKeysAndGetItem` protocol but did not directly derive from `Mapping`.
+    -   Enhancement: Added new diagnostic check `reportUnusedExpression` to catch bugs like `a == 4` when `a = 4` was intended.
+    -   Enhancement: Added special-case logic for a Type[T] (where T is an unbound TypeVar) that is instantiated through a call to its constructor. It should evaluate to T rather than Any.
+    -   Bug Fix: Fixed bug in pattern exhaustive match logic that failed to detect exhaustive match when the subject expression was a unnarrowable expression form.
+        ([pylance-release#2475](https://github.com/microsoft/pylance-release/issues/2475))
+    -   Bug Fix: Improved the heuristics in the alias resolution logic to prefer declarations that are in non-exception paths even if the exception path has a typed decl and the non-exception decl must be inferred.
+        ([pylance-release#2476](https://github.com/microsoft/pylance-release/issues/2476))
+    -   Bug Fix: Fixed two bugs that generated false positive errors when using PEP 604 union syntax in an implicit type alias. The first bug affected the case where the union started with `None`. The second affected the case where a TypeVar was included in the union.
+    -   Enhancement: Updated typeshed stubs to the latest.
+    -   Bug Fix: Fixed bug that resulted in false positive reportIncompatibleVariableOverride error when one base class defined a symbol as a property and another base class defined a symbol as Any.
+    -   Enhancement: Added support for the use of `Concatenate` as a type argument for a generic type alias that accepts a ParamSpec.
+-   [1.1.229](https://github.com/microsoft/pyright/releases/tag/1.1.229)
+    -   Bug Fix: Fixed a bug that caused semantic highlighting to sometimes skip information for certain tokens involved in member access expressions.
+    -   Enhancement: Added checks for incompatible variable types for same-named instance or class variables in two base classes.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed a bug that led to misleading type error messages and hover text when a type with an associated generic type alias was specialized. The underlying generic type was properly specialized, but the type alias itself appeared to be unspecialized still. Since the type alias is displayed in error messages and hover text, this was confusing.
+    -   Bug Fix: Fixed a bug where classes that derive from `Any` are not allowed to be assigned to a TypeVar. This resulted in a false positive error when returning `NotImplemented` in a function that is annotated to return a TypeVar.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error "variable not in slots" when a value was assigned to a class variable that is a descriptor.
+    -   Bug Fix: Fixed a bug in the `__post_init__` validation logic that resulted in a false positive when a dataclass with an `InitVar` derives from another dataclass with an `InitVar`.
+    -   Enhancement: Added support for per-line suppression of diagnostics using `# pyright: ignore` comment. This also supports rule-specific suppression using a list of diagnostic rules, as in `# pyright: ignore [reportGeneralTypeIssues]`.
+    -   Bug Fix: Fixed a bug in the reportUnnecessaryComparison diagnostic rule that resulted in false negatives when one of the two operands included a `None` in the type.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when testing type compatibility of an invariant type argument that consists of a union of types, some of which are subtypes of each other.
+
 ## 2022.3.1 (9 March 2022)
 
 Notable changes:
