@@ -59,5 +59,6 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnusedCallResult | Diagnostics for call expressions whose results are not consumed and are not None. |
 | reportUnsupportedDunderAll | Diagnostics for unsupported operations performed on `__all__`. |
 | reportUnusedCoroutine | Diagnostics for call expressions that return a Coroutine and whose results are not consumed. |
+| reportUnusedExpression | Diagnostics for simple expressions whose results are not used in any way. The default value for this setting is 'none'. |
 | reportUnnecessaryTypeIgnoreComment | Diagnostics for a '# type: ignore' comment that would have no effect if removed. |
 | reportMatchNotExhaustive | Diagnostics for a 'match' statement that does not provide cases that exhaustively match against all potential types of the target expression. |
