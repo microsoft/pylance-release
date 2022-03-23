@@ -1,5 +1,41 @@
 # Changelog
 
+## 2022.3.3 (23 March 2022)
+
+Notable changes:
+
+-   Enhancement: Added support for `prepare rename`. This will let users know when `rename` is not allowed.
+    ([pylance-release#1360](https://github.com/microsoft/pylance-release/issues/1360))
+    ([pylance-release#2457](https://github.com/microsoft/pylance-release/issues/2457))
+-   Enhancement: Improved `reportMissingSourceModule` to work for all different import cases.
+    ([pylance-release#2158](https://github.com/microsoft/pylance-release/issues/2158))
+-   Enhancement: Improved property completions.
+-   Enhancement: The bundled stubs for django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.230 to 1.1.232 including the following changes:
+
+-   [1.1.232](https://github.com/microsoft/pyright/releases/tag/1.1.232)
+    -   Enhancement: Improved diagnostic messages for overload implementation mismatch.
+    -   Bug Fix: Fixed bug that resulted in false negative when assigning one function to another and the dest contains named positional arguments that have no corresponding positional slot in the dest and the dest does not contain a \*\*kwargs.
+        ([pylance-release#2497](https://github.com/microsoft/pylance-release/issues/2497))
+    -   Bug Fix: Modified the special-case logic for `property` so it exposes methods and attributes provided by `object`.
+    -   Bug Fix: Improved the `reportIncompatibleMethodOverride` check to report a diagnostic if the base method provides a default argument value for a parameter but the override does not.
+    -   Behavior Change: Lowered cyclical code complexity threshold for code flow analysis in an attempt to reduce stack overflow crashes.
+    -   Bug Fix: Fixed a false positive error relating to `__slots__` when using a descriptor object that was assigned to a class variable in a base class.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Enhancement: Added support for new `assert_type` call, which is being added to Python 3.11 and typing_extensions.
+    -   Bug Fix: Fixed false positive error that occurs when assigning a class variable with a type annotation an expression that involves the name of the class variable symbol.
+    -   Bug Fix: Improved modeling of property class so its `fget`, `fset`, `fdel`, `__get__`, `__set__` and `__delete__` methods are updated properly when adding a setter or deleter.
+    -   Bug Fix: Fixed bug that resulted in false positive when overriding a method with position-only parameters when the base uses the old-style mechanism and the override uses the new-style `/` separator or vice versa.
+-   [1.1.231](https://github.com/microsoft/pyright/releases/tag/1.1.231)
+    -   Behavior Change: Moved a couple of type-related diagnostics under the reportGeneralTypeIssues diagnostic rule rather than reporting them unconditionally.
+    -   Bug Fix: Fixed false negative for the reportIncompatibleMethodOverride diagnostic check. It was not detecting the case where the base method used keyword parameters but the override method used position-only parameters.
+    -   Bug Fix: Fixed bug that resulted in a false positive error when matching a module against a specialized generic protocol class.
+    -   Bug Fix: Fixed a bug that resulted in misleading output when printing the type of a generic alias that includes a generic function parameterized by a ParamSpec and is later specialized.
+    -   Bug Fix: Fixed bug that resulted in incorrect type evaluation when a generic type alias parameterized with a ParamSpec was specialized multiple times.
+    -   Bug Fix: Fixed bug in "--verifytypes" feature. It was ignoring a missing parameter annotation for the first parameter in a non-method function.
+    -   Bug Fix: Fixed a bug that resulted in a false positive error when a generic callback protocol was passed as an argument to another generic callback protocol.
+
 ## 2022.3.2 (16 March 2022)
 
 Notable changes:
