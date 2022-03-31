@@ -1,5 +1,42 @@
 # Changelog
 
+## 2022.3.4 (30 March 2022)
+
+Notable changes:
+
+-   Enhancement: Improved `Rename Symbol` to handle imports.
+    ([pylance-release#1175](https://github.com/microsoft/pylance-release/issues/1175))
+-   Bug Fix: Fixed conda temp.txt files causing analysis unneeded refresh.
+-   Bug Fix: Ignore var decl in completions
+    ([pylance-release#2189](https://github.com/microsoft/pylance-release/issues/2189))
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.232 to 1.1.234 including the following changes:
+
+-   [1.1.234](https://github.com/microsoft/pyright/releases/tag/1.1.234)
+    -   Performance: Fixed bug that resulted in long analysis times when using call-site type inference for very complex functions that have no parameter annotations.
+    -   Behavior Change: Removed support for `transform_descriptor_types` parameter in `dataclass_transform`, a feature that was determined to be not necessary. Added support on normal dataclass handling for field types that are custom descriptor objects.
+    -   Bug Fix: Fixed bug in logic that determines whether to empty the in-memory type cache if it has the potential to overflow the heap.
+    -   Enhancement: Improved printing of string nodes in error and log messages. If the string node is long, it is truncated to 32 characters.
+    -   Enhancement: Improved textual form of string literal types. If the string literal is very long (>50 characters), it is truncated.
+    -   Bug Fix: Fixed recent regression that caused the "--verifytypes" feature to incorrectly report that the "self" parameter of a `@property` method as unannotated.
+    -   Performance: Removed older mechanism for tracking "incomplete types" — those that have been partially evaluated within a code flow loop. The older mechanism is no longer needed. Removing this is a big performance win in some (typically more complex) pieces of code.
+    -   Performance: Fixed performance issue that caused long analysis times in some complex unannotated functions when attempting to infer whether the function was a NoReturn return type.
+    -   Performance: Improved performance of code flow "reachability" analysis.
+    -   Enhancement: Updated typeshed stubs to the latest version.
+    -   Bug Fix: Fixed false positive error in "unreachable exception" detection code when the exception was typed as `Type[Exception]`.
+    -   Enhancement: Contributed by Kevin Coffey - Extended `a[I] is None` type narrowing logic to handle subtypes of Tuple including NamedTuple.
+-   [1.1.233](https://github.com/microsoft/pyright/releases/tag/1.1.233)
+    -   Behavior Change: When hovering over the LHS of an augmented assignment (e.g. the `a` within `a += x`), reveal the type of the symbol _after_ the operation rather than _before_.
+    -   Enhancement: Updated the `reportUnusedExpression` check to also report diagnostics for a simple name expression as a standalone statement.
+    -   Bug Fix (from pylance): Fixed several bugs related to "Rename Symbol" command and improved performance in some cases.
+    -   Bug Fix: Fixed crashing bug due to stack overflow when traversing the code flow graph.
+    -   Behavior Change: Modified algorithm for calculating the complexity of a function's code flow. If the complexity exceeds a certain threshold, pyright will not attempt to analyze the code.
+    -   Bug Fix: Fixed a bug that resulted in incorrect import resolution when the import referenced an empty directory within the stubspath. It should continue searching for imports in other locations in this case.
+    -   Bug Fix: Fixed regression that caused false positive error when protocol match involved a property that returned a type that was generic.
+    -   Bug Fix: Fixed bug that resulted in a false negative when assigning an invariant type var was specialized with a protocol type.
+    -   Bug Fix: Fixed several bugs relating to type evaluation within loops. This is a significant change to the code flow engine logic.
+        ([pylance-release#2983](https://github.com/microsoft/pylance-release/issues/2983))
+
 ## 2022.3.3 (23 March 2022)
 
 Notable changes:
