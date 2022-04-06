@@ -1,5 +1,34 @@
 # Changelog
 
+## 2022.4.0 (6 April 2022)
+
+Notable changes:
+
+-   Enhancement: Improved completions for native modules with matching stub files.
+    ([pylance-release#2533](https://github.com/microsoft/pylance-release/issues/2533))
+-   Bug Fix: Fixed docstring lookup for typeshed stubbed packages.
+    ([pylance-release#2472](https://github.com/microsoft/pylance-release/issues/2472))
+-   Enhancement: The stubs for pandas and django have been updated.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.234 to 1.1.235 including the following changes:
+
+-   [1.1.235](https://github.com/microsoft/pyright/releases/tag/1.1.235)
+    -   Performance: Fixed a performance regression that manifested when analyzing a large dictionary literal statement with a declared type.
+    -   Enhancement: (Contributed by Robert Craigie) Show TypedDict key type and docstring on hover.
+    -   Behavior Change: Updated logic for `dataclass_transform` to handle recent clarification in PEP 681 for cases where one or more overloads are decorated with `dataclass_transform`.
+    -   Enhancement: (Contributed by Kevin Coffey) Added support for type guard based on `a.b is None` or `a.b is not None` patterns where `b` is a member variable that distinguishes two different classes.
+    -   Enhancement: (Contributed by Robert Craigie) Add support for going to definition for TypedDict keys.
+    -   Behavior Change: Changed hover provider to display `(property)` rather than `(method)` if the field is decorated with a descriptor object.
+        ([pylance-release#2508](https://github.com/microsoft/pylance-release/issues/2508))
+    -   Enhancement: Changed logic for hover and completion providers to support docstrings for general descriptors rather than just properties.
+    -   Enhancement: Made synthesized `get` method in `TypedDict` classes a bit smarter. If a field is required, the default parameter's argument (or `None` if no default argument is provided) is ignored because the type will always come from the required field. If the `TypedDict` class is marked `@final`, any literal key name that is not part of the class will always return the type of the default argument (or `None` if no default argument is provided).
+    -   Bug Fix: Fixed bug that could theoretically account for some of the remaining stack overflows that we're seeing in the pylance telemetry.
+    -   Bug Fix: Fixed bug in the package type verifier where it incorrectly flagged an assignment to a descriptor member within a child class as an ambiguous override of that member.
+    -   Bug Fix: Changed the way pyright detects high memory usage and decides to empty its internal type cache.
+    -   Performance: Added perf enhancement to improve analysis times for complex unannotated code. Lowered complexity threshold for call-site return type inference and skipped argument expression evaluation for call expression when base call expression type is unknown.
+    -   Performance: More performance optimizations for complex unannotated functions. Don't evaluate argument or subscript expressions if base type of call expression or index expression is incomplete.
+    -   Enhancement: Updated typeshed stubs to latest.
+
 ## 2022.3.4 (30 March 2022)
 
 Notable changes:
