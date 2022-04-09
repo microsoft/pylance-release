@@ -1,9 +1,11 @@
 ---
 name: Bug Report
-about: 'Create a report to help us improve. Use the "Pylance: Report Issue" command (via command palette) to fill this out most of this information automatically.'
+about: 'Create a report to help us improve. Use the "Pylance: Report Issue" command
+  (via command palette) to fill this out most of this information automatically.'
 title: ''
 labels: ''
 assignees: ''
+
 ---
 
 <!--
@@ -26,11 +28,11 @@ To find your version, you can either:
 -   OS and version: XXX
 -   Python version (& distribution if applicable, e.g. Anaconda): XXX
 
-## Expected behaviour
+## Expected behavior
 
 XXX
 
-## Actual behaviour
+## Actual behavior
 
 XXX
 
