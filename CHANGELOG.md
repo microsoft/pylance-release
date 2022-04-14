@@ -1,5 +1,28 @@
 # Changelog
 
+## 2022.4.1 (13 April 2022)
+
+Notable changes:
+
+-   Enhancement: Renaming a method will rename all overridden methods as well.
+    ([pylance-release#813](https://github.com/microsoft/pylance-release/issues/813))
+-   Bug Fix: pandas stub updated to remove Unknown type argument.
+    ([pylance-release#1968](https://github.com/microsoft/pylance-release/issues/1968))
+-   Enhancement: Named argument in call context will show up at the top in completion.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.235 to 1.1.237.
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Fixed a bug that generated a false positive when importing from a "py.typed" namespace package. This change also loosens the requirements for a "py.typed" file to be in each of the submodules within a namespace package; a single "py.typed" within the top-level namespace directory is also now supported.
+    -   Improved error message for protocol mismatch due to invariance of mutable attributes.
+-   See pyright's release notes for details: [1.1.236](https://github.com/microsoft/pyright/releases/tag/1.1.236) and [1.1.237](https://github.com/microsoft/pyright/releases/tag/1.1.237)
+
+-   Issues fixed:
+    -   Enhancement: Better handling on namespace packages ([pylance-release#2562](https://github.com/microsoft/pylance-release/issues/2562))
+    -   Bug Fix: Incorrect type inference in loops ([pylance-release#2552](https://github.com/microsoft/pylance-release/issues/2552))
+    -   Bug Fix: False positive reportOptionalMemberAccess ([pylance-release#2549](https://github.com/microsoft/pylance-release/issues/2549))
+    -   Performance: Improvement on analyzing "while True" loop ([pylance-release#2540](https://github.com/microsoft/pylance-release/issues/2540))
+
 ## 2022.4.0 (6 April 2022)
 
 Notable changes:
