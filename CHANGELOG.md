@@ -1,5 +1,20 @@
 # Changelog
 
+## 2022.4.2 (20 April 2022)
+
+Notable changes:
+
+-   Enhancement: Improvement on supporting doc comment for builtin modules.
+    ([pylance-release#1938](https://github.com/microsoft/pylance-release/issues/1938))
+-   Enhancement: Updated typeshed stubs to latest.
+
+In addition, Pylance's copy of Pyright has been updated from 1.1.237 to 1.1.239.
+
+-   See pyright's release notes for details: [1.1.238](https://github.com/microsoft/pyright/releases/tag/1.1.238) and [1.1.239](https://github.com/microsoft/pyright/releases/tag/1.1.239)
+
+-   Issues fixed:
+    -   Bug Fix: Fixed bug that resulted in an infinite loop when a reference to a generic function was passed to itself as an argument. ([pylance-release#2686](https://github.com/microsoft/pylance-release/issues/2686))
+
 ## 2022.4.1 (13 April 2022)
 
 Notable changes:
