@@ -1,5 +1,16 @@
 # Changelog
 
+## 2022.4.3 (27 April 2022)
+
+Pylance's copy of Pyright has been updated from 1.1.239 to 1.1.240.
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Fixed regression in "reportUnnecessaryComparison" diagnostic check that resulted in false positives when the LHS or RHS evaluated to `Never`.
+-   See pyright's release notes for details: [1.1.240](https://github.com/microsoft/pyright/releases/tag/1.1.240)
+
+-   Issues fixed:
+    -   Bug Fix: Fixed bug on tuple assignment inside of loop. ([pylance-release#2731](https://github.com/microsoft/pylance-release/issues/2731))
+    
 ## 2022.4.2 (20 April 2022)
 
 Notable changes:
