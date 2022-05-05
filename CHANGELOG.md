@@ -1,5 +1,26 @@
 # Changelog
 
+## 2022.5.0-pre.1 (4 May 2022)
+
+We're only shipping to insiders this week. This release includes a change in Pyright's code flow analysis of `NoReturn` calls. When a similar change was attempted in Pylance 2022.2.1 it caused perf issues and was reverted. Pyright has improved its `NoReturn` handling and we're giving it another shot, but we're limiting the exposure to insiders users for now.
+
+Notable changes:
+
+-   Enhancement: Show completion suggestions for overriding inherited class variables
+    ([pylance-release#2059](https://github.com/microsoft/pylance-release/issues/2059))
+-   Enhancement: Updated typeshed stubs to latest.
+
+Pylance's copy of Pyright has been updated from 1.1.240 to 1.1.244.
+
+-   See pyright's release notes for details: [1.1.241](https://github.com/microsoft/pyright/releases/tag/1.1.241), [1.1.242](https://github.com/microsoft/pyright/releases/tag/1.1.242), [1.1.243](https://github.com/microsoft/pyright/releases/tag/1.1.243), and [1.1.244](https://github.com/microsoft/pyright/releases/tag/1.1.244).
+
+-   Issues fixed:
+    -   Bug Fix: Improved detection of NoReturn calls within code flow graph.
+    -   Bug Fix: Fixed bug that led to inconsistent type evaluation results when the code flow engine determined that an expression was unreachable.
+        ([pylance-release#2745](https://github.com/microsoft/pylance-release/issues/2745))
+    -   Bug Fix: Fixed bug that incorrectly inferred the type for an exception group when using a Python 3.11 `except*` statement.
+        ([pylance-release#2762](https://github.com/microsoft/pylance-release/issues/2762))
+
 ## 2022.4.3 (27 April 2022)
 
 Pylance's copy of Pyright has been updated from 1.1.239 to 1.1.240.
@@ -10,7 +31,7 @@ Pylance's copy of Pyright has been updated from 1.1.239 to 1.1.240.
 
 -   Issues fixed:
     -   Bug Fix: Fixed bug on tuple assignment inside of loop. ([pylance-release#2731](https://github.com/microsoft/pylance-release/issues/2731))
-    
+
 ## 2022.4.2 (20 April 2022)
 
 Notable changes:
