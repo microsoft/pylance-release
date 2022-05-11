@@ -1,5 +1,25 @@
 # Changelog
 
+## 2022.5.1 (11 May 2022)
+
+Notable changes:
+
+-   Bug Fix: TypedDict attribute suggestions don't recognise f-string quote type
+    ([pylance-release#1919](https://github.com/microsoft/pylance-release/issues/1919))
+-   Bug Fix: Auto complete for attributes form CBV in Django not working
+    ([pylance-release#2059](https://github.com/microsoft/pylance-release/issues/2059))
+-   Bug Fix: Always require restart when installing new package and cannot find python interpreter ([pylance-release#2505](https://github.com/microsoft/pylance-release/issues/2505))
+
+Pylance's copy of Pyright has been updated from 1.1.244 to 1.1.246.
+
+-   See pyright's release notes for details: [1.1.246](https://github.com/microsoft/pyright/releases/tag/1.1.246), [1.1.245](https://github.com/microsoft/pyright/releases/tag/1.1.245).
+
+-   Issues fixed:
+    -   Bug Fix: Functions in class cannot be analyzed under some circumstances ([pylance-release#2745](https://github.com/microsoft/pylance-release/issues/2745))
+    -   Bug Fix: False positive with type variable seemingly not being bound correctly when return type is inferred ([pylance-release#2785](https://github.com/microsoft/pylance-release/issues/2785))
+    -   Bug Fix: Value dependent typing signature with self-defined generic types incorrectly handled ([pylance-release#2784](https://github.com/microsoft/pylance-release/issues/2784))
+    -   Bug Fix: Type of "globals" is unknown when module named as globals ([pylance-release#2793](https://github.com/microsoft/pylance-release/issues/2793))
+
 ## 2022.5.0-pre.1 (4 May 2022)
 
 We're only shipping to insiders this week. This release includes a change in Pyright's code flow analysis of `NoReturn` calls. When a similar change was attempted in Pylance 2022.2.1 it caused perf issues and was reverted. Pyright has improved its `NoReturn` handling and we're giving it another shot, but we're limiting the exposure to insiders users for now.
