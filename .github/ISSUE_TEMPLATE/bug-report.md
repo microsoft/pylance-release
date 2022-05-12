@@ -28,6 +28,26 @@ To find your version, you can either:
 -   OS and version: XXX
 -   Python version (& distribution if applicable, e.g. Anaconda): XXX
 
+## Code Snippet
+
+<!--
+Please provide a minimal, self-contained code snippet that reproduces the issue. If the code snippet uses any libraries, please specify the versions used.
+
+Note: If you think a GIF of what is happening would be helpful, consider tools like https://www.cockos.com/licecap/, https://github.com/phw/peek or https://www.screentogif.com/ .
+-->
+
+```python
+XXX
+```
+
+## Repro Steps
+
+<!--
+If multiple steps are needed to reproduce the issue, please list the steps here. Delete this section if not needed.
+-->
+
+1. XXX
+
 ## Expected behavior
 
 XXX
@@ -45,15 +65,5 @@ Adding this will cause a large amount of info to be printed to the Python output
 -->
 
 ```
-XXX
-```
-
-## Code Snippet / Additional information
-
-<!--
-Note: If you think a GIF of what is happening would be helpful, consider tools like https://www.cockos.com/licecap/, https://github.com/phw/peek or https://www.screentogif.com/ .
--->
-
-```python
 XXX
 ```
