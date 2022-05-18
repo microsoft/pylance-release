@@ -1,5 +1,21 @@
 # Changelog
 
+## 2022.5.2 (18 May 2022)
+
+Notable changes:
+
+-   Bug Fix: Jupyter notebooks hang
+    ([pylance-release#2783](https://github.com/microsoft/pylance-release/issues/2783))
+
+Pylance's copy of Pyright has been updated from 1.1.246 to 1.1.247.
+
+-   See Pyright's release notes for details: [1.1.247](https://github.com/microsoft/pyright/releases/tag/1.1.247).
+
+-   Issues fixed:
+    -   Enhancement: Improved handling of context managers that swallow exceptions
+        ([pylance-release#982](https://github.com/microsoft/pylance-release/issues/982),
+        [pylance-release#2081](https://github.com/microsoft/pylance-release/issues/2081))
+
 ## 2022.5.1 (11 May 2022)
 
 Notable changes:
