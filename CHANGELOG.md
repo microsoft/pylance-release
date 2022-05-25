@@ -1,5 +1,25 @@
 # Changelog
 
+## 2022.5.3 (25 May 2022)
+
+Notable changes:
+
+-   Experimental Feature: Treat each Jupyter notebook cell as a separate document rather than concatenating the cells together into a single document. Has the potential to fix a lot of Pylance notebook behaviors. Can be enabled by setting `"python.pylanceLspNotebooksEnabled": true`.
+-   Bug Fix: Multiline tuples don't fold
+    ([pylance-release#2779](https://github.com/microsoft/pylance-release/issues/2779))
+-   Bug Fix: Report Issue command fails if Pylance has not been activated
+    ([pylance-release#2791](https://github.com/microsoft/pylance-release/issues/2791))
+
+Pylance's copy of Pyright has been updated from 1.1.247 to 1.1.249.
+
+-   See Pyright's release notes for details: [1.1.248](https://github.com/microsoft/pyright/releases/tag/1.1.248), [1.1.249](https://github.com/microsoft/pyright/releases/tag/1.1.249).
+
+-   Issues fixed:
+    -   Enhancement: Improved parser recovery for member access expressions that are missing the member name
+        ([pylance-release#2836](https://github.com/microsoft/pylance-release/issues/2836))
+    -   Bug: Incorrect type evaluation for a property access within a class when that property's getter has a generic return type
+        ([pylance-release#2841](https://github.com/microsoft/pylance-release/issues/2841))
+
 ## 2022.5.2 (18 May 2022)
 
 Notable changes:
