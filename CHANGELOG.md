@@ -1,5 +1,19 @@
 # Changelog
 
+## 2022.6.0 (1 June 2022)
+
+Pylance's copy of Pyright has been updated from 1.1.249 to 1.1.251.
+
+-   See Pyright's release notes for details: [1.1.249](https://github.com/microsoft/pyright/releases/tag/1.1.249), [1.1.251](https://github.com/microsoft/pyright/releases/tag/1.1.251).
+
+-   Issues fixed:
+    -   Bug: Object of type "None" cannot be called
+        ([pylance-release#2871](https://github.com/microsoft/pylance-release/issues/2871))
+    -   Bug: No keys hints for TypedDict when it is in union
+        ([pylance-release#2860](https://github.com/microsoft/pylance-release/issues/2860))
+    -   Bug: Bool are int
+        ([pylance-release#2865](https://github.com/microsoft/pylance-release/issues/2865))
+
 ## 2022.5.3 (25 May 2022)
 
 Notable changes:
