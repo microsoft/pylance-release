@@ -1,5 +1,25 @@
 # Changelog
 
+## 2022.6.10 (8 June 2022)
+
+Notable changes:
+
+-   Enhancment: Changed our version numbering scheme so we can support VS Code's [pre-release extensions feature](https://code.visualstudio.com/updates/v1_63#_pre-release-extensions). Stable versions going forward will be YYYY.MM.X0 and prerelease versions will be YYYY.MM.X1, where X starts at 1 each month and increments. Stable and prerelease versions released on the same day will have the same value for X.
+-   Enhancement: Show module paths in auto-import list
+    ([pylance-release#2885](https://github.com/microsoft/pylance-release/issues/2885))
+-   Bug Fix: "request cancelled" errors when using Pylance on vscode.dev
+    ([pylance-release#2743](https://github.com/microsoft/pylance-release/issues/2743))
+-   Bug Fix: Fix file watcher behavior with ZIP files
+    ([pylance-release#2890](https://github.com/microsoft/pylance-release/issues/2890))
+
+Pylance's copy of Pyright has been updated from 1.1.251 to 1.1.253.
+
+-   See Pyright's release notes for details: [1.1.252](https://github.com/microsoft/pyright/releases/tag/1.1.252), [1.1.253](https://github.com/microsoft/pyright/releases/tag/1.1.253).
+
+-   Issues fixed:
+    -   Bug Fix: Stack overflow during symbol rename
+        ([pylance-release#2550](https://github.com/microsoft/pylance-release/issues/2550))
+
 ## 2022.6.0 (1 June 2022)
 
 Pylance's copy of Pyright has been updated from 1.1.249 to 1.1.251.
@@ -7,11 +27,11 @@ Pylance's copy of Pyright has been updated from 1.1.249 to 1.1.251.
 -   See Pyright's release notes for details: [1.1.249](https://github.com/microsoft/pyright/releases/tag/1.1.249), [1.1.251](https://github.com/microsoft/pyright/releases/tag/1.1.251).
 
 -   Issues fixed:
-    -   Bug: Object of type "None" cannot be called
+    -   Bug Fix: Object of type "None" cannot be called
         ([pylance-release#2871](https://github.com/microsoft/pylance-release/issues/2871))
-    -   Bug: No keys hints for TypedDict when it is in union
+    -   Bug Fix: No keys hints for TypedDict when it is in union
         ([pylance-release#2860](https://github.com/microsoft/pylance-release/issues/2860))
-    -   Bug: Bool are int
+    -   Bug Fix: Bool are int
         ([pylance-release#2865](https://github.com/microsoft/pylance-release/issues/2865))
 
 ## 2022.5.3 (25 May 2022)
@@ -31,7 +51,7 @@ Pylance's copy of Pyright has been updated from 1.1.247 to 1.1.249.
 -   Issues fixed:
     -   Enhancement: Improved parser recovery for member access expressions that are missing the member name
         ([pylance-release#2836](https://github.com/microsoft/pylance-release/issues/2836))
-    -   Bug: Incorrect type evaluation for a property access within a class when that property's getter has a generic return type
+    -   Bug Fix: Incorrect type evaluation for a property access within a class when that property's getter has a generic return type
         ([pylance-release#2841](https://github.com/microsoft/pylance-release/issues/2841))
 
 ## 2022.5.2 (18 May 2022)
