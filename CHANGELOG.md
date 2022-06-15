@@ -1,5 +1,16 @@
 # Changelog
 
+## 2022.6.20 (15 June 2022)
+
+Notable changes:
+
+-   Enhancement: Added new configuration setting called "defineConstant". It allows a configuration to specify one or more identifiers that should be assigned by pyright's binder to be constant anywhere they appear. Values can be boolean (true or false) or a string. If an identifier of this value is used within a conditional statement (like `if not DEBUG:`) it will affect pyright's reachability analysis for the guarded code blocks.
+-   Enhancement: Added support for new reportTypeCommentUsage diagnostic check. It flags the usage of # type: xxx comments for functions and variables. These are still supported for backward compatibility, but they are increasingly irrelevant and will likely be deprecated in the next few years.
+
+Pylance's copy of Pyright has been updated from 1.1.253 to 1.1.254.
+
+-   See Pyright's release notes for details: [1.1.254](https://github.com/microsoft/pyright/releases/tag/1.1.254).
+
 ## 2022.6.10 (8 June 2022)
 
 Notable changes:
