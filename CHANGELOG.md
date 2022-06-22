@@ -1,5 +1,30 @@
 # Changelog
 
+## 2022.6.30 (22 June 2022)
+
+Notable changes:
+
+-   Enhancement: Added support for inlay hints on function return and variable declarations.
+    ```json
+    "python.analysis.inlayHints.variableTypes": true
+    "python.analysis.inlayHints.functionReturnTypes": true
+    ```
+    ([pylance-release#2643](https://github.com/microsoft/pylance-release/discussions/2643))
+-   Bug Fix: Error message persists for package imports
+    ([pylance-release#2246](https://github.com/microsoft/pylance-release/issues/2246))
+-   Bug Fix: Extension is watching files outside of the workspace
+    ([pylance-release#2914](https://github.com/microsoft/pylance-release/issues/2914))
+
+Pylance's copy of Pyright has been updated from 1.1.254 to 1.1.255.
+
+-   See Pyright's release notes for details: [1.1.255](https://github.com/microsoft/pyright/releases/tag/1.1.255).
+
+-   Issues fixed:
+    -   Bug Fix: exported name not exposed from workspace package even though listed in `__all__`
+        ([pylance-release#2150](https://github.com/microsoft/pylance-release/issues/2150))
+    -   Bug Fix: Docstring missing on `@overload` methods (but not plain functions)
+        ([pylance-release#2948](https://github.com/microsoft/pylance-release/issues/2948))
+
 ## 2022.6.20 (15 June 2022)
 
 Notable changes:
