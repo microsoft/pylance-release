@@ -1,5 +1,25 @@
 # Changelog
 
+## 2022.7.11 (1 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Method overriding template is auto inserted before opening parentheses.
+    ([pylance-release#2987](https://github.com/microsoft/pylance-release/issues/2987)))
+
+## 2022.6.31 (29 June 2022)
+
+Notable changes:
+
+-   Bug Fix: Period and open paren should insert currently selected IntelliSense completion
+    ([pylance-release#2946](https://github.com/microsoft/pylance-release/issues/2946))
+-   Bug Fix: Pylance/pyright is not running in IPythonMode
+    ([pylance-release#2963](https://github.com/microsoft/pylance-release/issues/2963))
+
+Pylance's copy of Pyright has been updated from 1.1.255 to 1.1.256.
+
+-   See Pyright's release notes for details: [1.1.256](https://github.com/microsoft/pyright/releases/tag/1.1.256).
+
 ## 2022.6.30 (22 June 2022)
 
 Notable changes:
