@@ -1,5 +1,40 @@
 # Changelog
 
+## 2022.7.21 (6 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Don't report unused imports/variables in notebooks when using the LSP notebooks experiment.
+    ([pylance-release#2986](https://github.com/microsoft/pylance-release/issues/2986))
+-   Bug Fix: Handle signature help better on nested calls.
+    ([pylance-release#1990](https://github.com/microsoft/pylance-release/issues/1990))
+-   Enhancement: Improved semantic token provider performance.
+-   Enhancement: Updated bundled pandas stubs.
+
+Pylance's copy of Pyright has been updated from 1.1.256 to 1.1.257.
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Fixed a bug that resulted in incorrect type narrowing when using an `in` expression and the LHS operand is of type `type`. This situation requires some special casing.
+    -   Fixed a bug in the handling of generic type aliases that are parameterized by ParamSpecs in the case where an explicit type argument is not provided. The type argument should default to `...` in this case.
+    -   Fixed bug in the expression printer. It was not properly handling a minimal slice (`:`).
+    -   Added optimization for slice expression evaluation. It can be skipped in cases where the we are speculatively evaluating the type.
+    -   Implemented optimization for type evaluation for index expressions. In cases where there are multiple subexpressions separated by commas, we can skip the check for the `__index__` magic method.
+    -   Fixed a bug that resulted in incorrect isinstance type narrowing when one or more of the filter classes was decorated with a class decorator.
+    -   Added support for context managers whose **exit** method is declared to return a falsy return type other than `None`.
+-   See Pyright's release notes for details: [1.1.257](https://github.com/microsoft/pyright/releases/tag/1.1.257).
+
+-   Issues fixed:
+    -   Bug Fix: Fixed a bug in type narrowing which caused pyright to report "code is unreachable"
+        ([pylance-release#2992](https://github.com/microsoft/pylance-release/issues/2992))
+    -   Bug Fix: Fixed a bug that caused incorrect diagnostics to be reported.
+        ([pylance-release#2989](https://github.com/microsoft/pylance-release/issues/2989))
+    -   Bug Fix: Don't report assert_type diagnostics when type checking mode is off.
+        ([pylance-release#2982](https://github.com/microsoft/pylance-release/issues/2982))
+
+## 2022.7.20 (6 July 2022)
+
+-   Release version that rolls up changes from the [2022.6.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022631-29-june-2022) and [2022.7.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022711-1-july-2022) prerelease builds.
+
 ## 2022.7.11 (1 July 2022)
 
 Notable changes:
