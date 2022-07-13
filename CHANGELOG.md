@@ -24,7 +24,7 @@ Pylance's copy of Pyright has been updated from 1.1.257 to 1.1.260.
 
 ## 2022.7.30 (13 July 2022)
 
--   Release version that rolls up changes from the [2022.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022721-6-july-2022) to [2022.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022721-6-july-2022) prerelease builds.
+-   Release version that rolls up changes from the [2022.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022721-6-july-2022) prerelease build.
 
 ## 2022.7.21 (6 July 2022)
 
