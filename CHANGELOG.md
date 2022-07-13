@@ -1,5 +1,31 @@
 # Changelog
 
+## 2022.7.31 (13 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Installing py.typed library will disable bundled partial stubs.
+-   Enhancement: Provide hidden option to disable library file watching
+    ([pylance-release#3001](https://github.com/microsoft/pylance-release/issues/3001))
+-   Enhancement: Support extra commit characters ("." and "(") in completion when applicable.
+    ([pylance-release#2946](https://github.com/microsoft/pylance-release/issues/2946))
+-   Enhancement: Updated bundled pandas stubs.
+-   Enhancement: Updated typeshed stubs to the latest version, which eliminates support for Python 3.6.
+
+Pylance's copy of Pyright has been updated from 1.1.257 to 1.1.260.
+
+-   See Pyright's release notes for details: [1.1.258](https://github.com/microsoft/pyright/releases/tag/1.1.258), [1.1.259](https://github.com/microsoft/pyright/releases/tag/1.1.259), [1.1.260](https://github.com/microsoft/pyright/releases/tag/1.1.260).
+
+-   Issues fixed:
+    -   Bug Fix: Fixed a bug that resulted in incorrect isinstance type narrowing when one or more of the filter classes was decorated with a class decorator.
+        ([pylance-release#3033](https://github.com/microsoft/pylance-release/issues/3033))
+    -   Performance: Added performance optimization for a special case that can occur in code without type annotations. It affects "pseudo-generic" classes that are parameterized recursively.
+        ([pylance-release#2983](https://github.com/microsoft/pylance-release/issues/2983))
+
+## 2022.7.30 (13 July 2022)
+
+-   Release version that rolls up changes from the [2022.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022721-6-july-2022) to [2022.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022721-6-july-2022) prerelease builds.
+
 ## 2022.7.21 (6 July 2022)
 
 Notable changes:
@@ -33,7 +59,7 @@ Pylance's copy of Pyright has been updated from 1.1.256 to 1.1.257.
 
 ## 2022.7.20 (6 July 2022)
 
--   Release version that rolls up changes from the [2022.6.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022631-29-june-2022) and [2022.7.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022711-1-july-2022) prerelease builds.
+-   Release version that rolls up changes from the [2022.6.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022631-29-june-2022) to [2022.7.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022711-1-july-2022) prerelease builds.
 
 ## 2022.7.11 (1 July 2022)
 
