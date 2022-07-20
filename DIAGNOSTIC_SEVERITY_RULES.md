@@ -49,6 +49,7 @@ This doc details all available rules that can be customized using the `python.an
 | reportUnnecessaryIsInstance | Diagnostics for 'isinstance' or 'issubclass' calls where the result is statically determined to be always true or always false. Such calls are often indicative of a programming error. |
 | reportUnnecessaryCast | Diagnostics for 'cast' calls that are statically determined to be unnecessary. Such calls are sometimes indicative of a programming error. |
 | reportUnnecessaryComparison | Diagnostics for '==' and '!=' comparisons that are statically determined to be unnecessary. Such calls are sometimes indicative of a programming error. |
+| reportUnnecessaryContains | Generate or suppress diagnostics for 'in' operations that are statically determined to always evaluate to False or True. Such operations are sometimes indicative of a programming error. The default value for this setting is 'none'. |
 | reportAssertAlwaysTrue | Diagnostics for 'assert' statement that will provably always assert. This can be indicative of a programming error.  |
 | reportSelfClsParameterName | Diagnostics for a missing or misnamed “self” parameter in instance methods and “cls” parameter in class methods. Instance methods in metaclasses (classes that derive from “type”) are allowed to use “cls” for instance methods. |
 | reportImplicitStringConcatenation | Diagnostics for two or more string literals that follow each other, indicating an implicit concatenation. This is considered a bad practice and often masks bugs such as missing commas.  |

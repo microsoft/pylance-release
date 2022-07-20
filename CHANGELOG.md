@@ -1,5 +1,31 @@
 # Changelog
 
+## 2022.7.41 (20 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Improved virtual workspace handling.
+    ([pylance-release#2978](https://github.com/microsoft/pylance-release/issues/2978))
+-   Bug Fix: Improved extract method code generation around expression.
+    ([pylance-release#2906](https://github.com/microsoft/pylance-release/issues/2906))
+-   Enhancement: Added new capability to Inlay hint that will insert the type when double clicked.
+    ([pylance-release#2970](https://github.com/microsoft/pylance-release/issues/2970))
+-   Enhancement: Added new code action `remove all unused imports` that also supports `Fix all`.
+-   Enhancement: Updated bundled pandas stubs.
+-   Enhancement: Updated bundled typeshed.
+
+Pylance's copy of Pyright has been updated from 1.1.260 to 1.1.262.
+
+-   See Pyright's release notes for details: [1.1.261](https://github.com/microsoft/pyright/releases/tag/1.1.261), [1.1.262](https://github.com/microsoft/pyright/releases/tag/1.1.262).
+
+-   Issues fixed:
+    -   Performance: Improved type analysis performance.
+        ([pylance-release#2881](https://github.com/microsoft/pylance-release/issues/2881))
+
+## 2022.7.40 (20 July 2022)
+
+-   Release version that rolls up changes from the [2022.7.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022731-13-july-2022) prerelease build.
+
 ## 2022.7.31 (13 July 2022)
 
 Notable changes:
