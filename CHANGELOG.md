@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022.7.42 (27 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Improved inlay type hints code gen on double click.
+    ([pylance-release#3095](https://github.com/microsoft/pylance-release/issues/3095))
+-   Bug Fix: Provided name for all source code actions.
+    ([pylance-release#3091](https://github.com/microsoft/pylance-release/issues/3091))
+-   Bug Fix: Improved magic command handling in interactive window.
+    ([pylance-release#2894](https://github.com/microsoft/pylance-release/issues/2894))
+
+Pylance's copy of Pyright has been updated from 1.1.262 to 1.1.264.
+
+-   See Pyright's release notes for details: [1.1.263](https://github.com/microsoft/pyright/releases/tag/1.1.263), [1.1.264](https://github.com/microsoft/pyright/releases/tag/1.1.264).
+
+-   Issues fixed:
+    -   Bug Fix: Incorrect type analysis in loop.
+        ([pylance-release#3077](https://github.com/microsoft/pylance-release/issues/3077))
+
 ## 2022.7.41 (20 July 2022)
 
 Notable changes:
