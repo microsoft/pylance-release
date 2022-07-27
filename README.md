@@ -122,6 +122,14 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
+-   `python.analysis.importFormat`
+
+    -   Defines the default format for import module.
+    -   Accepted values:
+        -   `absolute` (default)
+        -   `relative`
+        -   `auto`
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
@@ -179,6 +187,15 @@ Example of customizing semantic colors in settings.json:
     }
 }
 ```
+# Source Code Actions
+
+-   `source.fixAll.unusedImports`
+
+    -   Remove all unused imports in a file
+
+-   `source.fixAll.convertImportFormat`
+
+    -   Convert import format according to `python.analysis.importFormat`.
 
 # Troubleshooting
 
