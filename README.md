@@ -130,6 +130,20 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `relative`
         -   `auto`
 
+-   `python.analysis.inlayHints.variableTypes`
+
+    -   Enable/disable inlay hints for variable types.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
+-   `python.analysis.inlayHints.functionReturnTypes`
+
+    -   Enable/disable inlay hints for function return types.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
