@@ -1,5 +1,17 @@
 # Changelog
 
+## 2022.7.44 (31 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Removed `auto` option from import format.
+
+## 2022.7.43 (28 July 2022)
+
+Notable changes:
+
+-   Bug Fix: Fixed the handling of library module under workspace root in toggle import format.
+
 ## 2022.7.42 (27 July 2022)
 
 Notable changes:

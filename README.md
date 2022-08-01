@@ -128,7 +128,6 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Accepted values:
         -   `absolute` (default)
         -   `relative`
-        -   `auto`
 
 -   `python.analysis.inlayHints.variableTypes`
 
