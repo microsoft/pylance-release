@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022.8.11 (3 August 2022)
+
+Notable changes:
+
+-   Enhancement: Auto/add imports now supports new import format options (relative, absolute)
+-   Bug Fix: Remove double click to insert type hint on TypeVars, ParamSpec and typeAlias assigments
+
+Pylance's copy of Pyright has been updated from 1.1.264 to 1.1.265.
+
+-   See Pyright's release notes for details: [1.1.265](https://github.com/microsoft/pyright/releases/tag/1.1.265).
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a bug that caused incorrect type evaluation because of stale module paths that are cached for specific source files. Module paths are dependent on the list of configured import resolution paths, so when the import resolution paths change, we may need to recompute the module path for a source file.
+    -   Bug Fix: Fixed a bug that caused a false positive error when using a list comprehension within a method that is overloaded to accept either a `LiteralString` or a `str`. The incorrect overload was chosen in some cases, picking the `LiteralString` variant rather than the `str` variant even though `LiteralString` variant generated type errors.
+
+## 2022.8.10 (3 August 2022)
+
+-   Release version that rolls up changes from the [2022.7.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022741-20-july-2022) to the [2022.7.44](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022744-31-july-2022) prerelease build.
+
 ## 2022.7.44 (31 July 2022)
 
 Notable changes:
