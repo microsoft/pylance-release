@@ -4,7 +4,7 @@
 
 This repository is for providing feedback and documentation on the [Pylance language server extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to [Pyright](https://github.com/microsoft/pyright) to make improvements to the core typing engine that powers the Pylance experience.
 
-Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency. 
+Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency.
 
 # Quick Start
 
@@ -39,13 +39,6 @@ See the [changelog](CHANGELOG.md) for the latest release.
 
 Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the settings.json file in your workspace, or edited through the Settings Editor UI.
 
--   `pylance.insidersChannel`
-
-    -   Used to control the insiders download channel.
-    -   Available values:
-        -   `off` (default)
-        -   `daily`
-
 -   `python.analysis.typeCheckingMode`
 
     -   Used to specify the level of type checking analysis performed.
@@ -78,6 +71,11 @@ Pylance provides users with the ability to customize their Python language suppo
 
     -   Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     -   Default value: empty array
+
+-   `python.analysis.indexing`
+
+    - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
+    - Default value: null
 
 -   `python.analysis.diagnosticSeverityOverrides`
 
