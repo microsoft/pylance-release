@@ -1,5 +1,21 @@
 # Changelog
 
+## 2022.8.12 (8 August 2022)
+
+Notable changes:
+
+-   Bug Fix: Improved doc string support on function/callable assigned to a variable.
+    ([pylance-release#3135](https://github.com/microsoft/pylance-release/issues/3135))
+-   Bug Fix: Fixed crash on untitled.ipynb file.
+    ([pylance-release#3126](https://github.com/microsoft/pylance-release/issues/3126))
+-   Bug Fix: Fixed side by side file import bug on notebook.
+    ([pylance-release#3017](https://github.com/microsoft/pylance-release/issues/3017))
+-   Enhancement: Updated bundled typeshed.
+
+Pylance's copy of Pyright has been updated from 1.1.265 to 1.1.266.
+
+-   See Pyright's release notes for details: [1.1.266](https://github.com/microsoft/pyright/releases/tag/1.1.266).
+
 ## 2022.8.11 (3 August 2022)
 
 Notable changes:
