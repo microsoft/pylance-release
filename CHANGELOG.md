@@ -1,5 +1,21 @@
 # Changelog
 
+## 2022.8.21 (10 August 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Symbol renaming in Jupyter notebooks only works in a single cell ([pylance-release#3061](https://github.com/microsoft/pylance-release/issues/3061))
+
+Pylance's copy of Pyright has been updated to 1.1.266.
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed bug that caused error to be suppressed when calling `assert_never` with bad arguments (incorrect number, etc).
+    -   Enhancement: Added support for dictionary expansion of a TypedDict within a dictionary literal expression.
+
+## 2022.8.20 (10 August 2022) Stable
+
+-   Release version that rolls up changes from the [2022.8.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022811-3-august-2022) to the [2022.8.12](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022812-8-august-2022) prerelease build.
+
 ## 2022.8.12 (8 August 2022)
 
 Notable changes:
