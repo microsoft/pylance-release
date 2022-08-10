@@ -75,7 +75,10 @@ Pylance provides users with the ability to customize their Python language suppo
 -   `python.analysis.indexing`
 
     - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
-    - Default value: null
+    - Available values:
+        - `null` (default)
+        - `true`
+        - `false`
 
 -   `python.analysis.diagnosticSeverityOverrides`
 
