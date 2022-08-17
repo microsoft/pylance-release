@@ -1,5 +1,20 @@
 # Changelog
 
+## 2022.8.31 (17 August 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Importing .py file in same directory as notebook ([pylance-release#3017](https://github.com/microsoft/pylance-release/issues/3017))
+-   Bug Fix: Fixed bug in parser that resulted in crash when a soft keyword was used as a class pattern keyword argument name [pylance-release#3197](https://github.com/microsoft/pylance-release/issues/3197).
+
+Pylance's copy of Pyright has been updated to 1.1.267.
+
+-   See Pyright's release notes for details: [1.1.267](https://github.com/microsoft/pyright/releases/tag/1.1.267).
+
+## 2022.8.30 (17 August 2022) Release
+
+-   Release version that rolls up changes from the [2022.8.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022821-10-august-2022-prerelease) prerelease build.
+
 ## 2022.8.21 (10 August 2022) PreRelease
 
 Notable changes:
@@ -7,6 +22,8 @@ Notable changes:
 -   Bug Fix: Symbol renaming in Jupyter notebooks only works in a single cell ([pylance-release#3061](https://github.com/microsoft/pylance-release/issues/3061))
 
 Pylance's copy of Pyright has been updated to 1.1.266.
+
+-   See Pyright's release notes for details: [1.1.266](https://github.com/microsoft/pyright/releases/tag/1.1.266).
 
 -   Unreleased in Pyright, but included in Pylance:
     -   Bug Fix: Fixed bug that caused error to be suppressed when calling `assert_never` with bad arguments (incorrect number, etc).
