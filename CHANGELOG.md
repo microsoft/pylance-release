@@ -1,5 +1,22 @@
 # Changelog
 
+## 2022.8.41 (24 August 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Updated matplotlib type stubs
+-   Bug Fix: Mismatch between `__init__` arg name and matching attribute results in InternalError in 3.10 pattern matching ([pylance-release#3197](https://github.com/microsoft/pylance-release/issues/3197))
+-   Bug Fix: Code folding issue with imports ([pylance-release#3159](https://github.com/microsoft/pylance-release/issues/3159))
+-   Bug Fix: No folding of parenth_form expressions without commas [pylance-release#3085](https://github.com/microsoft/pylance-release/issues/3085)
+
+Pylance's copy of Pyright has been updated to 1.1.268.
+
+-   See Pyright's release notes for details: [1.1.268](https://github.com/microsoft/pyright/releases/tag/1.1.268).
+
+## 2022.8.40 (24 August 2022) Release
+
+-   Release version that rolls up changes from the [2022.8.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022831-17-august-2022-prerelease) prerelease build.
+
 ## 2022.8.31 (17 August 2022) PreRelease
 
 Notable changes:
