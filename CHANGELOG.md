@@ -1,5 +1,22 @@
 # Changelog
 
+## 2022.8.51 (31 August 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Updated bundled pandas stubs.
+-   Bug Fix: Pylance erroneously marks async in async for as invalid in Jupyter notebook ([pylance-release#3205](https://github.com/microsoft/pylance-release/issues/3205))
+-   Bug Fix: Ignoring \*.ipynb files does not work ([pylance-release#2135](https://github.com/microsoft/pylance-release/issues/2135))
+-   Bug Fix: Pylance experiment doesn't provide semantic colorization without scrolling [pylance-release#2837](https://github.com/microsoft/pylance-release/issues/2837), [pylance-release#2897](https://github.com/microsoft/pylance-release/issues/2897).
+
+Pylance's copy of Pyright has been updated from 1.1.268 to 1.1.269.
+
+-   See Pyright's release notes for details: [1.1.269](https://github.com/microsoft/pyright/releases/tag/1.1.269).
+
+## 2022.8.50 (31 August 2022) Release
+
+-   Release version that rolls up changes from the [2022.8.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022841-24-august-2022-prerelease) prerelease build.
+
 ## 2022.8.41 (24 August 2022) PreRelease
 
 Notable changes:
