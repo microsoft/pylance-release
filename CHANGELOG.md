@@ -1,5 +1,27 @@
 # Changelog
 
+## 2022.9.11 (7 September 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Include, exclude, and ignore paths can now be provided via settings in VS Code: `python.analysis.include`, `python.analysis.exclude`, `python.analysis.ignore` ([pylance-release#3261](https://github.com/microsoft/pylance-release/issues/3261), [pylance-release#3266](https://github.com/microsoft/pylance-release/issues/3266))
+-   Enhancement: Show names of empty modules in auto completion list ([pylance-release#3293](https://github.com/microsoft/pylance-release/issues/3293), [pylance-release#3289](https://github.com/microsoft/pylance-release/issues/3289))
+-   Enhancement: Updated bundled typeshed and pandas stubs
+-   Bug Fix: "Remove all unused imports" code action now only removes top level imports and "Remove unused import" code action now removes leading whitespace ([pylance-release#3181](https://github.com/microsoft/pylance-release/issues/3181))
+-   Bug Fix: Don't convert imports to relative format in user files that are within `extraPaths` ([pylance-release#3194](https://github.com/microsoft/pylance-release/issues/3194))
+-   Bug Fix: Fixed availability of refactoring commands ([pylance-release#3246](https://github.com/microsoft/pylance-release/issues/3246))
+-   Bug Fix: Fixed ignoring of IPython magics that appear after a dedent ([pylance-release#3251](https://github.com/microsoft/pylance-release/issues/3251))
+-   Bug Fix: Fixed importing of `style` and `Axes` in matplotlib stubs ([pylance-release#3273](https://github.com/microsoft/pylance-release/issues/3273))
+-   Bug Fix: Logging of file system exceptions was excessively verbose ([pylance-release#3291](https://github.com/microsoft/pylance-release/issues/3291))
+
+Pylance's copy of Pyright has been updated from 1.1.269 to 1.1.270.
+
+-   See Pyright's release notes for details: [1.1.270](https://github.com/microsoft/pyright/releases/tag/1.1.270).
+
+## 2022.9.10 (7 September 2022) Release
+
+-   Release version that rolls up changes from the [2022.8.51](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022851-31-august-2022-prerelease) prerelease build.
+
 ## 2022.8.51 (31 August 2022) PreRelease
 
 Notable changes:
