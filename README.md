@@ -55,18 +55,6 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `workspace`
         -   `openFilesOnly` (default)
 
--   `python.analysis.include`
-    -   Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the directory that contains workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
-    -   Default value: empty array
-
--   `python.analysis.exclude`
-    -   Paths of directories or files that should not be included. These override the include directories, allowing specific subdirectories to be excluded. Note that files in the exclude paths may still be included in the analysis if they are referenced (imported) by source files that are not excluded. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no exclude paths are specified, Pylance automatically excludes the following: `**/node_modules`, `**/__pycache__`, `.git` and any virtual environment directories.
-    -   Default value: empty array
-
--   `python.analysis.ignore`
-    -   Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no value is provided, the value of `python.linting.ignorePatterns` (if set) will be used.
-    -   Default value: empty array
-
 -   `python.analysis.stubPath`
 
     -   Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
