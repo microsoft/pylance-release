@@ -251,7 +251,7 @@ For user files, we index up to 2000 files. One difference between user files and
 
 We choose to show them only in code action since it requires explicit user action ```Ctrl+.``` rather than automatically triggered like completion.
 
-For people who don't want ```auto import``` suggestion ever show up in completion since they feel it bloats the completion, we have ```python.analysis.autoImportCompletions``` to disable it. And solely rely on code action.
+For people who don't want ```auto import``` suggestions to ever show up in completions since they feel it bloats the completions, you can use ```python.analysis.autoImportCompletions``` to disable it. Code actions can still be used with this setting disabled..
 
 # Troubleshooting
 
