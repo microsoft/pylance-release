@@ -92,6 +92,27 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false`
 
+-   `python.analysis.autoImportCompletions`
+
+    -   Used to control the offering of auto-imports in completions.
+    -   Accepted values:
+        -   `true` (default)
+        -   `false`
+
+-   `python.analysis.packageIndexDepths`
+
+    -   Used to control how much installed packages indexer will index.
+    -   Default value: empty array
+    -   Accepted values: 
+        -   Tuple of [```package name```, ```depth to scan```, ```include all symbols```]
+    -   Example:
+
+    ```jsonc
+    {
+        "python.analysis.packageIndexDepths": [["pandas", 3, true], ["numpy", 2, false]]
+    }    
+    ```
+
 -   `python.analysis.diagnosticSeverityOverrides`
 
     -   Used to allow a user to override the severity levels for individual diagnostics should they desire.
@@ -117,13 +138,6 @@ Pylance provides users with the ability to customize their Python language suppo
 -   `python.analysis.useLibraryCodeForTypes`
 
     -   Used to parse the source code for a package when a typestub is not found.
-    -   Accepted values:
-        -   `true` (default)
-        -   `false`
-
--   `python.analysis.autoImportCompletions`
-
-    -   Used to control the offering of auto-imports in completions.
     -   Accepted values:
         -   `true` (default)
         -   `false`
@@ -222,6 +236,22 @@ Example of customizing semantic colors in settings.json:
 -   `source.fixAll.convertImportFormat`
 
     -   Convert import format according to `python.analysis.importFormat`.
+
+# Auto/Add import and indexing
+
+Pylance has a feature called ```auto import``` which will show symbols from installed packages and user files in completion. When committed, insert ```import``` statement for you. It also has a similar feature called ```add import``` that will show symbols from installed packages and user files for an unknown identifier. When selected, insert ```import``` statement for you.
+
+Since these features can be costly to scan symbol information and show them in completion and code actions, by default, we have minimal functionality enabled and provide multiple settings to control its behavior.
+
+When ```python.analysis.indexing``` is off, we will only show symbols already used by opened files transitively. If ```indexing``` is on, we will spend some time indexing installed packages and user files when pylance is started, but after that, we will provide symbols that you haven't used yet in completion and code action.
+
+But since indexing is an expensive operation, we do not index every symbol from all installed packages but only top-level symbols. In another words, symbols in ```__all__``` in ```package/__init__```. If users want more than that, they need to use ```python.analysis.packageIndexDepths``` to tell us which package they want us to spend more time on. Symbols indexed will show up both in completion and code actions.
+
+For user files, we will index up to 2000 files. One difference between user files and installed packages is that they won't appear in completion unless it is already used. Unlike installed packages, we, by default, index all symbols from user files, which can cause thousands of user symbols to show up in completion. 
+
+We choose to show them only in code action since it requires explicit user action ```Ctrl+.``` rather than automatically triggered like completion.
+
+For people who don't want ```auto import``` suggestion ever show up in completion since they feel it bloats the completion, we have ```python.analysis.autoImportCompletions``` to disable it. And solely rely on code action.
 
 # Troubleshooting
 
