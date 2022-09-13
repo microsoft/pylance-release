@@ -249,7 +249,7 @@ But since indexing is an expensive operation, we do not index every symbol from 
 
 For user files, we will index up to 2000 files. One difference between user files and installed packages is that user files won't appear in completion unless they are already used. Unlike installed packages, we, by default, index all symbols from user files, which can cause thousands of user symbols to show up in completion. 
 
-We choose to show them only in code action since it requires explicit user action ```Ctrl+.``` rather than automatically triggered like completion.
+We show user file completions only in the code action since it requires an explicit user action ```Ctrl+.``` rather than being automatically triggered like completion.
 
 For people who don't want ```auto import``` suggestions to ever show up in completions since they feel it bloats the completions, you can use ```python.analysis.autoImportCompletions``` to disable it. Code actions can still be used with this setting disabled..
 
