@@ -247,7 +247,7 @@ When ```python.analysis.indexing``` is off, we will only show symbols already us
 
 But since indexing is an expensive operation, we do not index every symbol from all installed packages but only top-level symbols. In another words, symbols in ```__all__``` in ```package/__init__```. If users want more than that, they need to use ```python.analysis.packageIndexDepths``` to tell us which packages they want us to spend more time on. Symbols indexed will show up both in completion and code actions.
 
-For user files, we index up to 2000 files. One difference between user files and installed packages is that they won't appear in completion unless they are already used. Unlike installed packages, we, by default, index all symbols from user files, which can cause thousands of user symbols to show up in completion. 
+For user files, we will index up to 2000 files. One difference between user files and installed packages is that user files won't appear in completion unless they are already used. Unlike installed packages, we, by default, index all symbols from user files, which can cause thousands of user symbols to show up in completion. 
 
 We choose to show them only in code action since it requires explicit user action ```Ctrl+.``` rather than automatically triggered like completion.
 
