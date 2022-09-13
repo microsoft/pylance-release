@@ -101,7 +101,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 -   `python.analysis.packageIndexDepths`
 
-    -   Used to control how much installed packages indexer will index.
+    -   Used to control how many installed packages indexer will index.
     -   Default value: empty array
     -   Accepted values: 
         -   Tuple of [```package name```, ```depth to scan```, ```include all symbols```]
