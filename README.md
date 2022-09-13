@@ -239,7 +239,7 @@ Example of customizing semantic colors in settings.json:
 
 # Auto/Add import and indexing
 
-Pylance has a feature called ```auto import``` which will show symbols from installed packages and user files in completion. When committed, insert ```import``` statement for you. It also has a similar feature called ```add import``` that will show symbols from installed packages and user files for an unknown identifier. When selected, insert ```import``` statement for you.
+Pylance has a feature called ```auto import``` which shows symbols from installed packages and user files during completion. When committed, pylance will automatically generate an ```import``` statement. It also has something called ```add import``` which shows symbols from installed packages and user files for an unknown identifier. When selected, this will also insert an ```import``` statement.
 
 Since these features can be costly to scan symbol information and show them in completion and code actions, by default, we have minimal functionality enabled and provide multiple settings to control its behavior.
 
