@@ -1,5 +1,21 @@
 # Changelog
 
+## 2022.9.21 (14 September 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Using `Concatenate` and `ParamSpec` leads to skipped parameter in signature help ([pylance-release#3275](https://github.com/microsoft/pylance-release/issues/3275))
+-   Bug Fix: Unexpected `reportMissingImports` in notebook for local package ([pylance-release#3208](https://github.com/microsoft/pylance-release/issues/3208))
+-   Experiment: New auto-indent approach using `formatOnType`. We'll be enabling this for a percentage of prerelease users in the near future ([pylance-release#1613](https://github.com/microsoft/pylance-release/issues/1613))
+
+Pylance's copy of Pyright has been updated from 1.1.270 to 1.1.271.
+
+-   See Pyright's release notes for details: [1.1.271](https://github.com/microsoft/pyright/releases/tag/1.1.271).
+
+## 2022.9.20 (14 September 2022) Release
+
+-   Release version that rolls up changes from the [2022.9.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022911-7-september-2022-prerelease) prerelease build.
+
 ## 2022.9.11 (7 September 2022) PreRelease
 
 Notable changes:
