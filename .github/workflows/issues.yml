@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: If no labels, add to scrum board
         uses: peter-evans/create-or-update-project-card@v2
-        if: ${{ join(github.event.issue.labels.*.name, ',') == '' }
+        if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
           project-name: Python
           column-name: Triage
