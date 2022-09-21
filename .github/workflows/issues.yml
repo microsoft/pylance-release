@@ -14,6 +14,7 @@ jobs:
         uses: peter-evans/create-or-update-project-card@v2
         if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
+          token: ${{ secrets.ISSUE_ACTIONS_TOKEN }}
           project-location: microsoft
           project-number: 145
           column-name: Triage
