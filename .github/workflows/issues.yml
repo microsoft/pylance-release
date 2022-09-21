@@ -14,7 +14,9 @@ jobs:
         uses: peter-evans/create-or-update-project-card@v2
         if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
-          project-name: Python
+          token: ${{ secrets.PYLANCE_BOT_GITHUB_TOKEN }}
+          project-location: microsoft
+          project-number: 145
           column-name: Triage
 
       - name: If no labels, add triage
