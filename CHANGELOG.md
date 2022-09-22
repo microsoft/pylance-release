@@ -1,5 +1,28 @@
 # Changelog
 
+## 2022.9.31 (21 September 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Don't show diagnostics within IPython cell magics ([pylance-release#3327](https://github.com/microsoft/pylance-release/issues/3327))
+-   Enhancement: Extended support for method override completions that use member access expression forms in a parameter's default value expression ([pylance-release#3374](https://github.com/microsoft/pylance-release/issues/3374))
+-   Enhancement: Updated pandas stubs
+-   Bug Fix: Default includes and excludes weren't being used if a `pyproject.toml` file was present ([pylance-release#3348](https://github.com/microsoft/pylance-release/issues/3348))
+-   Bug Fix: Replaced django-stubs with a more pyright friendly version from ([sbdchd/django-types](https://github.com/sbdchd/django-types)) ([pylance-release#3359](https://github.com/microsoft/pylance-release/issues/3359))
+-   Bug Fix: Inlay hint of bigInt incorrectly displaying int ([pylance-release#3355](https://github.com/microsoft/pylance-release/issues/3355))
+-   Bug Fix: Display InlayHints only on variables that haven't already been annotated ([pylance-release#3325](https://github.com/microsoft/pylance-release/issues/3325))
+
+Pylance's copy of Pyright has been updated from 1.1.271 to 1.1.272.
+
+-   See Pyright's release notes for details: [1.1.272](https://github.com/microsoft/pyright/releases/tag/1.1.272).
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: False negative for calling positional-only argument by name
+
+## 2022.9.30 (21 September 2022) Release
+
+-   Release version that rolls up changes from the [2022.9.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022921-14-september-2022-prerelease) prerelease build.
+
 ## 2022.9.21 (14 September 2022) PreRelease
 
 Notable changes:
