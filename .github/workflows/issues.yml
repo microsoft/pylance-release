@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: If no labels, add to scrum board
-        uses: actions/add-to-project@v1
+        uses: actions/add-to-project@v0.3.0
         if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
           github-token: ${{ secrets.ISSUE_ACTIONS_TOKEN }}
