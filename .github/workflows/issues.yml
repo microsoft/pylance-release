@@ -11,13 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: If no labels, add to scrum board
-        uses: peter-evans/create-or-update-project-card@v2
+        uses: actions/add-to-project@v1
         if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
-          token: ${{ secrets.ISSUE_ACTIONS_TOKEN }}
-          project-location: debonte
-          project-number: 2
-          column-name: Triage
+          github-token: ${{ secrets.ISSUE_ACTIONS_TOKEN }}
+          project-url: https://github.com/users/debonte/projects/2/views/1
 
       - name: If no labels, add triage
         id: no-labels
