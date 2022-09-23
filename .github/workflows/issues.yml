@@ -15,8 +15,8 @@ jobs:
         if: ${{ join(github.event.issue.labels.*.name, ',') == '' }}
         with:
           token: ${{ secrets.ISSUE_ACTIONS_TOKEN }}
-          project-location: microsoft
-          project-number: 145
+          project-location: debonte
+          project-number: 2
           column-name: Triage
 
       - name: If no labels, add triage
