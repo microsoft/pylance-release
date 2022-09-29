@@ -1,5 +1,16 @@
 # Changelog
 
+## 2022.9.41 (28 September 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Added UX to control typeCheckingMode within language status button on status bar.
+-   Bug Fix: The inferred argument type is confusing in subclass of logging.FileHandler ([pylance-release#3381](https://github.com/microsoft/pylance-release/issues/3381))
+
+Pylance's copy of Pyright has been updated from 1.1.272 to 1.1.273.
+
+-   See Pyright's release notes for details: [1.1.273](https://github.com/microsoft/pyright/releases/tag/1.1.273).
+
 ## 2022.9.40 (26 September 2022) Release
 
 -   Release version that rolls up changes from the [2022.9.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022931-21-september-2022-prerelease) prerelease build.
