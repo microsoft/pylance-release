@@ -1,5 +1,9 @@
 # Changelog
 
+## 2022.9.40 (26 September 2022) Release
+
+-   Release version that rolls up changes from the [2022.9.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022931-21-september-2022-prerelease) prerelease build.
+
 ## 2022.9.31 (21 September 2022) PreRelease
 
 Notable changes:
