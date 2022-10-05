@@ -1,5 +1,22 @@
 # Changelog
 
+## 2022.10.11 (5 October 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Handles cache better with multi root workspaces. ([pylance-release#3408](https://github.com/microsoft/pylance-release/issues/3408))
+-   Bug Fix: Properly propagates future imports between notebook cells. ([pylance-release#3376](https://github.com/microsoft/pylance-release/issues/3376))
+-   Enhancement: Improved parse tree recovery for missing statements. ([pylance-release#3319](https://github.com/microsoft/pylance-release/issues/3319))
+-   Enhancement: Updated pandas stubs
+
+Pylance's copy of Pyright has been updated from 1.1.273 to 1.1.274.
+
+-   See Pyright's release notes for details: [1.1.274](https://github.com/microsoft/pyright/releases/tag/1.1.274).
+
+## 2022.10.10 (5 October 2022) Release
+
+-   Release version that rolls up changes from the [2022.9.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022941-28-september-2022-prerelease) prerelease build.
+
 ## 2022.9.41 (28 September 2022) PreRelease
 
 Notable changes:
