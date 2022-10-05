@@ -19,6 +19,13 @@ jobs:
 
       - name: If labeled, remove triage
         uses: andymckay/labeler@master
-        if: ${{ steps.no-labels.outcome == 'skipped' && join(github.event.issue.labels.*.name, ',') != 'triage' }}
+        if: ${{ steps.no-labels.outcome == 'skipped' && join(github.event.issue.labels.*.name, ',') != 'triage-needed' }}
         with:
           remove-labels: 'triage-needed'
+
+      - name: If triage-needed, add to scrum board
+        uses: actions/add-to-project@v0.3.0
+        if: ${{ steps.no-labels.outcome == 'success' }}
+        with:
+          github-token: ${{ secrets.PROJECT_BOARD_ACTIONS_TOKEN }}
+          project-url: https://github.com/orgs/microsoft/projects/145/views/17
