@@ -39,11 +39,11 @@ be taken as relative to the workspace root.
 
 Note that if you are coming to Pylance from using the Microsoft Python Language Server, this setting has changed from `python.autoComplete.extraPaths` to `python.analysis.extraPaths`.
 
-### Editable install packages not found
+### Editable install modules not found
 
-[PEP 660](https://peps.python.org/pep-0660/) enables build backends (ex. setuptools) to use import hooks to direct the [import machinery](https://docs.python.org/3/reference/import.html) to the package source files rather than using a `.pth` file. Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pylance/Pyright and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pylance/Pyright will be unable to find the corresponding source files.
+[PEP 660](https://peps.python.org/pep-0660/) enables build backends (ex. setuptools) to use import hooks to direct the [import machinery](https://docs.python.org/3/reference/import.html) to the package's source files rather than using a `.pth` file. Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pylance/Pyright and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pylance/Pyright will be unable to find the corresponding source files.
 
-If you want to use static analysis tooks and are willing to accept a lower fidelity editable install, you can configure your editable install to use `.pth` files instead of import hooks. See your build backend's documentation for details on how to do this. We have provided some basic information for common build backends below.
+If you want to use static analysis tools and you are willing to accept a lower-fidelity editable install, you can configure your editable install to use `.pth` files instead of import hooks. See your build backend's documentation for details on how to do this. We have provided some basic information for common build backends below.
 
 #### Setuptools
 Setuptools currently supports two ways to request ["compat mode"](https://setuptools.pypa.io/en/latest/userguide/development_mode.html#legacy-behavior) where a `.pth` file will be used -- a config setting and an environment variable. Another option is ["strict mode"](https://setuptools.pypa.io/en/latest/userguide/development_mode.html#strict-editable-installs) which uses symlinks instead.
