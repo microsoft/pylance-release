@@ -64,11 +64,12 @@ which uses symlinks instead.
 
 #### Hatch/Hatchling
 [Hatchling](https://hatch.pypa.io/latest/config/build/#dev-mode) uses `.pth` files by
-default. It uses import hooks if you set `dev-mode-exact` to `true`.
+default. It will only use import hooks if you set `dev-mode-exact` to `true`.
 
 #### PDM
 [PDM](https://pdm.fming.dev/latest/pyproject/build/#editable-build-backend) uses `.pth`
-files by default. It uses import hooks if you set `editable-backend` to `"editables"`.
+files by default. It will only use import hooks if you set `editable-backend` to
+`"editables"`.
 
 ### Migrating from the Microsoft Python Language Server to Pylance
 
