@@ -46,14 +46,14 @@ use import hooks to direct the [import machinery](https://docs.python.org/3/refe
 to the package's source files rather than using a `.pth` file. Import hooks can provide
 an editable installation that is a more accurate representation of your real installation.
 However, because resolving module locations using an import hook requires executing Python
-code, they are not usable by Pylance, Pyright, and other static analysis tools. Therefore,
-if your editable install is configured to use import hooks, Pylance/Pyright will be unable
-to find the corresponding source files.
+code, they are not usable by Pylance and other static analysis tools. Therefore, if your
+editable install is configured to use import hooks, Pylance will be unable to find the
+corresponding source files.
 
-If you want to use static analysis tools and you are willing to accept a lower-fidelity
-editable install, consider configuring your editable install to use `.pth` files instead
-of import hooks. See your build backend's documentation for details on how to do this. We
-have provided some basic information for common build backends below.
+If you want to use static analysis tools with an editable install, you should configure
+the editable install to use `.pth` files instead of import hooks. See your build backend's
+documentation for details on how to do this. We have provided some basic information for
+common build backends below.
 
 #### Setuptools
 Setuptools currently supports two ways to request
