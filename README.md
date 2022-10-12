@@ -84,14 +84,6 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     -   Default value: empty array
 
--   `python.analysis.indexing`
-
-    - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
-    - Available values:
-        - `null` (default)
-        - `true`
-        - `false`
-
 -   `python.analysis.diagnosticSeverityOverrides`
 
     -   Used to allow a user to override the severity levels for individual diagnostics should they desire.
@@ -105,14 +97,14 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Available rule to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
     -   Example:
 
-    ```jsonc
-    {
-        "python.analysis.diagnosticSeverityOverrides": {
-            "reportUnboundVariable": "information",
-            "reportImplicitStringConcatenation": "warning"
+        ```jsonc
+        {
+            "python.analysis.diagnosticSeverityOverrides": {
+                "reportUnboundVariable": "information",
+                "reportImplicitStringConcatenation": "warning"
+            }
         }
-    }
-    ```
+        ```
 
 -   `python.analysis.useLibraryCodeForTypes`
 
@@ -121,6 +113,36 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true` (default)
         -   `false`
 
+-   `python.analysis.indexing`
+
+    - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
+    - Available values:
+        - `null` (default)
+        - `true`
+        - `false`
+
+-   `python.analysis.packageIndexDepths`
+
+    -   Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.  
+       
+    -   Accepted values:
+        ```jsonc
+        {
+            "name": "package name (str)",
+            "depth": "depth to scan (int)",
+            "includeAllSymbols": "whether to include all symbols (bool)"
+        }
+        ```
+        If `include all symbols` is set to `false`, only symbols in each package's `__all__` are included. When it's set to `true`, Pylance will index every module/top level symbol declarations in the file.  
+
+    -   Example:
+        ```jsonc
+        [
+            { "name": "sklearn", "depth": 2, "includeAllSymbols": true },
+            { "name": "matplotlib", "depth": 3, "includeAllSymbols": false }
+        ]
+        ```
+
 -   `python.analysis.autoImportCompletions`
 
     -   Used to control the offering of auto-imports in completions.
@@ -128,19 +150,19 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true` (default)
         -   `false`
 
--   `python.analysis.completeFunctionParens`
-
-    -   Add parentheses to function completions.
-    -   Accepted values:
-        -   `true`
-        -   `false` (default)
-
 -   `python.analysis.importFormat`
 
     -   Defines the default format for import module.
     -   Accepted values:
         -   `absolute` (default)
         -   `relative`
+
+-   `python.analysis.completeFunctionParens`
+
+    -   Add parentheses to function completions.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
 
 -   `python.analysis.inlayHints.variableTypes`
 

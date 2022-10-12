@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022.10.21 (12 October 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Fixed a crash due to LSP type mismatch. ([pylance-release#3453](https://github.com/microsoft/pylance-release/issues/3453))
+-   Bug Fix: Fixed behavior of `__init__` parameter synthesis when `dataclass_transform` is applied to a base class. ([pylance-release#3304](https://github.com/microsoft/pylance-release/issues/3304))
+-   Enhancement: Improved `go to definition` behavior when multiple `pyi` are used for 1 `py` file. ([pylance-release#3227](https://github.com/microsoft/pylance-release/issues/3227))
+-   Enhancement: Updated pandas stubs
+-   Enhancement: Updated matplotlib stubs
+-   Enhancement: New setting `python.analysis.packageIndexDepths` is added. User can use the setting to control indexing behavior.
+
+Pylance's copy of Pyright has been updated from 1.1.274 to 1.1.275.
+
+-   See Pyright's release notes for details: [1.1.275](https://github.com/microsoft/pyright/releases/tag/1.1.275).
+
+## 2022.10.20 (12 October 2022) Release
+
+-   Release version that rolls up changes from the [2022.10.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221011-5-october-2022-prerelease) prerelease build.
+
 ## 2022.10.11 (5 October 2022) PreRelease
 
 Notable changes:
