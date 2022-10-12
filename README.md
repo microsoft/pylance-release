@@ -150,19 +150,19 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true` (default)
         -   `false`
 
--   `python.analysis.completeFunctionParens`
-
-    -   Add parentheses to function completions.
-    -   Accepted values:
-        -   `true`
-        -   `false` (default)
-
 -   `python.analysis.importFormat`
 
     -   Defines the default format for import module.
     -   Accepted values:
         -   `absolute` (default)
         -   `relative`
+
+-   `python.analysis.completeFunctionParens`
+
+    -   Add parentheses to function completions.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
 
 -   `python.analysis.inlayHints.variableTypes`
 
