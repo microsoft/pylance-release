@@ -1,5 +1,23 @@
 # Changelog
 
+## 2022.10.31 (19 October 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Fixed a crash due to notebook cell reordering. ([pylance-release#3469](https://github.com/microsoft/pylance-release/issues/3469))
+-   Bug Fix: Don't disable type checking mode for notebooks that don't exist on disk. ([pylance-release#3412](https://github.com/microsoft/pylance-release/issues/3412))
+-   Enhancement: Improved smart selection behavior to include argument lists. ([pylance-release#3301](https://github.com/microsoft/pylance-release/issues/3301))
+-   Enhancement: Improved doc string formatter to handle cv2 style doc string better. ([pylance-release#2945](https://github.com/microsoft/pylance-release/issues/2945))
+-   Enhancement: Updated pandas stubs
+
+Pylance's copy of Pyright has been updated from 1.1.275 to 1.1.276.
+
+-   See Pyright's release notes for details: [1.1.276](https://github.com/microsoft/pyright/releases/tag/1.1.276).
+
+## 2022.10.30 (19 October 2022) Release
+
+-   Release version that rolls up changes from the [2022.10.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221021-12-october-2022-prerelease) prerelease build.
+
 ## 2022.10.21 (12 October 2022) PreRelease
 
 Notable changes:
