@@ -147,8 +147,8 @@ Pylance provides users with the ability to customize their Python language suppo
 
     -   Used to control the offering of auto-imports in completions.
     -   Accepted values:
-        -   `true` (default)
-        -   `false`
+        -   `true` 
+        -   `false` (default)
 
 -   `python.analysis.importFormat`
 

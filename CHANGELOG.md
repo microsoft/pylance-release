@@ -1,5 +1,23 @@
 # Changelog
 
+## 2022.10.41 (26 October 2022) PreRelease
+
+Notable changes:
+
+-   Bug Fix: Fixed source mapper perf issue. ([pylance-release#3513](https://github.com/microsoft/pylance-release/issues/3513))
+-   Bug Fix: Fixed crash on notebook cell reordering. ([pylance-release#3433](https://github.com/microsoft/pylance-release/issues/3433))
+-   Enhancement: Changed auto import default to off. ([pylance-release#3467](https://github.com/microsoft/pylance-release/issues/3467))
+-   Enhancement: Updated pandas stubs.
+-   Enhancement: Updated typeshed.
+
+Pylance's copy of Pyright has been updated from 1.1.276 to 1.1.277.
+
+-   See Pyright's release notes for details: [1.1.277](https://github.com/microsoft/pyright/releases/tag/1.1.277).
+
+## 2022.10.40 (26 October 2022) Release
+
+-   Release version that rolls up changes from the [2022.10.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221021-19-october-2022-prerelease) prerelease build.
+
 ## 2022.10.31 (19 October 2022) PreRelease
 
 Notable changes:
