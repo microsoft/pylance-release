@@ -1,5 +1,22 @@
 # Changelog
 
+## 2022.11.21 (2 November 2022) PreRelease
+
+Notable changes:
+
+-   Bug fix: fix django CharField signature mismatch base class Field's init vs CharField's new function [pylance-release#3431](https://github.com/microsoft/pylance-release/issues/3431)
+-   Bug fix: Fix parens for extract [pylance-release#1768](https://github.com/microsoft/pylance-release/issues/1768)
+-   Bug fix: Fix type alias doc strings [pylance-release#3402](https://github.com/microsoft/pylance-release/issues/3402)
+-   Bug fix: Fix crash when indexing is enabled. [pylance-release#3510](https://github.com/microsoft/pylance-release/issues/3510)
+
+Pylance's copy of Pyright has been updated from 1.1.277 to 1.1.278.
+
+-   See Pyright's release notes for details: [1.1.278](https://github.com/microsoft/pyright/releases/tag/1.1.278).
+
+## 2022.11.10 (1 November 2022) Release
+
+-   Release version that rolls up changes from the [2022.10.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221041-26-october-2022-prerelease) prerelease build.
+
 ## 2022.10.41 (26 October 2022) PreRelease
 
 Notable changes:
