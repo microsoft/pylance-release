@@ -94,7 +94,7 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `information` (blue squiggle)
         -   `none` (disables the rule)
 
-    -   Available rule to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
+    -   Available rule to use as keys can be found [here](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings)
     -   Example:
 
         ```jsonc
