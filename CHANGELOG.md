@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022.11.21 (9 November 2022) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix Diagnostic links to jump straight into Pyright's documentation [pylance-release#3589](https://github.com/microsoft/pylance-release/issues/3589)
+-   Bug fix: Parameters for a TypedDict don't show on hover [pylance-release#3569](https://github.com/microsoft/pylance-release/issues/3569)
+-   Bug fix: Diagnostics in a notebook are not removed when changing language [pylance-release#3555](https://github.com/microsoft/pylance-release/issues/3555)
+-   Bug fix: Parmeter hints not working with a child class attribute [pylance-release#3512](https://github.com/microsoft/pylance-release/issues/3512)
+-   Bug fix: Rename fails in untitled notebook or untitled python file [pylance-release#3276](https://github.com/microsoft/pylance-release/issues/3276)
+-   Bug fix: UNC paths are not parsed correctly [pylance-release#2891](https://github.com/microsoft/pylance-release/issues/2891)
+
+Pylance's copy of Pyright has been updated from 1.1.278 to 1.1.279.
+
+-   See Pyright's release notes for details: [1.1.279](https://github.com/microsoft/pyright/releases/tag/1.1.279).
+
+## 2022.11.20 (9 November 2022) Release
+
+-   Release version that rolls up changes from the [2022.11.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221111-2-november-2022-prerelease) prerelease build.
+
 ## 2022.11.11 (2 November 2022) PreRelease
 
 Notable changes:
