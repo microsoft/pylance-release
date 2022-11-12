@@ -11,7 +11,7 @@ assignees: ''
 <!--
 Read the guidelines for filing an issue first.
 
-https://github.com/microsoft/pylance-release/blob/master/TROUBLESHOOTING.md#filing-an-issue
+https://github.com/microsoft/pylance-release/blob/main/TROUBLESHOOTING.md#filing-an-issue
 -->
 
 ## Environment data
