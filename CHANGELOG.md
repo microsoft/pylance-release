@@ -1,5 +1,11 @@
 # Changelog
 
+## 2022.11.32 (16 November 2022) PreRelease
+
+Notable changes:
+
+-   Bug fix: Don't treat empty open file as closed file.
+
 ## 2022.11.31 (16 November 2022) PreRelease
 
 Notable changes:
