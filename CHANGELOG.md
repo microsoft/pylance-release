@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022.11.31 (16 November 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Support for hint in inline `if` statement [pylance-release#3635](https://github.com/microsoft/pylance-release/issues/3635)
+-   Bug fix: Update Pylance details displayed in VS Code [pylance-release#3626](https://github.com/microsoft/pylance-release/issues/3626)
+-   Bug fix: Ensure folded function names are visible in Visual Studio [pylance-release#3580](https://github.com/microsoft/pylance-release/issues/3580)
+-   Bug fix: Last expression in notebook cell should not be marked as unused [pylance-release#3282](https://github.com/microsoft/pylance-release/issues/3282)
+-   Bug fix: Second declarations of from imports are marked as not defined [pylance-release#3218](https://github.com/microsoft/pylance-release/issues/3218)
+-   Bug fix: Fix all can be customized and support pyright ignore on unused code [pylance-release#3144](https://github.com/microsoft/pylance-release/issues/3144)
+
+Pylance's copy of Pyright has been updated from 1.1.279 to 1.1.280.
+
+-   See Pyright's release notes for details: [1.1.280](https://github.com/microsoft/pyright/releases/tag/1.1.280).
+
+## 2022.11.30 (16 November 2022) Release
+
+-   Release version that rolls up changes from the [2022.11.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221121-9-november-2022-prerelease) prerelease build.
+
 ## 2022.11.21 (9 November 2022) PreRelease
 
 Notable changes:
