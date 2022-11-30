@@ -144,8 +144,13 @@ Pylance provides users with the ability to customize their Python language suppo
         ```
 
 -   `python.analysis.autoImportCompletions`
+    - Used to control the offering of auto-imports in completions. This will impact number of items shown in the completion and performance.
+    - Accepted values:
+        - `true`
+        - `false` (default)
 
-    -   Used to control the offering of auto-imports in completions.
+- `python.analysis.autoImportUserSymbols`
+    - Used to control the offering of user symbols in auto-import completions. This will impact number of items shown in the completion and performance.
     -   Accepted values:
         -   `true` 
         -   `false` (default)
