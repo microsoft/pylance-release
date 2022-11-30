@@ -1,5 +1,31 @@
 # Changelog
 
+## 2022.11.41 (30 November 2022) PreRelease
+
+Notable changes:
+
+-   Enhancement: Dict Key Literal Autocompletion does not work with Attributes [pylance-release#3687](https://github.com/microsoft/pylance-release/issues/3687)
+-   Bug fix: Auto-indent fails to break out of nested context [pylance-release#3686](https://github.com/microsoft/pylance-release/issues/3686)
+-   Bug fix: Incorrectly Flagged child dataclass "Fields without default values cannot appear after fields with default values" [pylance-release#3676](https://github.com/microsoft/pylance-release/issues/3676)
+-   Enhancement: Feature Request: Auto import should suggest all symbols in your project [pylance-release#3670](https://github.com/microsoft/pylance-release/issues/3670)
+-   Bug fix: Semantic highlighting broken [pylance-release#3667](https://github.com/microsoft/pylance-release/issues/3667)
+-   Enhancement: Flag indentation error without invalidating rest of file [pylance-release#3656](https://github.com/microsoft/pylance-release/issues/3656)
+-   Bug fix: `TypeAlias` forward reference results in `Unknown` [pylance-release#3654](https://github.com/microsoft/pylance-release/issues/3654)
+-   Bug fix: Linting disappeares when using multiple folders in workspace [pylance-release#3652](https://github.com/microsoft/pylance-release/issues/3652)
+-   Bug fix: Massive performance issues for all Pylance features in some projects [pylance-release#3632](https://github.com/microsoft/pylance-release/issues/3632)
+-   Enhancement: Inappropriate type error with docstrings [pylance-release#3612](https://github.com/microsoft/pylance-release/issues/3612)
+-   Bug fix: How to prevent autocomplete of type hints [pylance-release#3599](https://github.com/microsoft/pylance-release/issues/3599)
+-   Bug fix: RPyC Python module description looks strange [pylance-release#3549](https://github.com/microsoft/pylance-release/issues/3549)
+-   Bug fix: `Add "# type: ignore" to suppress warning` places comment in wrong place [pylance-release#3544](https://github.com/microsoft/pylance-release/issues/3544)
+-   Bug fix: Bug template url gives 404 message [pylance-release#3497](https://github.com/microsoft/pylance-release/issues/3497)
+-   Bug fix: Bug on Pylance 2022.9.40 (released Sept 28, 2022) [pylance-release#3401](https://github.com/microsoft/pylance-release/issues/3401)
+-   Enhancement: Emit warning for unmatched `#region`/`#endregion` [pylance-release#3308](https://github.com/microsoft/pylance-release/issues/3308)
+-   Bug fix: lsp notebooks and jupyter.runStartupCommands [pylance-release#3219](https://github.com/microsoft/pylance-release/issues/3219)
+
+## 2022.11.40 (30 November 2022) Release
+
+-   Release version that rolls up changes from the [2022.11.32](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221132-16-november-2022-prerelease) prerelease build.
+
 ## 2022.11.32 (16 November 2022) PreRelease
 
 Notable changes:
