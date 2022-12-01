@@ -1,5 +1,12 @@
 # Changelog
 
+## 2022.12.11 (1 December 2022) PreRelease
+
+Notable changes:
+
+-   Bug fix: google.cloud namespace package imports fail as of 1.1.282 [pyright#4255](https://github.com/microsoft/pyright/issues/4255)
+-   Bug fix: Option to set python.analysis.packageIndexDepths depth globally [pylance-release#3678](https://github.com/microsoft/pylance-release/issues/3678)
+
 ## 2022.11.41 (30 November 2022) PreRelease
 
 Notable changes:
