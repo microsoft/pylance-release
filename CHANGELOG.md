@@ -1,5 +1,18 @@
 # Changelog
 
+## 2022.12.21 (7 December 2022) PreRelease
+
+Notable changes:
+
+-   Bug fix: Incorrect ShadowedImports warning on relative '.' import [pylance-release#3725](https://github.com/microsoft/pylance-release/issues/3725)
+-   Bug fix: `source.unusedImports` is very slow and adds unnecessary whitespace [pylance-release#3715](https://github.com/microsoft/pylance-release/issues/3715)
+-   Bug fix: Bad autocomplete when typing an open square bracket [pylance-release#3651](https://github.com/microsoft/pylance-release/issues/3651)
+-   Bug fix: Module docstrings have inconsistent behaviour on hover [pylance-release#3636](https://github.com/microsoft/pylance-release/issues/3636)
+
+## 2022.12.20 (7 December 2022) Release
+
+-   Release version that rolls up changes from the [2022.12.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221211-1-december-2022-prerelease) prerelease build.
+
 ## 2022.12.11 (1 December 2022) PreRelease
 
 Notable changes:
