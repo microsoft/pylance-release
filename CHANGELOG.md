@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.1.11 (4 January 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Any comment that contains the word "region" triggers an error "#region is missing corresponding #endregion" [pylance-release#3765](https://github.com/microsoft/pylance-release/issues/3765)
+-   Bug fix: Pyright parser causes tests failures [pylance-release#3761](https://github.com/microsoft/pylance-release/issues/3761)
+-   Bug fix: Provide doc string for module in "import statement" completion [pylance-release#3721](https://github.com/microsoft/pylance-release/issues/3721)
+-   Bug fix: Python intellisense is very slow [pylance-release#3668](https://github.com/microsoft/pylance-release/issues/3668)
+-   Bug fix: option to exclude some auto-import options [pylance-release#3466](https://github.com/microsoft/pylance-release/issues/3466)
+
+Pylance's copy of Pyright has been updated from 1.1.283 to 1.1.287.
+
+-   See Pyright's release notes for details: [1.1.287](https://github.com/microsoft/pyright/releases/tag/1.1.287), [1.1.286](https://github.com/microsoft/pyright/releases/tag/1.1.286), [1.1.285](https://github.com/microsoft/pyright/releases/tag/1.1.285), [1.1.284](https://github.com/microsoft/pyright/releases/tag/1.1.284).
+
+## ## 2023.1.10 (4 January 2023) Release
+
+-   Release version that rolls up changes from the [2022.12.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221221-7-december-2022-prerelease) prerelease build.
+
 ## 2022.12.21 (7 December 2022) PreRelease
 
 Notable changes:
