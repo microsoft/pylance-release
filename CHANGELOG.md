@@ -1,5 +1,21 @@
 # Changelog
 
+## 2023.1.21 (11 January 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: (Python) "Find All References" on any `__init__` shows every constructor for every class [pylance-release#3802](https://github.com/microsoft/pylance-release/issues/3802)
+-   Bug fix: Auto-indent behavior as before / jumping to beginning of line [pylance-release#3781](https://github.com/microsoft/pylance-release/issues/3781)
+-   Bug fix: No import suggestions for multi-root workspace with editable installs [pylance-release#3732](https://github.com/microsoft/pylance-release/issues/3732)
+
+Pylance's copy of Pyright has been updated from 1.1.287 to 1.1.288.
+
+-   See Pyright's release notes for details: [1.1.288](https://github.com/microsoft/pyright/releases/tag/1.1.288).
+
+## 2023.1.20 (11 January 2023) Release
+
+-   Release version that rolls up changes from the [2022.1.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023111-4-january-2023-prerelease) prerelease build.
+
 ## 2023.1.11 (4 January 2023) PreRelease
 
 Notable changes:
@@ -14,7 +30,7 @@ Pylance's copy of Pyright has been updated from 1.1.283 to 1.1.287.
 
 -   See Pyright's release notes for details: [1.1.287](https://github.com/microsoft/pyright/releases/tag/1.1.287), [1.1.286](https://github.com/microsoft/pyright/releases/tag/1.1.286), [1.1.285](https://github.com/microsoft/pyright/releases/tag/1.1.285), [1.1.284](https://github.com/microsoft/pyright/releases/tag/1.1.284).
 
-## ## 2023.1.10 (4 January 2023) Release
+## 2023.1.10 (4 January 2023) Release
 
 -   Release version that rolls up changes from the [2022.12.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221221-7-december-2022-prerelease) prerelease build.
 
