@@ -1,5 +1,30 @@
 # Changelog
 
+## 2023.1.31 (18 January 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Overly aggressive automatic indent on deeply nested list in a `@pytest.mark.parametrize()` call [pylance-release#3839](https://github.com/microsoft/pylance-release/issues/3839)
+-   Bug fix: No brackets autocompletion with python.analysis.completeFunctionParens set to true when python.languageServer is set to Pylance [pylance-release#3831](https://github.com/microsoft/pylance-release/issues/3831)
+-   Bug fix: PYTHONPATH isn't expanded like how python handles it [pylance-release#3823](https://github.com/microsoft/pylance-release/issues/3823)
+-   Bug fix: Django utils not found in auto import [pylance-release#3815](https://github.com/microsoft/pylance-release/issues/3815)
+-   Bug fix: `extraPaths` starting with `~/` on Linux are considered relative [pylance-release#3730](https://github.com/microsoft/pylance-release/issues/3730)
+-   Bug fix: Exclude map files from extension bundle [pylance-release#3647](https://github.com/microsoft/pylance-release/issues/3647)
+-   Bug fix: Exclude platform specific bits from extension bundle [pylance-release#3646](https://github.com/microsoft/pylance-release/issues/3646)
+
+Pylance's copy of Pyright has been updated from 1.1.288 to 1.1.290.
+
+-   See Pyright's release notes for details: [1.1.289](https://github.com/microsoft/pyright/releases/tag/1.1.289), [1.1.290](https://github.com/microsoft/pyright/releases/tag/1.1.290).
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a bug in the constraint solver that led to unsolved type variables in the case where a `lambda x:x` was passed to a `Callable[[T], S]`.
+    -   Bug Fix: Fixed a bug that could lead to infinite type evaluation time when inferring the type of a tuple in a loop.
+    -   Bug Fix: When converting a class into a callable (by combining its **new** and `__init__` methods), capture the docstring of the constructor or class. This preserves docstrings when using a class decorator.
+
+## 2023.1.30 (18 January 2023) Release
+
+-   Release version that rolls up changes from the [2022.1.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023121-11-january-2023-prerelease) prerelease build.
+
 ## 2023.1.21 (11 January 2023) PreRelease
 
 Notable changes:
