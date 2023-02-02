@@ -1,6 +1,6 @@
 # Changelog
 
-## 2023.1.11 (1 February 2023) PreRelease
+## 2023.2.11 (1 February 2023) PreRelease
 
 Notable changes:
 
@@ -21,7 +21,7 @@ Pylance's copy of Pyright has been updated from 1.1.291 to 1.1.292.
     -   Bug Fix: Fixed a bug that resulted in incorrect type evaluation when accessing instance methods directly from a `None` instance
     -   Bug Fix: Fixed a regression that resulted in a crash when resolving overloads with different numbers of parameters and with with arguments that evaluate to `Any`
 
-## 2023.1.10 (1 February 2023) Release
+## 2023.2.10 (1 February 2023) Release
 
 -   Release version that rolls up changes from the [2022.1.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023141-25-january-2023-prerelease) prerelease build.
 
