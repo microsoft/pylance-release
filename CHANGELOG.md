@@ -1,5 +1,30 @@
 # Changelog
 
+## 2023.1.11 (1 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Don't show `__future__` options in auto-import quick action [pylance-release#3882](https://github.com/microsoft/pylance-release/issues/3882)
+-   Bug fix: Syntax highlighting stop working after loading certain python files [pylance-release#3886](https://github.com/microsoft/pylance-release/issues/3886)
+-   Bug fix: No automatic parens with class types [pylance-release#3870](https://github.com/microsoft/pylance-release/issues/3870)
+-   Enhancement: semantic highlighting of cached_property [pylance-release#3742](https://github.com/microsoft/pylance-release/issues/3742)
+-   Enhancement: Improve pytest completions and goto def [pylance-release#3727](https://github.com/microsoft/pylance-release/issues/3727)
+-   Bug fix: `#region` nesting doesn't recognise last `#endregion` if there's no code after it at the end of the file on a non-"root" indent level [pylance-release#3290](https://github.com/microsoft/pylance-release/issues/3290)
+-   Bug fix: Commented code at the end of a method doesn't collapse with method [pylance-release#2321](https://github.com/microsoft/pylance-release/issues/2321)
+
+Pylance's copy of Pyright has been updated from 1.1.291 to 1.1.292.
+
+-   See Pyright's release notes for details: [1.1.292](https://github.com/microsoft/pyright/releases/tag/1.1.292).
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug Fix: Fixed a few typos in the pyright documentation.
+    -   Bug Fix: Fixed a bug that resulted in incorrect type evaluation when accessing instance methods directly from a `None` instance
+    -   Bug Fix: Fixed a regression that resulted in a crash when resolving overloads with different numbers of parameters and with with arguments that evaluate to `Any`
+
+## 2023.1.10 (1 February 2023) Release
+
+-   Release version that rolls up changes from the [2022.1.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023141-25-january-2023-prerelease) prerelease build.
+
 ## 2023.1.41 (25 January 2023) PreRelease
 
 Notable changes:
