@@ -185,6 +185,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 -    `python.analysis.inlayHints.pytestParameters`
     -    Enable/disable inlay hints for pytest function parameters.
+    
     ```python
     @pytest.fixture()
     def my_fixture() -> str:
@@ -192,7 +193,9 @@ Pylance provides users with the ability to customize their Python language suppo
         
     def test_foo(my_fixture):...
     ```
+    
     becomes
+    
     ```python
     @pytest.fixture()
     def my_fixture() -> str:
