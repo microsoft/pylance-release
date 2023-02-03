@@ -1,5 +1,13 @@
 # Changelog
 
+## 2023.2.12 (2 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Performance regression with 2023.2.11 Pre-Release [pylance-release#3901](https://github.com/microsoft/pylance-release/issues/3901)
+-   Bug fix: VS Code + Pylance does not find venv-installed modules while venv is activated [pylance-release#3881](https://github.com/microsoft/pylance-release/issues/3881)
+-   Enhancement: Pylance does not provide source actions for removing unused imports or sorting imports inside Jupyter Notebooks [pylance-release#3175](https://github.com/microsoft/pylance-release/issues/3175)
+
 ## 2023.2.11 (1 February 2023) PreRelease
 
 Notable changes:
