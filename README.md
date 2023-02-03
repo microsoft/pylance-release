@@ -212,6 +212,7 @@ def test_foo(my_fixture: str):...
     - Accepted values:
         - `source.unusedImports`
         - `source.convertImportFormat`
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
