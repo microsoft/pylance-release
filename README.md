@@ -190,8 +190,7 @@ Pylance provides users with the ability to customize their Python language suppo
     def my_fixture() -> str:
         return "foo"
         
-    def test_foo(my_fixture):
-        assert(myfixture)
+    def test_foo(my_fixture):...
     ```
     becomes
     ```python
@@ -199,8 +198,7 @@ Pylance provides users with the ability to customize their Python language suppo
     def my_fixture() -> str:
         return "foo"
 
-    def test_foo(my_fixture: str):
-        assert(myfixture)
+    def test_foo(my_fixture: str):...
     ```
     -    Accepted values:
         -   `true`
