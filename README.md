@@ -184,34 +184,18 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `false` (default)
 
 -    `python.analysis.inlayHints.pytestParameters`
-    -    Enable/disable inlay hints for pytest function parameters.
     
-    ```python
-    @pytest.fixture()
-    def my_fixture() -> str:
-        return "foo"
-        
-    def test_foo(my_fixture):...
-    ```
-    
-    becomes
-    
-    ```python
-    @pytest.fixture()
-    def my_fixture() -> str:
-        return "foo"
-
-    def test_foo(my_fixture: str):...
-    ```
-    -    Accepted values:
+    -   Enable/disable inlay hints for pytest test function and fixture parameters.
+    -   Accepted values:
         -   `true`
         -   `false` (default)
 
-- `python.analysis.fixAll`
-    - The set of commands to run when doing a `fixall`.
-    - Accepted values:
+-   `python.analysis.fixAll`
+    -   The set of commands to run when doing a `fixall`.
+    -   Accepted values:
         - `source.unusedImports`
         - `source.convertImportFormat`
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
