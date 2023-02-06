@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.2.13 (6 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Crash with multi-root workspace (pre-release) [pylance-release#3907](https://github.com/microsoft/pylance-release/issues/3907)
+
 ## 2023.2.12 (2 February 2023) PreRelease
 
 Notable changes:
