@@ -1,5 +1,22 @@
 # Changelog
 
+## 2023.2.21 (8 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Empty kw only dataclass has incorrect type hint for `__init__` signature [pylance-release#3916](https://github.com/microsoft/pylance-release/issues/3916)
+-   Bug fix: Docstring of @property is not rendered correctly [pylance-release#3888](https://github.com/microsoft/pylance-release/issues/3888)
+
+Pylance's copy of Pyright has been updated from 1.1.292 to 1.1.293.
+
+-   See Pyright's release notes for details: [1.1.293](https://github.com/microsoft/pyright/releases/tag/1.1.293).
+
+## 2023.2.20 (8 February 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through version [2022.2.13](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023213-6-february-2023-prerelease) prerelease build.
+
 ## 2023.2.13 (6 February 2023) PreRelease
 
 Notable changes:
