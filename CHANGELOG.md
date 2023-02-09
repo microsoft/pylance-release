@@ -6,7 +6,6 @@ Notable changes:
 
 -   Bug fix: Empty kw only dataclass has incorrect type hint for `__init__` signature [pylance-release#3916](https://github.com/microsoft/pylance-release/issues/3916)
 -   Bug fix: Docstring of @property is not rendered correctly [pylance-release#3888](https://github.com/microsoft/pylance-release/issues/3888)
--   Bug fix: Pandas Dataframe.explode function parameter TypeError [pylance-release#3871](https://github.com/microsoft/pylance-release/issues/3871)
 
 Pylance's copy of Pyright has been updated from 1.1.292 to 1.1.293.
 
