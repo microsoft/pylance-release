@@ -1,5 +1,20 @@
 # Changelog
 
+## 2023.2.31 (15 February 2023) PreRelease
+
+Notable changes:
+
+-   Enhancement: Make "Fields without default values cannot appear after fields with default values" a toggle-able diagnostic rule [pylance-release#3939](https://github.com/microsoft/pylance-release/issues/3939)
+-   Bug fix: New partial typeshed tensorflow stubs break pylance for tensorflow [pylance-release#3937](https://github.com/microsoft/pylance-release/issues/3937)
+-   Bug fix: Pandas Dataframe.explode function parameter TypeError [pylance-release#3871](https://github.com/microsoft/pylance-release/issues/3871)
+-   Bug fix: Named parameter supports for PEP 692 [pylance-release#3868](https://github.com/microsoft/pylance-release/issues/3868)
+
+## 2023.2.30 (15 February 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through version [2022.2.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023221-8-february-2023-prerelease) prerelease build.
+
 ## 2023.2.21 (8 February 2023) PreRelease
 
 Notable changes:
