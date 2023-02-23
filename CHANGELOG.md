@@ -1,5 +1,25 @@
 # Changelog
 
+## 2023.2.41 (22 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pytest fixtures that yield should show the yielded result [pylance-release#3973](https://github.com/microsoft/pylance-release/issues/3973)
+-   Bug fix: Missing syntax highlighting for multi variable declaration [pylance-release#3904](https://github.com/microsoft/pylance-release/issues/3904)
+-   Bug fix: Source directory hiding build directory in analysis and autocomplete [pylance-release#3429](https://github.com/microsoft/pylance-release/issues/3429)
+-   Enhancement: Updated pandas stubs.
+-   Enhancement: Updated typeshed.
+
+Pylance's copy of Pyright has been updated from 1.1.294 to 1.1.295.
+
+-   See Pyright's release notes for details: [1.1.295](https://github.com/microsoft/pyright/releases/tag/1.1.295).
+
+## 2023.2.40 (22 February 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through version [2022.2.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023231-15-february-2023-prerelease) prerelease build.
+
 ## 2023.2.31 (15 February 2023) PreRelease
 
 Notable changes:
@@ -8,6 +28,10 @@ Notable changes:
 -   Bug fix: New partial typeshed tensorflow stubs break pylance for tensorflow [pylance-release#3937](https://github.com/microsoft/pylance-release/issues/3937)
 -   Bug fix: Pandas Dataframe.explode function parameter TypeError [pylance-release#3871](https://github.com/microsoft/pylance-release/issues/3871)
 -   Bug fix: Named parameter supports for PEP 692 [pylance-release#3868](https://github.com/microsoft/pylance-release/issues/3868)
+
+Pylance's copy of Pyright has been updated from 1.1.293 to 1.1.294.
+
+-   See Pyright's release notes for details: [1.1.294](https://github.com/microsoft/pyright/releases/tag/1.1.294).
 
 ## 2023.2.30 (15 February 2023) Release
 
