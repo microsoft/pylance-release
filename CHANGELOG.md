@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.2.42 (23 February 2023) PreRelease
+
+Notable changes:
+
+-   Rollback changes for [pylance-release#4001](https://github.com/microsoft/pylance-release/discussions/4001). Fix broke imports of stubs.
+
 ## 2023.2.41 (22 February 2023) PreRelease
 
 Notable changes:
