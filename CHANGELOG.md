@@ -1,5 +1,12 @@
 # Changelog
 
+## 2023.2.43 (24 February 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Issues when moving symbol to a different file [pylance-release#4002](https://github.com/microsoft/pylance-release/issues/4002)
+-   Bug fix: Unexpected indent when pressing Enter at start of dedented line [pylance-release#3974](https://github.com/microsoft/pylance-release/issues/3974)
+
 ## 2023.2.42 (23 February 2023) PreRelease
 
 Notable changes:
