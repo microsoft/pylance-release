@@ -1,5 +1,34 @@
 # Changelog
 
+## 2023.3.11 (1 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: incomplete movement expression while Refactor -> Move symbol to [pylance-release#4018](https://github.com/microsoft/pylance-release/issues/4018)
+-   Bug fix: Keywords force completions to stop [pylance-release#3968](https://github.com/microsoft/pylance-release/issues/3968)
+-   Bug fix: quick fix places # type: ignore on wrong line. [pylance-release#3959](https://github.com/microsoft/pylance-release/issues/3959)
+-   Bug fix: Accepting refactor "type: ignore" puts newline in wrong spot [pylance-release#3858](https://github.com/microsoft/pylance-release/issues/3858)
+-   Bug fix: Inline docstrings for attributes don't show up unless docstring is on very next line [pylance-release#3769](https://github.com/microsoft/pylance-release/issues/3769)
+
+Pylance's copy of Pyright has been updated from 1.1.295 to 1.1.296.
+
+-   See Pyright's release notes for details: [1.1.296](https://github.com/microsoft/pyright/releases/tag/1.1.296).
+
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug fix: Fixed a bug that caused the variance for type parameters to be incorrectly inferred when an auto-variance class derived from a non-auto-variance class. This addresses [#4713](https://github.com/microsoft/pyright/issues/4713).
+    -   Enhancement: Performance optimization: reduced formatting of error messages in cases where it can be determined that they are not needed (e.g. in speculative evaluation code paths).
+    -   Enhancement: Declare workspaceFolders support in server capabilities (https://github.com/microsoft/pyright/pull/4666)
+    -   Bug fix: Added logic to detect when a type alias is used in a generic class declaration's base class list and a type parameter used with the type alias is incompatible with the variance required for the type alias. This addresses [#4699](https://github.com/microsoft/pyright/issues/4699).
+    -   Bug fix: Implemented missing check for generic type alias specialization when too few type arguments are provided. This addresses [#4709](https://github.com/microsoft/pyright/issues/4709).
+    -   Bug fix: Fixed a recent regression that resulted in an incorrect type evaluation when using a `__new__` method whose return type annotation is `Self`. This addresses [#4705](https://github.com/microsoft/pyright/issues/4705).
+    -   Bug fix: Fixed a bug that led to a false positive error when using the | operator with two dicts whose keys or values are defined as literals. This addresses part of [#4707](https://github.com/microsoft/pyright/issues/4707).
+
+## 2023.3.10 (1 March 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through version [2023.2.43](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023243-24-february-2023-prerelease) prerelease build.
+
 ## 2023.2.43 (24 February 2023) PreRelease
 
 Notable changes:
