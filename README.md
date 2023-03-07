@@ -116,9 +116,8 @@ Pylance provides users with the ability to customize their Python language suppo
 -   `python.analysis.indexing`
 
     - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
-    - Available values:
-        - `null` (default)
-        - `true`
+    - Accepted values:
+        - `true` (default)
         - `false`
 
 -   `python.analysis.packageIndexDepths`
@@ -189,26 +188,26 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
-```python
-@pytest.fixture()
-def my_fixture() -> str:
-    return "foo"
+    ```python
+    @pytest.fixture()
+    def my_fixture() -> str:
+        return "foo"
 
-def test_foo(my_fixture):...
-```
+    def test_foo(my_fixture):...
+    ```
 
--   becomes
+    -   becomes
 
-```python
-@pytest.fixture()
-def my_fixture() -> str:
-    return "foo"
+    ```python
+    @pytest.fixture()
+    def my_fixture() -> str:
+        return "foo"
 
-def test_foo(my_fixture: str):...
-```
+    def test_foo(my_fixture: str):...
+    ```
 
 - `python.analysis.fixAll`
-    - The set of commands to run when doing a `fixall`.
+    - The set of code actions to run when running the **Fix All** command.
     - Accepted values:
         - `source.unusedImports`
         - `source.convertImportFormat`
