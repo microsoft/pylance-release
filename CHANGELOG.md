@@ -1,5 +1,25 @@
 # Changelog
 
+## 2023.3.21 (8 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: In `functools.partial`, container of subclass is not recognized as container of baseclass [pylance-release#4044](https://github.com/microsoft/pylance-release/issues/4044)
+-   Bug fix: `__init__` docstring is ignored if `@overload` is used [pylance-release#4042](https://github.com/microsoft/pylance-release/issues/4042)
+-   Bug fix: Intellicode no longer works in Azure Notebooks [pylance-release#4032](https://github.com/microsoft/pylance-release/issues/4032)
+-   Enhancement: `match` `case` or `if` statements do not recognize `Literal` types [pylance-release#4005](https://github.com/microsoft/pylance-release/issues/4005)
+-   Enhancement: Autocomplete Keys for get method [pylance-release#3994](https://github.com/microsoft/pylance-release/issues/3994)
+
+Pylance's copy of Pyright has been updated from 1.1.296 to 1.1.298.
+
+-   See Pyright's release notes for details: [1.1.297](https://github.com/microsoft/pyright/releases/tag/1.1.297), [1.1.298](https://github.com/microsoft/pyright/releases/tag/1.1.298).
+
+## 2023.3.20 (8 March 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through version [2023.3.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023311-1-march-2023-prerelease) prerelease build.
+
 ## 2023.3.11 (1 March 2023) PreRelease
 
 Notable changes:
