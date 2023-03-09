@@ -28,7 +28,8 @@ jobs:
       - uses: actions/stale@v5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          days-before-issue-stale: 30
-          days-before-issue-close: 0
+          days-before-issue-stale: 21
+          days-before-issue-close: 9
+          stale-issue-message: "Hey @${assignee}, this issue might need further attention.\n\n@${author}, you can help us out by closing this issue if the problem no longer exists, or adding more information."
           close-issue-message: "This issue was closed because it has been stalled for 30 days with no activity. If the issue still persists, please reopen with the information requested. Thanks."
           any-of-labels: "waiting for user response"
