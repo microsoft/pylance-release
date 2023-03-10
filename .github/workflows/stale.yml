@@ -29,7 +29,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-issue-stale: 21
-          days-before-issue-close: 9
-          stale-issue-message: "Hey @${assignee}, this issue might need further attention.\n\n@${author}, you can help us out by closing this issue if the problem no longer exists, or adding more information."
+          days-before-issue-close: 7
+          stale-issue-message: "You can help us out by closing this issue if the problem no longer exists, or by adding more information. Otherwise, this issue will be closed in 1 week."
           close-issue-message: "This issue was closed because it has been stalled for 30 days with no activity. If the issue still persists, please reopen with the information requested. Thanks."
           any-of-labels: "waiting for user response"
