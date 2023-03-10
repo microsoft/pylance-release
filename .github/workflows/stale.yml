@@ -1,0 +1,40 @@
+name: Stale Issue Closer
+permissions:
+  issues: write
+  
+on:
+  schedule:
+    #        ┌───────────── minute (0 - 59)
+    #        │ ┌───────────── hour (0 - 23)
+    #        │ │ ┌───────────── day of the month (1 - 31)
+    #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #        │ │ │ │ │
+    #        │ │ │ │ │
+    #        │ │ │ │ │
+    #        * * * * *
+    - cron: "0 0 * * *"
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Actions
+        uses: actions/checkout@v3
+        with:
+          repository: "microsoft/vscode-github-triage-actions"
+          path: ./actions
+          ref: stable
+      - name: Install Actions
+        run: npm install --production --prefix ./actions
+      - name: Run Stale Issue Closer
+        uses: ./actions/needs-more-info-closer
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          label: waiting for user response
+          # Close issues that are marked a 'waiting for user response' label and were last interacted with by a contributor or bot, after 30 days has passed.
+          closeDays: 30
+          closeComment: "This issue has been closed automatically because it needs more information and has not had recent activity. If the issue still persists, please reopen with the information requested. Thanks."
+          # Ping the assignee if the last comment was by someonne other than a team member or bot after 7 days has passed.
+          pingDays: 7
+          pingComment: "Hey @${assignee}, this issue might need further attention.\n\n@${author}, you can help us out by closing this issue if the problem no longer exists, or adding more information."
