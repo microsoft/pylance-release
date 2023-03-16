@@ -1,5 +1,21 @@
 # Changelog
 
+## 2023.3.22 (15 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Type captured by wildcard pattern is partially unknown - Why? [pylance-release#4058](https://github.com/microsoft/pylance-release/issues/4058)
+-   Bug fix: Pytest intellisense doesn't work when using direct imports of `fixture, mark` [pylance-release#4039](https://github.com/microsoft/pylance-release/issues/4039)
+-   Bug fix: Enabling the Jupyter extension causes high CPU usage [pylance-release#4022](https://github.com/microsoft/pylance-release/issues/4022)
+-   Bug fix: Inappropriate type hint or obscured declaration error [pylance-release#3834](https://github.com/microsoft/pylance-release/issues/3834)
+-   Bug fix: Invalid Type Suggestion [pylance-release#3824](https://github.com/microsoft/pylance-release/issues/3824)
+-   Bug fix: Inlay Hints infills illegal return type hints on methods [pylance-release#3767](https://github.com/microsoft/pylance-release/issues/3767)
+-   Bug fix: Renaming in Jupyter notebooks only works in a single cell [pylance-release#3279](https://github.com/microsoft/pylance-release/issues/3279)
+
+Pylance's copy of Pyright has been updated from 1.1.298 to 1.1.299.
+
+-   See Pyright's release notes for details: [1.1.299](https://github.com/microsoft/pyright/releases/tag/1.1.299)
+
 ## 2023.3.21 (8 March 2023) PreRelease
 
 Notable changes:
