@@ -1,5 +1,16 @@
 # Changelog
 
+## 2023.3.24 (17 March 2023) PreRelease
+
+Pylance's copy of Pyright remains on 1.1.299.
+
+-   See Pyright's release notes for details: [1.1.299](https://github.com/microsoft/pyright/releases/tag/1.1.299)
+-   Unreleased in Pyright, but included in Pylance:
+    -   Enhancement: Improved hover text for methods that are synthesized (e.g. the `get` method for TypedDict). This partly addresses https://github.com/microsoft/pylance-release/issues/4098.
+    -   Enhancement Added support for `clear` and `popitem` methods on TypedDict instance that is marked `@final` and has no required entries.
+    -   Bug fix: Fixed bug that resulted in a crash when user types `import` without a follow-on module name. This can happen in due corse of typing an import statement.
+    -   Performance: Changed the logic in the code flow engine so it never attempts to infer a NoReturn return type for a function that lacks a return type annotation. This results in a big speed improvement for some (unannotated) code bases, but it also produces somewhat inconsistent type evaluation results because a function whose type is inferred to be NoReturn by the type checker will not be treated as such if it is called elsewhere in the program.
+
 ## 2023.3.23 (16 March 2023) PreRelease
 
 Notable changes:
