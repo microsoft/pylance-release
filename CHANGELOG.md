@@ -1,5 +1,22 @@
 # Changelog
 
+## 2023.3.23 (16 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Django. Several DoesNotExist exceptions not reached [pylance-release#3918](https://github.com/microsoft/pylance-release/issues/3918)
+
+Pylance's copy of Pyright remains on 1.1.299.
+
+-   See Pyright's release notes for details: [1.1.299](https://github.com/microsoft/pyright/releases/tag/1.1.299)
+-   Unreleased in Pyright, but included in Pylance:
+    -   Bug fix: Fixed regression that caused a crash in the presence of the illegal statement `import .`. This addresses [pylance-release#4778](https://github.com/microsoft/pyright/issues/4778).
+    -   Bug fix: Fixed bug that resulted in a false positive error relating to variance incompatibility.
+    -   Enhancement: Added new diagnostic check `reportImplicitOverride`.
+    -   Performance: Further improved perf when determining type compatibility of unions with many subtypes. This further reduces the analysis time of pydantic from 12s to 4s.
+    -   Performance: sped up type analyzer by 5-25% by caching types that have been converted to or from an instance. This drops the analysis time of pydantic from 17s to 12s.
+    -   Bug fix: Fixed regression that resulted in a false positive error when using an index expression form with a class whose metaclass supplies a `__getitem__` method when the expression is used as a runtime expression, as opposed to a type expression.
+
 ## 2023.3.22 (15 March 2023) PreRelease
 
 Notable changes:
