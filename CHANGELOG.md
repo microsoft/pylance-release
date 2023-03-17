@@ -1,5 +1,17 @@
 # Changelog
 
+## 2023.3.25 (17 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Hover over symbols without docstrings isn't rendered correctly [pylance-release#4082](https://github.com/microsoft/pylance-release/issues/4082)
+-   Bug fix: Language server crashing with `TypeError: this._token.cancel is not a function` [pylance-release#4055](https://github.com/microsoft/pylance-release/issues/4055)
+-   Bug fix: Pylance suggestions show indirect imports through files opened in the site-packages folder [pylance-release#3760](https://github.com/microsoft/pylance-release/issues/3760)
+
+Pylance's copy of Pyright remains on 1.1.299.
+
+-   See Pyright's release notes for details: [1.1.299](https://github.com/microsoft/pyright/releases/tag/1.1.299)
+
 ## 2023.3.24 (17 March 2023) PreRelease
 
 Pylance's copy of Pyright remains on 1.1.299.
