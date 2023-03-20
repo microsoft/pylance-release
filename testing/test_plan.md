@@ -5,7 +5,7 @@
 -   OS: XXX (Windows, macOS, latest Ubuntu LTS)
 -   Python
     -   Distribution: XXX (CPython, miniconda)
-    -   Version: XXX (3.9, 3.10, 3.11)
+    -   Version: XXX (3.9, 3.10, 3.11, 3.12)
 -   VS Code: XXX (Insiders)
 -   Python, Jupyter && Pylance Extension: XXX (Insiders)
 
