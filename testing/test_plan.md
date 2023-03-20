@@ -7,7 +7,7 @@
     -   Distribution: XXX (CPython, miniconda)
     -   Version: XXX (3.9, 3.10, 3.11)
 -   VS Code: XXX (Insiders)
--   Python && Pylance Extension: XXX (Insiders)
+-   Python, Jupyter && Pylance Extension: XXX (Insiders)
 
 ## Tests
 
@@ -23,7 +23,7 @@
     1. Make sure no squiggles happen
 -   [ ] Import errors
     1. Create a brand new python environment
-    1. Select this in VS code.
+    1. Select the new environment in VS code.
     1. Open a new python file
     1. Add `import pandas as pd` at the top
     1. It should error on the pandas
@@ -50,7 +50,7 @@
         '''
         pass
     ```
-    6. Hover over `foo` and make sure you get a doc string
+    6. Hover over `foo` and make sure the hover info includes the doc string
     [ ] Goto definition
     1. Open a new python file
     1. Add an import for sys `import sys`
@@ -65,7 +65,7 @@
     1. Create a method in the python file
     1. In the first cell of the notebook, import the python file
     1. Verify no red squiggles show up
-    1. Try calling the method from the python file. Something like so:
+    1. In the same cell of the notebook, try calling the method you created. Something like so:
     ```python
     import test_file
     test_file.foo()
@@ -80,14 +80,14 @@
     1. Open a new python file
     1. Create a method
     1. Call that method
-    1. Hit F2 on the method and rename it something else
+    1. Hit F2 on the method call and rename it something else
     1. Verify the definition of the method changes
 
 -   [ ] Rename across files
     1. Open a new python file
     1. Create a method
     1. Open another python file
-    1. Reference the first file and its method
+    1. Import the method from the first file
     1. Rename the method from the second file
     1. Verify it is renamed in the original file too
 
