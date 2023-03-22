@@ -64,7 +64,7 @@ Pylance provides users with the ability to customize their Python language suppo
     -   Default value: empty array
 
 -   `python.analysis.ignore`
-    -   Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no value is provided, the value of `python.linting.ignorePatterns` (if set) will be used.
+    -   Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     -   Default value: empty array
 
 -   `python.analysis.stubPath`

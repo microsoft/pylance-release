@@ -1,5 +1,25 @@
 # Changelog
 
+## 2023.3.31 (22 March 2023) PreRelease
+
+Notable changes:
+
+-   Behavior change: Remove support for `python.linting.ignorePatterns` [pylance-release#4100](https://github.com/microsoft/pylance-release/issues/4100)
+-   Bug fix: add support for pulsar avro [pylance-release#4117](https://github.com/microsoft/pylance-release/issues/4117)
+-   Bug fix: dedent on `else` for an `if` statement that is followed by a `try` is incorrect [pylance-release#4050](https://github.com/microsoft/pylance-release/issues/4050)
+-   Enhancement: Added bundled stubs for lightgbm, networkx, and vispy
+-   Enhancement: Updated cv2, matplotlib, and sklearn stubs
+
+Pylance's copy of Pyright has been updated from 1.1.299 to 1.1.300.
+
+-   See Pyright's release notes for details: [1.1.300](https://github.com/microsoft/pyright/releases/tag/1.1.300)
+
+## 2023.3.30 (22 March 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.3.25](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023325-17-march-2023-prerelease) prerelease build.
+
 ## 2023.3.25 (17 March 2023) PreRelease
 
 Notable changes:
