@@ -51,7 +51,8 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 
 ## Diagnostic severity overrides
 
-Both Pylance and Pyright specify a custom [`python.analysis.diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults) setting. Differences in this setting have a direct impact on the diagnostics returned. If you were attempting to get the same error output for both, making sure this setting is consistent is probably the first thing to do.
+Both Pylance and Pyright support a [`python.analysis.diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults) setting. Differences in this setting have a direct impact on the diagnostics returned. If you were attempting to get the same error output from both Pylance and Pyright, ensure that they are using the same value for this setting.
+
 
 
 ### Diagnostic Severity Overrides to match Pyright defaults
