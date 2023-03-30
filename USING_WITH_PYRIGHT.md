@@ -23,51 +23,81 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 
 Both Pylance and Pyright specify a custom [`python.analysis.diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults) setting. Differences in this setting have a direct impact on the diagnostics returned. If you were attempting to get the same error output for both, making sure this setting is consistent is probably the first thing to do.
 
-Differences for typeCheckingMode `basic`:
 
+### Diagnostic Severity Overrides to match Pyright defaults
 
-| Diagnostic Override | Pylance | Pyright |
-|----|----|----|
-| reportAssertAlwaysTrue | "information" | "warning" |
-| reportCallInDefaultInitializer | "information" | "none" |
-| reportConstantRedefinition | "warning" | "none" |
-| reportDuplicateImport | "warning" | "none" |
-| reportImplicitStringConcatenation | "warning" | "none" |
-| reportImportCycles | "warning" | "none" |
-| reportIncompatibleMethodOverride | "warning" | "none" |
-| reportIncompatibleVariableOverride | "warning" | "none" |
-| reportInvalidStubStatement | "warning" | "none" |
-| reportMissingImports | "warning" | "error" |
-| reportMissingTypeStubs | "warning" | "none" |
-| reportOptionalCall | "warning" | "error" |
-| reportOptionalContextManager | "warning" | "error" |
-| reportOptionalIterable | "warning" | "error" |
-| reportOptionalMemberAccess | "warning" | "error" |
-| reportOptionalOperand | "warning" | "error" |
-| reportOptionalSubscript | "warning" | "error" |
-| reportPrivateUsage | "warning" | "none" |
-| reportPropertyTypeMismatch | "error" | "none" |
-| reportSelfClsParameterName | "information" | "warning" |
-| reportShadowedImports | "warning" | "none" |
-| reportUndefinedVariable | "warning" | "error" |
-| reportUnboundVariable | "information" | "error" |
-| reportUnnecessaryCast | "information" | "none" |
-| reportUnnecessaryInstance | "information" | "none" |
-| reportUnknownArgumentType | "warning" | "none" |
-| reportUnknownLambdaType | "warning" | "none" |
-| reportUnknownMemberType | "warning" | "none" |
-| reportUnknownParmeterType | "warning" | "none" |
-| reportUnknownVariableType | "warning" | "none" |
-| reportUntypedBaseClass | "warning" | "none" |
-| reportUntypedClassDecorator | "warning" | "none" |
-| reportUntypedFunctionDecorator | "warning" | "none" |
-| reportUntypedNamedTuple | "warning" | "none" |
-| reportUnusedClass | "information" | "none" |
-| reportUnusedFunction | "information" | "none" |
-| reportUnusedImport | "information" | "none" |
-| reportUnusedVariable | "information" | "none" |
-
-## Diagnostic Severity Overrides to match Pyright defaults
+| Diagnostic Rule                           | Off        | Basic      | Strict     |
+| :---------------------------------------- | :--------- | :--------- | :--------- |
+| strictListInference                       | false      | false      | true       |
+| strictDictionaryInference                 | false      | false      | true       |
+| strictSetInference                        | false      | false      | true       |
+| analyzeUnannotatedFunctions               | true       | true       | true       |
+| strictParameterNoneValue                  | true       | true       | true       |
+| enableTypeIgnoreComments                  | true       | true       | true       |
+| reportMissingModuleSource                 | "warning"  | "warning"  | "warning"  |
+| reportMissingImports                      | "warning"  | "error"    | "error"    |
+| reportUndefinedVariable                   | "warning"  | "error"    | "error"    |
+| reportAssertAlwaysTrue                    | "none"     | "warning"  | "error"    |
+| reportInvalidStringEscapeSequence         | "none"     | "warning"  | "error"    |
+| reportInvalidTypeVarUse                   | "none"     | "warning"  | "error"    |
+| reportMissingTypeStubs                    | "none"     | "warning"  | "error"    |
+| reportSelfClsParameterName                | "none"     | "warning"  | "error"    |
+| reportUnsupportedDunderAll                | "none"     | "warning"  | "error"    |
+| reportUnusedExpression                    | "none"     | "warning"  | "error"    |
+| reportWildcardImportFromLibrary           | "none"     | "warning"  | "error"    |
+| reportGeneralTypeIssues                   | "none"     | "error"    | "error"    |
+| reportOptionalSubscript                   | "none"     | "error"    | "error"    |
+| reportOptionalMemberAccess                | "none"     | "error"    | "error"    |
+| reportOptionalCall                        | "none"     | "error"    | "error"    |
+| reportOptionalIterable                    | "none"     | "error"    | "error"    |
+| reportOptionalContextManager              | "none"     | "error"    | "error"    |
+| reportOptionalOperand                     | "none"     | "error"    | "error"    |
+| reportTypedDictNotRequiredAccess          | "none"     | "error"    | "error"    |
+| reportPrivateImportUsage                  | "none"     | "error"    | "error"    |
+| reportUnboundVariable                     | "none"     | "error"    | "error"    |
+| reportUnusedCoroutine                     | "none"     | "error"    | "error"    |
+| reportConstantRedefinition                | "none"     | "none"     | "error"    |
+| reportDeprecated                          | "none"     | "none"     | "error"    |
+| reportDuplicateImport                     | "none"     | "none"     | "error"    |
+| reportFunctionMemberAccess                | "none"     | "none"     | "error"    |
+| reportImportCycles                        | "none"     | "none"     | "error"    |
+| reportIncompatibleMethodOverride          | "none"     | "none"     | "error"    |
+| reportIncompatibleVariableOverride        | "none"     | "none"     | "error"    |
+| reportIncompleteStub                      | "none"     | "none"     | "error"    |
+| reportInconsistentConstructor             | "none"     | "none"     | "error"    |
+| reportInvalidStubStatement                | "none"     | "none"     | "error"    |
+| reportMatchNotExhaustive                  | "none"     | "none"     | "error"    |
+| reportMissingParameterType                | "none"     | "none"     | "error"    |
+| reportMissingTypeArgument                 | "none"     | "none"     | "error"    |
+| reportOverlappingOverload                 | "none"     | "none"     | "error"    |
+| reportPrivateUsage                        | "none"     | "none"     | "error"    |
+| reportTypeCommentUsage                    | "none"     | "none"     | "error"    |
+| reportUnknownArgumentType                 | "none"     | "none"     | "error"    |
+| reportUnknownLambdaType                   | "none"     | "none"     | "error"    |
+| reportUnknownMemberType                   | "none"     | "none"     | "error"    |
+| reportUnknownParameterType                | "none"     | "none"     | "error"    |
+| reportUnknownVariableType                 | "none"     | "none"     | "error"    |
+| reportUnnecessaryCast                     | "none"     | "none"     | "error"    |
+| reportUnnecessaryComparison               | "none"     | "none"     | "error"    |
+| reportUnnecessaryContains                 | "none"     | "none"     | "error"    |
+| reportUnnecessaryIsInstance               | "none"     | "none"     | "error"    |
+| reportUnusedClass                         | "none"     | "none"     | "error"    |
+| reportUnusedImport                        | "none"     | "none"     | "error"    |
+| reportUnusedFunction                      | "none"     | "none"     | "error"    |
+| reportUnusedVariable                      | "none"     | "none"     | "error"    |
+| reportUntypedBaseClass                    | "none"     | "none"     | "error"    |
+| reportUntypedClassDecorator               | "none"     | "none"     | "error"    |
+| reportUntypedFunctionDecorator            | "none"     | "none"     | "error"    |
+| reportUntypedNamedTuple                   | "none"     | "none"     | "error"    |
+| reportCallInDefaultInitializer            | "none"     | "none"     | "none"     |
+| reportImplicitOverride                    | "none"     | "none"     | "none"     |
+| reportImplicitStringConcatenation         | "none"     | "none"     | "none"     |
+| reportMissingSuperCall                    | "none"     | "none"     | "none"     |
+| reportPropertyTypeMismatch                | "none"     | "none"     | "none"     |
+| reportShadowedImports                     | "none"     | "none"     | "none"     |
+| reportUninitializedInstanceVariable       | "none"     | "none"     | "none"     |
+| reportUnnecessaryTypeIgnoreComment        | "none"     | "none"     | "none"     |
+| reportUnusedCallResult                    | "none"     | "none"     | "none"     |
 
 If you wanted a consistent set of settings for diagnostic severity overrides, the Pyright basic settings would like this:
 
