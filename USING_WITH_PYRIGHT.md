@@ -9,7 +9,7 @@ However, Pylance and Pyright don't always produce the same results. The reason f
 
 ## Stub differences
 
-Pylance comes bundled with a bunch of stubs, usually found here in the installation:
+Pylance comes bundled with a number of stubs, usually found here in the installation:
 
 ```
 <pylance-extension-install>/dist/bundled
@@ -60,7 +60,8 @@ Both Pylance and Pyright support a [`python.analysis.diagnosticSeverityOverrides
 
 ### Diagnostic Severity Overrides to match Pyright defaults
 
-Here are the settings you would provide to Pylance based on which `typeCheckingMode` you are using in Pyright:
+The sections below describe the json needed to make Pylance create the same diagnostics as Pyright. 
+You would add these settings to your settings.json when running inside of VS Code.
 
 
 <details>
@@ -309,8 +310,4 @@ Here are the settings you would provide to Pylance based on which `typeCheckingM
 
 </details>
 </br>
-
-You would add these settings to your settings.json when running inside of VS Code.
-
-
 
