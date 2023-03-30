@@ -49,7 +49,8 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 
 | python.analysis.diagnosticMode | openFilesOnly | openFilesOnly | Determines which files are analyzed. `openFilesOnly` means only those files that are open in an IDE. | You'll likely set this to `workspace` for the CI version of Pyright. This means Pylance would likely not give you all of the same errors since it's only looking at open files. |
 
-| python.analysis.diagnosticSeverityOverrides | - | - | Allows a user to override the severity levels for individual diagnostic rules. | See below |
+| python.analysis.diagnosticSeverityOverrides | - | - | Allows a user to override the severity levels for individual diagnostic rules. | See below. |
+
 
 ## Diagnostic severity overrides
 
