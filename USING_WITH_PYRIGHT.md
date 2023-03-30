@@ -61,7 +61,8 @@ Here are the settings you would provide to Pylance based on which `typeCheckingM
 
 
 <details>
-  <summary>Pyright 'off' mode</summary>
+  <summary>Pyright `typeCheckingMode` = `off`</summary>
+
 
 ```json
 {
