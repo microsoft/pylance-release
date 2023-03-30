@@ -15,7 +15,7 @@ Pylance comes bundled with a bunch of stubs, usually found here in the installat
 <pylance-extension-install>/dist/native-stubs
 ```
 
-In order for Pyright to produce the same errors as Pylance these stub files need to be accessible to pyright. 
+In order for Pyright to produce the same errors as Pylance it need to use the same stub files. 
 
 This might be done by copying the contents of each of those folders to a new folder. 
 
