@@ -2,7 +2,8 @@
 
 [Pyright](https://github.com/Microsoft/pyright) is an open source version of a Python type checker that forms the basis for Pylance. Both Pyright and Pylance can be used inside of an IDE to provide a [language server](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#why-language-server) for Python code.
 
-Pyright can also be used on the [command line](https://github.com/microsoft/pyright/blob/main/docs/command-line.md) to produce json or text output. This can be used in a variety of situations, like a pre-commit hook, or a [github action](https://github.com/jakebailey/pyright-action).
+Pyright can also be used on the [command line](https://github.com/microsoft/pyright/blob/main/docs/command-line.md) to produce json or text output. This can be used in a variety of situations, like a [pre-commit hook](https://github.com/microsoft/pyright/blob/main/docs/ci-integration.md#running-pyright-as-a-pre-commit-hook), or a [github action](https://github.com/jakebailey/pyright-action).
+
 
 However, Pylance and Pyright don't always produce the same results. The reason for this is a difference in configuration. 
 
