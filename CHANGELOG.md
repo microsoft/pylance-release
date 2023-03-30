@@ -1,5 +1,29 @@
 # Changelog
 
+## 2023.3.41 (29 March 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Crash within `getRegionCommentType` [pylance-release#4157](https://github.com/microsoft/pylance-release/issues/4157)
+-   Bug fix: intermittent "ClassName is incompatible with ClassName" [pylance-release#4151](https://github.com/microsoft/pylance-release/issues/4151)
+-   Bug fix: "suggestion details" in intellisense stopped showing on Ctrl+Space [pylance-release#4153](https://github.com/microsoft/pylance-release/issues/4153)
+-   Bug fix: autoimport stopped working when using workspaces [pylance-release#4144](https://github.com/microsoft/pylance-release/issues/4144)
+-   Bug fix: macOS toggleSuggestionDetails not working if Pylance is working [pylance-release#4145](https://github.com/microsoft/pylance-release/issues/4145)
+-   Bug fix: Autoimport from module, not directly from file [pylance-release#4065](https://github.com/microsoft/pylance-release/issues/4065)
+-   Bug fix: Auto parens happens for except clauses [pylance-release#3969](https://github.com/microsoft/pylance-release/issues/3969)
+-   Bug fix: Call Hierarchy always returns no results for function aliased via `import as` [pylance-release#3893](https://github.com/microsoft/pylance-release/issues/3893)
+-   Enhancement: `__slots__` not found on dataclass [pylance-release#4147](https://github.com/microsoft/pylance-release/issues/4147)
+
+Pylance's copy of Pyright has been updated from 1.1.300 to 1.1.301.
+
+-   See Pyright's release notes for details: [1.1.301](https://github.com/microsoft/pyright/releases/tag/1.1.301)
+
+## 2023.3.40 (29 March 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.3.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023331-22-march-2023-prerelease) prerelease build.
+
 ## 2023.3.31 (22 March 2023) PreRelease
 
 Notable changes:
