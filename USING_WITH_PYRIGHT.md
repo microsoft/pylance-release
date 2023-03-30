@@ -29,7 +29,7 @@ You'd then reference that new folder in your [pyrightconfig.json](https://micros
 
 Where `pylanceStubs` contains the contents of the `bundled` and `native-stubs` folders.
 
-We have plans to make this easier in the future.
+We have plans to make this easier in the [future](https://github.com/microsoft/pylance-release/discussions/3638).
 
 ## Settings differences
 
@@ -39,7 +39,7 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 |----|----|----|----|----|
 | python.analysis.autoSearchPaths | true | false|  Adds 'src' to the list of search paths | This may change what files are found when analyzing. So if you're getting missing imports for things in your 'src' tree, this might be why |
 | python.analysis.indexing | true | false | All files in the current virtual environment are parsed to a certain depth. This gives Pylance more information for auto import completions and other things. | This can have an impact on completions and hover information, but shouldn't impact errors returned.
-| python.analysis.useLibraryCodeForTypes | true | false | When true, this means 3rd party libraries are analyzed to produce type information. Without it, all 3 party libraries are just assumed to be of type Any unless they provided type information explicitly | This setting changes the types found by Pylance/Pyright. It can definitely cause differences in errors reported, so make this the same for both if you want consistent results |
+| python.analysis.useLibraryCodeForTypes | true | false | When true, this means 3rd party libraries are analyzed to produce type information. Without it, all 3 party libraries are just assumed to be of type Any unless they provided type information explicitly | This setting changes the types found by Pylance/Pyright. It can definitely cause differences in errors reported, so make this the same for both if you want consistent results. A lot of the time this is the sole cause of differences. |
 | python.analysis.typeCheckingMode | off | basic | Determines what diagnostics are shown. | Pylance defaults to off, but there is a possibility that VS code will force this to 'basic' for pylance users. If you want to guarantee this is the same as Pyright, force it to 'basic' (or whatever you want to enforce) by specifying it in your settings.json|
 | python.analysis.diagnosticMode | openFilesOnly | openFilesOnly | Determines which files are analyzed. `openFilesOnly` means only those files that are open in an IDE | You'll likely set this to 'workspace' for the CI version of Pyright. This means Pylance would likely not give you all of the same errors since it's only looking at open files. |
 | python.analysis.diagnosticSeverityOverrides | - | - | Allows a user to override the severity levels for individual diagnostic rules. | See below |
