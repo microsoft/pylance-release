@@ -57,7 +57,8 @@ Both Pylance and Pyright support a [`python.analysis.diagnosticSeverityOverrides
 
 ### Diagnostic Severity Overrides to match Pyright defaults
 
-Here's the settings you would provide to Pylance based on which Pyright mode you are using:
+Here are the settings you would provide to Pylance based on which `typeCheckingMode` you are using in Pyright:
+
 
 <details>
   <summary>Pyright 'off' mode</summary>
