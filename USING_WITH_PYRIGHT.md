@@ -34,7 +34,8 @@ We have plans to make this easier in the [future](https://github.com/microsoft/p
 
 ## Settings differences
 
-Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-release#settings-and-customization) to control behavior. For the most part, they use the same values, but the few differences do have an impact on the analysis.
+Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-release#settings-and-customization) to control behavior. For the most part, they use the same values, but the few differences, described below, do have an impact on the analysis.
+
 
 | Setting | Pylance default | Pyright default | Description | Potential Impact |
 |----|----|----|----|----|
