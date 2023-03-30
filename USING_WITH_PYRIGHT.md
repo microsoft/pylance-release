@@ -26,123 +26,253 @@ Both Pylance and Pyright specify a custom [`python.analysis.diagnosticSeverityOv
 
 ### Diagnostic Severity Overrides to match Pyright defaults
 
-| Diagnostic Rule                           | Off        | Basic      | Strict     |
-| :---------------------------------------- | :--------- | :--------- | :--------- |
-| strictListInference                       | false      | false      | true       |
-| strictDictionaryInference                 | false      | false      | true       |
-| strictSetInference                        | false      | false      | true       |
-| analyzeUnannotatedFunctions               | true       | true       | true       |
-| strictParameterNoneValue                  | true       | true       | true       |
-| enableTypeIgnoreComments                  | true       | true       | true       |
-| reportMissingModuleSource                 | "warning"  | "warning"  | "warning"  |
-| reportMissingImports                      | "warning"  | "error"    | "error"    |
-| reportUndefinedVariable                   | "warning"  | "error"    | "error"    |
-| reportAssertAlwaysTrue                    | "none"     | "warning"  | "error"    |
-| reportInvalidStringEscapeSequence         | "none"     | "warning"  | "error"    |
-| reportInvalidTypeVarUse                   | "none"     | "warning"  | "error"    |
-| reportMissingTypeStubs                    | "none"     | "warning"  | "error"    |
-| reportSelfClsParameterName                | "none"     | "warning"  | "error"    |
-| reportUnsupportedDunderAll                | "none"     | "warning"  | "error"    |
-| reportUnusedExpression                    | "none"     | "warning"  | "error"    |
-| reportWildcardImportFromLibrary           | "none"     | "warning"  | "error"    |
-| reportGeneralTypeIssues                   | "none"     | "error"    | "error"    |
-| reportOptionalSubscript                   | "none"     | "error"    | "error"    |
-| reportOptionalMemberAccess                | "none"     | "error"    | "error"    |
-| reportOptionalCall                        | "none"     | "error"    | "error"    |
-| reportOptionalIterable                    | "none"     | "error"    | "error"    |
-| reportOptionalContextManager              | "none"     | "error"    | "error"    |
-| reportOptionalOperand                     | "none"     | "error"    | "error"    |
-| reportTypedDictNotRequiredAccess          | "none"     | "error"    | "error"    |
-| reportPrivateImportUsage                  | "none"     | "error"    | "error"    |
-| reportUnboundVariable                     | "none"     | "error"    | "error"    |
-| reportUnusedCoroutine                     | "none"     | "error"    | "error"    |
-| reportConstantRedefinition                | "none"     | "none"     | "error"    |
-| reportDeprecated                          | "none"     | "none"     | "error"    |
-| reportDuplicateImport                     | "none"     | "none"     | "error"    |
-| reportFunctionMemberAccess                | "none"     | "none"     | "error"    |
-| reportImportCycles                        | "none"     | "none"     | "error"    |
-| reportIncompatibleMethodOverride          | "none"     | "none"     | "error"    |
-| reportIncompatibleVariableOverride        | "none"     | "none"     | "error"    |
-| reportIncompleteStub                      | "none"     | "none"     | "error"    |
-| reportInconsistentConstructor             | "none"     | "none"     | "error"    |
-| reportInvalidStubStatement                | "none"     | "none"     | "error"    |
-| reportMatchNotExhaustive                  | "none"     | "none"     | "error"    |
-| reportMissingParameterType                | "none"     | "none"     | "error"    |
-| reportMissingTypeArgument                 | "none"     | "none"     | "error"    |
-| reportOverlappingOverload                 | "none"     | "none"     | "error"    |
-| reportPrivateUsage                        | "none"     | "none"     | "error"    |
-| reportTypeCommentUsage                    | "none"     | "none"     | "error"    |
-| reportUnknownArgumentType                 | "none"     | "none"     | "error"    |
-| reportUnknownLambdaType                   | "none"     | "none"     | "error"    |
-| reportUnknownMemberType                   | "none"     | "none"     | "error"    |
-| reportUnknownParameterType                | "none"     | "none"     | "error"    |
-| reportUnknownVariableType                 | "none"     | "none"     | "error"    |
-| reportUnnecessaryCast                     | "none"     | "none"     | "error"    |
-| reportUnnecessaryComparison               | "none"     | "none"     | "error"    |
-| reportUnnecessaryContains                 | "none"     | "none"     | "error"    |
-| reportUnnecessaryIsInstance               | "none"     | "none"     | "error"    |
-| reportUnusedClass                         | "none"     | "none"     | "error"    |
-| reportUnusedImport                        | "none"     | "none"     | "error"    |
-| reportUnusedFunction                      | "none"     | "none"     | "error"    |
-| reportUnusedVariable                      | "none"     | "none"     | "error"    |
-| reportUntypedBaseClass                    | "none"     | "none"     | "error"    |
-| reportUntypedClassDecorator               | "none"     | "none"     | "error"    |
-| reportUntypedFunctionDecorator            | "none"     | "none"     | "error"    |
-| reportUntypedNamedTuple                   | "none"     | "none"     | "error"    |
-| reportCallInDefaultInitializer            | "none"     | "none"     | "none"     |
-| reportImplicitOverride                    | "none"     | "none"     | "none"     |
-| reportImplicitStringConcatenation         | "none"     | "none"     | "none"     |
-| reportMissingSuperCall                    | "none"     | "none"     | "none"     |
-| reportPropertyTypeMismatch                | "none"     | "none"     | "none"     |
-| reportShadowedImports                     | "none"     | "none"     | "none"     |
-| reportUninitializedInstanceVariable       | "none"     | "none"     | "none"     |
-| reportUnnecessaryTypeIgnoreComment        | "none"     | "none"     | "none"     |
-| reportUnusedCallResult                    | "none"     | "none"     | "none"     |
+Here's the settings you would provide to Pylance based on which Pyright mode you are using:
 
-If you wanted a consistent set of settings for diagnostic severity overrides, the Pyright basic settings would like this:
+<details>
+  <summary>Pyright 'off' mode</summary>
 
 ```json
-"python.anaylsis.diagnosticSeverityOverrides": {
-    "reportAssertAlwaysTrue ": "warning",
-    "reportCallInDefaultInitializer ": "none",
-    "reportConstantRedefinition ": "none",
-    "reportDuplicateImport ": "none",
-    "reportImplicitStringConcatenation ": "none",
-    "reportImportCycles ": "none",
-    "reportIncompatibleMethodOverride ": "none",
-    "reportIncompatibleVariableOverride ": "none",
-    "reportInvalidStubStatement ": "none",
-    "reportMissingImports ": "error",
-    "reportMissingTypeStubs ": "none",
-    "reportOptionalCall ": "error",
-    "reportOptionalContextManager ": "error",
-    "reportOptionalIterable ": "error",
-    "reportOptionalMemberAccess ": "error",
-    "reportOptionalOperand ": "error",
-    "reportOptionalSubscript ": "error",
-    "reportPrivateUsage ": "none",
-    "reportPropertyTypeMismatch ": "none",
-    "reportSelfClsParameterName ": "warning",
-    "reportShadowedImports ": "none",
-    "reportUndefinedVariable ": "error",
-    "reportUnboundVariable ": "error",
-    "reportUnnecessaryCast ": "none",
-    "reportUnnecessaryInstance ": "none",
-    "reportUnknownArgumentType ": "none",
-    "reportUnknownLambdaType ": "none",
-    "reportUnknownMemberType ": "none",
-    "reportUnknownParmeterType ": "none",
-    "reportUnknownVariableType ": "none",
-    "reportUntypedBaseClass ": "none",
-    "reportUntypedClassDecorator ": "none",
-    "reportUntypedFunctionDecorator ": "none",
-    "reportUntypedNamedTuple ": "none",
-    "reportUnusedClass ": "none",
-    "reportUnusedFunction ": "none",
-    "reportUnusedImport ": "none",
-    "reportUnusedVariable ": "none",
+{
+    "python.anaylsis.diagnosticSeverityOverrides": {
+        "strictListInference": false,
+        "strictDictionaryInference": false,
+        "strictSetInference": false,
+        "analyzeUnannotatedFunctions": true,
+        "strictParameterNoneValue": true,
+        "enableTypeIgnoreComments": true,
+        "reportMissingModuleSource": "warning",
+        "reportMissingImports": "warning",
+        "reportUndefinedVariable": "warning",
+        "reportAssertAlwaysTrue": "none",
+        "reportInvalidStringEscapeSequence": "none",
+        "reportInvalidTypeVarUse": "none",
+        "reportMissingTypeStubs": "none",
+        "reportSelfClsParameterName": "none",
+        "reportUnsupportedDunderAll": "none",
+        "reportUnusedExpression": "none",
+        "reportWildcardImportFromLibrary": "none",
+        "reportGeneralTypeIssues": "none",
+        "reportOptionalSubscript": "none",
+        "reportOptionalMemberAccess": "none",
+        "reportOptionalCall": "none",
+        "reportOptionalIterable": "none",
+        "reportOptionalContextManager": "none",
+        "reportOptionalOperand": "none",
+        "reportTypedDictNotRequiredAccess": "none",
+        "reportPrivateImportUsage": "none",
+        "reportUnboundVariable": "none",
+        "reportUnusedCoroutine": "none",
+        "reportConstantRedefinition": "none",
+        "reportDeprecated": "none",
+        "reportDuplicateImport": "none",
+        "reportFunctionMemberAccess": "none",
+        "reportImportCycles": "none",
+        "reportIncompatibleMethodOverride": "none",
+        "reportIncompatibleVariableOverride": "none",
+        "reportIncompleteStub": "none",
+        "reportInconsistentConstructor": "none",
+        "reportInvalidStubStatement": "none",
+        "reportMatchNotExhaustive": "none",
+        "reportMissingParameterType": "none",
+        "reportMissingTypeArgument": "none",
+        "reportOverlappingOverload": "none",
+        "reportPrivateUsage": "none",
+        "reportTypeCommentUsage": "none",
+        "reportUnknownArgumentType": "none",
+        "reportUnknownLambdaType": "none",
+        "reportUnknownMemberType": "none",
+        "reportUnknownParameterType": "none",
+        "reportUnknownVariableType": "none",
+        "reportUnnecessaryCast": "none",
+        "reportUnnecessaryComparison": "none",
+        "reportUnnecessaryContains": "none",
+        "reportUnnecessaryIsInstance": "none",
+        "reportUnusedClass": "none",
+        "reportUnusedImport": "none",
+        "reportUnusedFunction": "none",
+        "reportUnusedVariable": "none",
+        "reportUntypedBaseClass": "none",
+        "reportUntypedClassDecorator": "none",
+        "reportUntypedFunctionDecorator": "none",
+        "reportUntypedNamedTuple": "none",
+        "reportCallInDefaultInitializer": "none",
+        "reportImplicitOverride": "none",
+        "reportImplicitStringConcatenation": "none",
+        "reportMissingSuperCall": "none",
+        "reportPropertyTypeMismatch": "none",
+        "reportShadowedImports": "none",
+        "reportUninitializedInstanceVariable": "none",
+        "reportUnnecessaryTypeIgnoreComment": "none",
+        "reportUnusedCallResult": "none",
+    }
 }
 ```
+
+</details>
+</br>
+<details>
+    <summary>Pyright 'basic' mode</summary>
+
+```json
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "strictListInference": false,
+        "strictDictionaryInference": false,
+        "strictSetInference": false,
+        "analyzeUnannotatedFunctions": true,
+        "strictParameterNoneValue": true,
+        "enableTypeIgnoreComments": true,
+        "reportMissingModuleSource": "warning",
+        "reportMissingImports": "error",
+        "reportUndefinedVariable": "error",
+        "reportAssertAlwaysTrue": "warning",
+        "reportInvalidStringEscapeSequence": "warning",
+        "reportInvalidTypeVarUse": "warning",
+        "reportMissingTypeStubs": "warning",
+        "reportSelfClsParameterName": "warning",
+        "reportUnsupportedDunderAll": "warning",
+        "reportUnusedExpression": "warning",
+        "reportWildcardImportFromLibrary": "warning",
+        "reportGeneralTypeIssues": "error",
+        "reportOptionalSubscript": "error",
+        "reportOptionalMemberAccess": "error",
+        "reportOptionalCall": "error",
+        "reportOptionalIterable": "error",
+        "reportOptionalContextManager": "error",
+        "reportOptionalOperand": "error",
+        "reportTypedDictNotRequiredAccess": "error",
+        "reportPrivateImportUsage": "error",
+        "reportUnboundVariable": "error",
+        "reportUnusedCoroutine": "error",
+        "reportConstantRedefinition": "none",
+        "reportDeprecated": "none",
+        "reportDuplicateImport": "none",
+        "reportFunctionMemberAccess": "none",
+        "reportImportCycles": "none",
+        "reportIncompatibleMethodOverride": "none",
+        "reportIncompatibleVariableOverride": "none",
+        "reportIncompleteStub": "none",
+        "reportInconsistentConstructor": "none",
+        "reportInvalidStubStatement": "none",
+        "reportMatchNotExhaustive": "none",
+        "reportMissingParameterType": "none",
+        "reportMissingTypeArgument": "none",
+        "reportOverlappingOverload": "none",
+        "reportPrivateUsage": "none",
+        "reportTypeCommentUsage": "none",
+        "reportUnknownArgumentType": "none",
+        "reportUnknownLambdaType": "none",
+        "reportUnknownMemberType": "none",
+        "reportUnknownParameterType": "none",
+        "reportUnknownVariableType": "none",
+        "reportUnnecessaryCast": "none",
+        "reportUnnecessaryComparison": "none",
+        "reportUnnecessaryContains": "none",
+        "reportUnnecessaryIsInstance": "none",
+        "reportUnusedClass": "none",
+        "reportUnusedImport": "none",
+        "reportUnusedFunction": "none",
+        "reportUnusedVariable": "none",
+        "reportUntypedBaseClass": "none",
+        "reportUntypedClassDecorator": "none",
+        "reportUntypedFunctionDecorator": "none",
+        "reportUntypedNamedTuple": "none",
+        "reportCallInDefaultInitializer": "none",
+        "reportImplicitOverride": "none",
+        "reportImplicitStringConcatenation": "none",
+        "reportMissingSuperCall": "none",
+        "reportPropertyTypeMismatch": "none",
+        "reportShadowedImports": "none",
+        "reportUninitializedInstanceVariable": "none",
+        "reportUnnecessaryTypeIgnoreComment": "none",
+        "reportUnusedCallResult": "none",
+}
+```
+
+</details>
+</br>
+<details>
+  <summary>Pyright 'strict' mode</summary>
+
+```json
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "strictListInference": true,
+        "strictDictionaryInference": true,
+        "strictSetInference": true,
+        "analyzeUnannotatedFunctions": true,
+        "strictParameterNoneValue": true,
+        "enableTypeIgnoreComments": true,
+        "reportMissingModuleSource": "warning",
+        "reportMissingImports": "error",
+        "reportUndefinedVariable": "error",
+        "reportAssertAlwaysTrue": "error",
+        "reportInvalidStringEscapeSequence": "error",
+        "reportInvalidTypeVarUse": "error",
+        "reportMissingTypeStubs": "error",
+        "reportSelfClsParameterName": "error",
+        "reportUnsupportedDunderAll": "error",
+        "reportUnusedExpression": "error",
+        "reportWildcardImportFromLibrary": "error",
+        "reportGeneralTypeIssues": "error",
+        "reportOptionalSubscript": "error",
+        "reportOptionalMemberAccess": "error",
+        "reportOptionalCall": "error",
+        "reportOptionalIterable": "error",
+        "reportOptionalContextManager": "error",
+        "reportOptionalOperand": "error",
+        "reportTypedDictNotRequiredAccess": "error",
+        "reportPrivateImportUsage": "error",
+        "reportUnboundVariable": "error",
+        "reportUnusedCoroutine": "error",
+        "reportConstantRedefinition": "error",
+        "reportDeprecated": "error",
+        "reportDuplicateImport": "error",
+        "reportFunctionMemberAccess": "error",
+        "reportImportCycles": "error",
+        "reportIncompatibleMethodOverride": "error",
+        "reportIncompatibleVariableOverride": "error",
+        "reportIncompleteStub": "error",
+        "reportInconsistentConstructor": "error",
+        "reportInvalidStubStatement": "error",
+        "reportMatchNotExhaustive": "error",
+        "reportMissingParameterType": "error",
+        "reportMissingTypeArgument": "error",
+        "reportOverlappingOverload": "error",
+        "reportPrivateUsage": "error",
+        "reportTypeCommentUsage": "error",
+        "reportUnknownArgumentType": "error",
+        "reportUnknownLambdaType": "error",
+        "reportUnknownMemberType": "error",
+        "reportUnknownParameterType": "error",
+        "reportUnknownVariableType": "error",
+        "reportUnnecessaryCast": "error",
+        "reportUnnecessaryComparison": "error",
+        "reportUnnecessaryContains": "error",
+        "reportUnnecessaryIsInstance": "error",
+        "reportUnusedClass": "error",
+        "reportUnusedImport": "error",
+        "reportUnusedFunction": "error",
+        "reportUnusedVariable": "error",
+        "reportUntypedBaseClass": "error",
+        "reportUntypedClassDecorator": "error",
+        "reportUntypedFunctionDecorator": "error",
+        "reportUntypedNamedTuple": "error",
+        "reportCallInDefaultInitializer": "none",
+        "reportImplicitOverride": "none",
+        "reportImplicitStringConcatenation": "none",
+        "reportMissingSuperCall": "none",
+        "reportPropertyTypeMismatch": "none",
+        "reportShadowedImports": "none",
+        "reportUninitializedInstanceVariable": "none",
+        "reportUnnecessaryTypeIgnoreComment": "none",
+        "reportUnusedCallResult": "none",
+    }
+}
+```
+
+</details>
+</br>
 
 You would add these settings to your settings.json when running inside of VS Code.
 
