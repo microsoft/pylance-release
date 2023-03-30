@@ -5,9 +5,9 @@
 Pyright can also be used on the [command line](https://github.com/microsoft/pyright/blob/main/docs/command-line.md) to produce json or text output. This can be used in a variety of situations, like a [pre-commit hook](https://github.com/microsoft/pyright/blob/main/docs/ci-integration.md#running-pyright-as-a-pre-commit-hook), or a [github action](https://github.com/jakebailey/pyright-action).
 
 
-However, Pylance and Pyright don't always produce the same results. The reason for this is a difference in configuration. 
+However, Pylance and Pyright don't always produce the same results. There are several reasons why this may happen.
 
-## Stub differences
+## Type stub differences
 
 Pylance comes bundled with a number of stubs, usually found here in the installation:
 
@@ -16,9 +16,9 @@ Pylance comes bundled with a number of stubs, usually found here in the installa
 <pylance-extension-install>/dist/native-stubs
 ```
 
-In order for Pyright to produce the same errors as Pylance it need to use the same stub files. 
+For Pyright to produce the same errors as Pylance, it needs to use the same stub files. 
 
-This might be done by copying the contents of each of those folders to a new folder. 
+This might be done by copying the contents of each of the bundled Pylance stub folders to a new folder. 
 
 You'd then reference that new folder in your [pyrightconfig.json](https://microsoft.github.io/pyright/#/configuration)
 
@@ -26,6 +26,13 @@ You'd then reference that new folder in your [pyrightconfig.json](https://micros
 {
     "stubPath": "./pylanceStubs"
 }
+```
+
+or pyproject.toml
+
+```ini
+[tool.pyright]
+stubPath="./pylanceStubs"
 ```
 
 Where `pylanceStubs` contains the contents of the `bundled` and `native-stubs` folders.
