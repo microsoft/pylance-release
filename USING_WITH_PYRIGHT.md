@@ -6,6 +6,31 @@ Pyright can also be used on the [command line](https://github.com/microsoft/pyri
 
 However, Pylance and Pyright don't always produce the same results. The reason for this is a difference in configuration. 
 
+## Stub differences
+
+Pylance comes bundled with a bunch of stubs, usually found here in the installation:
+
+```
+<pylance-extension-install>/dist/bundled
+<pylance-extension-install>/dist/native-stubs
+```
+
+In order for Pyright to produce the same errors as Pylance these stub files need to be accessible to pyright. 
+
+This might be done by copying the contents of each of those folders to a new folder. 
+
+You'd then reference that new folder in your [pyrightconfig.json](https://microsoft.github.io/pyright/#/configuration)
+
+```json
+{
+    "stubPath": "./pylanceStubs"
+}
+```
+
+Where `pylanceStubs` contains the contents of the `bundled` and `native-stubs` folders.
+
+We have plans to make this easier in the future.
+
 ## Settings differences
 
 Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-release#settings-and-customization) to control behavior. For the most part, they use the same values, but the few differences do have an impact on the analysis.
