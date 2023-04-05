@@ -1,5 +1,26 @@
 # Changelog
 
+## 2023.4.11 (5 April 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Python 3.11 BaseExceptionGroup mistyped as ExceptionGroup [pylance-release#4183](https://github.com/microsoft/pylance-release/issues/4183)
+-   Bug fix: call does not always resolve when in map [pylance-release#4182](https://github.com/microsoft/pylance-release/issues/4182)
+-   Bug fix: Auto-import is suggesting completions from local files rather than library [pylance-release#4179](https://github.com/microsoft/pylance-release/issues/4179)
+-   Bug fix: Autocomplete places positional arguments after keyword arguments [pylance-release#4173](https://github.com/microsoft/pylance-release/issues/4173)
+-   Bug fix: Switching kernels in a notebook made pylance stop working [pylance-release#4166](https://github.com/microsoft/pylance-release/issues/4166)
+-   Bug fix: pylance randomly stopped recognizing used imports [pylance-release#4142](https://github.com/microsoft/pylance-release/issues/4142)
+-   Bug fix: Infinite loop in the chaining of files [pylance-release#4141](https://github.com/microsoft/pylance-release/issues/4141)
+-   Bug fix: The "Move symbol to ..." refactoring displaces trailing comments in the destination module (including `type: ignore`, etc.) [pylance-release#4136](https://github.com/microsoft/pylance-release/issues/4136)
+-   Bug fix: Rename on symbol in `from foo import foo` incorrectly updates module name [pylance-release#4129](https://github.com/microsoft/pylance-release/issues/4129)
+-   Enhancement: Change hover to only show the overload that applies. [pylance-release#3850](https://github.com/microsoft/pylance-release/issues/3850)
+
+## 2023.4.10 (5 April 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.3.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023341-29-march-2023-prerelease) prerelease build.
+
 ## 2023.3.41 (29 March 2023) PreRelease
 
 Notable changes:
