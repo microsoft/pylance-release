@@ -15,6 +15,10 @@ Notable changes:
 -   Bug fix: Rename on symbol in `from foo import foo` incorrectly updates module name [pylance-release#4129](https://github.com/microsoft/pylance-release/issues/4129)
 -   Enhancement: Change hover to only show the overload that applies. [pylance-release#3850](https://github.com/microsoft/pylance-release/issues/3850)
 
+Pylance's copy of Pyright has been updated from 1.1.301 to 1.1.302.
+
+-   See Pyright's release notes for details: [1.1.302](https://github.com/microsoft/pyright/releases/tag/1.1.302)
+
 ## 2023.4.10 (5 April 2023) Release
 
 Notable changes:
