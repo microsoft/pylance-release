@@ -102,7 +102,7 @@
     1. Verify it finds the two creations in the other files
     1. Go back to the first file
     1. Find all references on the `__init__` function
-    1. Verify it finds the same references as searching for the class name
+    1. Verify it finds the references to all the creations of the class.
 
 ### P2 Test Scenarios
 
