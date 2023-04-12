@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.4.21 (12 April 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Generic Callable[[T], Any] cannot be passed on to another generic function [pylance-release#4219](https://github.com/microsoft/pylance-release/issues/4219)
+-   Bug fix: High CPU on starting pylance from get_pytest_options.py [pylance-release#4218](https://github.com/microsoft/pylance-release/issues/4218)
+-   Bug fix: Clear inlay hint on function return type when function declaration is incomplete. [pylance-release#4212](https://github.com/microsoft/pylance-release/issues/4212)
+-   Bug fix: Incorrect Evaluation of Recursive Types in Structural Pattern Matching [pylance-release#4207](https://github.com/microsoft/pylance-release/issues/4207)
+-   Bug fix: Don't put 2 lines between variables when moving symbol. [pylance-release#4202](https://github.com/microsoft/pylance-release/issues/4202)
+-   Bug fix: Folding is not working correctly for `#region` surrounded by imports [pylance-release#4159](https://github.com/microsoft/pylance-release/issues/4159)
+-   Bug fix: Get Outgoing Calls always returns no results for aliased functions and classes [pylance-release#4137](https://github.com/microsoft/pylance-release/issues/4137)
+-   Bug fix: Matplotlib subplots not returning correct types [pylance-release#3482](https://github.com/microsoft/pylance-release/issues/3482)
+
+## 2023.4.20 (12 April 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.4.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023411-5-april-2023-prerelease) prerelease build.
+
 ## 2023.4.11 (5 April 2023) PreRelease
 
 Notable changes:
