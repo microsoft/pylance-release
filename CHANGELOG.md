@@ -13,6 +13,10 @@ Notable changes:
 -   Bug fix: Get Outgoing Calls always returns no results for aliased functions and classes [pylance-release#4137](https://github.com/microsoft/pylance-release/issues/4137)
 -   Bug fix: Matplotlib subplots not returning correct types [pylance-release#3482](https://github.com/microsoft/pylance-release/issues/3482)
 
+Pylance's copy of Pyright has been updated from 1.1.302 to 1.1.303.
+
+-   See Pyright's release notes for details: [1.1.303](https://github.com/microsoft/pyright/releases/tag/1.1.303)
+
 ## 2023.4.20 (12 April 2023) Release
 
 Notable changes:
