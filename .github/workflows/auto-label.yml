@@ -1,0 +1,41 @@
+name: Auto-label when user responds
+permissions:
+  issues: write
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  run-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add/Remove labels when user responds
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const payload = context.payload;
+            const issueAuthor = payload.issue.user.login;
+            const commentAuthor = payload.comment.user.login;
+            if (issueAuthor === commentAuthor) {
+              const issue_number = payload.issue.number;
+              const labels = payload.issue.labels.map(label => label.name);
+              const hasWaitingLabel = labels.includes('waiting for user response');
+              const hasRespondedLabel = labels.includes('user responded');
+              
+              if (hasWaitingLabel && !hasRespondedLabel) {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue_number,
+                  name: 'waiting for user response'
+                });
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue_number,
+                  labels: ['user responded']
+                });
+              }
+            }
