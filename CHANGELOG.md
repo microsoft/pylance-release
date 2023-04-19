@@ -1,5 +1,25 @@
 # Changelog
 
+## 2023.4.31 (19 April 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Incorrect Evaluation of Recursive Types in Structural Pattern Matching [pylance-release#4240](https://github.com/microsoft/pylance-release/issues/4240)
+-   Bug fix: Error in bundled matplotlib stubs [pylance-release#4237](https://github.com/microsoft/pylance-release/issues/4237)
+-   Enhancement: Autocomplete for method overwrites could add missing imports [pylance-release#4200](https://github.com/microsoft/pylance-release/issues/4200)
+-   Bug fix: Linebreak issue with tooltip display of function comment [pylance-release#4074](https://github.com/microsoft/pylance-release/issues/4074)
+-   Bug fix: Indentation gets removed [pylance-release#3961](https://github.com/microsoft/pylance-release/issues/3961)
+
+Pylance's copy of Pyright has been updated from 1.1.303 to 1.1.304.
+
+-   See Pyright's release notes for details: [1.1.304](https://github.com/microsoft/pyright/releases/tag/1.1.304)
+
+## 2023.4.30 (19 April 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.4.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023421-12-April-2023-prerelease) prerelease build.
+
 ## 2023.4.21 (12 April 2023) PreRelease
 
 Notable changes:
