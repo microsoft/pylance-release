@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.4.41 (26 April 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: reportGeneralTypeIssues: Pylance complains about sending any value other than None to a generator. [pylance-release#4275](https://github.com/microsoft/pylance-release/issues/4275)
+-   Bug fix: Move symbol refactoring not updating the import when symbol is referenced inside a function [pylance-release#4234](https://github.com/microsoft/pylance-release/issues/4234)
+-   Enhancement: feature request: braces should auto-pair inside f-strings [pylance-release#3743](https://github.com/microsoft/pylance-release/issues/3743)
+-   Enhancement: Go to definition by python module path in string [pylance-release#3700](https://github.com/microsoft/pylance-release/issues/3700)
+
+Pylance's copy of Pyright has been updated from 1.1.304 to 1.1.305.
+
+-   See Pyright's release notes for details: [1.1.305](https://github.com/microsoft/pyright/releases/tag/1.1.305)
+
+## 2023.4.40 (26 April 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.4.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023431-19-April-2023-prerelease) prerelease build.
+
 ## 2023.4.31 (19 April 2023) PreRelease
 
 Notable changes:
