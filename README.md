@@ -212,6 +212,19 @@ Pylance provides users with the ability to customize their Python language suppo
         - `source.unusedImports`
         - `source.convertImportFormat`
 
+- `python.analysis.enablePytestSupport`
+    - Enable pytest goto def and inlay hint support for fixtures. 
+    - Accepted values:
+        - `true` (default)
+        - `false`
+
+- `python.analysis.autoFormatStrings`
+    - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
+    - Accepted values:
+        - `true` 
+        - `false` (default)
+
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
