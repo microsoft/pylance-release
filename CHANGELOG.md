@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.5.11 (3 May 2023) PreRelease
+
+Notable changes:
+
+-   Enhancement: Support for PEP 712 [pylance-release#4290](https://github.com/microsoft/pylance-release/issues/4290)
+-   Bug fix: Typing `import an` should not result in auto-importing of antigravity [pylance-release#4229](https://github.com/microsoft/pylance-release/issues/4229)
+-   Enhancement: Remove auto-import when typing the letter d to avoid being serenaded with The Zen of Python [pylance-release#2535](https://github.com/microsoft/pylance-release/issues/2535)
+
+Pylance's copy of Pyright has been updated from 1.1.305 to 1.1.306.
+
+-   See Pyright's release notes for details: [1.1.306](https://github.com/microsoft/pyright/releases/tag/1.1.306)
+
+## 2023.5.10 (3 May 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.4.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023441-26-April-2023-prerelease) prerelease build.
+
 ## 2023.4.41 (26 April 2023) PreRelease
 
 Notable changes:
