@@ -12,50 +12,34 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'microsoft/pylance-release' && github.event.action == 'opened'
     steps:
-      - uses: actions/checkout@v3
-      - name: Created internally
-        id: internal
+      - name: Find last assigned
+        id: assigned
+        uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              state: 'all',
+              assignee: '*',
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            return issues.data.length > 0 ? issues.data[0].assignee.login : '';
+      - name: Dump last assigned
         env:
-            ISSUE_OWNER: ${{github.event.issue.user.login}}
-        run: |
-          echo ::set-output name=result::$(node -p -e "['bschnurr', 'heejaechang', 'debonte', 'rchiodo', 'judej'].filter(item => process.env.ISSUE_OWNER.toLowerCase() === item.toLowerCase()).length > 0 ? 1 : 0")
-        shell: bash
-      - name: Should we proceed
-        id: proceed
+          LAST_ASSIGNED: ${{ steps.assigned.outputs.result }}
+        run: echo "$LAST_ASSIGNED"
+      - uses: lee-dohm/team-rotation@v1
+        with:
+          last: ${{ steps.assigned.outputs.result }}
+          include: bschnurr debonte heejaechang StellaHuang95 rchiodo
+        id: rotation
+      - name: Dump next in rotation
         env:
-            ISSUE_LABELS: ${{toJson(github.event.issue.labels)}}
-            ISSUE_ASSIGNEES: ${{toJson(github.event.issue.assignees)}}
-            ISSUE_IS_INTERNAL: ${{steps.internal.outputs.result}}
-        run: |
-          echo ::set-output name=result::$(node -p -e "process.env.ISSUE_IS_INTERNAL === '0' && JSON.parse(process.env.ISSUE_ASSIGNEES).length === 0 ? 1 : 0")
-        shell: bash
-      - name: Day of week
-        if: steps.proceed.outputs.result == 1
-        id: day
-        run: |
-          echo ::set-output name=number::$(node -p -e "new Date().getDay()")
-        shell: bash
-      - name: Hour of day
-        if: steps.proceed.outputs.result == 1
-        id: hour
-        run: |
-          echo ::set-output name=hour::$(node -p -e "(new Date().getUTCHours() - 7)%24")
-        shell: bash
-      - name: Week Number
-        if: steps.proceed.outputs.result == 1
-        id: week
-        run: |
-          echo ::set-output name=odd::$(node .github/workflows/week.js)
-        shell: bash
-      - name: Print day and week
-        if: steps.proceed.outputs.result == 1
-        run: |
-          echo ${{steps.day.outputs.number}}
-          echo ${{steps.week.outputs.odd}}
-          echo ${{steps.hour.outputs.hour}}
-        shell: bash
-      - name: Saturday (Bill)
-        if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 6
+          NEXT_ROTATION: ${{ steps.rotation.outputs.next }}
+        run: echo "$NEXT_ROTATION"        
+      - name: Assign to next person
         uses: actions/github-script@v6.3.3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -64,77 +48,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              assignees: ['bschnurr']
-            })
-      - name: Sunday (Erik)
-        if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 0
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['debonte']
-            })
-      - name: Monday (Heejae)
-        if: steps.proceed.outputs.result == 1 && steps.day.outputs.number == 1 && steps.hour.outputs.hour < 16
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['heejaechang']
-            })
-      - name: Tuesday (Jude)
-        if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 1 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 2 && steps.hour.outputs.hour < 16)
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['judej']
-            })
-      - name: Wednesday (Rich)
-        if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 2 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 3 && steps.hour.outputs.hour < 16)
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['rchiodo']
-            })
-      - name: Thursday (Rich)
-        if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 3 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 4 && steps.hour.outputs.hour < 16)
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['rchiodo']
-            })
-      - name: Friday (Erik)
-        if: steps.proceed.outputs.result == 1 && (steps.day.outputs.number == 4 && steps.hour.outputs.hour >= 16) || (steps.day.outputs.number == 5)
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: ['debonte']
+              assignees: ['${{ steps.rotation.outputs.next }}']
             })
