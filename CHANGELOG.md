@@ -1,5 +1,26 @@
 # Changelog
 
+## 2023.5.21 (10 May 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Raw strings should not auto format [pylance-release#4320](https://github.com/microsoft/pylance-release/issues/4320)
+-   Bug fix: Google docstrings with type hints not displaying properly in hover window after version 2023.4.30 [pylance-release#4317](https://github.com/microsoft/pylance-release/issues/4317)
+-   Bug fix: wrong result for references [pylance-release#4285](https://github.com/microsoft/pylance-release/issues/4285)
+-   Bug fix: Indentation for tuples doesn't work [pylance-release#4259](https://github.com/microsoft/pylance-release/issues/4259)
+-   Bug fix: Saving .py files delayed by Getting code actions from 'Python' [pylance-release#4263](https://github.com/microsoft/pylance-release/issues/4263)
+-   Enhancement: Enable inlay hints for call argument names by setting 'python.analysis.inlayHints.callArgumentNames' to true
+
+Pylance's copy of Pyright has been updated from 1.1.306 to 1.1.307.
+
+-   See Pyright's release notes for details: [1.1.307](https://github.com/microsoft/pyright/releases/tag/1.1.307)
+
+## 2023.5.20 (10 May 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.5.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023511-3-May-2023-prerelease) prerelease build.
+
 ## 2023.5.11 (3 May 2023) PreRelease
 
 Notable changes:
