@@ -182,29 +182,38 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
+-   `python.analysis.inlayHints.callArgumentNames`
+
+    -   Enable/disable inlay hints for call argument names.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
+
 -   `python.analysis.inlayHints.pytestParameters`
+
     -   Enable/disable inlay hints for pytest function parameters.
     -   Accepted values:
         -   `true`
         -   `false` (default)
 
-    ```python
-    @pytest.fixture()
-    def my_fixture() -> str:
-        return "foo"
+```python
+@pytest.fixture()
+def my_fixture() -> str:
+    return "foo"
 
-    def test_foo(my_fixture):...
-    ```
+def test_foo(my_fixture):...
+```
 
-    -   becomes
+-   becomes
 
-    ```python
-    @pytest.fixture()
-    def my_fixture() -> str:
-        return "foo"
+```python
+@pytest.fixture()
+def my_fixture() -> str:
+    return "foo"
 
-    def test_foo(my_fixture: str):...
-    ```
+def test_foo(my_fixture: str):...
+```
 
 - `python.analysis.fixAll`
     - The set of code actions to run when running the **Fix All** command.
