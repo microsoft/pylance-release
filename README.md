@@ -182,17 +182,18 @@ Pylance provides users with the ability to customize their Python language suppo
         -   `true`
         -   `false` (default)
 
--   `python.analysis.inlayHints.pytestParameters`
-    -   Enable/disable inlay hints for pytest function parameters.
-    -   Accepted values:
-        -   `true`
-        -   `false` (default)
-        
 -   `python.analysis.inlayHints.callArgumentNames`
     -   Enable/disable inlay hints for call argument names.
     -   Accepted values:
         -   `true`
         -   `false` (default)
+        
+ -   `python.analysis.inlayHints.pytestParameters`
+    -   Enable/disable inlay hints for pytest function parameters.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+        
 
     ```python
     @pytest.fixture()
