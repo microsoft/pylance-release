@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.5.41 (24 May 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Google docstrings, hover preview for args when multiple words in parenthesis [pylance-release#4395](https://github.com/microsoft/pylance-release/issues/4395)
+-   Bug fix: "expand selection" behaves inconsistently [pylance-release#4393](https://github.com/microsoft/pylance-release/issues/4393)
+-   Bug fix: renaming symbol from untitled python file does not change the symbol in the file [pylance-release#4335](https://github.com/microsoft/pylance-release/issues/4335)
+
+Pylance's copy of Pyright has been updated from 1.1.309 to 1.1.310.
+
+-   See Pyright's release notes for details: [1.1.310](https://github.com/microsoft/pyright/releases/tag/1.1.310)
+
+## 2023.5.40 (24 May 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.5.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023531-17-May-2023-prerelease) prerelease build.
+
 ## 2023.5.31 (17 May 2023) PreRelease
 
 Notable changes:
