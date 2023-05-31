@@ -1,5 +1,22 @@
 # Changelog
 
+## 2023.5.51 (31 May 2023) PreRelease
+
+Notable changes:
+
+-   Enhancement: Make the file count limit for indexing configurable [pylance-release#4417](https://github.com/microsoft/pylance-release/issues/4417)
+-   Enhancement: Using `display` in a notebook requires a kernel be selected that has IPython installed [pylance-release#4193](https://github.com/microsoft/pylance-release/issues/4193)
+
+Pylance's copy of Pyright has been updated from 1.1.310 to 1.1.311.
+
+-   See Pyright's release notes for details: [1.1.311](https://github.com/microsoft/pyright/releases/tag/1.1.311)
+
+## 2023.5.50 (31 May 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.5.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023541-24-May-2023-prerelease) prerelease build.
+
 ## 2023.5.41 (24 May 2023) PreRelease
 
 Notable changes:
