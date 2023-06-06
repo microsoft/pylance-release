@@ -22,6 +22,7 @@ jobs:
             const issues = await github.rest.issues.listForRepo({
               state: 'all',
               assignee: '*',
+              sort: 'updated',
               owner: context.repo.owner,
               repo: context.repo.repo
             });
