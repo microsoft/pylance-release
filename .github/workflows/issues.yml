@@ -19,13 +19,12 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const issues = await github.rest.issues.listForRepo({
-              state: 'all',
-              assignee: '*',
+            const issue = await github.rest.issues.get({
+              issue_number: 4462,
               owner: context.repo.owner,
               repo: context.repo.repo
             });
-            return issues.data.length > 0 ? issues.data[0].assignee.login : '';
+            return issue.data.assignee.login || '';
       - name: Dump last assigned
         env:
           LAST_ASSIGNED: ${{ steps.assigned.outputs.result }}
@@ -46,6 +45,17 @@ jobs:
           script: |
             github.rest.issues.addAssignees({
               issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: ['${{ steps.rotation.outputs.next }}']
+            })
+      - name: Save assignment to state
+        uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.addAssignees({
+              issue_number: 4462,
               owner: context.repo.owner,
               repo: context.repo.repo,
               assignees: ['${{ steps.rotation.outputs.next }}']
