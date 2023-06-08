@@ -54,6 +54,12 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            await github.rest.issues.removeAssignees({
+              issue_number: 4462,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: ['${{ steps.assigned.outputs.result }}']
+            });
             github.rest.issues.addAssignees({
               issue_number: 4462,
               owner: context.repo.owner,
