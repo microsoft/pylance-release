@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.6.11 (7 June 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Escaped anti-slash at the end of f-string shows syntax error [pylance-release#4460](https://github.com/microsoft/pylance-release/issues/4460)
+-   Bug fix: Cannot access member "named_steps" for type "BaseEstimator" [pylance-release#4432](https://github.com/microsoft/pylance-release/issues/4432)
+-   Bug fix: Error: Debug Failure. False expression: Check called before binding [pylance-release#4310](https://github.com/microsoft/pylance-release/issues/4310)
+-   Enhancement: Provides go to def support for overloaded operators and special method names. [pylance-release#3759](https://github.com/microsoft/pylance-release/issues/3759)
+
+Pylance's copy of Pyright has been updated from 1.1.311 to 1.1.313.
+
+-   See Pyright's release notes for details: [1.1.312](https://github.com/microsoft/pyright/releases/tag/1.1.312), [1.1.313](https://github.com/microsoft/pyright/releases/tag/1.1.313)
+
+## 2023.6.10 (7 June 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.5.51](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023551-31-may-2023-prerelease) prerelease build.
+
 ## 2023.5.51 (31 May 2023) PreRelease
 
 Notable changes:
