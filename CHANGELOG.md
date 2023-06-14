@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.6.21 (14 June 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Stubs downloader log claims that `django` is not installed, but it is [pylance-release#4469](https://github.com/microsoft/pylance-release/issues/4469)
+-   Bug fix: Source actions not found [pylance-release#4464](https://github.com/microsoft/pylance-release/issues/4464)
+-   Bug fix: The cursor doesn't auto indent after newline [pylance-release#4444](https://github.com/microsoft/pylance-release/issues/4444)
+-   Bug fix: Pylance crash when autocompleting aws_cdk [pylance-release#4241](https://github.com/microsoft/pylance-release/issues/4241)
+
+Pylance's copy of Pyright has been updated from 1.1.313 to 1.1.314.
+
+-   See Pyright's release notes for details: [1.1.314](https://github.com/microsoft/pyright/releases/tag/1.1.314)
+
+## 2023.6.20 (14 June 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.6.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023611-7-june-2023-prerelease) prerelease build.
+
 ## 2023.6.11 (7 June 2023) PreRelease
 
 Notable changes:
