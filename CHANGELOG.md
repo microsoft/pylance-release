@@ -1,5 +1,22 @@
 # Changelog
 
+## 2023.6.31 (21 June 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Type Checking Working Inconsistently [pylance-release#4495](https://github.com/microsoft/pylance-release/issues/4495)
+-   Bug fix: Automatically infer class variables based on declaration [pylance-release#4389](https://github.com/microsoft/pylance-release/issues/4389)
+
+Pylance's copy of Pyright has been updated from 1.1.314 to 1.1.315.
+
+-   See Pyright's release notes for details: [1.1.315](https://github.com/microsoft/pyright/releases/tag/1.1.315)
+
+## 2023.6.30 (21 June 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.6.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023621-14-june-2023-prerelease) prerelease build.
+
 ## 2023.6.21 (14 June 2023) PreRelease
 
 Notable changes:
