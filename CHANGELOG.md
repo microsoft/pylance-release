@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.6.41 (28 June 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance does not find scipy functions (e.g. "filtfilt" is not a known member of "scipy.signal") since Pylance 2023.6.20 [pylance-release#4531](https://github.com/microsoft/pylance-release/issues/4531)
+-   Bug fix: Overloaded functions not recognized [pylance-release#4526](https://github.com/microsoft/pylance-release/issues/4526)
+-   Bug fix: Automatic Indentation for Multiline F-Strings within Brackets [pylance-release#4496](https://github.com/microsoft/pylance-release/issues/4496)
+-   Bug fix: Debug Failure. False expression: Check called unnecessarily [pylance-release#4492](https://github.com/microsoft/pylance-release/issues/4492)
+
+Pylance's copy of Pyright has been updated from 1.1.315 to 1.1.316.
+
+-   See Pyright's release notes for details: [1.1.316](https://github.com/microsoft/pyright/releases/tag/1.1.316)
+
+## 2023.6.40 (28 June 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.6.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023631-21-june-2023-prerelease) prerelease build.
+
 ## 2023.6.31 (21 June 2023) PreRelease
 
 Notable changes:
