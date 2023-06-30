@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.6.42 (29 June 2023) PreRelease
+
+Notable changes:
+
+-   Enhancement: Add support for localization [pylance-release#3437](https://github.com/microsoft/pylance-release/issues/3437)
+
 ## 2023.6.41 (28 June 2023) PreRelease
 
 Notable changes:
