@@ -1,5 +1,39 @@
 # Changelog
 
+## 2023.7.21 (12 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Enabled "python.analysis.autoFormatStrings" is being applied on docstrings [pylance-release#4583](https://github.com/microsoft/pylance-release/issues/4583)
+-   Bug fix: Typo in description of python.analysis.inlayHints.pytestParameters [pylance-release#4576](https://github.com/microsoft/pylance-release/issues/4576)
+-   Bug fix: Using autocomplete to override methods yields unexpected imports [pylance-release#4575](https://github.com/microsoft/pylance-release/issues/4575)
+-   Bug fix: Moving symbol refactoring: docstrings have the blank line removed [pylance-release#4540](https://github.com/microsoft/pylance-release/issues/4540)
+-   Bug fix: PyLance automatically removes tab when using colon [pylance-release#4507](https://github.com/microsoft/pylance-release/issues/4507)
+
+## 2023.7.20 (12 July 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.7.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023711-5-july-2023-prerelease) prerelease build.
+
+## 2023.7.11 (5 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance automatically removes tab when using colon [pylance-release#4507](https://github.com/microsoft/pylance-release/issues/4507)
+
+## 2023.7.10 (5 July 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.6.43](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023643-3-july-2023-prerelease) prerelease build.
+
+## 2023.6.43 (3 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix Django-specific telemetry
+
 ## 2023.6.42 (29 June 2023) PreRelease
 
 Notable changes:
