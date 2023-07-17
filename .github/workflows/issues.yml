@@ -49,6 +49,17 @@ jobs:
               repo: context.repo.repo,
               assignees: ['${{ steps.rotation.outputs.next }}']
             })
+      - name: Give it the label 'needs repro'
+        uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['needs repro']
+            })
       - name: Save assignment to state
         uses: actions/github-script@v6.3.3
         with:
