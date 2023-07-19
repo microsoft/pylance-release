@@ -1,5 +1,27 @@
 # Changelog
 
+## 2023.7.31 (19 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance reports errors in EJS file [pylance-release#4591](https://github.com/microsoft/pylance-release/issues/4591)
+-   Bug fix: Wrong return type when autocomplete async abstractmethod [pylance-release#4573](https://github.com/microsoft/pylance-release/issues/4573)
+-   Bug fix: Annotated[..., Type] forward references are not understood [pylance-release#4565](https://github.com/microsoft/pylance-release/issues/4565)
+-   Bug fix: Server settings should be printed when in 'trace' mode. [pylance-release#4559](https://github.com/microsoft/pylance-release/issues/4559)
+-   Bug fix: Long operation nearly 80 seconds [pylance-release#4459](https://github.com/microsoft/pylance-release/issues/4459)
+-   Bug fix: Show Call Hierarchy doesn't handle overridden methods correctly [pylance-release#2774](https://github.com/microsoft/pylance-release/issues/2774)
+-   Enhancement: Stop Suggesting Enum member access on Enum members [pylance-release#1905](https://github.com/microsoft/pylance-release/issues/1905)
+
+Pylance's copy of Pyright has been updated from 1.1.316 to 1.1.318.
+
+-   See Pyright's release notes for details: [1.1.317](https://github.com/microsoft/pyright/releases/tag/1.1.317), [1.1.318](https://github.com/microsoft/pyright/releases/tag/1.1.318)
+
+## 2023.7.30 (19 July 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.7.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023721-12-july-2023-prerelease) prerelease build.
+
 ## 2023.7.21 (12 July 2023) PreRelease
 
 Notable changes:
