@@ -6,8 +6,8 @@ Notable changes:
 
 -   Bug fix: Pylance not indexing all files and symbols for sqlalchemy even with package depth of 4 [pylance-release#4637](https://github.com/microsoft/pylance-release/issues/4637)
 -   Bug fix: Pylance seems to forget the selected interpreter after a (short) while: reportMissingImports [pylance-release#4606](https://github.com/microsoft/pylance-release/issues/4606)
--   Bug fix: Add ability to track messages being displayed to users [pylance-release#4482](https://github.com/microsoft/pylance-release/issues/4482)
--   Bug fix: Import resolution errors should show more information about the environment in use [pylance-release#4368](https://github.com/microsoft/pylance-release/issues/4368)
+-   Enhancement: Add ability to track messages being displayed to users [pylance-release#4482](https://github.com/microsoft/pylance-release/issues/4482)
+-   Enhancement: Import resolution errors should show more information about the environment in use [pylance-release#4368](https://github.com/microsoft/pylance-release/issues/4368)
 -   Bug fix: `python.analysis.completeFunctionParens` adds parens on base class names [pylance-release#4273](https://github.com/microsoft/pylance-release/issues/4273)
 
 Pylance's copy of Pyright has been updated from 1.1.318 to 1.1.319.
