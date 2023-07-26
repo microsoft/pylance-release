@@ -1,5 +1,25 @@
 # Changelog
 
+## 2023.7.41 (26 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance not indexing all files and symbols for sqlalchemy even with package depth of 4 [pylance-release#4637](https://github.com/microsoft/pylance-release/issues/4637)
+-   Bug fix: Pylance seems to forget the selected interpreter after a (short) while: reportMissingImports [pylance-release#4606](https://github.com/microsoft/pylance-release/issues/4606)
+-   Bug fix: Add ability to track messages being displayed to users [pylance-release#4482](https://github.com/microsoft/pylance-release/issues/4482)
+-   Bug fix: Import resolution errors should show more information about the environment in use [pylance-release#4368](https://github.com/microsoft/pylance-release/issues/4368)
+-   Bug fix: `python.analysis.completeFunctionParens` adds parens on base class names [pylance-release#4273](https://github.com/microsoft/pylance-release/issues/4273)
+
+Pylance's copy of Pyright has been updated from 1.1.318 to 1.1.319.
+
+-   See Pyright's release notes for details: [1.1.319](https://github.com/microsoft/pyright/releases/tag/1.1.319)
+
+## 2023.7.40 (26 July 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.7.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023731-19-july-2023-prerelease) prerelease build.
+
 ## 2023.7.31 (19 July 2023) PreRelease
 
 Notable changes:
