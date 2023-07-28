@@ -1,5 +1,12 @@
 # Changelog
 
+## 2023.7.42 (28 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Unexpected "importSourceResolveFailure" [pylance-release#4653](https://github.com/microsoft/pylance-release/issues/4653)
+-   Bug fix: AddExtraPath was broken by the rule change for import resolve errors [pylance-release#4651](https://github.com/microsoft/pylance-release/issues/4651)
+
 ## 2023.7.41 (26 July 2023) PreRelease
 
 Notable changes:
