@@ -1,5 +1,13 @@
 # Changelog
 
+## 2023.7.43 (31 July 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: No `unbound variable` reported for variable self assignment inside function [pylance-release#4634](https://github.com/microsoft/pylance-release/issues/4634)
+-   Bug fix: Support for code block wrapped with "~~~" [pylance-release#4612](https://github.com/microsoft/pylance-release/issues/4612)
+-   Bug fix: Import resolve error changes should be behind an experiment [pylance-release#4672](https://github.com/microsoft/pylance-release/issues/4672)
+
 ## 2023.7.42 (28 July 2023) PreRelease
 
 Notable changes:
