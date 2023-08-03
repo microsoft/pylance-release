@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.8.11 (2 August 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: `__iter__` implementation not detected in superclass of Pyomo OrderedScalarSet [pylance-release#4667](https://github.com/microsoft/pylance-release/issues/4667)
+-   Bug fix: error: Expected no type arguments for class in pyright, but not pylance [pylance-release#4656](https://github.com/microsoft/pylance-release/issues/4656)
+-   Bug fix: Don't show private modules for import completions on a py.typed package [pylance-release#4528](https://github.com/microsoft/pylance-release/issues/4528)
+
+Pylance's copy of Pyright has been updated from 1.1.319 to 1.1.320.
+
+-   See Pyright's release notes for details: [1.1.320](https://github.com/microsoft/pyright/releases/tag/1.1.320)
+
+## 2023.8.10 (2 August 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.7.43](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023743-31-july-2023-prerelease) prerelease build.
+
 ## 2023.7.43 (31 July 2023) PreRelease
 
 Notable changes:
