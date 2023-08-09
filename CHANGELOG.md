@@ -1,5 +1,21 @@
 # Changelog
 
+## 2023.8.21 (9 August 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: FATAL ERROR: MarkCompactCollector: young object promotion failed Allocation failed - JavaScript heap out of memory [pylance-release#4598](https://github.com/microsoft/pylance-release/issues/4598)
+
+Pylance's copy of Pyright has been updated from 1.1.320 to 1.1.321.
+
+-   See Pyright's release notes for details: [1.1.321](https://github.com/microsoft/pyright/releases/tag/1.1.321)
+
+## 2023.8.20 (9 August 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.8.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023811-2-august-2023-prerelease) prerelease build.
+
 ## 2023.8.11 (2 August 2023) PreRelease
 
 Notable changes:
