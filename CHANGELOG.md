@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.8.31 (16 August 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance crashing for unknown reason [pylance-release#4712](https://github.com/microsoft/pylance-release/issues/4712)
+-   Bug fix: False positive when using structural pattern matching inside a loop [pylance-release#4706](https://github.com/microsoft/pylance-release/issues/4706)
+-   Enhancement: Importing SynapseML doesn't work [pylance-release#4648](https://github.com/microsoft/pylance-release/issues/4648)
+
+Pylance's copy of Pyright has been updated from 1.1.321 to 1.1.323.
+
+-   See Pyright's release notes for details: [1.1.322](https://github.com/microsoft/pyright/releases/tag/1.1.322), [1.1.323](https://github.com/microsoft/pyright/releases/tag/1.1.323)
+
+## 2023.8.30 (16 August 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.8.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023821-9-august-2023-prerelease) prerelease build.
+
 ## 2023.8.21 (9 August 2023) PreRelease
 
 Notable changes:
