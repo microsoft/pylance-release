@@ -1,5 +1,28 @@
 # Changelog
 
+## 2023.8.41 (23 August 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: IntelliSense not fully working with Python Enum classes [pylance-release#4734](https://github.com/microsoft/pylance-release/issues/4734)
+-   Bug fix: Pylance crash after saving loose untitled notebook [pylance-release#4733](https://github.com/microsoft/pylance-release/issues/4733)
+-   Bug fix: formatOnType causes incorrect indentation in nested function calls within functions and methods [pylance-release#4714](https://github.com/microsoft/pylance-release/issues/4714)
+-   Bug fix: Pylance crashing on Jupyter Notebook Cell Deletion [pylance-release#4685](https://github.com/microsoft/pylance-release/issues/4685)
+-   Bug fix: Sometimes the referenced objects and methods may appear as Unknown [pylance-release#4684](https://github.com/microsoft/pylance-release/issues/4684)
+-   Bug fix: Inconsistency between inlay hint and implied type with recursive type [pylance-release#4641](https://github.com/microsoft/pylance-release/issues/4641)
+-   Bug fix: Auto-indent doesn't respect VS Code indentation settings in new files [pylance-release#4071](https://github.com/microsoft/pylance-release/issues/4071)
+-   Bug fix: Python code prompt in vscode with docstring [pylance-release#3509](https://github.com/microsoft/pylance-release/issues/3509)
+
+Pylance's copy of Pyright has been updated from 1.1.323 to 1.1.324.
+
+-   See Pyright's release notes for details: [1.1.324](https://github.com/microsoft/pyright/releases/tag/1.1.324)
+
+## 2023.8.40 (23 August 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.8.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023831-16-august-2023-prerelease) prerelease build.
+
 ## 2023.8.31 (16 August 2023) PreRelease
 
 Notable changes:
