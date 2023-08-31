@@ -1,5 +1,26 @@
 # Changelog
 
+## 2023.8.51 (30 August 2023) PreRelease
+
+Notable changes:
+
+-   Enhancement: Pylance import resolve messages should be pushed to Pyright [pylance-release#4701](https://github.com/microsoft/pylance-release/issues/4701)
+-   Bug fix: Pylance crashing on Jupyter Notebook Cell Deletion [pylance-release#4685](https://github.com/microsoft/pylance-release/issues/4685)
+-   Enhancement: Autocomplete for `__getattr__` by Literal values [pylance-release#4660](https://github.com/microsoft/pylance-release/issues/4660)
+-   Enhancement: No suggestions for TypedDict value with Union[Literal, None] type annotation [pylance-release#4649](https://github.com/microsoft/pylance-release/issues/4649)
+-   Enhancement: Completions don't work for test parameters [pylance-release#4590](https://github.com/microsoft/pylance-release/issues/4590)
+-   Enhancement: Go to def on `in` should navigate to `__contains__` [pylance-release#4467](https://github.com/microsoft/pylance-release/issues/4467)
+
+Pylance's copy of Pyright has been updated from 1.1.324 to 1.1.325.
+
+-   See Pyright's release notes for details: [1.1.325](https://github.com/microsoft/pyright/releases/tag/1.1.325)
+
+## 2023.8.50 (30 August 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.8.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023841-23-august-2023-prerelease) prerelease build.
+
 ## 2023.8.41 (23 August 2023) PreRelease
 
 Notable changes:
