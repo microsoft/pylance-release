@@ -192,9 +192,9 @@ Pylance provides users with the ability to customize their Python language suppo
 
     -   Enable/disable inlay hints for call argument names.
     -   Accepted values:
-        -   `true`
-        -   `false` (default)
-
+        -   `off` (default)
+        -   `partial`
+        -   `all`
 
 -   `python.analysis.inlayHints.pytestParameters`
 
