@@ -1,5 +1,26 @@
 # Changelog
 
+## 2023.9.11 (6 September 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Diagnostics can suddenly disappear in a notebook [pylance-release#4780](https://github.com/microsoft/pylance-release/issues/4780)
+-   Enhancement: Support `goto def` on `__getattr__` as well [pylance-release#4764](https://github.com/microsoft/pylance-release/issues/4764)
+-   Bug fix: Rename of type alias defined with PEP 695 fails [pylance-release#4696](https://github.com/microsoft/pylance-release/issues/4696)
+-   Bug fix: Wrong tooltip `Dictionary key` when indexing a list [pylance-release#4689](https://github.com/microsoft/pylance-release/issues/4689)
+-   Bug fix: Pylance not completing suggestions for first party imports [pylance-release#4678](https://github.com/microsoft/pylance-release/issues/4678)
+-   Enhancement: Python Analysis Inlay Hints Call Argument Names gives useless and confusing names [pylance-release#4543](https://github.com/microsoft/pylance-release/issues/4543)
+
+Pylance's copy of Pyright has been updated from 1.1.325 to 1.1.326.
+
+-   See Pyright's release notes for details: [1.1.326](https://github.com/microsoft/pyright/releases/tag/1.1.326)
+
+## 2023.9.10 (6 September 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.8.51](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023851-30-august-2023-prerelease) prerelease build.
+
 ## 2023.8.51 (30 August 2023) PreRelease
 
 Notable changes:
