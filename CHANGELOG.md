@@ -1,5 +1,13 @@
 # Changelog
 
+## 2023.9.12 (8 September 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance returns symbols for previous version of the document [pylance-release#4810](https://github.com/microsoft/pylance-release/issues/4810)
+-   Bug fix: Latest insiders does not recognise active pyenv virtualenv [pylance-release#4806](https://github.com/microsoft/pylance-release/issues/4806)
+-   Enhancement: Make "add type annotation for pyTest arguments" to add `import` automatically as well. [pylance-release#4779](https://github.com/microsoft/pylance-release/issues/4779)
+
 ## 2023.9.11 (6 September 2023) PreRelease
 
 Notable changes:
