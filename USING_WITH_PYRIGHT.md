@@ -56,7 +56,7 @@ Here's an example `pyrightconfig.json` you would use to ensure Pylance and Pyrig
 ```json
 {
     "autoSearchPaths": false,
-    "extraPaths": [] // Include paths from PYTHONPATH env var and .env definition
+    "extraPaths": [], // Include paths from PYTHONPATH env var and .env definition
     "useLibraryCodeForTypes": false,
     "typeCheckingMode": "basic"
 }
