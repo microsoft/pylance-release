@@ -1,5 +1,21 @@
 # Changelog
 
+## 2023.9.21 (20 September 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Inconsistent behavior of formatOnType for multi-line with different line break types [pylance-release#4456](https://github.com/microsoft/pylance-release/issues/4456)
+
+Pylance's copy of Pyright has been updated from 1.1.326 to 1.1.328.
+
+-   See Pyright's release notes for details: [1.1.327](https://github.com/microsoft/pyright/releases/tag/1.1.327), [1.1.328](https://github.com/microsoft/pyright/releases/tag/1.1.328)
+
+## 2023.9.20 (20 September 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.9.12](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023912-8-september-2023-prerelease) prerelease build.
+
 ## 2023.9.12 (8 September 2023) PreRelease
 
 Notable changes:
