@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.9.31 (27 September 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance not starting if python file is located on UNC network drive. [pylance-release#4862](https://github.com/microsoft/pylance-release/issues/4862)
+-   Bug fix: Can't import file from the same directory [pylance-release#4861](https://github.com/microsoft/pylance-release/issues/4861)
+-   Bug fix: Auto-dedent on `else:` in tabbed file removes too many characters [pylance-release#4858](https://github.com/microsoft/pylance-release/issues/4858)
+-   Bug fix: No action on "Remove all unused imports" [pylance-release#4830](https://github.com/microsoft/pylance-release/issues/4830)
+
+Pylance's copy of Pyright has been updated from 1.1.328 to 1.1.329.
+
+-   See Pyright's release notes for details: [1.1.329](https://github.com/microsoft/pyright/releases/tag/1.1.329)
+
+## 2023.9.30 (27 September 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.9.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023921-20-september-2023-prerelease) prerelease build.
+
 ## 2023.9.21 (20 September 2023) PreRelease
 
 Notable changes:
