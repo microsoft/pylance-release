@@ -1,5 +1,23 @@
 # Changelog
 
+## 2022.10.11 (4 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: pyTest features are sometime very slow [pylance-release#4805](https://github.com/microsoft/pylance-release/issues/4805)
+-   Enhancement: add support for `__setattr__`, `__delattr__` and `__getattribute__` [pylance-release#4786](https://github.com/microsoft/pylance-release/issues/4786)
+-   Enhancement: Add auto import setting as a language status item [pylance-release#3894](https://github.com/microsoft/pylance-release/issues/3894)
+
+Pylance's copy of Pyright has been updated from 1.1.329 to 1.1.330.
+
+-   See Pyright's release notes for details: [1.1.330](https://github.com/microsoft/pyright/releases/tag/1.1.330)
+
+## 2022.10.10 (4 October 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.9.31](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2023931-27-september-2023-prerelease) prerelease build.
+
 ## 2023.9.31 (27 September 2023) PreRelease
 
 Notable changes:
