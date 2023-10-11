@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.10.21 (11 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: [Type hints] Pylance is confused by `type(parameter_name)` instructions [pylance-release#4942](https://github.com/microsoft/pylance-release/issues/4942)
+-   Bug fix: Don't show `stubPath xxx is not a valid directory` warning when using config default [pylance-release#4917](https://github.com/microsoft/pylance-release/issues/4917)
+-   Bug fix: Cancellation exception from inlay hints [pylance-release#4916](https://github.com/microsoft/pylance-release/issues/4916)
+-   Bug fix: Auto imports typeshed fallback when using refactor -> move symbol [pylance-release#4871](https://github.com/microsoft/pylance-release/issues/4871)
+
+Pylance's copy of Pyright has been updated from 1.1.330 to 1.1.331.
+
+-   See Pyright's release notes for details: [1.1.331](https://github.com/microsoft/pyright/releases/tag/1.1.331)
+
+## 2023.10.20 (11 October 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2022.10.11](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20221011-4-october-2023-prerelease) prerelease build.
+
 ## 2022.10.11 (4 October 2023) PreRelease
 
 Notable changes:
