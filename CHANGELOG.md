@@ -1,5 +1,24 @@
 # Changelog
 
+## 2023.10.31 (18 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: There is no preview after renaming module [pylance-release#4964](https://github.com/microsoft/pylance-release/issues/4964)
+-   Bug fix: `pytest code action fix all` fails to fully qualify types if it shows up multiple times. [pylance-release#4958](https://github.com/microsoft/pylance-release/issues/4958)
+-   Bug fix: The result of finding all references to the **init** function is not correct [pylance-release#4954](https://github.com/microsoft/pylance-release/issues/4954)
+-   Bug fix: support hover tooltip on string that mapped to module/symbol [pylance-release#4287](https://github.com/microsoft/pylance-release/issues/4287)
+
+Pylance's copy of Pyright has been updated from 1.1.331 to 1.1.332.
+
+-   See Pyright's release notes for details: [1.1.332](https://github.com/microsoft/pyright/releases/tag/1.1.332)
+
+## 2023.10.30 (18 October 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.10.21](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20231021-11-october-2023-prerelease) prerelease build.
+
 ## 2023.10.21 (11 October 2023) PreRelease
 
 Notable changes:
