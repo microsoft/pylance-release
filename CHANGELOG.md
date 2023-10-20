@@ -1,5 +1,19 @@
 # Changelog
 
+## 2023.10.41 (20 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance latest release killing remote connections to notebooks [pylance-release#4983](https://github.com/microsoft/pylance-release/issues/4983)
+-   Bug fix: Use pyright-specific comment for `Quick Fix... > Add '# type: ignore' to suppress warning` [pylance-release#4494](https://github.com/microsoft/pylance-release/issues/4494)
+-   Bug fix: "No code actions available" if Ctrl+. is hit quickly after moving the cursor [pylance-release#1247](https://github.com/microsoft/pylance-release/issues/1247)
+
+## 2023.10.40 (20 October 2023) Release
+
+This is a hotfix release based on [2023.10.30](https://github.com/microsoft/pyrx/blob/main/packages/vscode-pylance/CHANGELOG.md#20231030-18-october-2023-release) with the following changes:
+
+-   Bug fix: Pylance latest release killing remote connections to notebooks [pylance-release#4983](https://github.com/microsoft/pylance-release/issues/4983)
+
 ## 2023.10.31 (18 October 2023) PreRelease
 
 Notable changes:
