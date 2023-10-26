@@ -1,5 +1,19 @@
 # Changelog
 
+## 2023.10.51 (26 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pytest add fixture type annotation code action shows up for non test files [pylance-release#5003](https://github.com/microsoft/pylance-release/issues/5003)
+-   Bug fix: Pylance does not respect `__builtins__.pyi` for notebooks. [pylance-release#4949](https://github.com/microsoft/pylance-release/issues/4949)
+-   Bug fix: Wrong inlay hint when passing \*arg or \*\*kwarg [pylance-release#4930](https://github.com/microsoft/pylance-release/issues/4930)
+
+## 2023.10.50 (26 October 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.10.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20231041-20-october-2023-prerelease) prerelease build.
+
 ## 2023.10.41 (20 October 2023) PreRelease
 
 Notable changes:
