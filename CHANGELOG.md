@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.10.52 (26 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance v2023.10.51 no longer works once Untitled notebooks are saved as e.g. Untitiled-1.ipynb
+
 ## 2023.10.51 (26 October 2023) PreRelease
 
 Notable changes:
