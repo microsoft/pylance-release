@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.10.53 (27 October 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix crash when calling isSymbolicLink on stat of zip/egg [pylance-release#5009](https://github.com/microsoft/pylance-release/issues/5009)
+
 ## 2023.10.52 (26 October 2023) PreRelease
 
 Notable changes:
