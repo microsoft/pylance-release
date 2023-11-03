@@ -1,5 +1,23 @@
 # Changelog
 
+## 2023.11.11 (2 November 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance crashes upon startup: `[info] Error: [UriError]: Scheme contains illegal characters.` [pylance-release#5032](https://github.com/microsoft/pylance-release/issues/5032)
+-   Bug fix: ExtractMethod no longer works on notebooks opened from WSL [pylance-release#5016](https://github.com/microsoft/pylance-release/issues/5016)
+-   Bug fix: [Auto Import] - Suggest equivalents from `collections.abc` rather than `typing` [pylance-release#3318](https://github.com/microsoft/pylance-release/issues/3318)
+
+Pylance's copy of Pyright has been updated from 1.1.333 to 1.1.334.
+
+-   See Pyright's release notes for details: [1.1.334](https://github.com/microsoft/pyright/releases/tag/1.1.334)
+
+## 2023.11.10 (2 November 2023) Release
+
+Notable changes:
+
+-   Rolled back release version that includes changes through the [2023.10.40](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20231040-20-october-2023-release) release build.
+
 ## 2023.10.53 (27 October 2023) PreRelease
 
 Notable changes:
