@@ -1,5 +1,19 @@
 # Changelog
 
+## 2023.11.12 (8 November 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: "RangeError: Maximum call stack size exceeded" [pylance-release#5090](https://github.com/microsoft/pylance-release/issues/5090)
+-   Bug fix: Pylance hints not working in Jupyter Notebook in Remote Tunnel [pylance-release#5071](https://github.com/microsoft/pylance-release/issues/5071)
+-   Bug fix: Pylance v2023.10.50 is incompatible with Python Extension v2020.8.109390 [pylance-release#5019](https://github.com/microsoft/pylance-release/issues/5019)
+-   Bug fix: abstractmethod override inherits typing with only the final object name [pylance-release#4948](https://github.com/microsoft/pylance-release/issues/4948)
+-   Bug fix: Auto indentation fails after comment lines [pylance-release#4763](https://github.com/microsoft/pylance-release/issues/4763)
+
+Pylance's copy of Pyright has been updated from 1.1.334 to 1.1.335.
+
+-   See Pyright's release notes for details: [1.1.335](https://github.com/microsoft/pyright/releases/tag/1.1.335)
+
 ## 2023.11.11 (2 November 2023) PreRelease
 
 Notable changes:
