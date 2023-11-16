@@ -1,5 +1,16 @@
 # Changelog
 
+## 2023.11.13 (15 November 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Error: Debug Failure. False expression: Check called before binding [pylance-release#5097](https://github.com/microsoft/pylance-release/issues/5097)
+-   Enhancement: Add support for "Show super type Hierarchy" command [pylance-release#4978](https://github.com/microsoft/pylance-release/issues/4978)
+
+Pylance's copy of Pyright has been updated from 1.1.335 to 1.1.336.
+
+-   See Pyright's release notes for details: [1.1.336](https://github.com/microsoft/pyright/releases/tag/1.1.336)
+
 ## 2023.11.12 (8 November 2023) PreRelease
 
 Notable changes:
