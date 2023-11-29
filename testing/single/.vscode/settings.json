@@ -2,5 +2,6 @@
     "python.analysis.enablePytestSupport": true,
     "python.analysis.enablePytestExtra": true,
     "python.analysis.inlayHints.pytestParameters": true,
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.indexing": true,
 }
