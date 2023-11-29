@@ -24,8 +24,26 @@ def test_highlight_refernce(cache):
 
 # place cursor after `c` and trigger completion and confirm pytest tooltip and fixtures are listed
 # see `completion.py` on how to trigger completion
-def test_completion(c):
+def test_parameter_completion(c):
     pass
+
+# place cursor after `capfdbinary.` and trigger completion and 
+# confirm CaptureFixture[bytes]'s members are listed
+def test_fixture_completion(capfdbinary):
+    capfdbinary.
+
+# hover `close` and confirm tooltip for close is provided.
+def test_fixture_hover(capfdbinary):
+    capfdbinary.close
+
+# place cursor inside of `()` at `genitems()` and trigger signature help
+# and confirm the signature help
+def test_fixture_signatureHelp(pytester):
+    pytester.genitems()
+
+# place cursor at `clear` and trigger go to definition
+def test_fixture_gotodef(doctest_namespace):
+    doctest_namespace.clear()
 
 # place cursor on `pytester` and confirm light bulb shows up with `Add type annotation ...` entry
 # select pytest code actions and confirm correct imports are added
