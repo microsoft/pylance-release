@@ -4,8 +4,16 @@
 
 Pyright can also be used on the [command line](https://github.com/microsoft/pyright/blob/main/docs/command-line.md) to produce json or text output. This can be used in a variety of situations, like a [pre-commit hook](https://github.com/microsoft/pyright/blob/main/docs/ci-integration.md#running-pyright-as-a-pre-commit-hook), or a [github action](https://github.com/jakebailey/pyright-action).
 
-
 However, Pylance and Pyright don't always produce the same results. There are several reasons why this may happen.
+
+## Pyright version and Pylance's underlying Pyright version are different
+
+Since Pyright and Pylance have different release cadences, there are many times when the latest version of Pylance (even Pylance prerelease) is not based on the latest version of Pyright. If you're using one of the following tools to run Pyright, you can specify your Pylance version (`latest-release`, `latest-prerelease`, or version number) and the tool will use the matching version of Pyright:
+
+- [pyright-action](https://github.com/jakebailey/pyright-action): In v1.8.0+, provide the `pylance-version` option instead of `version`. For more details, see [their documentation](https://github.com/jakebailey/pyright-action#keeping-pyright-and-pylance-in-sync).
+- [pyright-python](https://github.com/RobertCraigie/pyright-python): In v1.1.338+, set the `PYRIGHT_PYTHON_PYLANCE_VERSION` environment variable and do not set `PYRIGHT_PYTHON_FORCE_VERSION`. For more details, see [their documentation](https://github.com/RobertCraigie/pyright-python#keeping-pyright-and-pylance-in-sync).
+
+If you are aware of other similar tools that could benefit from having the same behavior, please let us know.
 
 ## Type stub differences
 
