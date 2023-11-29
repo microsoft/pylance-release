@@ -6,7 +6,7 @@ Pyright can also be used on the [command line](https://github.com/microsoft/pyri
 
 However, Pylance and Pyright don't always produce the same results. There are several reasons why this may happen.
 
-## Type checker differences
+## Pyright version and Pylance's underlying Pyright version are different
 
 Since Pyright and Pylance have different release cadences, there are many times when the latest version of Pylance (even Pylance prerelease) is not based on the latest version of Pyright. If you're using one of the following tools to run Pyright, you can specify your Pylance version (`latest-release`, `latest-prerelease`, or version number) and the tool will use the matching version of Pyright:
 
