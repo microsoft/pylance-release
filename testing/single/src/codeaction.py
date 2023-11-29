@@ -55,6 +55,7 @@ import unknownModule
 # select code between `codeToExtract` and `print(codeToExtract)` and confirm lightbulb shows up
 # and trigger quick fix and confirm `extract method` is listed
 # execute the code action and confirm it works as expected
+# confirm it can be executed through "Refactoring..." menu as well
 def function():
     codeToExtract = 1
     print(codeToExtract)
@@ -63,6 +64,7 @@ def function():
 # select `1 + 2 + 3` and confirm lightbulb shows up
 # and trigger quick fix and confirm `extract variable` is listed
 # execute the code action and confirm it works as expected
+# confirm it can be executed through "Refactoring..." menu as well
 print(1 + 2 + 3)
 
 

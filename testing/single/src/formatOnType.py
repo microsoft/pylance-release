@@ -17,3 +17,7 @@ match ch:
 __break_for_case_ # its here so that code after this is not recognized as body of the case statement.
 
 
+if ch == "a":
+    pass
+    # type `:` after `else` and see `else` is moved to right position.
+    else
