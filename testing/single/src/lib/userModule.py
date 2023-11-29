@@ -1,0 +1,2 @@
+class MyType:
+    pass
