@@ -1,3 +1,6 @@
+# you can trigger call hierarchy using `Calls: Show Call Hierarchy` command
+# use `command palette` to find the command and its short cut
+# one can use both command or menu to issue the command.
 def func1():
     pass
 
