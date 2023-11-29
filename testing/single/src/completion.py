@@ -1,9 +1,8 @@
 # you can trigger suggestion (completion) explicitly using `Trigger Suggestion` command
 # use `command palette` to find the command and its short cut
 # also make sure to expand completion item tooltip (>) to see them
-from typing import Literal, TypedDict
+from typing import Literal, TypedDict, overload
 
-from altair import overload
 
 # bring up completion after `os` and confirm tooltip and `os` is added as `auto import` 
 os
