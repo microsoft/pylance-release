@@ -1,3 +1,6 @@
+# you can trigger folding range using `Go to next folding range` command
+# use `command palette` to find the command and its short cut
+# but that said, folding range should automatically run when a file is opened.
 from typing import Callable, Type, TypeVar
 
 _T = TypeVar("_T")

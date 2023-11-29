@@ -1,5 +1,6 @@
 # you can trigger quick fix explicitly using `QuickFix` command
 # use `command palette` to find the command and its short cut
+# since code action usually modify code, make sure `undo` work as expected.
 
 # place cursor on `os` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add 'import os'` is listed
@@ -54,6 +55,39 @@ import unknownModule
 # select code between `codeToExtract` and `print(codeToExtract)` and confirm lightbulb shows up
 # and trigger quick fix and confirm `extract method` is listed
 # execute the code action and confirm it works as expected
+# confirm it can be executed through "Refactoring..." menu as well
 def function():
     codeToExtract = 1
     print(codeToExtract)
+
+
+# select `1 + 2 + 3` and confirm lightbulb shows up
+# and trigger quick fix and confirm `extract variable` is listed
+# execute the code action and confirm it works as expected
+# confirm it can be executed through "Refactoring..." menu as well
+print(1 + 2 + 3)
+
+
+# place curosr on `userModule` and confirm lightbulb shows up
+# and trigger quick fix and confirm `Convert to relative path` is listed
+# execute the code action and confirm it works as expected
+from lib.userModule import MyType
+
+
+# place curosr on `mailbox` and confirm lightbulb shows up
+# and trigger quick fix and confirm `Rename "...mailbox" to "...mailbox_x"` entry is listed
+# execute the code action and confirm it works as expected
+import mailbox
+
+
+# place curosr on `None` and confirm lightbulb shows up
+# and trigger quick fix and confirm `Add "Optional" To type annotation` is listed
+# execute the code action and confirm it works as expected
+def foo(a: int = None) -> int:
+    return a
+
+
+# place curosr on `event` and confirm lightbulb shows up
+# and trigger quick fix and confirm `Create Type Stub` entry is listed
+# execute the code action and confirm it works as expected
+import zope.event
