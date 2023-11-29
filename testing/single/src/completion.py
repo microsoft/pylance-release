@@ -27,6 +27,10 @@ d[]
 # bring up string literal completion inside of `""` and confirm 2 literals are suggested
 e: Literal["Hello", "There"] = ""
 
+# bring up string literal completion between `""` and confirm `"Hello"` is suggested
+match e:
+    case ""
+
 # bring up symbol completion after `My` and confirm tooltip and `MyDict` is suggested
 My
 
@@ -53,3 +57,7 @@ class TypeWithOverload:
     
     @overload
     def ha
+
+# bring up named parameter completion after `sep` and confirm `sep=` is suggested
+print("Hello", sep)
+
