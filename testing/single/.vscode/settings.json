@@ -5,4 +5,7 @@
     "python.analysis.autoImportCompletions": true,
     "python.analysis.indexing": true,
     "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingTypeStubs": "information"
+    }
 }

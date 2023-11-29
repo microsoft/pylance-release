@@ -1,2 +1,8 @@
+from zipfile import Path
+
+from requests import ConnectTimeout
+
+
 class MyType:
-    pass
+    def method(self, v: Path) -> ConnectTimeout:
+        raise Exception("Hello")
