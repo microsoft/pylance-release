@@ -1,3 +1,5 @@
+# this file contains types that are used by other test files.
+
 from zipfile import Path
 
 from requests import ConnectTimeout
