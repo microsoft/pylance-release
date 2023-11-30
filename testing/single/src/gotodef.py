@@ -7,6 +7,8 @@ from typing import Mapping
 class ClassWithMagicMethod:
     def __lt__(self, v: int) -> bool:
         return True
+    def __len__(self) -> int:
+        return 1
     
 
 # place cursor on `<` and issue go to def command
@@ -17,3 +19,7 @@ b = "os"
 
 # place curosr on "Mapping" and issue go to def command
 c: Mapping
+
+# place cursor on `len` and issue go to def
+# and confirm it shows both len and __len__ as def
+print(len(ClassWithMagicMethod()))
