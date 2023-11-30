@@ -61,3 +61,8 @@ class TypeWithOverload:
 # bring up named parameter completion after `sep` and confirm `sep=` is suggested
 print("Hello", sep)
 
+
+# bring up override completion after `__init__` and confirm `__init__` is suggested
+# commit the completion and confirm the generated code. also verify undo work.
+class BuiltInMethod:
+    def __init__

@@ -49,3 +49,13 @@ def test_fixture_gotodef(doctest_namespace):
 # select pytest code actions and confirm correct imports are added
 def test_fixture_codeAction(pytester):
     pass
+
+# place cursor on `fruit_bowl` and execute `Find all references` command either through
+# command palette or right-click menu and confirm it found 3 references in 2 files.
+def test_fixture_findAllReferences(fruit_bowl):
+    print(len(fruit_bowl))
+
+# place cursor on `fruit_bowl` and execute `Rename` command either through
+# command palette or right-click menu and confirm the results.
+def test_fixture_rename(sample_bowl):
+    print(len(sample_bowl))
