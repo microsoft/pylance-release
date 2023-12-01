@@ -48,8 +48,10 @@ class Derived(Base):
 class BaseConsumer:
     def consumer(self, base: Base):
         base.method()
+        return base
 
 
 class DerivedConsumer:
     def consumer(self, derived: Derived):
         derived.method()
+        return derived
