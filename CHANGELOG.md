@@ -1,5 +1,14 @@
 # Changelog
 
+## 2023.12.102 (1 December 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: [Linux] GoTo definition performs symlink resolution [pylance-release#5136](https://github.com/microsoft/pylance-release/issues/5136)
+-   Bug fix: Auto-indent indents unexpectedly in "in between comments" scenario [pylance-release#5100](https://github.com/microsoft/pylance-release/issues/5100)
+-   Bug fix: Auto indentation doesn't work when hitting enter in a class method [pylance-release#5098](https://github.com/microsoft/pylance-release/issues/5098)
+-   Bug fix: Rename symbol in a symbolic py file opens source file [pylance-release#5030](https://github.com/microsoft/pylance-release/issues/5030)
+
 ## 2023.11.13 (15 November 2023) PreRelease
 
 Notable changes:
