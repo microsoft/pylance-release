@@ -3,11 +3,10 @@
 # but that said, it will automatically run if you put cursor on top
 # of supported symbol
 
-# place cursor on `variable` and confirm all `variable` referenced in the document
-# is highlighted
 from typing import Literal
 
-
+# place cursor on `variable` and confirm all `variable` referenced in the document
+# is highlighted
 variable = "Hello"
 
 print(variable)
