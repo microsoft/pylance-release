@@ -1,6 +1,18 @@
 # Changelog
 
-## 2023.12.102 (1 December 2023) PreRelease
+## 2023.11.104 (7 December 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Goto def doesn't work in VS code.dev [pylance-release#5222](https://github.com/microsoft/pylance-release/issues/5222)
+
+## 2023.11.103 (7 December 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Goto def doesn't work in VS code.dev [pylance-release#5222](https://github.com/microsoft/pylance-release/issues/5222)
+
+## 2023.11.102 (1 December 2023) PreRelease
 
 Notable changes:
 
