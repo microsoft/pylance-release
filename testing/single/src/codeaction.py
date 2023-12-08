@@ -71,20 +71,13 @@ print(1 + 2 + 3)
 # place curosr on `userModule` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Convert to relative path` is listed
 # execute the code action and confirm it works as expected
-from lib.userModule import MyType
+from lib.userModule import ConvertImportPath
 
 
 # place curosr on `mailbox` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Rename "...mailbox" to "...mailbox_x"` entry is listed
 # execute the code action and confirm it works as expected
 import mailbox
-
-
-# place curosr on `None` and confirm lightbulb shows up
-# and trigger quick fix and confirm `Add "Optional" To type annotation` is listed
-# execute the code action and confirm it works as expected
-def foo(a: int = None) -> int:
-    return a
 
 
 # place curosr on `event` and confirm lightbulb shows up

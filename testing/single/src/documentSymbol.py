@@ -8,8 +8,8 @@
 
 # confirm the `Go to symbol in Editor` also works as expected
 class A:
-    def __init__(self, v: int):
-        self.v = v
+    def __init__(self, p: int):
+        self.v = p
 
     def getValue(self) -> int:
         return self.v
