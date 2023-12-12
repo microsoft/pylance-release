@@ -2,7 +2,7 @@
 
 ## How to file issues and get help
 
-This project uses GitHub Issues to track bugs and feature requests. Please search the [existing issues](https://github.com/microsoft/pylance-release/issues) before filing new issues to avoid duplicates. For new issues, file your bug or feature request as a new Issue.
+This project uses GitHub Issues to track bugs and feature requests. Please search the [existing issues](https://github.com/microsoft/pylance-release/issues) before filing new issues to avoid duplicates. For new issues, file your bug or feature request as a new issue.
 
 For help and questions about using this project, please see the [Discussions page](https://github.com/microsoft/pylance-release/discussions) in our GitHub repository. 
 
