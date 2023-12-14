@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.12.1 (13 December 2023) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2023.11.104](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#202311104-7-december-2023-prerelease) prerelease build.
+
 ## 2023.11.104 (7 December 2023) PreRelease
 
 Notable changes:
