@@ -1,5 +1,16 @@
 # Changelog
 
+## 2023.12.100 (14 December 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance not recognizing properties and methods from injected dependencies after v2023.12.1 update [pylance-release#5262](https://github.com/microsoft/pylance-release/issues/5262)
+-   Bug fix: Improper handling of partial type stub packages [pylance-release#5139](https://github.com/microsoft/pylance-release/issues/5139)
+
+Pylance's copy of Pyright has been updated from 1.1.336 to 1.1.338.
+
+-   See Pyright's release notes for details: [1.1.337](https://github.com/microsoft/pyright/releases/tag/1.1.337), [1.1.338](https://github.com/microsoft/pyright/releases/tag/1.1.338)
+
 ## 2023.12.1 (13 December 2023) Release
 
 Notable changes:
