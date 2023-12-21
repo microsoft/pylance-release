@@ -1,5 +1,14 @@
 # Changelog
 
+## 2023.12.101 (20 December 2023) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance renders inlay parameter hints with type hint color [pylance-release#5278](https://github.com/microsoft/pylance-release/issues/5278)
+-   Bug fix: Expand Selection on a class method selects the whole file [pylance-release#5272](https://github.com/microsoft/pylance-release/issues/5272)
+-   Bug fix: Inconsistent use of '...' in UI labels [pylance-release#5218](https://github.com/microsoft/pylance-release/issues/5218)
+-   Bug fix: Fix Pylance crash in PTVS [PTVS#7771](https://github.com/microsoft/PTVS/issues/7771)
+
 ## 2023.12.100 (14 December 2023) PreRelease
 
 Notable changes:
