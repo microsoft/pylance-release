@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023.12.102 (4 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Slow Code Completion for Function Names When Analyzing Overridable Functions in Classes [pylance-release#5268](https://github.com/microsoft/pylance-release/issues/5268)
+
 ## 2023.12.101 (20 December 2023) PreRelease
 
 Notable changes:
