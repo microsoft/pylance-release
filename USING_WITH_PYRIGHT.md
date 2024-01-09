@@ -56,7 +56,7 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 |----|----|----|----|----|
 | autoSearchPaths | true | false|  Adds 'src' to the list of search paths. | This may change what files are found when analyzing. So if you're getting missing imports for modules in your 'src' tree, this might be why. |
 | extraPaths | `PYTHONPATH` | [ ] | Additional search paths that will be used when searching for modules imported by files. | Pylance includes paths found in the `PYTHONPATH` environment variable and the `PYTHONPATH` definition from your [`.env` file](https://code.visualstudio.com/docs/python/environments#_environment-variable-definitions-file). Pyright ignores `.env` files and treats paths from the `PYTHONPATH` environment variable as third party library paths. This results in a difference in prioritization of these paths when resolving imports. |
-| typeCheckingMode | off | basic | Determines what diagnostics are shown. | Pylance defaults to `off`, but there is a possibility that VS code will default this to `basic` for Pylance users. If you want to guarantee this is the same as Pyright, set it to `basic` (or whatever you want to enforce) by specifying it in your settings.json. |
+| typeCheckingMode | off | standard | Determines what diagnostics are shown. | Pylance defaults to `off`. If you want to guarantee this is the same as Pyright, set it to `standard` (or whatever you want to enforce) by specifying it in your settings.json. |
 
 Here's an example `pyrightconfig.json` you would use to ensure Pylance and Pyright both picked up the same settings:
 
@@ -64,7 +64,7 @@ Here's an example `pyrightconfig.json` you would use to ensure Pylance and Pyrig
 {
     "autoSearchPaths": false,
     "extraPaths": [], // Include paths from PYTHONPATH env var and .env definition
-    "typeCheckingMode": "basic"
+    "typeCheckingMode": "standard"
 }
 ```
 
@@ -74,7 +74,7 @@ or pyproject.toml
 [tool.pyright]
 autoSearchPaths=false
 extraPaths=[] # Include paths from PYTHONPATH env var and .env definition
-typeCheckingMode="basic"
+typeCheckingMode="standard"
 ```
 
 
