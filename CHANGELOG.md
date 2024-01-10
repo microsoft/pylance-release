@@ -1,5 +1,13 @@
 # Changelog
 
+## 2023.12.103 (10 January 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Output Pyright version in Pylance log [pylance-release#5331](https://github.com/microsoft/pylance-release/issues/5331)
+-   Bug fix: Extract method not working when invoking it on a member inside a class [pylance-release#5277](https://github.com/microsoft/pylance-release/issues/5277)
+-   Bug fix: Auto Generate pandas docify config for docstring injection [pylance-release#5334](https://github.com/microsoft/pylance-release/issues/5334)
+
 ## 2023.12.102 (4 January 2024) PreRelease
 
 Notable changes:
