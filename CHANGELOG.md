@@ -1,5 +1,19 @@
 # Changelog
 
+## 2023.12.104 (22 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: "Received redundant open text document command" when working off mapped network drive [pylance-release#5326](https://github.com/microsoft/pylance-release/issues/5326)
+-   Bug fix: Go-to-def/find-all-refs/rename doesn't work for class declared after type alias [pylance-release#5304](https://github.com/microsoft/pylance-release/issues/5304)
+-   Bug fix: "unknown import symbol" for symbol in unsaved file in symlinked directory [pylance-release#5181](https://github.com/microsoft/pylance-release/issues/5181)
+-   Bug fix: Sync server fails to load `python.analysis.*` (and other) config settings [pylance-release#5035](https://github.com/microsoft/pylance-release/issues/5035)
+-   Bug fix: Rename Symbol deletes extra characters when replacing a symbol found after an elif [pylance-release#4966](https://github.com/microsoft/pylance-release/issues/4966)
+
+Pylance's copy of Pyright has been updated from 1.1.338 to 1.1.347.
+
+-   See Pyright's release notes for details: [1.1.339](https://github.com/microsoft/pyright/releases/tag/1.1.339), [1.1.340](https://github.com/microsoft/pyright/releases/tag/1.1.340), [1.1.341](https://github.com/microsoft/pyright/releases/tag/1.1.341), [1.1.342](https://github.com/microsoft/pyright/releases/tag/1.1.342), [1.1.343](https://github.com/microsoft/pyright/releases/tag/1.1.343), [1.1.344](https://github.com/microsoft/pyright/releases/tag/1.1.344), [1.1.345](https://github.com/microsoft/pyright/releases/tag/1.1.345), [1.1.346](https://github.com/microsoft/pyright/releases/tag/1.1.346), [1.1.347](https://github.com/microsoft/pyright/releases/tag/1.1.347)
+
 ## 2023.12.103 (10 January 2024) PreRelease
 
 Notable changes:
