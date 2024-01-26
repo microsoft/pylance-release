@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.1.101 (25 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Turning off indexing, Pylance gives different results for completions (2023.12.1 did not) [pylance-release#5397](https://github.com/microsoft/pylance-release/issues/5397)
+-   Bug fix: Symbols from ancestor cells in Interactive Window are unrecognized [pylance-release#5389](https://github.com/microsoft/pylance-release/issues/5389)
+
 ## 2024.1.100 (24 January 2024) PreRelease
 
 Notable changes:
