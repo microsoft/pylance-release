@@ -1,5 +1,16 @@
 # Changelog
 
+## 2024.1.100 (24 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: No docstrings shown for stdlib symbols [pylance-release#5383](https://github.com/microsoft/pylance-release/issues/5383)
+-   Bug fix: Indexing time with 2023.12.104 is about 3x slower [pylance-release#5382](https://github.com/microsoft/pylance-release/issues/5382)
+
+Pylance's copy of Pyright has been updated from 1.1.347 to 1.1.348.
+
+-   See Pyright's release notes for details: [1.1.348](https://github.com/microsoft/pyright/releases/tag/1.1.348)
+
 ## 2023.12.104 (22 January 2024) PreRelease
 
 Notable changes:
