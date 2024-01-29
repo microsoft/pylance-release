@@ -33,3 +33,6 @@ class MyNumber:
 
 # hover on `+` and confirm it shows tooltip for `__add__`
 e = MyNumber(0) + MyNumber(1)
+
+# hover on int to see builtin doc string
+i: int
