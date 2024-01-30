@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.1.102 (29 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Extract variable shouldn't be offered when multiple statements are selected. [pylance-release#5400](https://github.com/microsoft/pylance-release/issues/5400)
+-   Bug fix: MoveSymbol doesn't work with network folder [pylance-release#5399](https://github.com/microsoft/pylance-release/issues/5399)
+
 ## 2024.1.101 (25 January 2024) PreRelease
 
 Notable changes:
