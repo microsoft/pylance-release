@@ -23,6 +23,8 @@ b.method()
 
 # place cursor on `Derived2` and see type hierarchy
 # check subtypes and supertypes
+# Please note that currently it doesn't show subtypes. It's a known issue tracked at
+# https://github.com/microsoft/pylance-release/issues/5403
 c = Derived2()
 
 # place cursor on `method` and see type hierarchy
@@ -32,10 +34,12 @@ c.method()
 
 T = TypeVar("T")
 
+
 # place cursor on `TypeHierarchyBase` and see type hierarchy
 # check subtypes
 class TypeHierarchyBase(Generic[T]):
     pass
+
 
 # place cursor on `TypeHierarchyType` and see type hierarchy
 # check supertypes

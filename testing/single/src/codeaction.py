@@ -46,7 +46,7 @@ a: int = "hello"
 
 
 # place cursor on `unknownModule` and confirm lightbulb shows up
-# and trigger quick fix and confirm `select a different interpreter` and 
+# and trigger quick fix and confirm `select a different interpreter` and
 # `learn more about resolving import` entry is listed
 # execute the code action and confirm it works as expected
 import unknownModule
@@ -83,4 +83,6 @@ import mailbox
 # place curosr on `event` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Create Type Stub` entry is listed
 # execute the code action and confirm it works as expected
+# Please note that currently it doesn't work. It's a known issue tracked at
+# https://github.com/microsoft/pylance-release/issues/5188
 import zope.event
