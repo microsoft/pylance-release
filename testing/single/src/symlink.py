@@ -30,7 +30,8 @@ a = shared.RenameType()
 
 
 # rename `SharedType` to `SharedType1` and undo
-# confirm only `SharedType` from `from linked.shared` is renamed.
+# confirm only `SharedType` from `from linked.shared` is renamed when you rename,
+# but when a file is saved, both of them should be renamed.
 b = shared.SharedType()
 
 # try to rename `shared`, we need to decide whether we should allow it or not since it will break
