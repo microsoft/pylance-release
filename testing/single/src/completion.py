@@ -27,7 +27,7 @@ d[]
 # bring up string literal completion inside of `""` and confirm 2 literals are suggested
 e: Literal["Hello", "There"] = ""
 
-# bring up string literal completion between `""` and confirm `"Hello"` is suggested
+# bring up string literal completion between `""` and confirm `"Hello"` and `"There"` are suggested
 match e:
     case ""
 

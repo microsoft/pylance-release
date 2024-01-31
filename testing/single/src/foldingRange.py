@@ -30,6 +30,8 @@ def functionWithArgsSpreadOverMultipleLines(name: str,
     pass
 
 # Folding this class should leave only the `class` line visible.
+# In addition to the methods within, the trailing comments at the end of
+# the class should also be folded.
 class Class:
     # Single-line ranges (such as single-line functions) are not foldable.
     def singleLineFunction(self): pass
