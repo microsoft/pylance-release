@@ -14,10 +14,10 @@ class ClassWithMagicMethod:
 # place cursor on `<` and issue go to def command
 a = ClassWithMagicMethod() < 1
 
-# place curosr on "os" and issue go to def command
+# place cursor on "os" and issue go to def command
 b = "os"
 
-# place curosr on "Mapping" and issue go to def command
+# place cursor on "Mapping" and issue go to def command
 c: Mapping
 
 # place cursor on `len` and issue go to def
