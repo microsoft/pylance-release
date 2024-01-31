@@ -36,6 +36,7 @@ class TypeToMove:
 # place cursor on `outerModule` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add "./outsideLib" to extraPaths` is listed
 # execute the code action and confirm `extraPaths` is added to `settings.json`
+# Undo currently does not work: https://github.com/microsoft/pylance-release/issues/5161
 import outerModule
 
 
@@ -68,19 +69,20 @@ def function():
 print(1 + 2 + 3)
 
 
-# place curosr on `userModule` and confirm lightbulb shows up
+# place cursor on `userModule` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Convert to relative path` is listed
 # execute the code action and confirm it works as expected
 from lib.userModule import ConvertImportPath
 
 
-# place curosr on `mailbox` and confirm lightbulb shows up
+# place cursor on `mailbox` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Rename "...mailbox" to "...mailbox_x"` entry is listed
 # execute the code action and confirm it works as expected
+# Undo currently does not work: https://github.com/microsoft/pylance-release/issues/5162
 import mailbox
 
 
-# place curosr on `event` and confirm lightbulb shows up
+# place cursor on `event` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Create Type Stub` entry is listed
 # execute the code action and confirm it works as expected
 # Please note that currently it doesn't work. It's a known issue tracked at

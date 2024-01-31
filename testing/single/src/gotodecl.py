@@ -9,10 +9,10 @@ from typing import Mapping
 # it should go to pyi file.
 a = 1 == 1
 
-# place curosr on "os" and issue go to decl command
+# place cursor on "os" and issue go to decl command
 # it should go to pyi file.
 b = "os"
 
-# place curosr on "Mapping" and issue go to decl command
+# place cursor on "Mapping" and issue go to decl command
 # it should go to pyi file instead of py file.
 c: Mapping
