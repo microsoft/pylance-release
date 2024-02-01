@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.1.103 (31 January 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Extract method and variable not working on Untitled notebooks in WSL [pylance-release#5424](https://github.com/microsoft/pylance-release/issues/5424)
+-   Bug fix: Cancellation failed in browser [pylance-release#5420](https://github.com/microsoft/pylance-release/issues/5420)
+
 ## 2024.1.102 (29 January 2024) PreRelease
 
 Notable changes:
