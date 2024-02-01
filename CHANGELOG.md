@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.1.104 (1 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Cell URI to notebook URI conversion fails if path only contains filename [pylance-release#5435](https://github.com/microsoft/pylance-release/issues/5435)
+
 ## 2024.1.103 (31 January 2024) PreRelease
 
 Notable changes:
