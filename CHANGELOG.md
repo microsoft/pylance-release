@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.2.100 (13 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Release version 2024.2.1 shows missing imports error for function imported from another python file [pylance-release#5459](https://github.com/microsoft/pylance-release/issues/5459)
+-   Enhancement: Add heuristics for add imports quick fixes [pylance-release#5226](https://github.com/microsoft/pylance-release/issues/5226)
+-   Bug fix: Editor language status for Python wiggles distractingly [pylance-release#4961](https://github.com/microsoft/pylance-release/issues/4961)
+-   Bug fix: Quick Fix import puts local imports with third-party imports [pylance-release#4872](https://github.com/microsoft/pylance-release/issues/4872)
+
+Pylance's copy of Pyright has been updated from 1.1.348 to 1.1.350.
+
+-   See Pyright's release notes for details: [1.1.349](https://github.com/microsoft/pyright/releases/tag/1.1.349), [1.1.350](https://github.com/microsoft/pyright/releases/tag/1.1.350)
+
 ## 2024.2.1 (8 February 2024) Release
 
 Notable changes:
