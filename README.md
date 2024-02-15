@@ -239,6 +239,12 @@ def test_foo(my_fixture: str):...
         - `true` 
         - `false` (default)
 
+- `python.analysis.addImport.heuristics`
+    - Offers experimental heuristics in `add import` code actions
+    - Accepted values:
+       - `true`
+       - `false` (default)
+
 
 # Semantic highlighting
 
