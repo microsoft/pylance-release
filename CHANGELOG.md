@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024.2.101 (15 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Support cancellation in the browser when COI is turned off [pylance-release#5473](https://github.com/microsoft/pylance-release/issues/5473)
+-   Enhancement: Add `Change spelling to` code action similar to what typescript provide [pylance-release#5467](https://github.com/microsoft/pylance-release/issues/5467)
+-   Bug fix: `region` at the start of a normal comment triggers error about `endregion` being missing [pylance-release#3857](https://github.com/microsoft/pylance-release/issues/3857)
+
 ## 2024.2.100 (13 February 2024) PreRelease
 
 Notable changes:
