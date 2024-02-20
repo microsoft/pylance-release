@@ -1,5 +1,16 @@
 # Changelog
 
+## 2024.2.102 (20 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: `searchImport` fails with circular reference some times. [pylance-release#5481](https://github.com/microsoft/pylance-release/issues/5481)
+-   Bug fix: Enhancement: Support a different location for downloading type stubs in the browser [pylance-release#5479](https://github.com/microsoft/pylance-release/issues/5479)
+
+Pylance's copy of Pyright has been updated from 1.1.350 to 1.1.351.
+
+-   See Pyright's release notes for details: [1.1.351](https://github.com/microsoft/pyright/releases/tag/1.1.351)
+
 ## 2024.2.101 (15 February 2024) PreRelease
 
 Notable changes:
