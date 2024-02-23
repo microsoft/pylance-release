@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.2.103 (22 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: "Auto-Import" imports from wrong path when import format is "relative" [pylance-release#5427](https://github.com/microsoft/pylance-release/issues/5427)
+-   Enhancement: Improve error message when symbol fails to be moved to an existing file [pylance-release#4345](https://github.com/microsoft/pylance-release/issues/4345)
+
 ## 2024.2.102 (20 February 2024) PreRelease
 
 Notable changes:
