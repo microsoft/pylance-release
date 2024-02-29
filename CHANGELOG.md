@@ -1,11 +1,5 @@
 # Changelog
 
-## 2024.2.104 (27 February 2024) PreRelease
-
-Notable changes:
-
--   Bug fix: Telemetry fixes
-
 ## 2024.2.103 (22 February 2024) PreRelease
 
 Notable changes:
