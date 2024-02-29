@@ -154,12 +154,6 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.autoImportUserSymbols`
-    - Used to control the offering of user symbols in auto-import completions. This will impact number of items shown in the completion and performance.
-    -   Accepted values:
-        -   `true` 
-        -   `false` (default)
-
 -   `python.analysis.importFormat`
 
     -   Defines the default format for import module.
