@@ -31,6 +31,7 @@ jobs:
         uses: ./actions/needs-more-info-closer
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          additionalTeam: "erictraut"
           label: waiting for user response
           # Close issues that are marked a 'waiting for user response' label and were last interacted with by a contributor or bot, after 30 days has passed.
           closeDays: 30
