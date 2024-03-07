@@ -89,6 +89,18 @@ you are running an official build and are still running into issues, please file
 If you are using Pylance in a WSL environment, make sure your workspace is located under a WSL folder (`/home/...`) and not shared with Windows (`/mnt/...`).
 See issues [#1443](https://github.com/microsoft/pylance-release/issues/1443#issuecomment-867863124) and [vscode-remote-release#5000](https://github.com/microsoft/vscode-remote-release/issues/5000).
 
+### Pylance is crashing
+
+Although we attempt to prevent Pylance from crashing, sometimes certain configurations can cause problems for Pylance. One particular problem is the amount of memory that Pylance is allowed to allocate when running inside of VS Code. VS Code ships with [pointer compression](https://www.electronjs.org/blog/v8-memory-cage) enabled. This makes VS Code run faster, but limits the amount of memory that Pylance can use. With some configurations, we may need more than 4GB of memory in order to analyze your project. 
+
+If you think you're hitting an OOM situation, you can alleviate this problem by providing your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. Pylance (by default) runs using VS code's Node.js executable (which has the 4GB limit). 
+
+To specify your own Node.js executable, set this setting in your user settings.json and restart VS Code:
+
+```json
+"python.analysis.nodeExecutable": "<path to node.js exe>"
+```
+
 ## Filing an issue
 
 When filing an issue, make sure you do the following:
