@@ -95,7 +95,7 @@ Although we attempt to prevent Pylance from crashing, sometimes certain configur
 
 If you think you're hitting an OOM situation, you can alleviate this problem by providing your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. Pylance (by default) runs using VS code's Node.js executable (which has the 4GB limit). 
 
-To specify your own Node.js executable, set this setting in your user settings.json and restart VS Code:
+To specify your own Node.js executable, set this setting in your User settings.json and restart VS Code:
 
 ```json
 "python.analysis.nodeExecutable": "<path to node.js exe>"
