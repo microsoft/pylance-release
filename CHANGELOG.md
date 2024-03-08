@@ -1,5 +1,23 @@
 # Changelog
 
+## 2024.2.106 (7 March 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Added telemetry to investigate the hover performance issue [pylance-release#5598](https://github.com/microsoft/pylance-release/issues/5598)
+
+## 2024.2.105 (29 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: add import throws on certain invalid code [pylance-release#5536](https://github.com/microsoft/pylance-release/issues/5536)
+
+## 2024.2.104 (27 February 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Telemetry fixes
+
 ## 2024.2.103 (22 February 2024) PreRelease
 
 Notable changes:
@@ -38,12 +56,6 @@ Notable changes:
 Pylance's copy of Pyright has been updated from 1.1.348 to 1.1.350.
 
 -   See Pyright's release notes for details: [1.1.349](https://github.com/microsoft/pyright/releases/tag/1.1.349), [1.1.350](https://github.com/microsoft/pyright/releases/tag/1.1.350)
-
-## 2024.2.3 (4 March 2024) Release
-
-Notable changes:
-
--   Enhancement: Server-side LSP request telemetry
 
 ## 2024.2.2 (14 February 2024) Release
 
