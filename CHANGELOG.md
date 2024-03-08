@@ -57,6 +57,12 @@ Pylance's copy of Pyright has been updated from 1.1.348 to 1.1.350.
 
 -   See Pyright's release notes for details: [1.1.349](https://github.com/microsoft/pyright/releases/tag/1.1.349), [1.1.350](https://github.com/microsoft/pyright/releases/tag/1.1.350)
 
+## 2024.2.3 (4 March 2024) Release
+
+Notable changes:
+
+-   Enhancement: Server-side LSP request telemetry
+
 ## 2024.2.2 (14 February 2024) Release
 
 Notable changes:
