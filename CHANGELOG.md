@@ -1,5 +1,21 @@
 # Changelog
 
+## 2024.3.100 (13 March 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Provide profiling command to generate `cpuprofile` (chrome perf profile file) for all worker threads [pylance-release#5590](https://github.com/microsoft/pylance-release/issues/5590)
+-   Bug fix: No documentation for `isalpha` called on `LiteralString` [pylance-release#5566](https://github.com/microsoft/pylance-release/issues/5566)
+-   Bug fix: Regression in 2023.10.41 quick-fix pyright-specific comments [pylance-release#5565](https://github.com/microsoft/pylance-release/issues/5565)
+-   Bug fix: Dont show `convert to relative path` for files in local `typings` or `stubs` path. [pylance-release#5505](https://github.com/microsoft/pylance-release/issues/5505)
+-   Bug fix: Move symbol to doesn't work in typed context [pylance-release#5498](https://github.com/microsoft/pylance-release/issues/5498)
+-   Bug fix: JavaScript heap out of memory - pytest w aws_cdk imports [pylance-release#5440](https://github.com/microsoft/pylance-release/issues/5440)
+-   Bug fix: semantic modifiers : BuiltinConstants don't have the TypeHint modifier when they should [pylance-release#4758](https://github.com/microsoft/pylance-release/issues/4758)
+
+Pylance's copy of Pyright has been updated from 1.1.351 to 1.1.354.
+
+-   See Pyright's release notes for details: [1.1.352](https://github.com/microsoft/pyright/releases/tag/1.1.352), [1.1.353](https://github.com/microsoft/pyright/releases/tag/1.1.353), [1.1.354](https://github.com/microsoft/pyright/releases/tag/1.1.354)
+
 ## 2024.3.1 (12 March 2024) Release
 
 Notable changes:
