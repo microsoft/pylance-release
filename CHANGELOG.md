@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.3.101 (21 March 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: `Add #type ignore` code action not offered for some type-related diagnostics [pylance-release#5628](https://github.com/microsoft/pylance-release/issues/5628)
+-   Bug fix: Respect `files.refactoring.autoSave` for move to file [pylance-release#5217](https://github.com/microsoft/pylance-release/issues/5217)
+-   Enhancement: Updated pandas stubs
+-   Enhancement: Added SymPy stubs
+
+Pylance's copy of Pyright has been updated from 1.1.354 to 1.1.355.
+
+-   See Pyright's release notes for details: [1.1.355](https://github.com/microsoft/pyright/releases/tag/1.1.355)
+
 ## 2024.3.100 (13 March 2024) PreRelease
 
 Notable changes:
