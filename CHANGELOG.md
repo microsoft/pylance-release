@@ -29,6 +29,12 @@ Pylance's copy of Pyright has been updated from 1.1.351 to 1.1.354.
 
 -   See Pyright's release notes for details: [1.1.352](https://github.com/microsoft/pyright/releases/tag/1.1.352), [1.1.353](https://github.com/microsoft/pyright/releases/tag/1.1.353), [1.1.354](https://github.com/microsoft/pyright/releases/tag/1.1.354)
 
+## 2024.3.2 (25 March 2024) Release
+
+Notable changes:
+
+-   Bug fix: Code marked as unreachable after pandas concat [pylance-release#5630](https://github.com/microsoft/pylance-release/issues/5630)
+
 ## 2024.3.1 (12 March 2024) Release
 
 Notable changes:
