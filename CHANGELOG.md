@@ -1,5 +1,19 @@
 # Changelog
 
+## 2024.3.102 (27 March 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Some characters are mistaken for invalid identifiers [pylance-release#5656](https://github.com/microsoft/pylance-release/issues/5656)
+-   Enhancement: Users should be able to tell which `pandas-stubs` we have bundled [pylance-release#5643](https://github.com/microsoft/pylance-release/issues/5643)
+-   Enhancement: Multiline Comment: the 2nd line can be wrongly indented [pylance-release#5488](https://github.com/microsoft/pylance-release/issues/5488)
+-   Bug fix: Extract variable shouldn't work on assignments [pylance-release#5339](https://github.com/microsoft/pylance-release/issues/5339)
+-   Enhancement: Updated pandas stubs
+
+Pylance's copy of Pyright has been updated from 1.1.355 to 1.1.356.
+
+-   See Pyright's release notes for details: [1.1.356](https://github.com/microsoft/pyright/releases/tag/1.1.356)
+
 ## 2024.3.101 (21 March 2024) PreRelease
 
 Notable changes:
