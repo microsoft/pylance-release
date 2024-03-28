@@ -21,3 +21,21 @@ if ch == "a":
     pass
     # type `:` after `else` and see `else` is moved to right position.
     else
+    
+
+# Set "autoFormatStrings" to true and add a { into the string below. Make sure
+# it auto adds the `f` on the front. Repeat for the other strings
+x = ""
+y = ''
+z = """""""
+w = ''''''
+
+# Make sure it doesn't add the `f` if it's already there
+a = f""
+b = f''
+c = f"""""""
+d = f''''''
+
+# Make sure it doesn't add the `f` if it the start is a r or b string.
+e = r""
+f = b''
