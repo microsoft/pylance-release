@@ -30,8 +30,11 @@ a = shared.RenameType()
 
 
 # rename `SharedType` to `SharedType1` and undo
-# confirm only `SharedType` from `from linked.shared` is renamed when you rename,
-# but when a file is saved, both of them should be renamed.
+# confirm only `SharedType` in `src/linked/shared.py` is renamed when you rename,
+# but when `shared.py` is saved, `SharedType` in `src/linked/shared_link.py` should also be renamed.
+#
+# Note that when "files.refactoring.autoSave" is `true` (default), `shared.py` is saved
+# immediately and therefore both files will show the change.
 b = shared.SharedType()
 
 # try to rename `shared`, we need to decide whether we should allow it or not since it will break
