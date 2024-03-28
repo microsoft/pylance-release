@@ -30,7 +30,8 @@ y = ''
 z = """""""
 w = ''''''
 
-# Make sure it doesn't add the `f` if it's already there
+# Make sure it doesn't add the `f` if it's already there. Note this is a known
+# issue in our implementation: https://github.com/microsoft/pylance-release/issues/5703
 a = f""
 b = f''
 c = f"""""""
