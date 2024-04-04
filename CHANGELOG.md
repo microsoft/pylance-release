@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.4.100 (4 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: The annotation inserted on double-click of the preview of inferred type does not match, and instead inserts the first imported variable of that type [pylance-release#5693](https://github.com/microsoft/pylance-release/issues/5693)
+-   Bug fix: File System error with Pylance on activate [pylance-release#5686](https://github.com/microsoft/pylance-release/issues/5686)
+-   Bug fix: Conda environment folders are not recognized as virtual environments [pylance-release#5191](https://github.com/microsoft/pylance-release/issues/5191)
+
+Pylance's copy of Pyright has been updated from 1.1.356 to 1.1.357.
+
+-   See Pyright's release notes for details: [1.1.357](https://github.com/microsoft/pyright/releases/tag/1.1.357)
+
 ## 2024.4.1 (2 April 2024) Release
 
 Notable changes:
