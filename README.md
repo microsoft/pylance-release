@@ -227,17 +227,17 @@ def test_foo(my_fixture: str):...
         - `true` (default)
         - `false`
 
+- `python.analysis.autoIndent`
+    - Automatically adjust indentation based on language semantics when typing Python code.
+    - Accepted values:
+        - `true` (default)
+        - `false`
+
 - `python.analysis.autoFormatStrings`
     - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
     - Accepted values:
         - `true` 
         - `false` (default)
-
-- `python.analysis.addImport.heuristics`
-    - Offers experimental heuristics in `add import` code actions
-    - Accepted values:
-       - `true`
-       - `false` (default)
 
 
 # Semantic highlighting
