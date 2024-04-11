@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.4.101 (10 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Smart indentation is broken in Python [pylance-release#5741](https://github.com/microsoft/pylance-release/issues/5741)
+-   Bug fix: [Feature request] Autocomplete Abstract, Protocol and method override [pylance-release#5362](https://github.com/microsoft/pylance-release/issues/5362)
+-   Bug fix: Python curses module on Windows is never allowed to autocomplete [pylance-release#2763](https://github.com/microsoft/pylance-release/issues/2763)
+
+Pylance's copy of Pyright has been updated from 1.1.357 to 1.1.358.
+
+-   See Pyright's release notes for details: [1.1.358](https://github.com/microsoft/pyright/releases/tag/1.1.358)
+
 ## 2024.4.100 (4 April 2024) PreRelease
 
 Notable changes:
