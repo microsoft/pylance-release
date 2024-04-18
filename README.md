@@ -227,18 +227,23 @@ def test_foo(my_fixture: str):...
         - `true` (default)
         - `false`
 
+- `python.analysis.autoFormatStrings`
+    - When typing a `{` in a string, automatically puts an `f` on the front of the string.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 - `python.analysis.autoIndent`
     - Automatically adjust indentation based on language semantics when typing Python code.
     - Accepted values:
         - `true` (default)
         - `false`
 
-- `python.analysis.autoFormatStrings`
-    - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
+- `python.analysis.nodeExecutable`
+    - Path to a node executable to use to run Pylance. If this value is empty, Pylance uses VS Code's node executable.
+    - Set this value when you are having out of memory issues. Using a custom node executable allows Pylance to allocate more memory.
     - Accepted values:
-        - `true` 
-        - `false` (default)
-
+        - `any executable path`
 
 # Semantic highlighting
 
