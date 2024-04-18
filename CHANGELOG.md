@@ -1,5 +1,15 @@
 # Changelog
 
+## 2024.4.102 (17 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Should be able to disable auto-indent without setting `formatOnType` to `false` [pylance-release#5592](https://github.com/microsoft/pylance-release/issues/5592)
+
+Pylance's copy of Pyright has been updated from 1.1.358 to 1.1.359.
+
+-   See Pyright's release notes for details: [1.1.359](https://github.com/microsoft/pyright/releases/tag/1.1.359)
+
 ## 2024.4.101 (10 April 2024) PreRelease
 
 Notable changes:
