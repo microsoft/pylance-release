@@ -1,5 +1,23 @@
 # Changelog
 
+## 2024.4.104 (25 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: multiple `#type: ignore` shown for 1 line if that line contains multiple errors [pylance-release#5657](https://github.com/microsoft/pylance-release/issues/5657)
+
+Pylance's copy of Pyright has been updated from 1.1.359 to 1.1.360.
+
+-   See Pyright's release notes for details: [1.1.360](https://github.com/microsoft/pyright/releases/tag/1.1.360)
+
+## 2024.4.103 (24 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Syntax tokens are not provided for f-strings [pylance-release#5781](https://github.com/microsoft/pylance-release/issues/5781)
+-   Bug fix: Exact match suggestions sometimes not shown for symbol import completions [pylance-release#5764](https://github.com/microsoft/pylance-release/issues/5764)
+-   Enhancement: Provide command to start trace logging without restarting pylance [pylance-release#5724](https://github.com/microsoft/pylance-release/issues/5724)
+
 ## 2024.4.102 (17 April 2024) PreRelease
 
 Notable changes:
