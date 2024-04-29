@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.4.105 (29 April 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Unresolved import on package that is installed in kernel used in a notebook [pylance-release#5814](https://github.com/microsoft/pylance-release/issues/5814)
+
 ## 2024.4.104 (25 April 2024) PreRelease
 
 Notable changes:
