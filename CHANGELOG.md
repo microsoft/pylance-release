@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.4.106 (1 May 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Telemetry fix for perf investigations
+
 ## 2024.4.105 (29 April 2024) PreRelease
 
 Notable changes:
