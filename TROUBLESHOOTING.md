@@ -101,6 +101,16 @@ To specify your own Node.js executable, set this setting in your User settings.j
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
+For those using `vscode-server` remotely, you can increase the memory limit by setting the `NODE_OPTIONS` environment variable in your shell configuration.
+
+On Linux or Mac, add `export NODE_OPTIONS="--max-old-space-size=8192"` to either your `.xxx_profile` or `.xxxrc` file. On Windows, add `set NODE_OPTIONS=--max-old-space-size=8192` to your batch file to update your system environment variable, or open the `System Properties` window and add `NODE_OPTIONS=--max-old-space-size=8192`.
+
+For more details, visit [--max-old-space-size](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes)
+
+To minimize memory usage by Pylance, exclude unneeded `*.py` files using `python.analysis.exclude`. For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
+
+For environments with multiple root workspaces, place the `.vscode/settings.json` in the root directory of each workspace instead of using `settings` section in a `*.code-workspace` file.
+
 ## Filing an issue
 
 When filing an issue, make sure you do the following:
