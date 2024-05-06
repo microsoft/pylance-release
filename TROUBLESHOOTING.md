@@ -105,7 +105,7 @@ To specify your own Node.js executable, set this setting in your User settings.j
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
-Your user settings.json depends upon how you're connecting:
+The location of your User settings.json depends upon how you're connecting:
 
 - Local - Stored in a [local](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) file. This can be found with the command `Preferences: Open User Settings.json`.
 - Remote - Stored on the remote machine. Example `/home/user/.vscode-server/data/Machine/settings.json`
