@@ -118,7 +118,7 @@ On Linux or Mac, add `export NODE_OPTIONS="--max-old-space-size=8192"` to either
 
 For more details, visit [--max-old-space-size](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes)
 
-#### Exclude unneeded `*.py` files
+#### Exclude unneeded `*.py` files from analysis
 
 To minimize memory usage by Pylance, exclude unneeded `*.py` files using `python.analysis.exclude`. For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
 
