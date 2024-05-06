@@ -99,11 +99,16 @@ If you think you're hitting an out-of-memory situation, you can alleviate this p
 
 Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit). 
 
-To specify your own Node.js executable, set this setting in your User settings.json and restart VS Code:
+To specify your own Node.js executable, set this setting in your user settings.json and restart VS Code:
 
 ```json
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
+
+Your user settings.json depends upon how you're connecting:
+
+- Local - Should by your User settings.json
+- Remote - Should be a remote settings.json. Example `/home/user/.vscode-server/data/Machine/settings.json`
 
 #### Increase memory limit for VS code (remote only)
 
