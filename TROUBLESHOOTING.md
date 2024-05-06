@@ -93,7 +93,7 @@ See issues [#1443](https://github.com/microsoft/pylance-release/issues/1443#issu
 
 Although we attempt to prevent Pylance from crashing, sometimes certain configurations can cause problems for Pylance. One particular problem is the amount of memory that Pylance is allowed to allocate when running inside of VS Code. VS Code ships with [pointer compression](https://www.electronjs.org/blog/v8-memory-cage) enabled. This makes VS Code run faster, but limits the amount of memory that Pylance can use. With some configurations, we may need more than 4GB of memory in order to analyze your project. 
 
-If you think you're hitting an out-of-memory situation, you can alleviate this problem a number of ways:
+If you think you're hitting an out-of-memory situation, you can alleviate this problem in a number of ways:
 
 #### Provide your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. 
 
