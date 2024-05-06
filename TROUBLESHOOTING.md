@@ -93,7 +93,11 @@ See issues [#1443](https://github.com/microsoft/pylance-release/issues/1443#issu
 
 Although we attempt to prevent Pylance from crashing, sometimes certain configurations can cause problems for Pylance. One particular problem is the amount of memory that Pylance is allowed to allocate when running inside of VS Code. VS Code ships with [pointer compression](https://www.electronjs.org/blog/v8-memory-cage) enabled. This makes VS Code run faster, but limits the amount of memory that Pylance can use. With some configurations, we may need more than 4GB of memory in order to analyze your project. 
 
-If you think you're hitting an out-of-memory situation, you can alleviate this problem by providing your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit). 
+If you think you're hitting an out-of-memory situation, you can alleviate this problem in a number of ways:
+
+#### Provide your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. 
+
+Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit). 
 
 To specify your own Node.js executable, set this setting in your User settings.json and restart VS Code:
 
@@ -101,11 +105,20 @@ To specify your own Node.js executable, set this setting in your User settings.j
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
+The location of your User settings.json depends upon how you're connecting:
+
+- Local - Stored in a [local](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) file. This can be found with the command `Preferences: Open User Settings.json`.
+- Remote - Stored on the remote machine. Example `/home/user/.vscode-server/data/Machine/settings.json`
+
+#### Increase memory limit for VS code (remote only)
+
 For those using `vscode-server` remotely, you can increase the memory limit by setting the `NODE_OPTIONS` environment variable in your shell configuration.
 
 On Linux or Mac, add `export NODE_OPTIONS="--max-old-space-size=8192"` to either your `.xxx_profile` or `.xxxrc` file. On Windows, add `set NODE_OPTIONS=--max-old-space-size=8192` to your batch file to update your system environment variable, or open the `System Properties` window and add `NODE_OPTIONS=--max-old-space-size=8192`.
 
 For more details, visit [--max-old-space-size](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes)
+
+#### Exclude unneeded `*.py` files from analysis
 
 To minimize memory usage by Pylance, exclude unneeded `*.py` files using `python.analysis.exclude`. For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
 
