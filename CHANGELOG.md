@@ -1,5 +1,20 @@
 # Changelog
 
+## 2024.5.100 (9 May 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Don't append "py" on show call hierarchy view when source is a notebook file [pylance-release#5815](https://github.com/microsoft/pylance-release/issues/5815)
+-   Enhancement: Support enabling/disabling auto-indent without restarting Pylance [pylance-release#5778](https://github.com/microsoft/pylance-release/issues/5778)
+-   Enhancement: Add "implement all inherited abstract classes" code action as a quick fix for reportAbstractUsage [pylance-release#5757](https://github.com/microsoft/pylance-release/issues/5757)
+-   Bug fix: create stub file not working [pylance-release#5188](https://github.com/microsoft/pylance-release/issues/5188)
+-   Bug fix: Syntax highlighting color of keywords should remain constant [pylance-release#4845](https://github.com/microsoft/pylance-release/issues/4845)
+-   Bug fix: VS Code + Pylance does not find venv-installed modules while venv is activated [pylance-release#3881](https://github.com/microsoft/pylance-release/issues/3881)
+
+Pylance's copy of Pyright has been updated from 1.1.360 to 1.1.362.
+
+-   See Pyright's release notes for details: [1.1.361](https://github.com/microsoft/pyright/releases/tag/1.1.361), [1.1.362](https://github.com/microsoft/pyright/releases/tag/1.1.362)
+
 ## 2024.5.1 (6 May 2024) Release
 
 Notable changes:
