@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.5.101 (16 May 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Added more detail to assertion message to investigate "Check called before parsing" crash [pylance-release#5868](https://github.com/microsoft/pylance-release/issues/5868)
+-   Enhancement: Updated pandas, django and scikit-learn stubs
+
 ## 2024.5.100 (9 May 2024) PreRelease
 
 Notable changes:
