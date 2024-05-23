@@ -1,5 +1,6 @@
 # This file is for testing different types of docstrings and verifying they display
 # correctly.
+# Try it with `python.analysis.supportRestructuredText` both true and false. 
 import numpy as np
 
 # Hover over zeroes and ensure the markdown looks correct.
