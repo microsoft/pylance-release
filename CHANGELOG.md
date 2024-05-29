@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024.5.103 (28 May 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: import side by side in standalone file didn't work [pylance-release#5916](https://github.com/microsoft/pylance-release/issues/5916)
+-   Bug fix: Pylance reports import Missing in inexistent file when git enabled [pylance-release#5895](https://github.com/microsoft/pylance-release/issues/5895)
+-   Bug fix: Pylance deletes automatically-added `#` sign when you line break inside a comment [pylance-release#5484](https://github.com/microsoft/pylance-release/issues/5484)
+
 ## 2024.5.102 (23 May 2024) PreRelease
 
 Notable changes:
