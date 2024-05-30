@@ -610,6 +610,16 @@ def normaltable():
     +------------------------+------------+----------+----------+
     """
 
+def simpletable():
+    """
+    ================ ============ =============
+    Column 1         Column 2     Column 3
+    ================ ============ =============
+    Some text        Some more    Some more
+    Another row      2            3
+    ================ ============ =============
+    """
+
 def link():
     """
     Direct link
@@ -662,5 +672,68 @@ def substitution():
     dispose of medical waste.
 
     .. |biohazard| image:: https://thumb10.shutterstock.com/thumb_large/3673289/401411077/stock-vector-biohazard-sign-vector-illustration-eps-401411077.jpg
-        alt: biohazard
+        :alt: biohazard
     """
+
+def footnotes():
+    """
+    Lorem ipsum [#f1]_ dolor sit amet ... [#f2]_
+
+    .. rubric:: Footnotes
+
+    .. [#f1] Text of the first footnote.
+    .. [#f2] Text of the second footnote.
+    """
+    
+def format_example_func(a:str, b:int):
+    """
+    This function made expressly to show docstring formatting and nothing else
+    
+    For some reason the parsing has a really hard time when I write a docstring
+    where both multiline docstrings and indentation exist simultaneously.
+
+        Params:
+            a: a string you want to do something with, who knows what it actually
+               does this is just an example so people can call the help function
+            b: another random arguement intended to showcase what changes when you
+               combine indentation with multiline docstrings
+
+        Returns:
+            foo: I don't even know what this thing will return blah blah thingy
+                 stuff stuff stuff.
+    """
+
+class Foo:
+    """Does the thing.
+
+    Attributes:
+        bar (int): A short description
+        buzz (str): A longer description that needs to be broken up over multiple lines,
+            because there is additional context that I want to provide, and I don't
+            want to go past the 88 line length limit for whatever reason.
+    """
+    bar: int
+    buzz: str
+
+def foo(a:int,b:float,c:str):
+    """
+    Parameters
+    ----------
+        a (int): integer number.
+        b (float): description that takes
+            more than 1 line in docstr
+        c (str): word.
+    """
+    pass
+
+def bsr(a:int,b:float,c:str):
+    """
+    Parameters
+    ----------
+        a : integer
+            integer number.
+        b (float): description that takes
+            more than 1 line in docstr
+        c (str): word.
+    """
+    pass
