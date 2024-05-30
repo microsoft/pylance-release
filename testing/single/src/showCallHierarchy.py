@@ -51,7 +51,7 @@ class BaseConsumer:
         return base
 
 
-class DerivedConsumer:
+class DerivedConsumer(BaseConsumer):
     def consumer(self, derived: Derived):
         derived.method()
         return derived
