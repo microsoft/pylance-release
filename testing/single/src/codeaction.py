@@ -16,7 +16,7 @@ userModule
 
 # place cursor on `MyType` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add 'from lib.userModule import MyType'` is listed
-MyType
+MyType()
 
 
 # place cursor on `sys` and confirm lightbulb shows up
