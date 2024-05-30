@@ -85,6 +85,4 @@ import mailbox
 # place cursor on `event` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Create Type Stub` entry is listed
 # execute the code action and confirm it works as expected
-# Please note that currently it doesn't work. It's a known issue tracked at
-# https://github.com/microsoft/pylance-release/issues/5188
 import zope.event
