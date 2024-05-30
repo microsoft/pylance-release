@@ -1,5 +1,25 @@
 # Changelog
 
+## 2024.5.103 (28 May 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: import side by side in standalone file didn't work [pylance-release#5916](https://github.com/microsoft/pylance-release/issues/5916)
+-   Bug fix: Pylance reports import Missing in inexistent file when git enabled [pylance-release#5895](https://github.com/microsoft/pylance-release/issues/5895)
+-   Bug fix: Pylance deletes automatically-added `#` sign when you line break inside a comment [pylance-release#5484](https://github.com/microsoft/pylance-release/issues/5484)
+
+## 2024.5.102 (23 May 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Show Type Hierarchy shows no results for types declared in notebooks [pylance-release#5832](https://github.com/microsoft/pylance-release/issues/5832)
+-   Bug fix: Files to analyze count is wrong for notebooks [pylance-release#5173](https://github.com/microsoft/pylance-release/issues/5173)
+-   Bug fix: Attributes not recognized when using `converters` in `attrs` module [pylance-release#5391](https://github.com/microsoft/pylance-release/issues/5391)
+
+Pylance's copy of Pyright has been updated from 1.1.362 to 1.1.364.
+
+-   See Pyright's release notes for details: [1.1.363](https://github.com/microsoft/pyright/releases/tag/1.1.363), [1.1.364](https://github.com/microsoft/pyright/releases/tag/1.1.364)
+
 ## 2024.5.101 (16 May 2024) PreRelease
 
 Notable changes:
