@@ -18,5 +18,7 @@
     //    "source.unusedImports",
     //    "source.convertImportFormat"
     // ]
-    "python.analysis.extraPaths": ["${workspaceFolder:utfinname日本}"]
+    "python.analysis.extraPaths": [
+        "${workspaceFolder:utfinname日本}"
+    ],
 }
