@@ -1,4 +1,7 @@
 # you can trigger format on type by hitting enter at the end of statement
+# This test assumes `editor.autoIndent` is set to 'none'. This is to ensure
+# the outcomes described are consistent. If you want to do ad-hoc testing, you should
+# change this value back to the default.
 
 # place cursor after `:` and hit enter and confirm cursor is placed
 # at the expected indentation
@@ -21,7 +24,6 @@ if ch == "a":
     pass
     # type `:` after `else` and see `else` is moved to right position.
     else
-    
 
 # Set "autoFormatStrings" to true and add a { into the string below. Make sure
 # it auto adds the `f` on the front. Repeat for the other strings
