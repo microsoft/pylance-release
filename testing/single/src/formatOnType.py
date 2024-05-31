@@ -1,4 +1,5 @@
 # you can trigger format on type by hitting enter at the end of statement
+# Run this test twice, once with "editor.autoIndent" set to the default and once with "editor.autoIndent" set to "none"
 
 # place cursor after `:` and hit enter and confirm cursor is placed
 # at the expected indentation
@@ -21,7 +22,12 @@ if ch == "a":
     pass
     # type `:` after `else` and see `else` is moved to right position.
     else
-    
+
+# place cursor in the middle of this comment
+# if autoIndent is set to none, new line should not have comment, else it should
+if True:
+    # Try the same with this comment.
+    pass
 
 # Set "autoFormatStrings" to true and add a { into the string below. Make sure
 # it auto adds the `f` on the front. Repeat for the other strings
