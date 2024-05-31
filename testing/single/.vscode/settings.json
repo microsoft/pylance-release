@@ -1,5 +1,4 @@
 {
-    "editor.autoIndent": "none",
     "python.analysis.enablePytestSupport": true,
     "python.analysis.enablePytestExtra": true,
     "python.analysis.inlayHints.pytestParameters": true,
