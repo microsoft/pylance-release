@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.5.104 (4 June 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: cyclic symbolic detection is broken [pylance-release#5937](https://github.com/microsoft/pylance-release/issues/5937)
+
 ## 2024.5.103 (28 May 2024) PreRelease
 
 Notable changes:
