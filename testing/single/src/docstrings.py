@@ -4,6 +4,11 @@
 import numpy as np
 
 # Hover over zeroes and ensure the markdown looks correct.
+# `Correct` is subjective, but basically ensure that the markdown looks like
+# you would want it to look. There isn't weird lines appearing in the middle of things (like a table not displaying)
+# There isn't weird characters appearing in the middle of things
+# Parameters are consistently represented
+# Gifs/Links/Images show up
 z = np.zeros([1, 2, 3])
 
 # Hover over take and ensure the markdown looks correct.
