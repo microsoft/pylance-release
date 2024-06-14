@@ -1,5 +1,27 @@
 # Changelog
 
+## 2024.6.100 (13 June 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Support sphinx doc strings [pylance-release#5975](https://github.com/microsoft/pylance-release/issues/5975)
+-   Bug fix: Variable inlay type hints not displaying [pylance-release#5967](https://github.com/microsoft/pylance-release/issues/5967)
+-   Bug fix: Pylance failed to start service instance, caused by a regexp error [pylance-release#5963](https://github.com/microsoft/pylance-release/issues/5963)
+-   Bug fix: Docstring rendering doesn't handle indentation [pylance-release#5446](https://github.com/microsoft/pylance-release/issues/5446)
+-   Enhancement: Please transform NumpyDoc/ RestructuredText docstrings to nice tooltips to support useful docstrings across VS Code, Jupyter and Sphinx [pylance-release#5363](https://github.com/microsoft/pylance-release/issues/5363)
+-   Bug fix: docstring: Regarding Korean line spacing problem [pylance-release#4615](https://github.com/microsoft/pylance-release/issues/4615)
+-   Bug fix: Google docstring formatting for multi-line class attributes not recognized/converted properly for use in intellisense popup [pylance-release#3347](https://github.com/microsoft/pylance-release/issues/3347)
+-   Bug fix: `itertools.count` docstring is not shown correctly [pylance-release#3231](https://github.com/microsoft/pylance-release/issues/3231)
+-   Bug fix: missing new line from dict() help mouse hover [pylance-release#3118](https://github.com/microsoft/pylance-release/issues/3118)
+-   Bug fix: Intellisense does not show the complete multiline description of function/method parameters [pylance-release#2942](https://github.com/microsoft/pylance-release/issues/2942)
+-   Enhancement: Sphinx Style Docstring Rendering Feature [pylance-release#2251](https://github.com/microsoft/pylance-release/issues/2251)
+-   Bug fix: Slow computer -> "Expected 0 positional arguments" [pylance-release#4295](https://github.com/microsoft/pylance-release/issues/4295)
+-   Bug fix: Doc string for sqlalchemy.column is misformatted [pylance-release#6004](https://github.com/microsoft/pylance-release/issues/6004)
+
+Pylance's copy of Pyright has been updated from 1.1.364 to 1.1.367.
+
+-   See Pyright's release notes for details: [1.1.365](https://github.com/microsoft/pyright/releases/tag/1.1.365), [1.1.366](https://github.com/microsoft/pyright/releases/tag/1.1.366), [1.1.367](https://github.com/microsoft/pyright/releases/tag/1.1.367)
+
 ## 2024.6.1 (6 June 2024) Release
 
 Notable changes:
