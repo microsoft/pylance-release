@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.6.101 (20 June 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Signature help isn't formatted beautifully when class docstring is reused for `__init__` [pylance-release#6012](https://github.com/microsoft/pylance-release/issues/6012)
+-   Bug fix: notebook cells sometimes get cycle. [pylance-release#5798](https://github.com/microsoft/pylance-release/issues/5798)
+-   Enhancement: Pylance should auto-import from files marked with `_` too [pylance-release#5294](https://github.com/microsoft/pylance-release/issues/5294)
+
+Pylance's copy of Pyright has been updated from 1.1.367 to 1.1.368.
+
+-   See Pyright's release notes for details: [1.1.368](https://github.com/microsoft/pyright/releases/tag/1.1.368)
+
 ## 2024.6.100 (13 June 2024) PreRelease
 
 Notable changes:
