@@ -1,5 +1,19 @@
 # Changelog
 
+## 2024.6.102 (25 June 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Bokeh export_png docstring is not formatted correctly [pylance-release#6039](https://github.com/microsoft/pylance-release/issues/6039)
+-   Enhancement: Support lazy loading individual virtualenvs in a multi-root workspace [pylance-release#6009](https://github.com/microsoft/pylance-release/issues/6009)
+-   Bug fix: Multiple notifications "executing command" but no details on what is being run [pylance-release#6048](https://github.com/microsoft/pylance-release/issues/6048)
+-   Bug fix: Bug: Code is unreachable [pylance-release#6028](https://github.com/microsoft/pylance-release/issues/6028)
+-   Bug fix: The parseTreeUtils.findNodeByOffset function returns an incorrect node when using binary search [pylance-release#5775](https://github.com/microsoft/pylance-release/issues/5775)
+
+Pylance's copy of Pyright has been updated from 1.1.368 to 1.1.369.
+
+-   See Pyright's release notes for details: [1.1.369](https://github.com/microsoft/pyright/releases/tag/1.1.369)
+
 ## 2024.6.101 (20 June 2024) PreRelease
 
 Notable changes:
