@@ -17,14 +17,10 @@ https://github.com/microsoft/pylance-release/blob/main/TROUBLESHOOTING.md#filing
 ## Environment data
 
 <!--
-To find your version, you can either:
-
-- Open the VS Code extensions panel. Locate Pylance from the list of installed extensions. The version appears next to the name.
-
-- Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "Python Language Server" in the dropdown on the right. Look for the line Pylance Language Server version X in the console.
+To find your version, open the VS Code extensions panel, then locate Pylance from the list of installed extensions. The version appears next to the name.
 -->
 
--   Language Server version: XXX
+-   Pylance version: XXX
 -   OS and version: XXX
 -   Python version (& distribution if applicable, e.g. Anaconda): XXX
 
@@ -33,7 +29,7 @@ To find your version, you can either:
 <!--
 Please provide a minimal, self-contained code snippet that reproduces the issue. If the code snippet uses any libraries, please specify the versions used.
 
-Note: If you think a GIF of what is happening would be helpful, consider tools like https://www.cockos.com/licecap/, https://github.com/phw/peek or https://www.screentogif.com/ .
+Note: If you think a GIF of what is happening would be helpful, consider tools like https://github.com/vkohaupt/vokoscreenNG, https://www.cockos.com/licecap/, https://github.com/phw/peek or https://www.screentogif.com/ .
 -->
 
 ```python
