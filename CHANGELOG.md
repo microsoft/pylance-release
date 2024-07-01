@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.6.103 (1 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Having a pyproject.toml will break diagnosticSeverityOverrides in settings.json [pylance-release#6052](https://github.com/microsoft/pylance-release/issues/6052)
+-   Bug fix: [Slow performance] Pylance goes crazy after switching git branch [pylance-release#6046](https://github.com/microsoft/pylance-release/issues/6046)
+
 ## 2024.6.102 (25 June 2024) PreRelease
 
 Notable changes:
