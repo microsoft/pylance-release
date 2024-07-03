@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.6.104 (3 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: `reportShadowedImports` diagnostic missing in `codeaction.py` test file [pylance-release#6087](https://github.com/microsoft/pylance-release/issues/6087)
+-   Bug fix: Create stub is missing as a code action [pylance-release#6085](https://github.com/microsoft/pylance-release/issues/6085)
+
 ## 2024.6.103 (1 July 2024) PreRelease
 
 Notable changes:
