@@ -14,7 +14,7 @@ z = np.zeros([1, 2, 3])
 # Hover over take and ensure the markdown looks correct.
 t = np.take(z, [0])
 
-# Goto declaration on np and hover over all of the methods found there.
+# Go to definition on `take` and hover over all of the methods found there.
 # Ensure that all methods (which have docstrings) display markdown that is rendered correctly
 
 # Hover over each of these functions and verify they're rendering output in a way that makes sense (this is kind of subjective)
@@ -24,7 +24,7 @@ def pythonorg():
     =====================================
 
     .. image:: https://github.com/python/cpython/workflows/Tests/badge.svg
-        :alt: CPython build status on GitHub Actions
+        :alt: This looks like an icon because VS Code can't render SVGs
         :target: https://github.com/python/cpython/actions
 
     .. image:: https://dev.azure.com/python/cpython/_apis/build/status/Azure%20Pipelines%20CI?branchName=main
@@ -32,7 +32,7 @@ def pythonorg():
         :target: https://dev.azure.com/python/cpython/_build/latest?definitionId=4&branchName=main
 
     .. image:: https://img.shields.io/badge/discourse-join_chat-brightgreen.svg
-        :alt: Python Discourse chat
+        :alt: This looks like an icon because VS Code can't render SVGs
         :target: https://discuss.python.org/
 
 
