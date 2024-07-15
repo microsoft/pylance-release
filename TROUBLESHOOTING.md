@@ -43,7 +43,7 @@ Note that if you are coming to Pylance from using the Microsoft Python Language 
 
 If you want to use static analysis tools with an editable install, you should configure the editable install to use `.pth` files that contain file paths rather than executable lines (prefixed with `import`) that install import hooks. See your package manager’s documentation for details on how to do this. We have provided some basic information for common package managers below.
 
-Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pyright and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pyright will be unable to find the corresponding source files.
+Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pylance and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pylance will be unable to find the corresponding source files.
 
 #### pip / setuptools
 `pip` (`setuptools`) supports two ways to avoid import hooks:
