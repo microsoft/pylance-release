@@ -1,5 +1,15 @@
 # Changelog
 
+## 2024.7.100 (15 July 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: don't show code actions that are not supported in virtual workspace [pylance-release#6090](https://github.com/microsoft/pylance-release/issues/6090)
+-   Bug fix: too many notifications when pylance crashes [pylance-release#6056](https://github.com/microsoft/pylance-release/issues/6056)
+-   Bug fix: pylance crash: Allocation failed - JavaScript heap out of memory [pylance-release#5925](https://github.com/microsoft/pylance-release/issues/5925)
+-   Bug fix: Quick fix suggests importing symbol that is not available in `pythonVersion` [pylance-release#4993](https://github.com/microsoft/pylance-release/issues/4993)
+-   Bug fix: Intellisense still not fully working with Enum classes [pylance-release#4928](https://github.com/microsoft/pylance-release/issues/4928)
+
 ## 2024.7.1 (8 July 2024) Release
 
 Notable changes:
