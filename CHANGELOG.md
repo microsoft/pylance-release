@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.7.101 (22 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Asyncio.TaskGroup doc string causes parsing error [pylance-release#6143](https://github.com/microsoft/pylance-release/issues/6143)
+-   Bug fix: Incorrect Rendering of Google Style Docstrings in Pylance [pylance-release#6127](https://github.com/microsoft/pylance-release/issues/6127)
+-   Bug fix: Sphinx Style Docstring Incorrectly Rendering "Other Parameters" [pylance-release#6100](https://github.com/microsoft/pylance-release/issues/6100)
+
+Pylance's copy of Pyright has been updated from 1.1.369 to 1.1.372.
+
+-   See Pyright's release notes for details: [1.1.370](https://github.com/microsoft/pyright/releases/tag/1.1.370), [1.1.371](https://github.com/microsoft/pyright/releases/tag/1.1.371), [1.1.372](https://github.com/microsoft/pyright/releases/tag/1.1.372)
+
 ## 2024.7.100 (15 July 2024) PreRelease
 
 Notable changes:
