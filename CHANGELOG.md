@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024.7.102 (24 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pressing X on pylance has crashed notification should be treated as a `No` [pylance-release#6156](https://github.com/microsoft/pylance-release/issues/6156)
+-   Enhancement: Provide a way to disable unreachability hints [pylance-release#6106](https://github.com/microsoft/pylance-release/issues/6106)
+
 ## 2024.7.101 (22 July 2024) PreRelease
 
 Notable changes:
