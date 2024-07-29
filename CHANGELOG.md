@@ -1,5 +1,15 @@
 # Changelog
 
+## 2024.7.103 (29 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Highlighting fails after switching between monorepo projects (when switching python interpreters) [pylance-release#5995](https://github.com/microsoft/pylance-release/issues/5995)
+
+Pylance's copy of Pyright has been updated from 1.1.372 to 1.1.373.
+
+-   See Pyright's release notes for details: [1.1.373](https://github.com/microsoft/pyright/releases/tag/1.1.373)
+
 ## 2024.7.102 (24 July 2024) PreRelease
 
 Notable changes:
