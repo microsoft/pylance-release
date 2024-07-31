@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.7.104 (31 July 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance reports false errors then crashes [pylance-release#6178](https://github.com/microsoft/pylance-release/issues/6178)
+
 ## 2024.7.103 (29 July 2024) PreRelease
 
 Notable changes:
