@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.8.100 (9 August 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Failed to parse (some) docstrings that contain Markdown code since 2024.6.100 [pylance-release#6225](https://github.com/microsoft/pylance-release/issues/6225)
+-   Bug fix: Sphinx Style Docstring Incorrectly Rendering Nested Parameters Lists [pylance-release#6224](https://github.com/microsoft/pylance-release/issues/6224)
+-   Bug fix: Inline suggestions not working if bracket not closed [pylance-release#6188](https://github.com/microsoft/pylance-release/issues/6188)
+-   Bug fix: TypeError: Cannot read properties of undefined (reading 'fileInfo') [pylance-release#6234](https://github.com/microsoft/pylance-release/issues/6234)
+
+Pylance's copy of Pyright has been updated from 1.1.373 to 1.1.375.
+
+-   See Pyright's release notes for details: [1.1.374](https://github.com/microsoft/pyright/releases/tag/1.1.374), [1.1.375](https://github.com/microsoft/pyright/releases/tag/1.1.375)
+
 ## 2024.8.1 (5 August 2024) Release
 
 Notable changes:
