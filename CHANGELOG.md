@@ -21,6 +21,12 @@ Pylance's copy of Pyright has been updated from 1.1.373 to 1.1.375.
 
 -   See Pyright's release notes for details: [1.1.374](https://github.com/microsoft/pyright/releases/tag/1.1.374), [1.1.375](https://github.com/microsoft/pyright/releases/tag/1.1.375)
 
+## 2024.8.2 (26 August 2024) Release
+
+Notable changes:
+
+-   Bug fix: TypeError: Cannot read properties of undefined (reading 'fileInfo') [pylance-release#6234](https://github.com/microsoft/pylance-release/issues/6234)
+
 ## 2024.8.1 (5 August 2024) Release
 
 Notable changes:
