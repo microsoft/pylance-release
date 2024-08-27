@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.8.102 (27 August 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Error thrown from py lang server from a jupyter notebook on insiders.vscode.dev [pylance-release#6307](https://github.com/microsoft/pylance-release/issues/6307)
+-   Bug fix: Pylance's auto-completion does not work properly in Jupyter [pylance-release#6294](https://github.com/microsoft/pylance-release/issues/6294)
+-   Bug fix: Tooltip not being rendered with python.analysis.supportRestructuredText turned on. [pylance-release#6284](https://github.com/microsoft/pylance-release/issues/6284)
+-   Bug fix: pylance crashing with cannot read properties of undefined (wsl) [pylance-release#6263](https://github.com/microsoft/pylance-release/issues/6263)
+
+Pylance's copy of Pyright has been updated from 1.1.375 to 1.1.377.
+
+-   See Pyright's release notes for details: [1.1.376](https://github.com/microsoft/pyright/releases/tag/1.1.376), [1.1.377](https://github.com/microsoft/pyright/releases/tag/1.1.377)
+
 ## 2024.8.101 (12 August 2024) PreRelease
 
 Notable changes:
