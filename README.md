@@ -15,7 +15,8 @@ Note: If you've previously set a language server and want to try Pylance, make s
 
 # Features
 
-<img src=images/all-features.gif>
+<img src=images/all-features.gif>[janus_1724868164495.log](https://github.com/user-attachments/files/16789863/janus_1724868164495.log)
+
 
 Pylance provides some awesome features for Python 3, including:
 
