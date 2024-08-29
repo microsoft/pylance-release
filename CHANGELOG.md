@@ -1,5 +1,15 @@
 # Changelog
 
+## 2024.8.104 (28 August 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: "python.analysis.diagnosticMode" should be allowed even when "pyproject.toml" exists [pylance-release#6314](https://github.com/microsoft/pylance-release/issues/6314)
+
+Pylance's copy of Pyright has been updated from 1.1.377 to 1.1.378.
+
+-   See Pyright's release notes for details: [1.1.378](https://github.com/microsoft/pyright/releases/tag/1.1.378)
+
 ## 2024.8.103 (27 August 2024) PreRelease
 
 Functionally identical to 2024.8.102.
