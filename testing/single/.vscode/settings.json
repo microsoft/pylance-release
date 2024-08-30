@@ -8,11 +8,7 @@
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.indexing": true,
-    "python.analysis.typeCheckingMode": "basic",
     "python.analysis.importFormat": "absolute",
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingTypeStubs": "information"
-    },
     // "editor.codeActionsOnSave": { "source.fixAll": true },
     // "python.analysis.fixAll": [
     //    "source.unusedImports",

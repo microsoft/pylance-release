@@ -9,5 +9,8 @@
                 "./src"
             ]
         }
-    ]
+    ],
+    "reportShadowedImports": "information",
+    "reportMissingTypeStubs": "information",
+    "typeCheckingMode": "basic",
 }
