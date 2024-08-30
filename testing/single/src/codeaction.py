@@ -37,7 +37,7 @@ class TypeToMove:
 # and trigger quick fix and confirm `Add "./outsideLib" to extraPaths` is listed
 # execute the code action and confirm `extraPaths` is added to `settings.json`
 # Undo currently does not work: https://github.com/microsoft/pylance-release/issues/5161
-# It adds to `settings.json` even config file is present: https://github.com/microsoft/pylance-release/issues/6327
+# It adds to `settings.json` even if a config file is present: https://github.com/microsoft/pylance-release/issues/6327
 import outerModule
 
 
