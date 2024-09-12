@@ -1,5 +1,21 @@
 # Changelog
 
+## 2024.9.100 (12 September 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance crashes when using the interactive window [pylance-release#6357](https://github.com/microsoft/pylance-release/issues/6357)
+-   Bug fix: No Syntax Highlighting on v2024.14.0 [pylance-release#6358](https://github.com/microsoft/pylance-release/issues/6358)
+-   Enhancement: Goto def on inlay hints doesn't distinguish sub types [pylance-release#6346](https://github.com/microsoft/pylance-release/issues/6346)
+-   Bug fix: Warnings are not shown for non-overridable settings when a config file is present in a multi-root workspace scenario [pylance-release#6338](https://github.com/microsoft/pylance-release/issues/6338)
+-   Bug fix: Pylance with a multi-root workspace [pylance-release#6318](https://github.com/microsoft/pylance-release/issues/6318)
+-   Bug fix: Some localized strings have over-localized Python keywords [pylance-release#6035](https://github.com/microsoft/pylance-release/issues/6035)
+-   Bug fix: Pylance slows down when using the vulkan library [pylance-release#6351](https://github.com/microsoft/pylance-release/issues/6351)
+
+Pylance's copy of Pyright has been updated from 1.1.378 to 1.1.380.
+
+-   See Pyright's release notes for details: [1.1.379](https://github.com/microsoft/pyright/releases/tag/1.1.379), [1.1.380](https://github.com/microsoft/pyright/releases/tag/1.1.380)
+
 ## 2024.9.1 (9 September 2024) Release
 
 Notable changes:
