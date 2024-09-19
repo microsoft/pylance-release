@@ -1,5 +1,16 @@
 # Changelog
 
+## 2024.9.101 (18 September 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: `NoReturn` behaving unexpectedly after using the decorator with added type annotation [pylance-release#6391](https://github.com/microsoft/pylance-release/issues/6391)
+-   Bug fix: Recent pylance is striking out `Union` imports as deprecated [pylance-release#6390](https://github.com/microsoft/pylance-release/issues/6390)
+
+Pylance's copy of Pyright has been updated from 1.1.380 to 1.1.381.
+
+-   See Pyright's release notes for details: [1.1.381](https://github.com/microsoft/pyright/releases/tag/1.1.381)
+
 ## 2024.9.100 (12 September 2024) PreRelease
 
 Notable changes:
