@@ -27,6 +27,12 @@ Pylance's copy of Pyright has been updated from 1.1.378 to 1.1.380.
 
 -   See Pyright's release notes for details: [1.1.379](https://github.com/microsoft/pyright/releases/tag/1.1.379), [1.1.380](https://github.com/microsoft/pyright/releases/tag/1.1.380)
 
+## 2024.9.2 (20 September 2024) Release
+
+Notable changes:
+
+-   Bug fix: Pylance crashes when using the interactive window [pylance-release#6357](https://github.com/microsoft/pylance-release/issues/6357)
+
 ## 2024.9.1 (9 September 2024) Release
 
 Notable changes:
