@@ -122,7 +122,7 @@ When filing an issue, make sure you do the following:
 -   Enable trace logging by adding `"python.analysis.logLevel": "Trace"` to your settings.json configuration file or by using the `Pylance: Start Logging` command.
     -   Adding this will cause a large amount of info to be printed to the Python output panel.
         This should not be left long term, as the performance impact of the logging is significant.
-        Use `Pylance: Stop Logging` to turn off the additional info.
+        Use `Pylance: Stop Logging` to disable trace logging when you are done.
 -   Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "__Python Language Server__" in the dropdown on the right.  
 -   Copy the entire log starting with "Pylance language server XXX (pyright xxx) starting"
     
