@@ -48,15 +48,14 @@ Pylance provides users with the ability to customize their Python language suppo
     - Description:
         - `default`: Provides a balanced experience with many useful features enabled by default. It ensures that the language server delivers sufficient functionality for most users without overloading the system. Advanced features can be enabled as needed, allowing for further customization at the cost of performance.
         - `light`: Designed for users seeking a lightweight, memory-efficient setup. This mode disables various features to make Pylance function more like a streamlined text editor. Ideal for those who do not require the full breadth of IntelliSense capabilities and prefer Pylance to be as resource-friendly as possible.
-    - Individual settings can be configured to override the defaults set by `languageServerMode`.
-    - Default settings based on mode are:
-      
-| Mode                           | light      | default    |
-| :----------------------------- | :--------- | :--------- |
-| python.analysis.exclude                   | ["**"]      | []         |
-| python.analysis.useLibraryCodeForTypes    | false       | true       |
-| python.analysis.enablePytestSupport       | false       | true       |
-| python.analysis.indexing                  | false       | true       |
+    -  Modifies the default value of the following settings:      
+        | Setting                           | `light` mode   | `default` mode   |
+        | :----------------------------- | :--------- | :--------- |
+        | python.analysis.exclude                   | ["**"]      | []         |
+        | python.analysis.useLibraryCodeForTypes    | false       | true       |
+        | python.analysis.enablePytestSupport       | false       | true       |
+        | python.analysis.indexing                  | false       | true       |
+    - The  settings above can be changed individually to override the default values. 
 
 - `python.analysis.typeCheckingMode`
     - Used to specify the level of type checking analysis performed.
