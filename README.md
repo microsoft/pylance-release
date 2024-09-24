@@ -48,7 +48,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Description:
         - `default`: Provides a balanced experience with many useful features enabled by default. It ensures that the language server delivers sufficient functionality for most users without overloading the system. Advanced features can be enabled as needed, allowing for further customization at the cost of performance.
         - `light`: Designed for users seeking a lightweight, memory-efficient setup. This mode disables various features to make Pylance function more like a streamlined text editor. Ideal for those who do not require the full breadth of IntelliSense capabilities and prefer Pylance to be as resource-friendly as possible.
-    -  Modifies the default value for the following settings:      
+    -  Modifies the default value of the following settings:      
         | Setting                           | `light` mode   | `default` mode   |
         | :----------------------------- | :--------- | :--------- |
         | python.analysis.exclude                   | ["**"]      | []         |
