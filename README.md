@@ -180,6 +180,16 @@ Pylance provides users with the ability to customize their Python language suppo
             { "name": "matplotlib", "depth": 3, "includeAllSymbols": false }
         ]
         ```
+    - Performance Consideration:
+        - Adjusting this setting will cause Pylance to allocate more resources for indexing third-party libraries.
+
+- `python.analysis.includeAliasFromUserFiles`
+    - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+    - Performance Consideration:
+        - Enabling this can impact performance by increasing the number of completion items and indexing multiple files as changes occur.
 
 - `python.analysis.autoImportCompletions`
     - Used to control the offering of auto-imports in completions. This will impact number of items shown in the completion and performance.

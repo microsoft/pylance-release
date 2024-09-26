@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.9.102 (26 September 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Generic type aliases show two inlay hints [pylance-release#6427](https://github.com/microsoft/pylance-release/issues/6427)
+-   Bug fix: Pyright/Pylance inconsistency: Unknown import symbol sklearn [pylance-release#6410](https://github.com/microsoft/pylance-release/issues/6410)
+-   Enhancement: Importing from tests prefers deeper imports over package entry-point [pylance-release#5650](https://github.com/microsoft/pylance-release/issues/5650)
+-   Bug fix: Autoimport from module, not directly from file [pylance-release#4065](https://github.com/microsoft/pylance-release/issues/4065)
+
+Pylance's copy of Pyright has been updated from 1.1.381 to 1.1.382.
+
+-   See Pyright's release notes for details: [1.1.382](https://github.com/microsoft/pyright/releases/tag/1.1.382)
+
 ## 2024.9.101 (18 September 2024) PreRelease
 
 Notable changes:
