@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024.9.103 (2 October 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: pylance crash when notebook is opened while interactive window is opened. [pylance-release#6502](https://github.com/microsoft/pylance-release/issues/6502)
+-   Bug fix: File analysis runs indefinitely after upgrading to v2024.9.1 [pylance-release#6386](https://github.com/microsoft/pylance-release/issues/6386)
+-   Bug fix: pylance can't restart: Error: LanguageStatusItem with id 'python.analysis.typeCheckingMode' ALREADY exists [pylance-release#6378](https://github.com/microsoft/pylance-release/issues/6378)
+
 ## 2024.9.102 (26 September 2024) PreRelease
 
 Notable changes:
