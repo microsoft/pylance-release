@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.9.104 (3 October 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Crash telemetry fix
+
 ## 2024.9.103 (2 October 2024) PreRelease
 
 Notable changes:
