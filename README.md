@@ -63,8 +63,9 @@ Pylance provides users with the ability to customize their Python language suppo
         > Note that the value of this setting can be overridden by having a pyrightconfig.json or a pyproject.toml. For more information see this [link](https://aka.ms/AArua4c).
     - Available values:
         - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
-        - `basic`: Non-type checking-related rules (all rules in `off`) + basic type checking rules
-        - `strict`: All type checking rules at the highest severity of error (includes all rules in `off` and `basic` categories)
+        - `basic`: All `off` rules + basic type checking rules
+        - `standard`: All `off` rules + basic type checking rules + standard type checking rules
+        - `strict`: All `off` rules + all type checking rules.
     - Performance Consideration:
         - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by disabling type checking analysis, which can be resource-intensive, especially in large codebases.
 
