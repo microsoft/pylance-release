@@ -46,93 +46,33 @@ These settings can be individually customized to override the defaults for each 
 
 ## How to Change the Setting
 
-To adjust the `python.analysis.languageServerMode` setting in Visual Studio Code:
-
-1. **Open the Settings**:
-
-   - Click on the gear icon in the lower-left corner and select **Settings**.
-
-2. **Search for the Setting**:
-
-   - In the search bar at the top, type `python.analysis.languageServerMode`.
-
-3. **Modify the Setting**:
-
-   - Select your preferred mode (`default` or `light`) from the dropdown menu.
+1. **Open Settings**: Click on the gear icon in the lower-left corner of Visual Studio Code and select **Settings**.
+2. **Search for the Setting**: Type `python.analysis.languageServerMode` in the search bar.
+3. **Modify the Setting**: Choose `default` or `light` from the dropdown menu.
 
 Alternatively, you can edit your `settings.json` file directly:
 
-1. **Open Settings (JSON)**:
-
-   - Open the command palette and type `Preferences: Open Settings (JSON)`.
-
+1. **Open Settings (JSON)**: Open the command palette and type `Preferences: Open Settings (JSON)`.
 2. **Add or Modify the Setting**:
-
    ```json
    "python.analysis.languageServerMode": "light"
    ```
 
 ## When and Why to Use `light` Mode
 
-### Large Projects
-
-Working with large codebases can strain system resources due to the extensive analysis required. Switching to `light` mode can improve performance by limiting Pylance's analysis to open files only.
-
-### Limited System Resources
-
-On systems with limited memory or CPU capabilities, such as older machines or those running many applications simultaneously, `light` mode can provide a smoother editing experience.
-
-### Lightweight Editing
-
-If you primarily use Visual Studio Code as a text editor for quick edits and do not require advanced IntelliSense features, `light` mode can simplify your setup.
-
-### Performance Optimization
-
-In scenarios where Pylance's resource consumption affects the responsiveness of the editor, adjusting to `light` mode can alleviate these issues.
-
-## Practical Examples
-
-### Example 1: Switching to `light` Mode for a Large Workspace
-
-Suppose you're working on a sizable project with thousands of files, and you notice that Visual Studio Code becomes sluggish. You can switch to `light` mode to improve performance:
-
-1. Open your `settings.json` file.
-
-2. Add the following line:
-
-   ```json
-   "python.analysis.languageServerMode": "light"
-   ```
-
-3. Restart Visual Studio Code to apply the changes.
-
-In `light` mode, Pylance will focus on providing IntelliSense and diagnostics for open files, reducing the load on your system.
-
-### Example 2: Customizing Settings After Switching Modes
-
-After switching to `light` mode, you might want to re-enable a specific feature that was disabled by default. For instance, if you still want Pylance to index your user files:
-
-1. In your `settings.json`, add:
-   ```json
-   "python.analysis.languageServerMode": "light",
-   "python.analysis.indexing": true
-   ```
-
-This overrides the default value for `python.analysis.indexing` in `light` mode, re-enabling indexing while keeping other optimizations.
+- **Large Projects**: Improves performance by analyzing only open files, reducing resource usage.
+- **Limited Resources**: Suitable for systems with low memory or CPU power.
+- **Quick Edits**: Ideal if you don't need advanced features and just need a simple editor setup.
 
 ## Frequently Asked Questions
 
-### Q: What features are disabled when using `light` mode?
+### Q: How does `light` mode affect existing projects and what features are disabled?
 
-**A:** In `light` mode, Pylance disables workspace-wide analysis, indexing, type information extraction from library code, and Pytest support. This reduces resource usage but limits some IntelliSense features such as auto-import suggestions and code navigation across the workspace.
+**A:** In `light` mode, Pylance does not analyze closed files, perform indexing, extract type information from library code, or provide Pytest support. This reduces resource usage but limits IntelliSense features like auto-import suggestions, workspace-wide code navigation, find all references, and multi-file rename. Editor features such as completion, hover, and go-to definition will still work, but third-party library symbols may be unavailable if stubs or type information are missing, which can also affect diagnostics.
 
 ### Q: Can I customize individual settings after switching to `light` mode?
 
 **A:** Yes, you can individually override any of the settings adjusted by `languageServerMode`. For example, you can re-enable indexing or Pytest support by explicitly setting those configurations in your `settings.json`.
-
-### Q: Will switching to `light` mode affect my existing projects?
-
-**A:** Switching to `light` mode will change how Pylance analyzes your code in all projects where the setting is applied. IntelliSense features may be limited, and some diagnostics may not appear.
 
 ### Q: Is `light` mode suitable for all types of development?
 
@@ -144,9 +84,8 @@ This overrides the default value for `python.analysis.indexing` in `light` mode,
 
 ---
 
-*For more information on Pylance settings and customization, refer to the ****[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)**** documentation.*
+*For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.*
 
 ---
 
 *"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."*
-
