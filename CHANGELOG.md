@@ -1,5 +1,19 @@
 # Changelog
 
+## 2024.10.100 (10 October 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Multiline parameter docstrings are truncated when parsed [pylance-release#6524](https://github.com/microsoft/pylance-release/issues/6524)
+-   Bug fix: python.analysis.typeEvaluation.xxx is not marked in `settings.json` when `pyrightconfig.json` exists [pylance-release#6498](https://github.com/microsoft/pylance-release/issues/6498)
+-   Bug fix: Don't show settingsNotOverridable if vscode settings file has a larger scope than the current project [pylance-release#6428](https://github.com/microsoft/pylance-release/issues/6428)
+-   Enhancement: typeCheckingMode button only toggles between `off` and `basic` [pylance-release#6080](https://github.com/microsoft/pylance-release/issues/6080)
+-   Bug fix: Dataclass fields that use `converter` don't have expected semantic tokens [pylance-release#6525](https://github.com/microsoft/pylance-release/issues/6525)
+
+Pylance's copy of Pyright has been updated from 1.1.382 to 1.1.384.
+
+-   See Pyright's release notes for details: [1.1.383](https://github.com/microsoft/pyright/releases/tag/1.1.383), [1.1.384](https://github.com/microsoft/pyright/releases/tag/1.1.384)
+
 ## 2024.10.1 (7 October 2024) Release
 
 Notable changes:
@@ -28,6 +42,7 @@ Notable changes:
 -   Bug fix: Pyright/Pylance inconsistency: Unknown import symbol sklearn [pylance-release#6410](https://github.com/microsoft/pylance-release/issues/6410)
 -   Enhancement: Importing from tests prefers deeper imports over package entry-point [pylance-release#5650](https://github.com/microsoft/pylance-release/issues/5650)
 -   Bug fix: Autoimport from module, not directly from file [pylance-release#4065](https://github.com/microsoft/pylance-release/issues/4065)
+-   Enhancement: "Quick Fix" doesn't suggest `__init__.py` imports [pylance-release#5231](https://github.com/microsoft/pylance-release/issues/5231)
 
 Pylance's copy of Pyright has been updated from 1.1.381 to 1.1.382.
 
