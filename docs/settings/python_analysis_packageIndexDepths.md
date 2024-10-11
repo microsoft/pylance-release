@@ -185,6 +185,9 @@ If you want to change the indexing depth for all packages, you can set the `name
 
 **A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is overridden. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
 
+### Q: Can I enable this setting for specific files or projects?
+
+Currently, the `python.analysis.packageIndexDepths` setting applies globally or per-workspace in VS Code settings. You can adjust the setting in your workspace's `settings.json` to enable it for a specific project.
 ---
 
 *For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
