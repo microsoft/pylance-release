@@ -149,7 +149,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Setting `python.analysis.useLibraryCodeForTypes` to `false` can improve performance by preventing Pylance from parsing the source code of third-party libraries when type stubs are unavailable, thereby reducing resource usage.
 
-- `python.analysis.indexing`
+- [`python.analysis.indexing`](docs/settings/python_analysis_indexing.md)
     - Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
     - Without indexing, auto-import, add import, and workspace symbols will have less information.
     - Default value: `true` (or `false` in `light` mode)
@@ -163,7 +163,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Maximum number of user files to index in the workspace. Indexing files is a performance-intensive task. Please use this setting to limit the number of files you want us to index. If you enter -1, we will index all files.
     - Default value: 2000
 
-- `python.analysis.packageIndexDepths`
+- [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
     - Accepted values:
         ```jsonc

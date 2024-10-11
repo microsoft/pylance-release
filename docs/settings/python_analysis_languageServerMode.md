@@ -84,7 +84,7 @@ Alternatively, you can edit your `settings.json` file directly:
 
 ---
 
-*For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.*
+*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
 
 ---
 
