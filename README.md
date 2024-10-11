@@ -184,7 +184,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Adjusting this setting will cause Pylance to allocate more resources for indexing third-party libraries.
 
-- `python.analysis.includeAliasFromUserFiles`
+- [`python.analysis.includeAliasFromUserFiles`](docs\settings\python_analysis_includeAliasesFromUserFiles.md)
     - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
     - Accepted values:
         - `true`
