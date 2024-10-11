@@ -136,7 +136,7 @@ If you experience performance degradation after enabling this setting, you may c
 
 ### Does enabling `includeAliasesFromUserFiles` affect third-party libraries?
 
-No, this setting only affects alias symbols defined in your user files (the code within your project). Alias symbols in third-party libraries are already included by default, as they are less likely to change frequently, there is no significant performance concern.
+No, this setting only affects alias symbols defined in your user files (the code within your project). Alias symbols in third-party libraries are already included by default. As they are less likely to change frequently, there is no significant performance concern.
 
 ### Why are alias symbols from user files excluded by default?
 
