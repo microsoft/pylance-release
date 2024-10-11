@@ -22,7 +22,7 @@ from .utils import helper_function
 
 # main.py
 # Trying to use 'helper_function' might not prompt an auto-import suggestion 
-# from '__init__.py' unless the setting is enabled.
+# from '__init__.py' unless the "python.analysis.includeAliasesFromUserFiles" is enabled.
 ```
 
 In this example, `helper_function` is imported into `__init__.py`, and Pylance may not suggest importing `helper_function` from `__init__.py` in `main.py` unless `includeAliasesFromUserFiles` is set to `true`.
