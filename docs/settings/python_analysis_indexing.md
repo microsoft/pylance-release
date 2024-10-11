@@ -14,7 +14,7 @@ When indexing is enabled, Pylance scans your project's files and the libraries i
 
 ### Benefits of Indexing
 
-- **Improved Auto-Imports**: With indexing, Pylance can suggest auto-imports for symbols that are not yet imported in your code nor opened in the VSCode, saving you time and reducing errors.
+- **Improved Auto-Imports**: With indexing, Pylance can suggest auto-imports for symbols that are not yet imported in your code nor opened in VS Code, saving you time and reducing errors.
 - **Enhanced Code Navigation**: Indexing improves the performance of the `go to symbol` feature in the workspace, allowing it to find symbols across your entire codebase more efficiently, although the functionality will still work even if indexing is disabled.
 - **Improved Code Generation**: Indexing can enhance generated code by automatically adding import statements for symbols used, streamlining the development process.
 
