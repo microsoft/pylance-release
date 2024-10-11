@@ -92,7 +92,7 @@ Using these settings together, you can tailor indexing to meet your specific dev
 
 ### Q: Will disabling indexing remove all IntelliSense features?
 
-**A:** Disabling indexing keeps most IntelliSense features. Import suggestions for symbols in open files will still work, but auto-import for unused symbols may be limited, and workspace symbol search could be slower and use more memory.
+**A:** Disabling indexing doesn't impact most IntelliSense features. Import suggestions for symbols in open files will still work, but auto-import for unused symbols may be limited, and workspace symbol search could be slower and use more memory.
 
 ### Q: I disabled indexing, but I'm still experiencing performance issues. What else can I do?
 
