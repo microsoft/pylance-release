@@ -182,7 +182,7 @@ If you want to change the indexing depth for all packages, you can set the `name
 
 ### Q: What happens to the default `packageIndexDepth` when I manually set the depth?
 
-**A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is removed. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
+**A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is overridden. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
 
 ---
 
