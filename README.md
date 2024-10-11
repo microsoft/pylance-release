@@ -163,7 +163,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Maximum number of user files to index in the workspace. Indexing files is a performance-intensive task. Please use this setting to limit the number of files you want us to index. If you enter -1, we will index all files.
     - Default value: 2000
 
-- `python.analysis.packageIndexDepths`
+- [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
     - Accepted values:
         ```jsonc
