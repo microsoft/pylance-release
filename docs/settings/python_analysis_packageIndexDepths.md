@@ -30,6 +30,7 @@ Each configuration in the list should be an object with the following properties
 - `"depth"`: The depth to which Pylance should index the package (integer).
 - `"includeAllSymbols"` (optional): Whether to include all symbols in the indexing (boolean). If set to `false`, only symbols specified in a module's `__all__` attribute are included. Default is `false` if not specified.
 
+**Note**: When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is removed. This means you need to explicitly add any additional packages that you want indexed to this setting, even if you still want them indexed at the default depth.
 #### Example Structure:
 
 ```json
