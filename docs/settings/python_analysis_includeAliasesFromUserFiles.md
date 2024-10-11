@@ -108,7 +108,7 @@ The alias symbol with the highest score will be chosen. In case of a tie, the sy
 
 For example, the alias symbol from `usage.py` has the lowest score and will be disregarded. The alias symbols from `__init__.py`, `redundant.py`, and `all.py` each have 1 point, but the one from `__init__.py` has the shortest import module path, so it will be selected. If `__init__.py` had used `from .utils import helper_function as helper_function` instead, it would have received 2 points and be selected.
 
-Unlike auto-import in completion, the add/search import for code action will display all alias symbols, allowing you to choose one. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and continue suggesting it for future imports.
+Unlike auto-import suggestions in  the completion list, the add/search import for code action will display all available alias symbols, allowing you to choose one. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and continue suggesting it for future imports.
 
 ### Consistent Import Paths
 
