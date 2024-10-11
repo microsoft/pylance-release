@@ -88,4 +88,4 @@ Alternatively, you can edit your `settings.json` file directly:
 
 ---
 
-*"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."*
+*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
