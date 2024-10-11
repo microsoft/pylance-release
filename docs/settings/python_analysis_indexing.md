@@ -80,7 +80,7 @@ To further customize indexing behavior in Pylance, you can use additional settin
 
 - **`python.analysis.userFileIndexingLimit`**: Limits the number of user files to index, which can help manage performance on larger projects.
 
-- **`python.analysis.persistAllIndices`**: Determines if third-party library indices are preserved across VSCode sessions, while user file indices are always re-indexed.
+- **`python.analysis.persistAllIndices`**: Determines if third-party library indices are preserved across VS Code sessions. Note that user file indices are always re-indexed.
 
 Using these settings together, you can tailor indexing to meet your specific development needs while balancing performance considerations.
 
