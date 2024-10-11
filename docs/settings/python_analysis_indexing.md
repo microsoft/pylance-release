@@ -88,7 +88,7 @@ Using these settings together, you can tailor indexing to meet your specific dev
 
 ### Q: How does indexing affect auto-import suggestions?
 
-**A:** Indexing enables Pylance to scan your codebase and installed libraries for available symbols. With indexing enabled, Pylance can suggest auto-imports for symbols that were never opened or used in VSCode, making it easier to write and maintain code without manually adding import statements.
+**A:** Indexing enables Pylance to scan your codebase and installed libraries for available symbols. With indexing enabled, Pylance can suggest auto-imports for symbols that were never opened or used in VS Code, making it easier to write and maintain code without manually adding import statements.
 
 ### Q: Will disabling indexing remove all IntelliSense features?
 
