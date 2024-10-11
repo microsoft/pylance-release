@@ -76,7 +76,7 @@ To further customize indexing behavior in Pylance, you can use additional settin
 
 - **`python.analysis.exclude`**: Excludes specific directories or files from being part of the VS Code workspace, which affects what files the indexer will process.
 
-- **`python.analysis.extraPaths`**: By default, the indexer will index packages in import roots returned by `sys.path`. If there are other packages or modules you want to include, use `extraPaths` to add them as third-party packages to the workspace, which will indirectly affect the indexer to index them.
+- **`python.analysis.extraPaths`**: By default, the indexer will index packages in import roots returned by `sys.path`. If there are other packages or modules you want to include, use `extraPaths` to add them as third-party packages to the workspace, which will indirectly cause the indexer to index them.
 
 - **`python.analysis.userFileIndexingLimit`**: Limits the number of user files to index, which can help manage performance on larger projects.
 
