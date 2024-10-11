@@ -104,7 +104,7 @@ Using these settings together, you can tailor indexing to meet your specific dev
 
 ### Q: How can I tell if indexing is causing performance issues?
 
-**A:** If you notice high CPU usage, memory consumption, or sluggishness in the editor, indexing might be a contributing factor. Consider providing the information described here: [Collecting data for an investigation](https://github.com/microsoft/pylance-release/wiki/Collecting-data-for-an-investigation).
+**A:** If you notice high CPU usage, memory consumption, or sluggishness in the editor, indexing might be a contributing factor. Consider providing the information described here: [Collecting data for an investigation](https://github.com/microsoft/pylance-release/wiki/Collecting-data-for-an-investigation.).
 
 ---
 
