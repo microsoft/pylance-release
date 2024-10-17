@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024.10.101 (17 October 2024) PreRelease
+
+Notable changes:
+
+Pylance's copy of Pyright has been updated from 1.1.384 to 1.1.385.
+
+-   See Pyright's release notes for details: [1.1.385](https://github.com/microsoft/pyright/releases/tag/1.1.385)
+
 ## 2024.10.100 (10 October 2024) PreRelease
 
 Notable changes:
