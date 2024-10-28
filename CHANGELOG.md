@@ -1,11 +1,16 @@
 # Changelog
 
+## 2024.10.103 (28 October 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Docstring parsing is causing completions to be slow
+
 ## 2024.10.102 (24 October 2024) PreRelease
 
 Notable changes:
 
 -   Enhancement: Added "python.analysis.displayEnglishDiagnostics" to disable localized translations of technical error messages or terms [pylance-release#6265](https://github.com/microsoft/pylance-release/issues/6265)
-
 -   Enhancement: Add a "fold all docstrings" command [pylance-release#4677](https://github.com/microsoft/pylance-release/issues/4677)
 
 Pylance's copy of Pyright has been updated from 1.1.385 to 1.1.386.
