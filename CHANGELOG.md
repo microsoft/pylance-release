@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.10.104 (31 October 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Regression: pre-release fails to parse `pyproject.toml` with comments [pylance-release#6621](https://github.com/microsoft/pylance-release/issues/6621)
+
 ## 2024.10.103 (28 October 2024) PreRelease
 
 Notable changes:
