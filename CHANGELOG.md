@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.11.100 (6 November 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Docstring templating [pylance-release#5944](https://github.com/microsoft/pylance-release/issues/5944)
+-   Enhancement: Remove return type from **init** override member completion [pylance-release#5367](https://github.com/microsoft/pylance-release/issues/5367)
+-   Enhancement: semantic highlight and hints for a TypedDict's get function. [pylance-release#4098](https://github.com/microsoft/pylance-release/issues/4098)
+
+Pylance's copy of Pyright has been updated from 1.1.386 to 1.1.388.
+
+-   See Pyright's release notes for details: [1.1.387](https://github.com/microsoft/pyright/releases/tag/1.1.387), [1.1.388](https://github.com/microsoft/pyright/releases/tag/1.1.388)
+
 ## 2024.11.1 (4 November 2024) Release
 
 Notable changes:
