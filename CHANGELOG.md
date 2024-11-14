@@ -12,6 +12,12 @@ Pylance's copy of Pyright has been updated from 1.1.386 to 1.1.388.
 
 -   See Pyright's release notes for details: [1.1.387](https://github.com/microsoft/pyright/releases/tag/1.1.387), [1.1.388](https://github.com/microsoft/pyright/releases/tag/1.1.388)
 
+## 2024.11.2 (13 November 2024) Release
+
+Notable changes:
+
+-   Bug fix: Remove unicode character class entries in regex's for pylance-server package.
+
 ## 2024.11.1 (4 November 2024) Release
 
 Notable changes:
