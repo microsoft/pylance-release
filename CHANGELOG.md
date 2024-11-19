@@ -1,5 +1,17 @@
 # Changelog
 
+## 2024.11.101 (19 November 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Generated docstring does not include `:rtype` when return type annotation is present [pylance-release#6470](https://github.com/microsoft/pylance-release/issues/6470)
+-   Bug fix: `inlineChat.viewInChat` command from notebook will cause pylance to crash [pylance-release#6454](https://github.com/microsoft/pylance-release/issues/6454)
+-   Enhancement: Offer different pylance modes to enable light vs full IntelliSense experience [pylance-release#5434](https://github.com/microsoft/pylance-release/issues/5434)
+
+Pylance's copy of Pyright has been updated from 1.1.388 to 1.1.389.
+
+-   See Pyright's release notes for details: [1.1.389](https://github.com/microsoft/pyright/releases/tag/1.1.389)
+
 ## 2024.11.100 (6 November 2024) PreRelease
 
 Notable changes:
