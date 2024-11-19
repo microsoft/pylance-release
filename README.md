@@ -43,19 +43,32 @@ Pylance provides users with the ability to customize their Python language suppo
     - Offers predefined configurations to help users optimize Pylance's performance based on their development needs. It controls how many IntelliSense features Pylance provides, allowing you to choose between full language service functionality or a lightweight experience optimized for performance.
     - Default value: `default`
     - Available values:
-        - `default` (default)
         - `light`
+        - `default` (default)
+        - `full`
     - Description:
         - `default`: Provides a balanced experience with many useful features enabled by default. It ensures that the language server delivers sufficient functionality for most users without overloading the system. Advanced features can be enabled as needed, allowing for further customization at the cost of performance.
         - `light`: Designed for users seeking a lightweight, memory-efficient setup. This mode disables various features to make Pylance function more like a streamlined text editor. Ideal for those who do not require the full breadth of IntelliSense capabilities and prefer Pylance to be as resource-friendly as possible.
-    -  Modifies the default value of the following settings:      
-        | Setting                           | `light` mode   | `default` mode   |
-        | :----------------------------- | :--------- | :--------- |
-        | python.analysis.exclude                   | ["**"]      | []         |
-        | python.analysis.useLibraryCodeForTypes    | false       | true       |
-        | python.analysis.enablePytestSupport       | false       | true       |
-        | python.analysis.indexing                  | false       | true       |
-    - The  settings above can be changed individually to override the default values. 
+        - `full`: Designed for users seeking the most extensive feature set. This mode enables most of Pylance's features, offering the richest IntelliSense experience. Ideal for those who want access to the full range of available functionality.
+    - Individual settings can be configured to override the defaults set by `languageServerMode`.
+    - Default settings based on mode are:
+
+        | Mode                           | light      | default    | full       |
+        | :----------------------------- | :--------- | :--------- | :--------- |
+        | python.analysis.exclude                   | ["**"]      | []         | []         |
+        | python.analysis.useLibraryCodeForTypes    | false       | true       | true       |
+        | python.analysis.enablePytestSupport       | false       | true       | true       |
+        | python.analysis.indexing                  | false       | true       | true       |
+        | python.analysis.autoImportCompletions     | false       | false      | true       |
+        | python.analysis.showOnlyDirectDependenciesInAutoImport | false | false | true     |
+        | python.analysis.packageIndexDepths        | See | settings | below |
+        | python.analysis.regenerateStdLibIndices   | false       | false      | true       |
+        | python.analysis.userFileIndexingLimit     | 2000        | 2000       | -1         |
+        | python.analysis.includeAliasesFromUserFiles | false     | false      | true       |
+        | python.analysis.functionReturnTypes       | false       | false      | true       |
+        | python.analysis.pytestParameters          | false       | false      | true       |
+        | python.analysis.supportRestructuredText   | false       | false      | true       |
+        | python.analysis.supportDocstringTemplate  | false       | false      | true       |
 
 - `python.analysis.typeCheckingMode`
     - Used to specify the level of type checking analysis performed.
@@ -161,10 +174,29 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.userFileIndexingLimit`
     - Maximum number of user files to index in the workspace. Indexing files is a performance-intensive task. Please use this setting to limit the number of files you want us to index. If you enter -1, we will index all files.
-    - Default value: 2000
+    - Default value: 2000 (or -1 for `full` mode)
+    - Performance Consideration:
+        - Increasing this number will cause Pylance to allocate more resources for user file indexing.
 
 - [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
+     - Default value:
+        ```jsonc
+        [
+            { "name": "sklearn", "depth": 2 }, 
+            { "name": "matplotlib", "depth": 2 }, 
+            { "name": "scipy", "depth": 2 }, 
+            { "name": "django", "depth": 2 }, 
+            { "name": "flask", "depth": 2 }, 
+            { "name": "fastapi", "depth": 2 }
+        ]
+        ```
+        or in `full` mode
+        ```jsonc
+        [
+            { "name": "", "depth": 4,  "includeAllSymbols": true }
+        ]
+        ```
     - Accepted values:
         ```jsonc
         {
@@ -184,8 +216,18 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Adjusting this setting will cause Pylance to allocate more resources for indexing third-party libraries.
 
+- `python.analysis.regenerateStdLibIndices`
+    - Instead of relying on the shared `stdlib.json` indices for all Python versions, generate unique indices tailored to each workspace's specific Python version and platform. This regeneration process will affect performance, unlike using the prebuilt stdlib indices.
+    - Default value: `false` (or `true` in `full` mode)
+    - Accepted values:
+        - `true`
+        - `false` (default)
+    - Performance Consideration:
+        - Enabling this can impact performance by creating its own indices for standard libraries.
+
 - [`python.analysis.includeAliasFromUserFiles`](docs/settings/python_analysis_includeAliasesFromUserFiles.md)
     - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true`
         - `false` (default)
@@ -194,6 +236,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.autoImportCompletions`
     - Used to control the offering of auto-imports in completions. This will impact number of items shown in the completion and performance.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true`
         - `false` (default)
@@ -224,6 +267,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.inlayHints.functionReturnTypes`
     - Enable/disable inlay hints for function return types.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true`
         - `false` (default)
@@ -241,6 +285,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.inlayHints.pytestParameters`
     - Enable/disable inlay hints for pytest function parameters.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true`
         - `false` (default)
@@ -294,6 +339,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.supportRestructuredText`
     - Enable/disable support for reStructuredText in docstrings. Experimental, may cause docstrings to no longer render.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true` 
         - `false` (default)
@@ -317,6 +363,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.supportDocstringTemplate`
     - Enable/disable support for docstring generation.
+    - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true` 
         - `false` (default)
