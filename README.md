@@ -243,6 +243,13 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Enabling `python.analysis.autoImportCompletions` can impact performance by increasing the number of completion items and resource usage. Disabling it can improve performance by reducing the computational overhead during code completion.
 
+- `python.analysis.showOnlyDirectDependenciesInAutoImport`
+    - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in `auto import` suggestions, if they exist. This only affects `auto import` for completions. The `add import` code action will continue to show all possible imports.
+    - Default value: `false` (or `true` in `full` mode)
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 - `python.analysis.importFormat`
     - Defines the default format for import module.
     - Accepted values:
