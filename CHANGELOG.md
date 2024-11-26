@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024.11.102 (26 November 2024) PreRelease
+
+Notable changes:
+
+-   Enhancement: Updated pandas stubs
+
 ## 2024.11.101 (19 November 2024) PreRelease
 
 Notable changes:
