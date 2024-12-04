@@ -31,6 +31,7 @@ Each configuration in the list should be an object with the following properties
 - `"includeAllSymbols"` (optional): Whether to include all symbols in the indexing (boolean). If set to `false`, only symbols specified in a module's `__all__` attribute are included. Default is `false` if not specified.
 
 **Note**: When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is removed. This means you need to explicitly add any additional packages that you want indexed to this setting, even if you still want them indexed at the default depth.
+
 #### Example Structure:
 
 ```json
@@ -174,6 +175,26 @@ If you want to change the indexing depth for all packages, you can set the `name
 ```
 
 - **Explanation**: This setting adjusts the default indexing depth for all packages to 3. Use this cautiously, as it may significantly impact performance.
+
+## Default Values for Each Language Server Mode
+
+- Default value for `light` and `default` mode:
+  ```jsonc
+  [
+      { "name": "sklearn", "depth": 2 },
+      { "name": "matplotlib", "depth": 2 },
+      { "name": "scipy", "depth": 2 },
+      { "name": "django", "depth": 2 },
+      { "name": "flask", "depth": 2 },
+      { "name": "fastapi", "depth": 2 }
+  ]
+  ```
+  or in `full` mode:
+  ```jsonc
+  [
+      { "name": "", "depth": 4,  "includeAllSymbols": true }
+  ]
+  ```
 
 ## Frequently Asked Questions
 
