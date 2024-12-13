@@ -355,9 +355,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.aiCodeActions`
     - Enable/disable AI-assisted code actions. Requires the Copilot Chat extension to be enabled.
-    - Accepted values:
-        - `true`
-        - `false`
+    - This setting accepts objects where the keys are the available AI-assisted code actions, and the values are `true` or `false` to enable or disable each action.
     - Available code actions to use as keys: `implementAbstractClasses`.
     - Example:
     ```json
