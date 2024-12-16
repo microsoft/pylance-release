@@ -1,5 +1,18 @@
 # Changelog
 
+## 2024.12.100 (16 December 2024) PreRelease
+
+Notable changes:
+
+-   Bug fix: Return type of generated docstrings is Any when it should not be [pylance-release#6745](https://github.com/microsoft/pylance-release/issues/6745)
+-   Bug fix: Generated docstrings return type could be narrowed [pylance-release#6704](https://github.com/microsoft/pylance-release/issues/6704)
+-   Bug fix: Make pass through settings descriptions to adopt inline code [pylance-release#6757](https://github.com/microsoft/pylance-release/issues/6757)
+-   Enhancement: Support go-to-implementation [pylance-release#4329](https://github.com/microsoft/pylance-release/issues/4329)
+
+Pylance's copy of Pyright has been updated from 1.1.389 to 1.1.390.
+
+-   See Pyright's release notes for details: [1.1.390](https://github.com/microsoft/pyright/releases/tag/1.1.390)
+
 ## 2024.12.1 (5 December 2024) Release
 
 Notable changes:
