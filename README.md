@@ -345,19 +345,17 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false` 
 
 - `python.analysis.supportRestructuredText`
-    - Enable/disable support for reStructuredText in docstrings. Experimental, may cause docstrings to no longer render.
+    - Enable/disable support for reStructuredText in docstrings.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
-        - `true` 
-        - `false` (default)
+        - `true` (default)
+        - `false` 
     - Performance Consideration:
         - Disabling support for reStructuredText in docstrings by setting `python.analysis.supportRestructuredText` to `false` can improve performance by reducing the overhead of parsing complex docstrings.
 
 - `python.analysis.aiCodeActions`
     - Enable/disable AI-assisted code actions. Requires the Copilot Chat extension to be enabled.
-    - Accepted values:
-        - `true` 
-        - `false` (default)
+    - This setting accepts objects where the keys are the available AI-assisted code actions, and the values are `true` or `false` to enable or disable each action.
     - Available code actions to use as keys: `implementAbstractClasses`.
     - Example:
     ```json
@@ -388,6 +386,17 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
         
+- `python.analysis.generateWithTypeAnnotation`
+    - Add type annotations when generating code. Defaults to `false` for type checking mode `off`, and `true` for other modes.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+- `python.analysis.enableNotebookDataTips`
+    - Enable data tips for the last value of a variable when executing notebook cells. 
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 # Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
