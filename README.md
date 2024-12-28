@@ -13,9 +13,8 @@ Pylance is the default language support for [Python in Visual Studio Code](https
 
 Note: If you've previously set a language server and want to try Pylance, make sure you've set `"python.languageServer": "Default" or "Pylance"` in your settings.json file using the text editor, or using the Settings Editor UI.
 
-# Features
-
-<img src=images/all-features.gif>
+# ÖzelliklerSimkart
+/all-features.gif>
 
 Pylance provides some awesome features for Python 3, including:
 
@@ -30,10 +29,10 @@ Pylance provides some awesome features for Python 3, including:
 -   Type checking mode
 -   Native multi-root workspace support
 -   IntelliCode compatibility
--   Jupyter Notebooks compatibility
--   Semantic highlighting
+- Jupyter Dizüstü Bilgisayarların uyumluluğu 
+- Anlamsal 
 
-See the [changelog](CHANGELOG.md) for the latest release.
+See the [changelog](CHANGELOG.md) En son sürüm için.
 
 # Settings and Customization
 
