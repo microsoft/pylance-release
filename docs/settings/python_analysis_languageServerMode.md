@@ -45,13 +45,13 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 | `python.analysis.supportDocstringTemplate`               | `false`        | `false`      | `true`      |
 | `python.analysis.packageIndexDepths`                     | `default`      | `default`    | `full`      |
 
-- **`python.analysis.exclude`**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from workspace, enabling IntelliSense support for open files only.
+- **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
 
 - **`python.analysis.useLibraryCodeForTypes`**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
 
 - **`python.analysis.enablePytestSupport`**: Enables Pytest-specific IntelliSense features. Disabled in `light` mode to reduce resource consumption.
 
-- **`python.analysis.indexing`**: Indexes installed third-party libraries and user files to improve features like auto-imports and symbol searches. Disabled in `light` mode for performance optimization.
+- **[`python.analysis.indexing`](python_analysis_indexing.md)**: Indexes installed third-party libraries and user files to improve features like auto-imports and symbol searches. Disabled in `light` mode for performance optimization.
 
 - **`python.analysis.autoImportCompletions`**: Controls the offering of auto-imports in completions. Enabled in `full` mode to provide a richer development experience.
 

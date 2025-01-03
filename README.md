@@ -114,7 +114,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true` (default)
         - `false`
 
-- `python.analysis.extraPaths`
+- [`python.analysis.extraPaths`](docs/settings/python_analysis_extraPaths.md)
     - Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     - Default value: empty array
 
