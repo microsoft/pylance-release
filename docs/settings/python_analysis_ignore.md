@@ -68,16 +68,6 @@ The `ignore` setting is useful when you want Pylance to recognize the files (e.g
 
 ## Examples
 
-### Suppressing Diagnostics in Third-Party Libraries
-
-If you're using third-party libraries that are causing unwanted diagnostics, you can ignore them:
-
-```json
-{
-    "python.analysis.ignore": ["**/site-packages/**"]
-}
-```
-
 ### Ignoring Generated Files
 
 Suppose your project generates code into a `generated` directory:
@@ -89,16 +79,6 @@ Suppose your project generates code into a `generated` directory:
 ```
 
 This way, Pylance won't show errors or warnings for the generated code but will still provide IntelliSense when you import from it.
-
-### Ignoring Files in Virtual Environments
-
-Sometimes, Pylance may display diagnostics for files in your virtual environment. You can suppress these by ignoring the virtual environment directories:
-
-```json
-{
-    "python.analysis.ignore": ["**/venv/**", "**/.venv/**", "**/env/**"]
-}
-```
 
 ## Frequently Asked Questions
 
