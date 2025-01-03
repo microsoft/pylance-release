@@ -153,7 +153,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.useLibraryCodeForTypes`
+- [`python.analysis.useLibraryCodeForTypes`](docs/settings/python_analysis_useLibraryCodeForTypes.md)
     - Used to parse the source code for a package when a typestub is not found.
     - Default value: `true` (or `false` in `light` mode)
     - Accepted values:
@@ -172,7 +172,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling indexing by setting `python.analysis.indexing` to `false` can improve performance by reducing resource consumption, especially in large projects, at the cost of making features like auto-imports and workspace symbol search find fewer symbols.
 
-- `python.analysis.userFileIndexingLimit`
+- [`python.analysis.userFileIndexingLimit`](docs/settings/python_analysis_userFileIndexingLimit.md)
     - Maximum number of user files to index in the workspace. Indexing files is a performance-intensive task. Please use this setting to limit the number of files you want us to index. If you enter -1, we will index all files.
     - Default value: 2000 (or -1 for `full` mode)
     - Performance Consideration:

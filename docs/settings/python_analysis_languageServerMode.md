@@ -47,7 +47,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
 
-- **`python.analysis.useLibraryCodeForTypes`**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
+- **[`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md)**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
 
 - **`python.analysis.enablePytestSupport`**: Enables Pytest-specific IntelliSense features. Disabled in `light` mode to reduce resource consumption.
 
@@ -57,7 +57,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **`python.analysis.showOnlyDirectDependenciesInAutoImport`**: In `full` mode, only direct dependencies declared in `requirements.txt` or `pyproject.toml` are shown in auto-import suggestions, improving the relevance of suggestions.
 
-- **`python.analysis.userFileIndexingLimit`**: Limits the number of user files indexed in the workspace. In `full` mode, there is no limit (`-1`), allowing comprehensive indexing of all files.
+- **[`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)**: Limits the number of user files indexed in the workspace. In `full` mode, there is no limit (`-1`), allowing comprehensive indexing of all files.
 
 - **`python.analysis.functionReturnTypes`**: Enables inlay hints for function return types in `full` mode, providing additional type information during development.
 

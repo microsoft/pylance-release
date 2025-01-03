@@ -63,8 +63,8 @@ Disable indexing if you face performance issues, have limited resources, or are 
 
 The indexer creates two indices: one for user files (files that belong to the VS Code workspace) and one for third-party libraries.
 
-- **User File Index**: This index includes files within the current workspace and is controlled by `python.analysis.userFileIndexingLimit`.
-- **Third-Party Library Index**: This index covers third-party libraries installed in the environment and can be controlled using `python.analysis.packageIndexDepths`.
+- **User File Index**: This index includes files within the current workspace and is controlled by [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md).
+- **Third-Party Library Index**: This index covers third-party libraries installed in the environment and can be controlled using [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md).
 
 ## Adjusting Indexing Behavior with Related Settings
 
