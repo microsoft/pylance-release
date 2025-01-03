@@ -160,10 +160,6 @@ Your project may contain directories with generated code, build artifacts, or ex
 - You haven't overridden the default include paths without including the workspace root (if needed).
 - There are no conflicting settings in `python.analysis.exclude` that might be excluding the files you want to include.
 
-### Q: Anything to be careful about when explicitly setting include/exclude?
-
-**A:** By default, Pylance includes/excludes certain directories like `**/node_modules`, `**/__pycache__`, `.*`, and virtual environment directories. However, if you customize this setting, Pylance's automatic exclusion of virtual environments will be overridden, and you’ll need to manually specify every file and directory to include or exclude, including virtual environments. Often time, one of most common mistakes users make is manually setting this setting but forgetting to exclude the virtual environment folder.
-
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
