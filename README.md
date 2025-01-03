@@ -153,7 +153,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.useLibraryCodeForTypes`
+- [`python.analysis.useLibraryCodeForTypes`](docs/settings/python_analysis_useLibraryCodeForTypes.md)
     - Used to parse the source code for a package when a typestub is not found.
     - Default value: `true` (or `false` in `light` mode)
     - Accepted values:

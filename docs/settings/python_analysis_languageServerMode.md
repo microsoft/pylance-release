@@ -47,7 +47,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
 
-- **`python.analysis.useLibraryCodeForTypes`**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
+- **[`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md)**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
 
 - **`python.analysis.enablePytestSupport`**: Enables Pytest-specific IntelliSense features. Disabled in `light` mode to reduce resource consumption.
 
