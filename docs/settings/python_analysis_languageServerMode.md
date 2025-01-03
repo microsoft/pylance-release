@@ -67,7 +67,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **`python.analysis.supportDocstringTemplate`**: Enables support for docstring generation in `full` mode, facilitating better code documentation.
 
-- **[`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. By default, only top-level modules are indexed.
+- **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. By default, only top-level modules are indexed.
 
   - **Default value**:
     ```jsonc

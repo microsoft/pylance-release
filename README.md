@@ -90,7 +90,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Setting `python.analysis.diagnosticMode` to `openFilesOnly` limits analysis to open files, improving performance by reducing the amount of code Pylance needs to process in large workspaces.
 
-- `python.analysis.include`
+- [`python.analysis.include`](docs/settings/python_analysis_include.md)
     - Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the directory that contains workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
 
