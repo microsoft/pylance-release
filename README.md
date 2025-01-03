@@ -90,17 +90,17 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Setting `python.analysis.diagnosticMode` to `openFilesOnly` limits analysis to open files, improving performance by reducing the amount of code Pylance needs to process in large workspaces.
 
-- `python.analysis.include`
+- [`python.analysis.include`](docs/settings/python_analysis_include.md)
     - Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the directory that contains workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
 
-- `python.analysis.exclude`
+- [`python.analysis.exclude`](docs/settings/python_analysis_exclude.md)
     - Paths of directories or files that should not be included. These override the include directories, allowing specific subdirectories to be excluded. Note that files in the exclude paths may still be included in the analysis if they are referenced (imported) by source files that are not excluded. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no exclude paths are specified, Pylance automatically excludes the following: `**/node_modules`, `**/__pycache__`, `.git` and any virtual environment directories.
     - Default value: empty array (or `["**"]` in `light` mode)
     - Performance Consideration:
         - Excluding unnecessary files or directories can significantly improve performance by reducing the scope of analysis. For example, setting `python.analysis.exclude` to `["**"]` will exclude all files except those currently open, minimizing resource consumption.
 
-- `python.analysis.ignore`
+- [`python.analysis.ignore`](docs/settings/python_analysis_ignore.md)
     - Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
 
@@ -114,7 +114,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true` (default)
         - `false`
 
-- `python.analysis.extraPaths`
+- [`python.analysis.extraPaths`](docs/settings/python_analysis_extraPaths.md)
     - Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     - Default value: empty array
 
