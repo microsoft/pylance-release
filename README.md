@@ -216,7 +216,13 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Adjusting this setting will cause Pylance to allocate more resources for indexing third-party libraries.
 
-- `python.analysis.regenerateStdLibIndices`
+- [`python.analysis.persistAllIndices`](docs/settings/python_analysis_persistAllIndices.md)
+    - Used to specify whether indices for all third-party libraries should be persisted to disk.
+    - Default value: `true`
+    - Performance Consideration:
+        - Enabling this setting can improve startup performance by reducing the need to re-index third-party libraries.
+
+- [`python.analysis.regenerateStdLibIndices`](docs/settings/python_analysis_regenerateStdLibIndices.md)
     - Instead of relying on the shared `stdlib.json` indices for all Python versions, generate unique indices tailored to each workspace's specific Python version and platform. This regeneration process will affect performance, unlike using the prebuilt stdlib indices.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
@@ -234,7 +240,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Enabling this can impact performance by increasing the number of completion items and indexing multiple files as changes occur.
 
-- `python.analysis.autoImportCompletions`
+- [`python.analysis.autoImportCompletions`](docs/settings/python_analysis_autoImportCompletions.md)
     - Used to control the offering of auto-imports in completions. This will impact number of items shown in the completion and performance.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
