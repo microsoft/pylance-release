@@ -8,7 +8,7 @@ The `python.analysis.persistAllIndices` setting in Pylance controls whether the 
 
 ## What Is Indexing in Pylance?
 
-Indexing is the process by which Pylance scans your project's files and installed third-party libraries to build a database (indices) of symbols such as classes, functions, and variables. This enables features like:
+Indexing is the process by which Pylance scans your project's files and installed third-party libraries to build indices of symbols such as classes, functions, and variables. This enables features like:
 
 - **Auto-import Suggestions**: Quickly import symbols from libraries without manually typing import statements.
 - **Workspace Symbol Search**: Search for symbols across your project and libraries.
@@ -21,7 +21,7 @@ The `python.analysis.persistAllIndices` setting determines whether Pylance saves
 
 ### Accepted Values
 
-- `true` (default): Pylance will save indices for all third-party libraries to disk and reuse them in future sessions.
+- `true` (default): Pylance will save indices for all third-party libraries to disk and reuse them in future sessions.
 - `false`: Pylance will not persist indices; it will re-index libraries upon each session.
 
 ### How to Change the Setting
