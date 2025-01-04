@@ -220,7 +220,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Used to specify whether indices for all third-party libraries should be persisted to disk.
     - Default value: `true`
     - Performance Consideration:
-        - Enabling this setting can improve performance at load by reducing the need to re-index third-party libraries.
+        - Enabling this setting can improve startup performance by reducing the need to re-index third-party libraries.
 
 - [`python.analysis.regenerateStdLibIndices`](docs/settings/python_analysis_regenerateStdLibIndices.md)
     - Instead of relying on the shared `stdlib.json` indices for all Python versions, generate unique indices tailored to each workspace's specific Python version and platform. This regeneration process will affect performance, unlike using the prebuilt stdlib indices.
