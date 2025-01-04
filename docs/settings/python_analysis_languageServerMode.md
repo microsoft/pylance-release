@@ -53,7 +53,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.indexing`](python_analysis_indexing.md)**: Indexes installed third-party libraries and user files to improve features like auto-imports and symbol searches. Disabled in `light` mode for performance optimization.
 
-- **`python.analysis.autoImportCompletions`**: Controls the offering of auto-imports in completions. Enabled in `full` mode to provide a richer development experience.
+- **[`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md)**: Controls the offering of auto-imports in completions. Enabled in `full` mode to provide a richer development experience.
 
 - **`python.analysis.showOnlyDirectDependenciesInAutoImport`**: In `full` mode, only direct dependencies declared in `requirements.txt` or `pyproject.toml` are shown in auto-import suggestions, improving the relevance of suggestions.
 

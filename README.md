@@ -240,7 +240,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Enabling this can impact performance by increasing the number of completion items and indexing multiple files as changes occur.
 
-- `python.analysis.autoImportCompletions`
+- [`python.analysis.autoImportCompletions`](docs/settings/python_analysis_autoImportCompletions.md)
     - Used to control the offering of auto-imports in completions. This will impact number of items shown in the completion and performance.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
