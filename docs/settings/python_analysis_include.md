@@ -146,7 +146,7 @@ Your project may contain directories with generated code, build artifacts, or ex
 
 ### Q: How does `python.analysis.include` interact with `python.analysis.exclude`?
 
-**A:** Paths specified in `python.analysis.exclude` take precedence over those in `python.analysis.include`. This means you can include a broad set of directories and then use `exclude` to remove specific subdirectories or files from the analysis.
+**A:** Paths specified in [`python.analysis.exclude`](python_analysis_exclude.md) take precedence over those in `python.analysis.include`. This means you can include a broad set of directories and then use `exclude` to remove specific subdirectories or files from the analysis.
 
 ### Q: Can I use `python.analysis.include` to include files outside of my workspace?
 
@@ -158,7 +158,7 @@ Your project may contain directories with generated code, build artifacts, or ex
 
 - The paths specified in `python.analysis.include` are correct and match the actual directory structure.
 - You haven't overridden the default include paths without including the workspace root (if needed).
-- There are no conflicting settings in `python.analysis.exclude` that might be excluding the files you want to include.
+- There are no conflicting settings in [`python.analysis.exclude`](python_analysis_exclude.md) that might be excluding the files you want to include.
 
 ## Related Documentation
 
