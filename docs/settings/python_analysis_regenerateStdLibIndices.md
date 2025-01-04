@@ -87,8 +87,11 @@ Regenerating the standard library indices can take a few seconds when you open a
 
 ## Related Settings
 
-- **[`python.analysis.indexing`](python_analysis_indexing.md)**: Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
-- **[`python.analysis.persistAllIndices`](python_analysis_persistAllIndices.md)**: Determines if third-party library indices are preserved across VS Code sessions.
+- [`python.analysis.indexing`](python_analysis_indexing.md) 
+   - Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
+- [`python.analysis.persistAllIndices`]
+(python_analysis_persistAllIndices.md)
+   - Determines if third-party library indices are preserved across VS Code sessions.
 
 ---
 
