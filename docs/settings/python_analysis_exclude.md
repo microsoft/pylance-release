@@ -176,6 +176,19 @@ Set `python.analysis.exclude` to `["**"]`:
 
 This configuration tells Pylance to exclude all files from analysis, effectively only analyzing files you have open in the editor.
 
+### Why do certain `**` patterns fail to match the file structure?
+
+In the given file structure:
+
+```
+my_project/
+├── src/
+│   ├── module1/
+│   │   ├── module2/
+```
+
+The pattern `**/src/**` does not match `src/` because there is no folder preceding `src`. Similarly, `src/**/module1` does not match `src/module1/` because there is no folder between `src` and `module1`. However, `src/**/module2` successfully matches `module2/` because `module1` exists between `src` and `module2`.
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
