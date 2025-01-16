@@ -1,5 +1,21 @@
 # Changelog
 
+## 2025.1.100 (15 January 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: importing class from wrong module [pylance-release#6843](https://github.com/microsoft/pylance-release/issues/6843)
+-   Bug fix: "generateDocstring" in AI code action doesn't automatically pop [pylance-release#6766](https://github.com/microsoft/pylance-release/issues/6766)
+-   Bug fix: NewType is not indexed [pylance-release#6601](https://github.com/microsoft/pylance-release/issues/6601)
+-   Enhancement: Add semantic token modifiers to callable variables. [pylance-release#5841](https://github.com/microsoft/pylance-release/issues/5841)
+-   Enhancement: Syntax highlighting for PEP 695: Type Parameter Syntax [pylance-release#5541](https://github.com/microsoft/pylance-release/issues/5541)
+-   Enhancement: Improve semantic highlighting of `TypeAlias` [pylance-release#3100](https://github.com/microsoft/pylance-release/issues/3100)
+-   Bug fix: Final annotation is not recognized across notebook cells [pylance-release#6455](https://github.com/microsoft/pylance-release/issues/6455)
+
+Pylance's copy of Pyright has been updated from 1.1.390 to 1.1.392.
+
+-   See Pyright's release notes for details: [1.1.391](https://github.com/microsoft/pyright/releases/tag/1.1.391), [1.1.392](https://github.com/microsoft/pyright/releases/tag/1.1.392)
+
 ## 2024.12.100 (16 December 2024) PreRelease
 
 Notable changes:
