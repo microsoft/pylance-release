@@ -160,6 +160,56 @@ Your project may contain directories with generated code, build artifacts, or ex
 - You haven't overridden the default include paths without including the workspace root (if needed).
 - There are no conflicting settings in [`python.analysis.exclude`](python_analysis_exclude.md) that might be excluding the files you want to include.
 
+### Q: Can users use `${workspaceFolder:rootName}` in `include/exclude/ignore`, and when would they use it?
+
+**A:** Yes, `${workspaceFolder:rootName}` can be used. In a multi-root workspace, if you want to specify `include`, `exclude`, or `ignore` settings for each workspace root individually, you can prefix those settings with `${workspaceFolder:rootName}` to indicate which root the setting applies to.
+
+For example, consider the following multi-root workspace configuration:
+
+```json
+{
+	"folders": [
+		{
+			"path": "first"
+		},
+		{
+			"path": "second"
+		},
+		{
+			"name": "third",
+			"path": "../extraRoot"
+		}
+	],
+	"settings": {
+		"python.analysis.include": [
+			"${workspaceFolder:first}/src/**",
+			"${workspaceFolder:second}/**"
+		],
+		"python.analysis.exclude": [
+			"${workspaceFolder:third}/testFiles/**"
+		]
+	}
+}
+```
+
+In this example:
+
+- `first` will get `src/**` as its include setting.
+- `second` will get `**` as its include setting.
+- `third` will use the default include settings but exclude `testFiles/**`.
+
+This approach allows you to provide `include`, `exclude`, or `ignore` configurations tailored to each workspace root in a multi-root environment in VS Code.
+
+### Q: Is there any other way to provide `include/exclude/ignore` settings per workspace in a multi-root workspace?
+
+**A:** Yes, besides using `${workspaceFolder:rootName}`, users can also:
+
+1. Create a `.vscode/settings.json` file for each root folder and define `python.analysis.include`, `python.analysis.exclude`, or `python.analysis.ignore` settings there.
+2. Place a `pyrightconfig.json` file in each root folder to customize include/exclude/ignore settings.
+3. Use `pyproject.toml` files in each root folder to configure these settings, especially if you’re following a specific project structure or build system.
+
+These methods offer flexibility for managing analysis settings per workspace root in a multi-root VS Code environment.
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
