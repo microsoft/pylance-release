@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.1.101 (22 January 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: go to implementation should find implementation of all sub types transitively. [pylance-release#6775](https://github.com/microsoft/pylance-release/issues/6775)
+
 ## 2025.1.100 (15 January 2025) PreRelease
 
 Notable changes:
