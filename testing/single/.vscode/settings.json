@@ -17,4 +17,7 @@
     "python.analysis.extraPaths": [
         "${workspaceFolder:utfinname日本}"
     ],
+    "python.analysis.aiCodeActions": {
+        "generateSymbol": true
+    }
 }
