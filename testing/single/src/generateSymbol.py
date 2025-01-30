@@ -1,8 +1,9 @@
 # test copilot generate symbol feature
 #
 # * NOTE *
-# The very first time, vscode will ask consent to use copilot unless you already did it, 
-# it only works if that is accepted.
+# 1. The very first time, vscode will ask consent to use copilot unless you already did it, 
+#    it only works if that is accepted.
+# 2. Make sure `interpreter` is selected, otherwise, it won't work.
 #
 # * What to test *
 # Since it is using copilot, rather than legacy imperative implementation, 
