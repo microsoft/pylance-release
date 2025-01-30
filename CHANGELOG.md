@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.1.102 (29 January 2025) PreRelease
+
+Pylance's copy of Pyright has been updated from 1.1.392 to 1.1.393.
+
+-   See Pyright's release notes for details: [1.1.393](https://github.com/microsoft/pyright/releases/tag/1.1.393)
+
 ## 2025.1.101 (22 January 2025) PreRelease
 
 Notable changes:
