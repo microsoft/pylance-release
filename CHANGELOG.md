@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.1.102 (29 January 2025) PreRelease
+
+Pylance's copy of Pyright has been updated from 1.1.392 to 1.1.393.
+
+-   See Pyright's release notes for details: [1.1.393](https://github.com/microsoft/pyright/releases/tag/1.1.393)
+
 ## 2025.1.101 (22 January 2025) PreRelease
 
 Notable changes:
@@ -621,12 +627,6 @@ Notable changes:
 Pylance's copy of Pyright has been updated from 1.1.348 to 1.1.350.
 
 -   See Pyright's release notes for details: [1.1.349](https://github.com/microsoft/pyright/releases/tag/1.1.349), [1.1.350](https://github.com/microsoft/pyright/releases/tag/1.1.350)
-
-## 2024.2.4 (21 January 2025) Release
-
-Notable changes:
-
--   Bug fix: Support PTVS 17.10 requirements
 
 ## 2024.2.3 (4 March 2024) Release
 
