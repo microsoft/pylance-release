@@ -1,5 +1,20 @@
 # Changelog
 
+## 2025.2.100 (13 February 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Semantic Highlighting: Variables of instances with **call** method get semantic token "function" since version 2025.2.1 [pylance-release#6924](https://github.com/microsoft/pylance-release/issues/6924)
+-   Bug fix: Semantic Highlighting: How to correctly typehint method decorator which changes argument/return types, making it still recognized as a method [pylance-release#6921](https://github.com/microsoft/pylance-release/issues/6921)
+-   Enhancement: Automatically add " when breaking long strings [pylance-release#6805](https://github.com/microsoft/pylance-release/issues/6805)
+-   Bug fix: Get pull diagnostics working = Diagnostics from open files sometime not cleared up when file is closed. [pylance-release#5402](https://github.com/microsoft/pylance-release/issues/5402)
+-   Bug fix: Semantic Highlighting for Class Method created by assigning method is wrongly coloured as `property` [pylance-release#5111](https://github.com/microsoft/pylance-release/issues/5111)
+-   Bug fix: Could not rename all references when using new Generic syntax [pylance-release#6893](https://github.com/microsoft/pylance-release/issues/6893)
+
+Pylance's copy of Pyright has been updated from 1.1.393 to 1.1.394.
+
+-   See Pyright's release notes for details: [1.1.394](https://github.com/microsoft/pyright/releases/tag/1.1.394)
+
 ## 2025.2.1 (5 February 2025) Release
 
 Notable changes:
