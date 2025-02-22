@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025.2.101 (20 February 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: ERROR: Pylance failed to parse docstring at index 1 [pylance-release#6952](https://github.com/microsoft/pylance-release/issues/6952)
+-   Bug fix: Pylance failed to parse docstring [pylance-release#6951](https://github.com/microsoft/pylance-release/issues/6951)
+-   Bug fix: Unparseable docstrings should fall back to the old docstring parser [pylance-release#6494](https://github.com/microsoft/pylance-release/issues/6494)
+
 ## 2025.2.100 (13 February 2025) PreRelease
 
 Notable changes:
