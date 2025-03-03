@@ -1,16 +1,5 @@
 # Changelog
 
-## 2025.2.102 (27 February 2025) PreRelease
-
-Notable changes:
-
--   Bug fix: Crash in pylance when using 'editable' install setting [pylance-release#6987](https://github.com/microsoft/pylance-release/issues/6987)
--   Bug fix: `reportAttributeAccessIssue` on Hugging Face `transformers` top-level attributes only in Pre-Release [pylance-release#6966](https://github.com/microsoft/pylance-release/issues/6966)
-
-Pylance's copy of Pyright has been updated from 1.1.394 to 1.1.395.
-
--   See Pyright's release notes for details: [1.1.395](https://github.com/microsoft/pyright/releases/tag/1.1.395)
-
 ## 2025.2.101 (20 February 2025) PreRelease
 
 Notable changes:
