@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.3.1 (5 March 2025) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2025.2.103](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20252103-3-march-2025-prerelease) prerelease build.
+
 ## 2025.2.103 (3 March 2025) PreRelease
 
 Pylance's copy of Pyright has been updated from 1.1.395 to 1.1.396.
