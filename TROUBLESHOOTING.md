@@ -100,7 +100,7 @@ The location of your User settings.json depends upon how you're connecting:
 - Local - Stored in a [local](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) file. This can be found with the command `Preferences: Open User Settings.json`.
 - Remote - Stored on the remote machine. Example `/home/user/.vscode-server/data/Machine/settings.json`. This can be found with the command `Preferences: Open Remote Settings ...`
 
-You should make sure to use a version of node that is greater than or equal to what VS Code is using. You can determine the version of VS Code's node in the `Help | About` menu unless you are using `auto`.
+You should make sure to use a version of node that is greater than or equal to what VS Code is using. You can determine the version of VS Code's node in the `Help | About` menu. Using the `auto` setting will automatically install an up-to-date version of node.
 
 #### Increase memory limit for VS code (remote only)
 
