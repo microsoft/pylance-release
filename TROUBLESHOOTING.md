@@ -93,7 +93,7 @@ To specify your own Node.js executable, set this setting in your User settings.j
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
-* If you set `auto` as `the path to the Node.js executable`, pylance will automatically download the appropriate version from [Node](https://nodejs.org/dist/) and use it without requiring manual installation. This should also work in remote environments.
+* If you set `auto` as `the path to the Node.js executable`, pylance will automatically download the appropriate version from [Node](https://nodejs.org/dist/) and use it without requiring manual installation. This will also work in remote environments.
 
 The location of your User settings.json depends upon how you're connecting:
 
