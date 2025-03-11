@@ -87,18 +87,20 @@ If you think you're hitting an out-of-memory situation, you can alleviate this p
 
 Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit). 
 
-To specify your own Node.js executable, set this setting in your User settings.json and restart VS Code:
+To specify your own Node.js executable, set this setting in your User settings.json or Remote settings.json and restart VS Code:
 
 ```json
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
+* If you set `auto` as `the path to the Node.js executable`, pylance will automatically download the appropriate version from [Node](https://nodejs.org/dist/) and use it without requiring manual installation. This should also work in remote environments.
+
 The location of your User settings.json depends upon how you're connecting:
 
 - Local - Stored in a [local](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson) file. This can be found with the command `Preferences: Open User Settings.json`.
-- Remote - Stored on the remote machine. Example `/home/user/.vscode-server/data/Machine/settings.json`
+- Remote - Stored on the remote machine. Example `/home/user/.vscode-server/data/Machine/settings.json`. This can be found with the command `Preferences: Open Remote Settings ...`
 
-You should make sure to use a version of node that is greater than or equal to what VS Code is using. You can determine the version of VS Code's node in the `Help | About` menu.
+You should make sure to use a version of node that is greater than or equal to what VS Code is using. You can determine the version of VS Code's node in the `Help | About` menu unless you are using `auto`.
 
 #### Increase memory limit for VS code (remote only)
 
