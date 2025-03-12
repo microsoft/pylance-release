@@ -44,6 +44,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 | `python.analysis.supportRestructuredText`                | `false`        | `false`      | `true`      |
 | `python.analysis.supportDocstringTemplate`               | `false`        | `false`      | `true`      |
 | `python.analysis.packageIndexDepths`                     | `default`      | `default`    | `full`      |
+| `python.analysis.nodeExecutable`                         | ``             | ``           | `auto`      |
 
 - **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
 
@@ -88,6 +89,8 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
     ```
 
   In `full` mode, this ensures comprehensive indexing of submodules, improving features like auto-import and symbol searches for deeply nested packages. For more detail, please refer to the link above.
+
+- **[`python.analysis.nodeExecutable`](python_analysis_nodeExecutable.md)**: Enables the automatic download of a node in `full` mode, allowing a bigger heap memory for Pylance.
 
 These settings can be individually customized to override the defaults for each mode.
 
