@@ -350,6 +350,12 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true` (default)
         - `false` 
 
+- `python.analysis.autoSplitStrings`
+    - Automatically add quote and line continuation characters when splitting strings.
+    - Accepted values:
+        - `true` (default)
+        - `false` 
+
 - `python.analysis.supportRestructuredText`
     - Enable/disable support for reStructuredText in docstrings.
     - Default value: `false` (or `true` in `full` mode)
