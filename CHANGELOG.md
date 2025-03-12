@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025.3.101 (12 March 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Hitting enter after the first part of a multiline string generates invalid quotes [pylance-release#6961](https://github.com/microsoft/pylance-release/issues/6961)
+-   Bug fix: [Bug] Function parentheses autocomplete does not recognize existing parentheses [pylance-release#3032](https://github.com/microsoft/pylance-release/issues/3032)
+-   Bug fix: Inaccurate translation of "Auto-Import Completions" in zh-cn [pylance-release#6781](https://github.com/microsoft/pylance-release/issues/6781)
+
 ## 2025.3.100 (6 March 2025) PreRelease
 
 Notable changes:
