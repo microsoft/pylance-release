@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.3.102 (13 March 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix crash when pylance is used with old copilot extension.
+
 ## 2025.3.101 (12 March 2025) PreRelease
 
 Notable changes:
