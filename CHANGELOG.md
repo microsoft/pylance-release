@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.3.103 (20 March 2025) PreRelease
+
+Pylance's copy of Pyright has been updated from 1.1.396 to 1.1.397.
+
+-   See Pyright's release notes for details: [1.1.397](https://github.com/microsoft/pyright/releases/tag/1.1.397)
+
 ## 2025.3.2 (13 March 2025) Release
 
 Notable changes:
@@ -924,7 +930,7 @@ Notable changes:
 
 ## 2023.10.40 (20 October 2023) Release
 
-This is a hotfix release based on [2023.10.30](https://github.com/microsoft/pyrx/blob/main/packages/vscode-pylance/CHANGELOG.md#20231030-18-october-2023-release) with the following changes:
+This is a hotfix release based on [2023.10.30](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20231030-18-october-2023-release) with the following changes:
 
 -   Bug fix: Pylance latest release killing remote connections to notebooks [pylance-release#4983](https://github.com/microsoft/pylance-release/issues/4983)
 
