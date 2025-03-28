@@ -79,6 +79,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `basic`: All `off` rules + basic type checking rules
         - `standard`: All `off` rules + basic type checking rules + standard type checking rules
         - `strict`: All `off` rules + all type checking rules.
+        > You can refer to [pyright](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) documentation to reference the default type checking rules for each of the type checking modes.
     - Performance Consideration:
         - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by disabling type checking analysis, which can be resource-intensive, especially in large codebases.
 
@@ -180,7 +181,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
-     - Default value:
+    - Default value:
         ```jsonc
         [
             { "name": "sklearn", "depth": 2 }, 
@@ -333,16 +334,21 @@ Pylance provides users with the ability to customize their Python language suppo
 - `python.analysis.autoFormatStrings`
     - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
     - Accepted values:
-        - `true` 
+        - `true`
         - `false` (default)
     - Performance Consideration:
         - Disabling `python.analysis.autoFormatStrings` can slightly improve performance by reducing the processing required during string formatting, though the impact is minimal.
 
 - `python.analysis.nodeExecutable`
-    - Path to a node executable to use to run Pylance. If this value is empty, Pylance uses VS Code's node executable.
+    - Path to a node executable to use to run Pylance. If this value is empty, Pylance uses VS Code's node executable. If set to `auto`, it will automatically download a version from [nodejs](https://nodejs.org/dist/)
     - Set this value when you are having out of memory issues. Using a custom node executable allows Pylance to allocate more memory.
     - Accepted values:
-        - `any executable path` 
+        - `any executable path` or `auto`
+
+-   `python.analysis.nodeArguments`
+    -   Extra arguments to pass to node when using `python.analysis.nodeExecutable`. Defaults to `--max-old-space-size=8192`
+    -   Accepted values:
+        -   `Any argument that node accepts`
 
 - `python.analysis.autoIndent`
     - Automatically adjust indentation based on language semantics when typing Python code.
@@ -376,7 +382,9 @@ Pylance provides users with the ability to customize their Python language suppo
     ```json
     {
         "python.analysis.aiCodeActions": {
-            "implementAbstractClasses": true
+            "implementAbstractClasses": true,
+            "generateSymbol": true,
+            "generateDocstring": true
         }
     }
     ```
@@ -385,7 +393,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Enable/disable support for docstring generation.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
-        - `true` 
+        - `true`
         - `false` (default)
     - Example:
         ```python
@@ -400,17 +408,30 @@ Pylance provides users with the ability to customize their Python language suppo
     - Accepted values:
         - `true`
         - `false` (default)
-        
+
 - `python.analysis.generateWithTypeAnnotation`
     - Add type annotations when generating code. Defaults to `false` for type checking mode `off`, and `true` for other modes.
     - Accepted values:
         - `true`
         - `false` (default)
+
 - `python.analysis.enableNotebookDataTips`
     - Enable data tips for the last value of a variable when executing notebook cells. 
     - Accepted values:
         - `true`
         - `false` (default)
+
+- `python.analysis.diagnosticsSource`
+    - Allows specifing a different language server to use for diagnostics. Pylance will combine its results with this other server.
+     - Accepted values:
+        - `Pylance` (default)
+        - `Pyright` - Allows running a different version of Pyright to generate diagnostics. See the `python.analysis.pyrightVersion` setting.
+
+- `python.analysis.pyrightVersion`
+    - Specifies the version of Pyright to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pyright`. Minimum version required is 1.1.397 or higher.
+    - Accepted values:
+        - version string, i.e. `1.1.397`
+        - path to a pyright-langserver.js file
 
 # Semantic highlighting
 
