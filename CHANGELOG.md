@@ -1,5 +1,18 @@
 # Changelog
 
+## 2025.3.104 (27 March 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Support custom schema with '.py' extension [pylance-release#7055](https://github.com/microsoft/pylance-release/issues/7055)
+-   Bug fix: Unstable import resolution in jupyter notebook [pylance-release#7045](https://github.com/microsoft/pylance-release/issues/7045)
+-   Enhancement: Allow setting --max-old-space-size when using python.analysis.nodeExecutable [pylance-release#5820](https://github.com/microsoft/pylance-release/issues/5820)
+-   Bug fix: variable is reported as not accessed when it's used only in f-strings and the string is a function param [pylance-release#7054](https://github.com/microsoft/pylance-release/issues/7054)
+
+Pylance's copy of Pyright has been updated from 1.1.397 to 1.1.398.
+
+-   See Pyright's release notes for details: [1.1.398](https://github.com/microsoft/pyright/releases/tag/1.1.398)
+
 ## 2025.3.103 (20 March 2025) PreRelease
 
 Pylance's copy of Pyright has been updated from 1.1.396 to 1.1.397.
