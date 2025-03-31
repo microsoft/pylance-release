@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.3.105 (31 March 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Virtual workspaces seem to have limited setting set (like the browser version) [pylance-release#5394](https://github.com/microsoft/pylance-release/issues/5394)
+
 ## 2025.3.104 (27 March 2025) PreRelease
 
 Notable changes:
