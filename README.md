@@ -67,18 +67,19 @@ Pylance provides users with the ability to customize their Python language suppo
         | python.analysis.includeAliasesFromUserFiles | false     | false      | true       |
         | python.analysis.functionReturnTypes       | false       | false      | true       |
         | python.analysis.pytestParameters          | false       | false      | true       |
-        | python.analysis.supportRestructuredText   | false       | false      | true       |
+        | python.analysis.supportRestructuredText   | false       | true       | true       |
         | python.analysis.supportDocstringTemplate  | false       | false      | true       |
+        | python.analysis.nodeExecutable            | ""          | ""         | "auto"     |
 
 - `python.analysis.typeCheckingMode`
     - Used to specify the level of type checking analysis performed.
     - Default: `off`. 
         > Note that the value of this setting can be overridden by having a pyrightconfig.json or a pyproject.toml. For more information see this [link](https://aka.ms/AArua4c).
     - Available values:
-        - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
-        - `basic`: All `off` rules + basic type checking rules
-        - `standard`: All `off` rules + basic type checking rules + standard type checking rules
-        - `strict`: All `off` rules + all type checking rules.
+        - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced.
+        - `basic`: All rules from `off` + `basic` type checking rules.
+        - `standard`: All rules from `basic` + `standard` type checking rules.
+        - `strict`: All rules from `standard` + `strict` type checking rules.
         > You can refer to [pyright](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) documentation to reference the default type checking rules for each of the type checking modes.
     - Performance Consideration:
         - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by disabling type checking analysis, which can be resource-intensive, especially in large codebases.
@@ -232,7 +233,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Enabling this can impact performance by creating its own indices for standard libraries.
 
-- [`python.analysis.includeAliasFromUserFiles`](docs/settings/python_analysis_includeAliasesFromUserFiles.md)
+- [`python.analysis.includeAliasesFromUserFiles`](docs/settings/python_analysis_includeAliasesFromUserFiles.md)
     - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
@@ -415,15 +416,9 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.enableNotebookDataTips`
-    - Enable data tips for the last value of a variable when executing notebook cells. 
-    - Accepted values:
-        - `true`
-        - `false` (default)
-
 - `python.analysis.diagnosticsSource`
     - Allows specifing a different language server to use for diagnostics. Pylance will combine its results with this other server.
-     - Accepted values:
+    - Accepted values:
         - `Pylance` (default)
         - `Pyright` - Allows running a different version of Pyright to generate diagnostics. See the `python.analysis.pyrightVersion` setting.
 
@@ -451,23 +446,26 @@ With semantic highlighting:
 
 Semantic colors can be customized in settings.json by associating the Pylance semantic token types and modifiers with the desired colors.
 
--   Semantic token types
+- Semantic token types
+    - class, enum
+    - parameter, variable, property, enumMember
+    - function, member
+    - module
+    - intrinsic
+    - magicFunction (dunder methods)
+    - selfParameter, clsParameter
 
-    -   class, enum
-    -   parameter, variable, property, enumMember
-    -   function, member
-    -   module
-    -   intrinsic
-    -   magicFunction (dunder methods)
-    -   selfParameter, clsParameter
+- Semantic token modifiers
+    - declaration
+    - readonly, static, abstract
+    - async
+    - typeHint, typeHintComment
+    - decorator
+    - builtin
+    - documentation
+    - overridden
+    - callable
 
--   Semantic token modifiers
-    -   declaration
-    -   readonly, static, abstract
-    -   async
-    -   typeHint, typeHintComment
-    -   decorator
-    -   builtin
 
 The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to.
 
@@ -494,11 +492,11 @@ Example of customizing semantic colors in settings.json:
 
 - `source.unusedImports`
 
-    -   Remove all unused imports in a file
+    - Remove all unused imports in a file
 
 - `source.convertImportFormat`
 
-    -   Convert import format according to `python.analysis.importFormat`.
+    - Convert import format according to `python.analysis.importFormat`.
 
 - `source.fixall.pylance`
     - Apply the commands listed in the `python.analysis.fixall` setting
@@ -513,14 +511,14 @@ Pylance leverages Microsoft's open-source static type checking tool, Pyright, to
 
 Code contributions are welcomed via the [Pyright](https://github.com/microsoft/pyright) repo.
 
-Pylance ships with a collection of type stubs for popular modules to provide fast and accurate auto-completions and type checking. Our type stubs are sourced from [typeshed](https://github.com/python/typeshed) and our work-in-progress stub repository, [microsoft/python-type-stubs]( https://github.com/microsoft/python-type-stubs). Type stubs in microsoft/python-type-stubs will be contributed back to typeshed or added inline to source packages once they are of high enough quality.
+Pylance ships with a collection of type stubs for popular modules to provide fast and accurate auto-completions and type checking. Our type stubs are sourced from [typeshed](https://github.com/python/typeshed) and our work-in-progress stub repository, [microsoft/python-type-stubs](https://github.com/microsoft/python-type-stubs). Type stubs in microsoft/python-type-stubs will be contributed back to typeshed or added inline to source packages once they are of high enough quality.
 
 For information on getting started, refer to the [CONTRIBUTING instructions](https://github.com/microsoft/pyright/blob/main/CONTRIBUTING.md).
 
 # Feedback
 
--   File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
--   [Tweet us](https://twitter.com/pythonvscode/) with other feedback
+- File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
+- [Tweet us](https://twitter.com/pythonvscode/) with other feedback
 
 # License
 
