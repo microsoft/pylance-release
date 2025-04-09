@@ -1,5 +1,16 @@
 # Changelog
 
+## 2025.4.100 (9 April 2025) PreRelease
+
+Notable changes:
+
+-   Enhancement: Invoke color picker with shortcut [pylance-release#6761](https://github.com/microsoft/pylance-release/issues/6761)
+-   Bug fix: Pylance crashes when there is a star import from a local module in `__builtins__.pyi` [pylance-release#7095](https://github.com/microsoft/pylance-release/issues/7095)
+
+Pylance's copy of Pyright has been updated from 1.1.398 to 1.1.399.
+
+-   See Pyright's release notes for details: [1.1.399](https://github.com/microsoft/pyright/releases/tag/1.1.399)
+
 ## 2025.4.1 (2 April 2025) Release
 
 Notable changes:
