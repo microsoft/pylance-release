@@ -22,7 +22,7 @@ Pylance also has an option to allow you to run a specific version of Pyright to 
 To get Pylance to run Pyight for diagnostics set these two settings in your settings.json:
 
 ```jsonc
-"python.analysis.diagnosticSource": "Pyright"
+"python.analysis.diagnosticsSource": "Pyright"
 "python.analysis.pyrightVersion": "1.1.397" // Has to be at least 1.1.397 or higher
 ```
 
