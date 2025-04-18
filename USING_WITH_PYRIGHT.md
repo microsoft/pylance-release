@@ -15,6 +15,19 @@ Since Pyright and Pylance have different release cadences, there are many times 
 
 If you are aware of other similar tools that could benefit from having the same behavior, please let us know.
 
+### Using Pyright as your diagnostics provider
+
+Pylance also has an option to allow you to run a specific version of Pyright to generate diagnostics. You might do this if you don't want to always be on the latest version of Pyright in your CI and you want your Pylance errors to match what your CI is generating.
+
+To get Pylance to run Pyight for diagnostics set these two settings in your settings.json:
+
+```jsonc
+"python.analysis.diagnosticSource": "Pyright"
+"python.analysis.pyrightVersion": "1.1.397" // Has to be at least 1.1.397 or higher
+```
+
+Internally Pylance will run a separate copy of Pyright to generate diagnostics. There is a downside to this approach however. There will essentially be two copies of Pyright running. One to provide your errors (the designated version) and one to provide intellisense (the one Pylance uses to compute types). This can double the amount of memory and CPU in use.
+
 ## Type stub differences
 
 Pylance comes bundled with a number of stubs, usually found here in the installation:
