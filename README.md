@@ -420,16 +420,16 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false` (default)
 
 - `python.analysis.diagnosticsSource`
-    - Allows specifing a different language server to use for diagnostics. Pylance will combine its results with this other server.
+    - Allows specifing a different language server to use for diagnostics. Pylance will merge its results with this other server. The merge algorithm depends upon which server is chosen.
     - Accepted values:
         - `Pylance` (default)
-        - `Pyright` - Allows running a different version of Pyright to generate diagnostics. See the `python.analysis.pyrightVersion` setting.
+        - `Pyright` - Allows running a different version of Pyright to generate diagnostics. Pyright diagnostics will completely replace the diagnostics for Pylance. See the `python.analysis.pyrightVersion` setting.
 
 - `python.analysis.pyrightVersion`
     - Specifies the version of Pyright to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pyright`. Minimum version required is 1.1.397 or higher.
     - Accepted values:
         - version string, i.e. `1.1.397`
-        - path to a pyright-langserver.js file
+        - path to a pyright-langserver.js file. For example, the Pyright installed by the PyPI Pyright module. In that case the path would be something like `~/.cache/pyright-python/1.1.397/node_modules/pyright/dist/pyright-langserver.js`
 
 
 Semantic highlighting
