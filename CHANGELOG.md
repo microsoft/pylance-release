@@ -1,5 +1,17 @@
 # Changelog
 
+## 2025.4.101 (23 April 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: `code actions with copilot` not working when copilot chat is not signed in [pylance-release#7142](https://github.com/microsoft/pylance-release/issues/7142)
+-   Bug fix: Wrong french translation [pylance-release#6758](https://github.com/microsoft/pylance-release/issues/6758)
+-   Enhancement: Auto format strings doesn't work for `r` strings [pylance-release#5703](https://github.com/microsoft/pylance-release/issues/5703)
+
+Pylance's copy of Pyright has been updated from 1.1.399 to 1.1.400.
+
+-   See Pyright's release notes for details: [1.1.400](https://github.com/microsoft/pyright/releases/tag/1.1.400)
+
 ## 2025.4.100 (9 April 2025) PreRelease
 
 Notable changes:
