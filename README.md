@@ -18,7 +18,7 @@ Note: If you've previously set a language server and want to try Pylance, make s
 Features
 =========
 
-<img src=images/all-features.gif>
+![ features ](images/all-features.gif)
 
 Pylance provides some awesome features for Python 3, including:
 
@@ -378,10 +378,11 @@ Pylance provides users with the ability to customize their Python language suppo
 - `python.analysis.aiCodeActions`
     - Enable/disable AI-assisted code actions. Requires the Copilot Chat extension to be enabled.
     - This setting accepts objects where the keys are the available AI-assisted code actions, and the values are `true` or `false` to enable or disable each action.
-    - Available code actions to use as keys: 
-        - `implementAbstractClasses`
+    - Available code actions to use as keys:
+        - `convertFormatString`
         - `generateDocstring`
         - `generateSymbol`
+        - `implementAbstractClasses`
     - Example:
     ```json
     {
@@ -525,4 +526,4 @@ Feedback
 
 # License
 
-See [LICENSE](LICENSE) for more information.
+See [Pylance's license](https://marketplace.visualstudio.com/items/ms-python.vscode-pylance/license) and [the pylance-release repository's license](LICENSE) for more information.
