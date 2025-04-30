@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025.4.102 (30 April 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Auto Import fails on symbols starting with Umlaut [pylance-release#7146](https://github.com/microsoft/pylance-release/issues/7146)
+-   Bug fix: Forever "... files and ... cells to analyze" [pylance-release#7087](https://github.com/microsoft/pylance-release/issues/7087)
+
 ## 2025.4.101 (23 April 2025) PreRelease
 
 Notable changes:
