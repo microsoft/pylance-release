@@ -1,0 +1,40 @@
+name: Azure function dry run
+
+on:
+  issues:
+    types: [opened]
+
+permissions: write-all
+
+jobs:
+  label_and_comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Call Azure Function
+        id: call_azure_function
+        env:
+          PAYLOAD: >-
+            {
+              "authToken": "${{ secrets.GITHUB_TOKEN }}",
+              "repoId": "pylance",
+              "issueData": {
+                "id": ${{ github.event.issue.number }},
+                "user": ${{ toJson(github.event.issue.user.login) }},
+                "title": ${{ toJson(github.event.issue.title) }},
+                "body":  ${{ toJson(github.event.issue.body)  }},
+                "labels": ${{ toJson(github.event.issue.labels) }}
+              },
+              "mode": "DirectUpdate"
+            }
+
+        run: |
+          # Make the HTTP request
+          response=$(curl -s \
+              --header "Content-Type: application/json" \
+              --request POST \
+              --data "$PAYLOAD" \
+              ${{ secrets.AZURE_FUNCTION_LINK }})
