@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025.4.103 (6 May 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Kernel selection events don't fire if the Python Environment manager is installed [pylance-release#7175](https://github.com/microsoft/pylance-release/issues/7175)
+-   Enhancement: Move symbol to new file. Missing typing.Self imports [pylance-release#7138](https://github.com/microsoft/pylance-release/issues/7138)
+-   Bug fix: Move symbol to new file. Incorrect import statement generated in new file [pylance-release#7137](https://github.com/microsoft/pylance-release/issues/7137)
+
 ## 2025.4.102 (30 April 2025) PreRelease
 
 Notable changes:

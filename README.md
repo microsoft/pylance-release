@@ -380,6 +380,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - This setting accepts objects where the keys are the available AI-assisted code actions, and the values are `true` or `false` to enable or disable each action.
     - Available code actions to use as keys:
         - `convertFormatString`
+        - `convertLambdaToNamedFunction`
         - `generateDocstring`
         - `generateSymbol`
         - `implementAbstractClasses`
