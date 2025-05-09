@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.4.104 (9 May 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Recent problem with mangled syntax highlighting (2025.4.103) [pylance-release#7190](https://github.com/microsoft/pylance-release/issues/7190)
+
 ## 2025.4.103 (6 May 2025) PreRelease
 
 Notable changes:
