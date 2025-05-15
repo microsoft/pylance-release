@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025.5.1 (14 May 2025) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2025.4.104](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20254104-9-may-2025-prerelease) prerelease build.
+-   Bug fix: Crash when activating Pylance in untrusted workspace [pylance-release#7214](https://github.com/microsoft/pylance-release/issues/7214)
+
 ## 2025.4.104 (9 May 2025) PreRelease
 
 Notable changes:
