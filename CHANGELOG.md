@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025.5.100 (15 May 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: python.analysis.autoFormatStrings settings should work in python notebook cells as well as plain .py files [pylance-release#7210](https://github.com/microsoft/pylance-release/issues/7210)
+-   Bug fix: VSCode.dev can't read files in sync server mode [pylance-release#7203](https://github.com/microsoft/pylance-release/issues/7203)
+-   Bug fix: Report Issue command fails to auth with GH and therefore doesn't upload big log [pylance-release#7177](https://github.com/microsoft/pylance-release/issues/7177)
+
 ## 2025.5.1 (14 May 2025) Release
 
 Notable changes:
