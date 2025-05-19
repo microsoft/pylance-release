@@ -46,7 +46,7 @@ export namespace TypeServerProtocol {
         // URI of the source file containing this node.
         uri: string;
         // Hash of the content of the source file at the time the AST was created.
-        contentHash: number;
+        fileContentHash: number;
         // The start byte position (zero-based) of the node in the source file.
         // Note this is per byte and not per character.
         start: number;
@@ -56,20 +56,20 @@ export namespace TypeServerProtocol {
 
     // Represents a category of a type, such as class, function, variable, etc.
     export const enum TypeCategory {
-        Class = 0,
-        Function = 1,
-        Overloaded = 2,
-        Module = 3,
-        Variable = 4,
-        Parameter = 5,
-        Property = 6,
-        TypeAlias = 7,
-        TypeVariable = 8,
-        Generic = 9,
-        Unknown = 10,
-        Any = 11,
-        None = 12,
-        Union = 13,
+        // Type can be anything
+        Any,
+        // Callable type
+        Function,
+        // Functions defined with @overload decorator
+        Overloaded,
+        // Class definition
+        Class,
+        // Module instance
+        Module,
+        // Union of two or more other types
+        Union,
+        // Type variable
+        TypeVar,
     }
 
     // Flags that describe the characteristics of a type.
@@ -79,10 +79,9 @@ export namespace TypeServerProtocol {
         Instantiable = 1 << 0, // Indicates if the type can be instantiated.
         Instance = 1 << 1, // Indicates if the type represents an instance (as opposed to a class or type itself).
         Callable = 1 << 2, // Indicates if an instance of the type can be called like a function. (It has a `__call__` method).
-        BuiltIn = 1 << 3, // Indicates if the type is a built-in type (like `int`, `str`, etc.).
-        Literal = 1 << 4, // Indicates if the instance is a literal (like `42`, `"hello"`, etc.).
-        Interface = 1 << 5, // Indicates if the type is an interface (a type that defines a set of methods and properties). In Python this would be a Protocol.
-        Generic = 1 << 6, // Indicates if the type is a generic type (a type that can be parameterized with other types).
+        Literal = 1 << 3, // Indicates if the instance is a literal (like `42`, `"hello"`, etc.).
+        Interface = 1 << 4, // Indicates if the type is an interface (a type that defines a set of methods and properties). In Python this would be a Protocol.
+        Generic = 1 << 5, // Indicates if the type is a generic type (a type that can be parameterized with other types).
     }
 
     // Flags that describe the characteristics of a function or method.
@@ -92,7 +91,7 @@ export namespace TypeServerProtocol {
         Async = 1 << 0, // Indicates if the function is asynchronous.
         Generator = 1 << 1, // Indicates if the function is a generator (can yield values).
         Abstract = 1 << 2, // Indicates if the function is abstract (must be implemented in a subclass).
-        Static = 1 << 3, // Indicates if the function is static (belongs to the class rather than an instance).
+        Static = 1 << 3, // Indicates if the function has a @staticmethod decorator.
     }
 
     // Flags that describe the characteristics of a class.
@@ -103,10 +102,16 @@ export namespace TypeServerProtocol {
     }
 
     export interface Type {
-        // Unique identifier for the type definition within the session.
+        // Unique identifier for the type definition within the snapshot. A handle doesn't need to exist beyond
+        // the lifetime of the snapshot.
+        //
+        // It can be used by the Type Server to reference internal information about a type when the
+        // type is returned in a subsequent request.
+        //
+        // When the internal snapshot is changed, all outstanding handles should be invalid and no longer usable.
         handle: string | number;
 
-        // Essential classification of the symbol.
+        // Essential classification of the Type.
         category: TypeCategory;
 
         // Flags describing the type.
@@ -115,43 +120,45 @@ export namespace TypeServerProtocol {
         // Name of the module the type comes from
         moduleName: string | undefined;
 
-        // Name of the type.
+        // Simple name of the type. For example, for a class `MyClass` in module `my_module`, this would be `MyClass`.
         name: string;
 
         // Flags specific to the category
         categoryFlags: number;
     }
 
-    export interface Member {
-        // The name of the member.
+    export interface Attribute {
+        // The name of the attribute.
         name: string;
 
-        // The type of the member.
+        // The type of the attribute.
         type: Type;
 
-        // The type the member came from
+        // The type the attribute came from
         classType: Type | undefined;
+
+        // The type the attribute is bound to, if applicable.
+        boundType: Type | undefined;
     }
 
-    // Flags that are used for searching for members of a type.
-    export const enum MemberAccessFlags {
+    // Flags that are used for searching for attributes of a class Type.
+    export const enum AttributeAccessFlags {
         None = 0,
-        SkipInstanceMembers = 1 << 0, // Skip instance members when searching for members of a type.
-        SkipObjectBaseClass = 1 << 1, // Skip members from the `object` base class when searching for members of a type.
+        SkipInstanceAttributes = 1 << 0, // Skip instance attributes when searching for attributes of a type.
+        GetBoundAttributes = 1 << 1, // Look for bound attributes when searching for attributes of a type. That is methods bound specifically to an instance.
     }
 
     // Represents the category of a declaration in the type system.
     // This is used to classify declarations such as variables, functions, classes, etc.
     export const enum DeclarationCategory {
-        Intrinsic = 0, // An intrinsic is a built-in type or function that is part of the language itself, such as `int`, `str`, `len`, etc.
-        Variable = 1, // A variable is a named storage location that can hold a value.
-        Param = 2, // A parameter is a variable that is passed to a function or method.
-        TypeParam = 3, // A type parameter is a placeholder for a type that can be specified when the type is used, such as in generics.
-        TypeAlias = 4, // A type alias is a name that refers to another type, such as `List[int]` or `Dict[str, int]`.
-        Function = 5, // A function is a named block of code that can be called with arguments and returns a value.
-        Class = 6, // A class is a blueprint for creating objects that encapsulates data and behavior.
-        SpecialBuiltInClass = 7, // Special built-in types like 'Tuple', 'Generic',  'Protocol', 'Callable', 'Type', etc
-        Alias = 8, // An alias declaration, which is a reference to another declaration.
+        Intrinsic, // An intrinsic refers to a symbol that has no actual declaration in the source code, such as built-in types or functions. One such example is a '__class__' declaration.
+        Variable, // A variable is a named storage location that can hold a value.
+        Param, // A parameter is a variable that is passed to a function or method.
+        TypeParam, // This is for PEP 695 type parameters.
+        TypeAlias, // This is for PEP 695 type aliases.
+        Function, // A function is any construct that begins with the `def` keyword and has a body, which can be called with arguments.
+        Class, // A class is any construct that begins with the `class` keyword and has a body, which can be instantiated.
+        Import, // An import declaration, which is a reference to another module.
     }
 
     // Represents a symbol declaration in the type system.
@@ -198,12 +205,19 @@ export namespace TypeServerProtocol {
         nameParts: string[];
     }
 
-    // Options for resolving an alias declaration.
-    export interface ResolveAliasOptions {
-        resolveLocalNames?: boolean; // Whether to resolve local names in the alias declaration.
+    // Options for resolving an import declaration.
+    // TODO: See if we can remove this as these are pretty specific to Pyright at the moment.
+    export interface ResolveImportOptions {
+        resolveLocalNames?: boolean; // Whether to resolve local names in the import declaration.
         allowExternallyHiddenAccess?: boolean; // Whether to allow access to members that are hidden by external modules.
-        skipFileNeededCheck?: boolean; // Whether to skip checking if the file is needed for the alias resolution.
+        skipFileNeededCheck?: boolean; // Whether to skip checking if the file is needed for the import  resolution.
     }
+
+    // Who owns file contents?
+    // That depends on the file.
+    // For a file that's open in an IDE, the IDE owns the file contents and forwards those contents and changes to the type server (and language server).
+    // For a file that's not open in an IDE, the file system owns the file contents.
+    // Changes for the file system owned files are sent to the type server (and language server) as file events.
 
     // Describes a file that's been opened in the language server which the type server needs to be aware of.
     export interface TextDocumentOpenParams {
@@ -230,6 +244,20 @@ export namespace TypeServerProtocol {
         snapshot: number;
     }
 
+    export interface GetTypeAttributeParams {
+        // The type for which the attribute is being requested.
+        type: Type;
+        // The name of the attribute being requested.
+        attributeName: string;
+        // Flags that control how the attribute is accessed.
+        accessFlags: AttributeAccessFlags;
+        // Optional: The expression node that the member is being accessed from.
+        expressionNode?: Node;
+
+        // The snapshot version of the type server state.
+        snapshot: number;
+    }
+
     // Represents settings that can be sent to the type server.
 
     export type Settings = {
@@ -241,11 +269,14 @@ export namespace TypeServerProtocol {
         // First request to initialize the type server.
         Initialize = 'typeServer/initialize',
         // Request from client to shut down the type server.
-        Shutdown = 'typeServer/shutdown',
+        ShutDown = 'typeServer/shutdown',
         // Request from client to get the current snapshot of the type server.
         // A snapshot is a point-in-time representation of the type server's state, including all loaded files and their types.
         // A type server should change its snapshot whenever any type it might have returned is no longer valid. Meaning types are
         // only usable for the snapshot they were returned with.
+        //
+        // Snapshots are not meant to survive any changes that would make the type server throw away its internal cache. They are merely an
+        // identifier to indicate to the client that the type server will accept requests for types from that snapshot.
         GetSnapshot = 'typeServer/getSnapshot',
         // Request to get diagnostics for a specific file.
         GetDiagnostics = 'typeServer/getDiagnostics',
@@ -253,24 +284,20 @@ export namespace TypeServerProtocol {
         GetDiagnosticsVersion = 'typeServer/getDiagnosticsVersion',
         // Request to get the type information for a specific node.
         GetType = 'typeServer/getType',
-        // Request to get the union types for a specific type.
+        // Request to get the collection of subtypes that make up a union type.
         GetUnionTypes = 'typeServer/getUnionTypes',
-        // Request to find a member of a type.
-        GetTypeMember = 'typeServer/getTypeMember',
-        // Request to get all overloads of a function or method.
+        // Request to find an attribute of a class.
+        GetTypeAttribute = 'typeServer/getTypeAttribute',
+        // Request to get all overloads of a function or method. The returned value doesn't include the implementation signature.
         GetOverloads = 'typeServer/getOverloads',
-        // Request to get the effective meta class of a type.
-        GetEffectiveMetaClass = 'typeServer/getEffectiveMetaClass',
+        // Request to get the meta class of a type.
+        GetMetaclass = 'typeServer/getMetaclass',
         // Request to get the type of a declaration.
         GetTypeOfDeclaration = 'typeServer/getTypeOfDeclaration',
         // Request to get symbol declaration information for a node.
         GetSymbolDeclarationInfo = 'typeServer/getSymbolDeclarationInfo',
-        // Request to get the bound magic method for a type.
-        GetBoundMagicMethod = 'typeServer/getBoundMagicMethod',
-        // Request to resolve an alias declaration.
-        // This request is sent by the client to resolve an alias declaration, which may involve looking up the
-        // declaration in the type server's cache or performing additional resolution logic.
-        ResolveAliasDeclaration = 'typeServer/resolveAliasDeclaration',
+        // Request to resolve an import declaration. Example: `from module import something`. The `something` is the import declaration.
+        ResolveImportDeclaration = 'typeServer/resolveImportDeclaration',
         // Request to resolve an import.
         ResolveImport = 'typeServer/resolveImport',
     }
@@ -279,7 +306,7 @@ export namespace TypeServerProtocol {
         // Notification sent by the server to indicate that the type server has been initialized.
         Initialized = 'typeServer/initialized',
         // Notification sent by the server to indicate that the type server has shut down.
-        Shutdown = 'typeServer/shutdown',
+        ShutDown = 'typeServer/shutdown',
         // Notification sent by the client to indicate that a text document has been opened.
         TextDocumentOpen = 'textDocument/open',
         // Notification sent by the client to indicate that a text document has been closed.
@@ -288,42 +315,33 @@ export namespace TypeServerProtocol {
         SettingsChange = 'typeServer/settingsChange',
         // Notification sent by the client to indicate that files have changed.
         FilesChanged = 'typeServer/filesChanged',
-        // Notification sent by the client to indicate that the type server's cache should be flushed (and snapshots reset)
-        FlushCache = 'typeServer/flushCache',
     }
 
     export interface Params {
         [Requests.Initialize]: { workspace: WorkspaceFolder; initialSettings: string };
-        [Requests.Shutdown]: void;
+        [Requests.ShutDown]: void;
         [Requests.GetSnapshot]: void;
         [Requests.GetDiagnostics]: { uri: string; snapshot: number };
-        [Requests.GetDiagnosticsVersion]: { uri: string };
+        [Requests.GetDiagnosticsVersion]: { uri: string; snapshot: number };
         [Requests.GetType]: { node: Node; snapshot: number };
         [Requests.GetUnionTypes]: { type: Type; snapshot: number };
-        [Requests.GetTypeMember]: {
-            type: Type;
-            memberName: string;
-            accessFlags: MemberAccessFlags;
-            snapshot: number;
-        };
+        [Requests.GetTypeAttribute]: GetTypeAttributeParams;
         [Requests.GetOverloads]: { type: Type; snapshot: number };
-        [Requests.GetEffectiveMetaClass]: { type: Type; snapshot: number };
+        [Requests.GetMetaclass]: { type: Type; snapshot: number };
         [Requests.GetTypeOfDeclaration]: { decl: Declaration; snapshot: number };
         [Requests.GetSymbolDeclarationInfo]: {
             node: Node;
             skipUnreachableCode: boolean;
             snapshot: number;
         };
-        [Requests.GetBoundMagicMethod]: { type: Type; name: string; snapshot: number };
-        [Requests.ResolveAliasDeclaration]: {
+        [Requests.ResolveImportDeclaration]: {
             decl: Declaration;
-            options: ResolveAliasOptions;
+            options: ResolveImportOptions;
             snapshot: number;
         };
         [Requests.ResolveImport]: ResolveImportParams;
         [Notifications.Initialized]: void;
-        [Notifications.Shutdown]: void;
-        [Notifications.FlushCache]: void;
+        [Notifications.ShutDown]: void;
         [Notifications.TextDocumentOpen]: TextDocumentOpenParams;
         [Notifications.TextDocumentClose]: TextDocumentCloseParams;
         [Notifications.SettingsChange]: Settings;
@@ -332,19 +350,18 @@ export namespace TypeServerProtocol {
 
     export interface Response {
         [Requests.Initialize]: { configRoots: string[] };
-        [Requests.Shutdown]: { success: boolean };
+        [Requests.ShutDown]: { success: boolean };
         [Requests.GetSnapshot]: number;
         [Requests.GetDiagnostics]: Diagnostic[] | undefined;
         [Requests.GetDiagnosticsVersion]: number | undefined;
         [Requests.GetType]: Type | undefined;
         [Requests.GetUnionTypes]: Type[] | undefined;
-        [Requests.GetTypeMember]: Member | undefined;
+        [Requests.GetTypeAttribute]: Attribute | undefined;
         [Requests.GetOverloads]: Type[] | undefined;
-        [Requests.GetEffectiveMetaClass]: Type | undefined;
+        [Requests.GetMetaclass]: Type | undefined;
         [Requests.GetTypeOfDeclaration]: Type | undefined;
         [Requests.GetSymbolDeclarationInfo]: SymbolDeclInfo | undefined;
-        [Requests.GetBoundMagicMethod]: Type | undefined;
-        [Requests.ResolveAliasDeclaration]: Declaration | undefined;
+        [Requests.ResolveImportDeclaration]: Declaration | undefined;
         [Requests.ResolveImport]: string | undefined;
     }
 
