@@ -119,6 +119,27 @@ This prevents Pylance from indexing the specified package for auto-import comple
 
 **A:** Yes, by configuring the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting, you can specify which packages to index and to what depth. Set `depth` to a positive number for packages you want to include and `0` for others.
 
+### Q: Why do some top-level variables not appear in auto-import or add import suggestions?
+
+**A:**
+The behavior for top-level variables differs between user files and third-party libraries:
+
+- **Third-party libraries:**
+  Whether a symbol is a variable or not generally does not affect indexing, since top-level variables are rare in packages. Instead, which symbols are available for auto-import is determined by other logic, such as the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting (which controls how deeply Pylance indexes packages), the [`python.analysis.languageServerMode`](python_analysis_languageServerMode.md), and the `python.analysis.showOnlyDirectDependenciesInAutoImport` option (see [README.md](../../README.md)). These settings affect which modules and symbols are indexed and suggested for auto-import.
+
+- **User files (your own workspace):**
+  For variables defined at the top level in user files, Pylance only includes them in auto-import/add import suggestions if:
+  - The variable name is all uppercase (e.g., `MY_CONSTANT`), or
+  - The variable is explicitly listed in the module’s `__all__` attribute.
+
+  This is because user workspaces often contain many scripts with numerous temporary or local variables, and there is no reliable way for Pylance to know which variables are intended to be imported by other modules. Using `__all__` signals that a variable is meant to be exported and available for import elsewhere.
+
+  Additional settings can also affect this behavior:
+  - [`python.analysis.includeAliasesFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md): Controls whether alias symbols from user files are included in auto-import suggestions.
+  - [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md): Limits how many user files are indexed, which can affect which variables are available for import.
+
+If you want a variable from your own code to appear in auto-import suggestions, either use an all-uppercase name or add it to the module’s `__all__` list.
+
 ---
 
 *For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
