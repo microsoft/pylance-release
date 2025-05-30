@@ -41,10 +41,10 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 | `python.analysis.userFileIndexingLimit`                  | `2000`         | `2000`       | `-1`        |
 | `python.analysis.functionReturnTypes`                    | `false`        | `false`      | `true`      |
 | `python.analysis.pytestParameters`                       | `false`        | `false`      | `true`      |
-| `python.analysis.supportRestructuredText`                | `false`        | `false`      | `true`      |
 | `python.analysis.supportDocstringTemplate`               | `false`        | `false`      | `true`      |
 | `python.analysis.packageIndexDepths`                     | `default`      | `default`    | `full`      |
 | `python.analysis.nodeExecutable`                         | ``             | ``           | `auto`      |
+| `python.analysis.includeAliasesFromUserFiles`            | `false`        | `false`      | `true`      |
 
 - **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
 
@@ -63,8 +63,6 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 - **`python.analysis.functionReturnTypes`**: Enables inlay hints for function return types in `full` mode, providing additional type information during development.
 
 - **`python.analysis.pytestParameters`**: Enables inlay hints for Pytest function parameters in `full` mode, enhancing test development support.
-
-- **`python.analysis.supportRestructuredText`**: Enables support for reStructuredText in docstrings in `full` mode, allowing for richer documentation rendering.
 
 - **`python.analysis.supportDocstringTemplate`**: Enables support for docstring generation in `full` mode, facilitating better code documentation.
 
@@ -91,6 +89,8 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
   In `full` mode, this ensures comprehensive indexing of submodules, improving features like auto-import and symbol searches for deeply nested packages. For more detail, please refer to the link above.
 
 - **[`python.analysis.nodeExecutable`](python_analysis_nodeExecutable.md)**: Enables the automatic download of a node in `full` mode, allowing a bigger heap memory for Pylance.
+
+- **[`python.analysis.includeAliasesFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md)**: Controls whether alias symbols from user files are included in auto-import and add import suggestions.
 
 These settings can be individually customized to override the defaults for each mode.
 
