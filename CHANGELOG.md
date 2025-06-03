@@ -1,5 +1,16 @@
 # Changelog
 
+## 2025.5.101 (3 June 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: UV generated project has no completions [pylance-release#7242](https://github.com/microsoft/pylance-release/issues/7242)
+-   Bug fix: Inserting inlay return types doesn't recognize `Callable` as imported symbol and always inserts it as a comment [pylance-release#7207](https://github.com/microsoft/pylance-release/issues/7207)
+
+Pylance's copy of Pyright has been updated from 1.1.400 to 1.1.401.
+
+-   See Pyright's release notes for details: [1.1.401](https://github.com/microsoft/pyright/releases/tag/1.1.401)
+
 ## 2025.5.100 (15 May 2025) PreRelease
 
 Notable changes:
