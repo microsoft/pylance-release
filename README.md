@@ -433,6 +433,11 @@ Pylance provides users with the ability to customize their Python language suppo
         - version string, i.e. `1.1.397`
         - path to a pyright-langserver.js file. For example, the Pyright installed by the PyPI Pyright module. In that case the path would be something like `~/.cache/pyright-python/1.1.397/node_modules/pyright/dist/pyright-langserver.js`
 
+- `python.analysis.enableColorPicker`
+    - Enable/disable color picker in the editor for '#RRGGBB' and '#RRGGBBAA' strings.
+    - Accepted values:
+        - `true` (default)
+        - `false`
 
 Semantic highlighting
 =====================
