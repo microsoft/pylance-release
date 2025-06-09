@@ -45,8 +45,6 @@ export namespace TypeServerProtocol {
     export interface Node {
         // URI of the source file containing this node.
         uri: string;
-        // Hash of the content of the source file at the time the AST was created.
-        fileContentHash: number;
         // The start byte position (zero-based) of the node in the source file.
         // Note this is per byte and not per character.
         start: number;

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025.5.102 (9 June 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Slow semantic token colouring on scroll [pylance-release#7278](https://github.com/microsoft/pylance-release/issues/7278)
+-   Bug fix: Pylance file analysis performance has degraded recently [pylance-release#7276](https://github.com/microsoft/pylance-release/issues/7276)
+
 ## 2025.5.101 (3 June 2025) PreRelease
 
 Notable changes:
