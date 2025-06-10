@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.5.103 (9 June 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Improve semantic token perf [pylance-release#7312](https://github.com/microsoft/pylance-release/issues/7312)
+
 ## 2025.5.102 (9 June 2025) PreRelease
 
 Notable changes:
