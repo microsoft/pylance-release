@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.6.1 (12 June 2025) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2025.5.103](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20255103-9-june-2025-prerelease) prerelease build.
+
 ## 2025.5.103 (9 June 2025) PreRelease
 
 Notable changes:
