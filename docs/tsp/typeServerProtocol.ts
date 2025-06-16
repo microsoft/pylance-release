@@ -42,13 +42,12 @@ export interface NotificationReceiver {
 
 export namespace TypeServerProtocol {
     export const ReturnAttributeName = '__return__'; // Special name for the return value of a function or method.
+    export const InvalidHandle = -1; // Special value for an invalid handle. This is used to indicate that a type or declaration is not valid.
 
     // Represents a node in an AST (Abstract Syntax Tree) or similar structure.
     export interface Node {
         // URI of the source file containing this node.
         uri: string;
-        // Hash of the content of the source file at the time the AST was created.
-        fileContentHash: number;
         // The start byte position (zero-based) of the node in the source file.
         // Note this is per byte and not per character.
         start: number;
@@ -109,7 +108,7 @@ export namespace TypeServerProtocol {
     // These flags can be combined using bitwise operations.
     export const enum TypeVarFlags {
         None = 0,
-        IsTypeParamSyntax = 1 << 0, // Indicates if the type variable is a type parameter syntax (e.g., `T` in `def foo[T](x: T) -> T:`) as specified in PEP 695.
+        IsParamSpec = 1 << 0, // Indicates if the type variable is a ParamSpec (as defined in PEP 612).
     }
 
     export interface ModuleName {
@@ -144,6 +143,8 @@ export namespace TypeServerProtocol {
         // Flags specific to the category. For example, for a class type, this would be ClassFlags.
         // For a function type, this would be FunctionFlags.
         categoryFlags: number;
+        // Declaration of the type, if available.
+        decl: Declaration | undefined;
     }
 
     export const enum AttributeFlags {
@@ -168,6 +169,8 @@ export namespace TypeServerProtocol {
         // Flags describing extra data about an attribute.
         // For example, if the attribute is a parameter, this could indicate if it's a positional or keyword parameter.
         flags: number;
+        // The declarations for the attribute.
+        decls: Declaration[];
     }
 
     // Flags that are used for searching for attributes of a class Type.
@@ -301,6 +304,8 @@ export namespace TypeServerProtocol {
         ExpandTypeAliases = 1 << 0,
         // Print the variance of a type parameter.
         PrintTypeVarVariance = 1 << 1,
+        // Convert the type into an instance type before printing it.
+        ConvertToInstanceType = 1 << 2,
     }
 
     export interface SearchForTypeAttributeParams {
