@@ -41,6 +41,9 @@ export interface NotificationReceiver {
 }
 
 export namespace TypeServerProtocol {
+    export const ReturnAttributeName = '__return__'; // Special name for the return value of a function or method.
+    export const InvalidHandle = -1; // Special value for an invalid handle. This is used to indicate that a type or declaration is not valid.
+
     // Represents a node in an AST (Abstract Syntax Tree) or similar structure.
     export interface Node {
         // URI of the source file containing this node.
@@ -98,11 +101,14 @@ export namespace TypeServerProtocol {
     export const enum ClassFlags {
         None = 0,
         Enum = 1 << 0, // Indicates if the class is an enum (a special kind of class that defines a set of named values).
+        TypedDict = 1 << 1, // Indicates if the class is a TypedDict or derived from a TypedDict (a special kind of class that defines a dictionary with specific keys and types).
     }
 
+    // Flags that describe the characteristics of a type variable.
+    // These flags can be combined using bitwise operations.
     export const enum TypeVarFlags {
         None = 0,
-        IsTypeParamSyntax = 1 << 0, // Indicates if the type variable is a type parameter syntax (e.g., `T` in `def foo[T](x: T) -> T:`) as specified in PEP 695.
+        IsParamSpec = 1 << 0, // Indicates if the type variable is a ParamSpec (as defined in PEP 612).
     }
 
     export interface ModuleName {
@@ -137,6 +143,14 @@ export namespace TypeServerProtocol {
         // Flags specific to the category. For example, for a class type, this would be ClassFlags.
         // For a function type, this would be FunctionFlags.
         categoryFlags: number;
+        // Declaration of the type, if available.
+        decl: Declaration | undefined;
+    }
+
+    export const enum AttributeFlags {
+        None = 0,
+        IsArgsList = 1 << 0, // Indicates if a parameter is an argument list (e.g., `*args`).
+        IsKwargsDict = 1 << 1, // Indicates if the attribute is a keyword argument dictionary (e.g., `**kwargs`).
     }
 
     export interface Attribute {
@@ -152,15 +166,20 @@ export namespace TypeServerProtocol {
 
         // The type the attribute is bound to, if applicable.
         boundType: Type | undefined;
+        // Flags describing extra data about an attribute.
+        // For example, if the attribute is a parameter, this could indicate if it's a positional or keyword parameter.
+        flags: number;
+        // The declarations for the attribute.
+        decls: Declaration[];
     }
 
     // Flags that are used for searching for attributes of a class Type.
     export const enum AttributeAccessFlags {
         None = 0,
         SkipInstanceAttributes = 1 << 0, // Skip instance attributes when searching for attributes of a type.
-        SkipTypeBaseClass = 1 << 2, // Skip members from the base class of a type when searching for members of a type.
-        SkipAttributeAccessOverride = 1 << 3, // Skip attribute access overrides when searching for members of a type.
-        GetBoundAttributes = 1 << 4, // Look for bound attributes when searching for attributes of a type. That is methods bound specifically to an instance.
+        SkipTypeBaseClass = 1 << 1, // Skip members from the base class of a type when searching for members of a type.
+        SkipAttributeAccessOverrides = 1 << 2, // Skip attribute access overrides when searching for members of a type.
+        GetBoundAttributes = 1 << 3, // Look for bound attributes when searching for attributes of a type. That is methods bound specifically to an instance.
     }
 
     // Represents the category of a declaration in the type system.
@@ -181,6 +200,9 @@ export namespace TypeServerProtocol {
         ClassMember = 1 << 0, // Indicates if the declaration is a method (a function defined within a class).
         Constant = 1 << 1, // Indicates if the declaration is a constant (a variable that cannot be changed).
         Final = 1 << 2, // Indicates if the declaration is final variable (a class that cannot be subclassed).
+        IsDefinedBySlots = 1 << 3, // Indicates if the declaration is defined by slots (a class that uses __slots__).
+        UsesLocalName = 1 << 4, // Indicates if the import declaration uses 'as' with a different name (ex: import foo as f).
+        UnresolvedImport = 1 << 5, // Indicates if the import declaration is unresolved (the module or symbol could not be found).
     }
 
     // Represents a symbol declaration in the type system.
@@ -206,25 +228,34 @@ export namespace TypeServerProtocol {
 
         // The symbol name for the declaration (as the user sees it)
         name: string;
+
+        // The file that contains the declaration.
+        // Unless this is an import declaration, then the uri refers to the file
+        // the import is referring to.
+        uri: string;
     }
 
-    // Synthesized type information for a declaration that is not directly
-    // represented in the source code, but is derived from the declaration. Other languages
-    // may refer to this as an anonymous type.
-    export interface SynthesizedTypeInfo {
-        type: Type;
-
-        // An optional node that is not used by the type evaluator
-        // but can be used by language services to provide additional
-        // functionality (such as go-to-definition).
-        node?: Node;
-    }
-
-    // Declaration information for a symbol, which includes
+    // Symbol information for a node, which includes
     // a list of declarations and potentially synthesized types for those declarations.
-    export interface SymbolDeclInfo {
+    export interface Symbol {
+        // The node for which the declaration information is being requested.
+        node: Node;
+        // The name of the symbol found.
+        name: string;
+        // The declarations for the symbol.
+        // This can include multiple declarations for the same symbol, such as when a symbol is defined in multiple files.
         decls: Declaration[];
-        synthesizedTypes: SynthesizedTypeInfo[];
+        // Synthesized type information for a declaration that is not directly
+        // represented in the source code, but is derived from the declaration. Other languages
+        // may refer to this as an anonymous type.
+        synthesizedTypes: TypeServerProtocol.Type[];
+    }
+
+    export interface FileSymbolInfo {
+        // The URI of the source file.
+        uri: string;
+        // The symbols in the file.
+        symbols: Symbol[];
     }
 
     // Options for resolving an import declaration.
@@ -271,6 +302,10 @@ export namespace TypeServerProtocol {
         None = 0,
         // Turn type aliases into their original type.
         ExpandTypeAliases = 1 << 0,
+        // Print the variance of a type parameter.
+        PrintTypeVarVariance = 1 << 1,
+        // Convert the type into an instance type before printing it.
+        ConvertToInstanceType = 1 << 2,
     }
 
     export interface SearchForTypeAttributeParams {
@@ -282,7 +317,9 @@ export namespace TypeServerProtocol {
         accessFlags: AttributeAccessFlags;
         // Optional: The expression node that the member is being accessed from.
         expressionNode?: Node;
-
+        // Optional: The type of an instance that the attribute is being accessed from.
+        // Example: type of `a` in `a = MyClass()`, where `MyClass` is a class and `a` is an instance of that class.
+        instanceType?: Type;
         // The snapshot version of the type server state.
         snapshot: number;
     }
@@ -293,8 +330,8 @@ export namespace TypeServerProtocol {
         // The snapshot version of the type server state.
         snapshot: number;
     }
-    export interface GetSymbolDeclarationInfoParams {
-        // The node for which the symbol declaration information is being requested.
+    export interface GetDeclarationInfoParams {
+        // The node for which the declaration information is being requested.
         node: Node;
         // The name of the symbol being requested. This is optional and can be undefined especially when the node is a name node.
         // If this node is a module node, this would be the name of the symbol being requested.
@@ -371,7 +408,9 @@ export namespace TypeServerProtocol {
         // Request to get the type of a declaration.
         GetTypeOfDeclaration = 'typeServer/getTypeOfDeclaration',
         // Request to get symbol declaration information for a node.
-        GetDeclarationInfo = 'typeServer/getDeclarationInfo',
+        GetSymbol = 'typeServer/getSymbol',
+        // Request to get all symbols for a file. This is used to get all symbols in a file.
+        GetSymbolsForFile = 'typeServer/getSymbolsForFile',
         // Request to get the string representation of a function's parts, meaning its parameters and return type.
         GetFunctionParts = 'typeServer/getFunctionParts',
         // Request to get the string representation of a type in a human-readable format. This may or may not be the same as the type's "name".
@@ -441,12 +480,13 @@ export namespace TypeServerProtocol {
             snapshot: number;
         };
         [Requests.GetDocString]: {
-            decl: Declaration;
-            fromAlias: boolean; // Indicates if the docstring should be retrieved from the alias (if the declaration was an alias) or from the original declaration.
+            type: Type | undefined; // The type of declaration if known.
+            decl: Declaration; // The symbol to get the docstring for.
             boundObjectOrClass: Type | undefined; // The object or class the docstring is bound to, if applicable.
             snapshot: number;
         };
-        [Requests.GetDeclarationInfo]: GetSymbolDeclarationInfoParams;
+        [Requests.GetSymbol]: GetDeclarationInfoParams;
+        [Requests.GetSymbolsForFile]: { uri: string; snapshot: number };
         [Requests.ResolveImportDeclaration]: {
             decl: Declaration;
             options: ResolveImportOptions;
@@ -490,7 +530,8 @@ export namespace TypeServerProtocol {
         [Requests.GetRepr]: string | undefined;
         [Requests.GetFunctionParts]: FunctionParts | undefined;
         [Requests.GetDocString]: string | undefined;
-        [Requests.GetDeclarationInfo]: SymbolDeclInfo | undefined;
+        [Requests.GetSymbol]: Symbol | undefined;
+        [Requests.GetSymbolsForFile]: FileSymbolInfo | undefined;
         [Requests.ResolveImportDeclaration]: Declaration | undefined;
         [Requests.ResolveImport]: string | undefined;
         [Requests.GetTypeAliasInfo]: TypeAliasInfo | undefined;
