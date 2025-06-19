@@ -1,5 +1,21 @@
 # Changelog
 
+## 2025.6.100 (19 June 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Hovering over `str` call shows docstring for `object` class [pylance-release#7333](https://github.com/microsoft/pylance-release/issues/7333)
+-   Bug fix: Turning off auto import still allows auto import completions to happen [pylance-release#7302](https://github.com/microsoft/pylance-release/issues/7302)
+-   Bug fix: Docstring Generation triggered by completion should use tooltip [pylance-release#6647](https://github.com/microsoft/pylance-release/issues/6647)
+-   Bug fix: Generated docstring has empty `:type` for parameters annotated with generic types [pylance-release#6519](https://github.com/microsoft/pylance-release/issues/6519)
+-   Bug fix: Generated docstring should have leading/trailing `"""` on their own lines [pylance-release#6471](https://github.com/microsoft/pylance-release/issues/6471)
+-   Bug fix: Generated docstring should not include `:type` for unannotated parameters [pylance-release#6469](https://github.com/microsoft/pylance-release/issues/6469)
+-   Bug fix: Pylance using broken 1.1.401 release of pyright [pylance-release#7319](https://github.com/microsoft/pylance-release/issues/7319)
+
+Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
+
+-   See Pyright's release notes for details: [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
+
 ## 2025.6.1 (12 June 2025) Release
 
 Notable changes:
