@@ -16,6 +16,16 @@ Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
 
 -   See Pyright's release notes for details: [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
 
+## 2025.6.2 (25 June 2025) Release
+
+Notable changes:
+
+-   Bug fix: Update Pyright to 1.1.402 [pylance-release#7319](https://github.com/microsoft/pylance-release/issues/7319)
+
+Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
+
+-   See Pyright's release notes for details: [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
+
 ## 2025.6.1 (12 June 2025) Release
 
 Notable changes:
