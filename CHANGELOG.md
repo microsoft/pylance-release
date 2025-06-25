@@ -1,15 +1,5 @@
 # Changelog
 
-## 2025.6.2 (25 June 2025) Release
-
-Notable changes:
-
--   Bug fix: Update Pyright to 1.1.402 [pylance-release#7319](https://github.com/microsoft/pylance-release/issues/7319)
-
-Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
-
--   See Pyright's release notes for details: [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
-
 ## 2025.6.100 (19 June 2025) PreRelease
 
 Notable changes:
@@ -21,6 +11,16 @@ Notable changes:
 -   Bug fix: Generated docstring should have leading/trailing `"""` on their own lines [pylance-release#6471](https://github.com/microsoft/pylance-release/issues/6471)
 -   Bug fix: Generated docstring should not include `:type` for unannotated parameters [pylance-release#6469](https://github.com/microsoft/pylance-release/issues/6469)
 -   Bug fix: Pylance using broken 1.1.401 release of pyright [pylance-release#7319](https://github.com/microsoft/pylance-release/issues/7319)
+
+Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
+
+-   See Pyright's release notes for details: [1.1.402](https://github.com/microsoft/pyright/releases/tag/1.1.402)
+
+## 2025.6.2 (25 June 2025) Release
+
+Notable changes:
+
+-   Bug fix: Update Pyright to 1.1.402 [pylance-release#7319](https://github.com/microsoft/pylance-release/issues/7319)
 
 Pylance's copy of Pyright has been updated from 1.1.401 to 1.1.402.
 
