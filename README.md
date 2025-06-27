@@ -8,7 +8,7 @@ Pylance is the default language support for [Python in Visual Studio Code](https
 
 The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
 
-Quick Start
+Speed Start
 ============
 1. Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) from the marketplace. Pylance will be installed as an optional extension.
 1. Open a Python (.py) file and the Pylance extension will activate.
