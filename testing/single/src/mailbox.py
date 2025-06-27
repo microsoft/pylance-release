@@ -1,1 +1,0 @@
-# shadowing stdlib mailbox module
