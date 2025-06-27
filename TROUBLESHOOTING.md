@@ -1,18 +1,4 @@
-# Troubleshooting
 
-If you're having trouble with the language server, check the below for information which
-may help. If something isn't covered here, please file an issue with the information given
-in [Filing an issue](#filing-an-issue).
-
-## Known issues
-
-## Common questions and issues
-
-### Unresolved import warnings
-
-If you're getting a warning about an unresolved import, first ensure that the
-package is installed into your environment if it is a library (`pip`, `pipenv`, etc).
-If the warning is about importing _your own_ code (and not a library), continue reading.
 
 The language server treats the workspace root (i.e. folder you have opened) as
 the main root of user module imports. This means that if your imports are not relative
