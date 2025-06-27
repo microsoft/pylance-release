@@ -1,3 +1,0 @@
-pytest
-zope.event
-numpy
