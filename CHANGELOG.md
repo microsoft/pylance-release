@@ -1,5 +1,7 @@
 # Changelog
 
+branch: prerelease
+=======A:/
 ## 2025.6.100 (19 June 2025) PreRelease
 
 Notable changes:
@@ -2243,6 +2245,7 @@ Pylance's copy of Pyright has been updated from 1.1.268 to 1.1.269.
 
 -   Release version that rolls up changes from the [2022.8.41](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#2022841-24-august-2022-prerelease) prerelease build.
 
+branch: main
 ## 2022.8.41 (24 August 2022) PreRelease
 
 Notable changes:
