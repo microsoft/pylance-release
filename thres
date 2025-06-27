@@ -1,0 +1,4 @@
+git branch b main min
+git fetch origin
+git branch -w origin/min min
+git remote set-head origin -z
