@@ -42,6 +42,7 @@ Settings and Customization
 ===============
 Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the `settings.json` file in your workspace, or edited through the Settings Editor UI. 
 
+<<<<<<< HEAD
 - [`python.analysis.languageServerMode`](docs/settings/python_analysis_languageServerMode.md)
     - Offers predefined configurations to help users optimize Pylance's performance based on their development needs. It controls how many IntelliSense features Pylance provides, allowing you to choose between full language service functionality or a lightweight experience optimized for performance.
     - Default value: `default`
@@ -116,6 +117,88 @@ Pylance provides users with the ability to customize their Python language suppo
 - `python.analysis.autoSearchPaths`
     - Used to automatically add search paths based on some predefined names (like `src`).
     - Available values:
+=======
+Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the settings.json file in your workspace, or edited through the Settings Editor UI.
+
+-   `python.analysis.typeCheckingMode`
+
+    -   Used to specify the level of type checking analysis performed.
+    -   Default: `off`
+    -   Available values:
+        -   `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced
+        -   `basic`: Non-type checking-related rules (all rules in `off`) + basic type checking rules
+        -   `strict`: All type checking rules at the highest severity of error (includes all rules in `off` and `basic` categories)
+
+-   `python.analysis.diagnosticMode`
+
+    -   Used to allow a user to specify what files they want the language server to analyze to get problems flagged in their code.
+    -   Available values:
+        -   `workspace`
+        -   `openFilesOnly` (default)
+
+-   `python.analysis.include`
+    -   Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the directory that contains workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
+    -   Default value: empty array
+
+-   `python.analysis.exclude`
+    -   Paths of directories or files that should not be included. These override the include directories, allowing specific subdirectories to be excluded. Note that files in the exclude paths may still be included in the analysis if they are referenced (imported) by source files that are not excluded. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no exclude paths are specified, Pylance automatically excludes the following: `**/node_modules`, `**/__pycache__`, `.git` and any virtual environment directories.
+    -   Default value: empty array
+
+-   `python.analysis.ignore`
+    -   Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no value is provided, the value of `python.linting.ignorePatterns` (if set) will be used.
+    -   Default value: empty array
+
+-   `python.analysis.stubPath`
+
+    -   Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
+    -   Default value: `./typings`
+
+-   `python.analysis.autoSearchPaths`
+
+    -   Used to automatically add search paths based on some predefined names (like `src`).
+    -   Available values:
+        -   `true` (default)
+        -   `false`
+
+-   `python.analysis.extraPaths`
+
+    -   Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
+    -   Default value: empty array
+
+-   `python.analysis.diagnosticSeverityOverrides`
+
+    -   Used to allow a user to override the severity levels for individual diagnostics should they desire.
+    -   Accepted severity values:
+
+        -   `error` (red squiggle)
+        -   `warning` (yellow squiggle)
+        -   `information` (blue squiggle)
+        -   `none` (disables the rule)
+
+    -   Available rule to use as keys can be found [here](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-check-diagnostics-settings)
+    -   Example:
+
+        ```jsonc
+        {
+            "python.analysis.diagnosticSeverityOverrides": {
+                "reportUnboundVariable": "information",
+                "reportImplicitStringConcatenation": "warning"
+            }
+        }
+        ```
+
+-   `python.analysis.useLibraryCodeForTypes`
+
+    -   Used to parse the source code for a package when a typestub is not found.
+    -   Accepted values:
+        -   `true` (default)
+        -   `false`
+
+-   `python.analysis.indexing`
+
+    - Used to specify whether Pylance should index installed third party libraries and user files to provide features such as auto-import, add import, workspace symbols, etc.
+    - Accepted values:
+>>>>>>> origin/updatereadm1
         - `true` (default)
         - `false`
 
@@ -301,6 +384,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Setting `python.analysis.inlayHints.callArgumentNames` to `off` can improve performance by reducing the processing needed to display argument names during function calls.
 
+<<<<<<< HEAD
 - `python.analysis.inlayHints.pytestParameters`
     - Enable/disable inlay hints for pytest function parameters.
     - Default value: `false` (or `true` in `full` mode)
@@ -319,9 +403,48 @@ Pylance provides users with the ability to customize their Python language suppo
         ```
     - Performance Consideration:
         - Disabling inlay hints for pytest parameters can improve performance by reducing the overhead associated with generating these hints.
+=======
+-   `python.analysis.inlayHints.variableTypes`
+
+    -   Enable/disable inlay hints for variable types.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
+-   `python.analysis.inlayHints.functionReturnTypes`
+
+    -   Enable/disable inlay hints for function return types.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
+-   `python.analysis.inlayHints.pytestParameters`
+    -   Enable/disable inlay hints for pytest function parameters.
+    -   Accepted values:
+        -   `true`
+        -   `false` (default)
+
+    ```python
+    @pytest.fixture()
+    def my_fixture() -> str:
+        return "foo"
+
+    def test_foo(my_fixture):...
+    ```
+
+    -   becomes
+
+    ```python
+    @pytest.fixture()
+    def my_fixture() -> str:
+        return "foo"
+
+    def test_foo(my_fixture: str):...
+    ```
+>>>>>>> origin/updatereadm1
 
 - `python.analysis.fixAll`
-    - The set of commands to run when doing a `fixall`.
+    - The set of code actions to run when running the **Fix All** command.
     - Accepted values:
         - `source.unusedImports`
         - `source.convertImportFormat`
