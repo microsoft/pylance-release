@@ -1,4 +1,4 @@
-name: Azure function dry run
+name: Azure function wet run
 
 on:
   issues:
