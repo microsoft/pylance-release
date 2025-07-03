@@ -1,5 +1,17 @@
 # Changelog
 
+## 2025.6.101 (2 July 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Typing pytest's fixtures is not usable inside fixtures [pylance-release#7347](https://github.com/microsoft/pylance-release/issues/7347)
+-   Bug fix: Add type ignore code action titles are not localized [pylance-release#7341](https://github.com/microsoft/pylance-release/issues/7341)
+-   Bug fix: Searching for source files multiple times at startup [pylance-release#7331](https://github.com/microsoft/pylance-release/issues/7331)
+-   Enhancement: "Expand selection" can't select string without quotes in multiword strings [pylance-release#7260](https://github.com/microsoft/pylance-release/issues/7260)
+-   Enhancement: Suggest inserting `# pyright: ignore` without `enableTypeIgnoreComments` [pylance-release#7220](https://github.com/microsoft/pylance-release/issues/7220)
+-   Enhancement: Show docstring completion on """ [pylance-release#6641](https://github.com/microsoft/pylance-release/issues/6641)
+-   Bug fix: Bundled type hints for lxml are inconsistent with source, lxml-stubs [pylance-release#5827](https://github.com/microsoft/pylance-release/issues/5827)
+
 ## 2025.6.100 (19 June 2025) PreRelease
 
 Notable changes:

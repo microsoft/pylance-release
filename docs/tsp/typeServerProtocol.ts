@@ -140,6 +140,11 @@ export namespace TypeServerProtocol {
         // Simple name of the type. For example, for a class `MyClass` in module `my_module`, this would be `MyClass`.
         name: string;
 
+        // The typing module defines aliases for builtin types
+        // (e.g. Tuple, List, Dict). This field holds the alias
+        // name.
+        aliasName?: string | undefined;
+
         // Flags specific to the category. For example, for a class type, this would be ClassFlags.
         // For a function type, this would be FunctionFlags.
         categoryFlags: number;
@@ -375,8 +380,6 @@ export namespace TypeServerProtocol {
     export enum Requests {
         // First request to initialize the type server.
         Initialize = 'typeServer/initialize',
-        // Request from client to shut down the type server.
-        ShutDown = 'typeServer/shutdown',
         // Request from client to get the current snapshot of the type server.
         // A snapshot is a point-in-time representation of the type server's state, including all loaded files and their types.
         // A type server should change its snapshot whenever any type it might have returned is no longer valid. Meaning types are
@@ -430,6 +433,10 @@ export namespace TypeServerProtocol {
         // Example:
         // `if (someCondition) { x = 1 } else { x = "hello" }`. The combined type of `x` would be `int | str`.
         CombineTypes = 'typeServer/combineTypes',
+        // Request to generate an instance type representation for the provided type.
+        // Example:
+        // Given a class type 'type[MyClass]', the resulting instance type is represented as 'MyClass'.
+        CreateInstanceType = 'typeServer/createInstanceType',
         // Request to get the search paths that the type server uses for Python modules.
         GetPythonSearchPaths = 'typeServer/getPythonSearchPaths',
     }
@@ -456,7 +463,6 @@ export namespace TypeServerProtocol {
 
     export interface Params {
         [Requests.Initialize]: { workspace: WorkspaceFolder; initialSettings: string };
-        [Requests.ShutDown]: void;
         [Requests.GetSnapshot]: void;
         [Requests.GetDiagnostics]: { uri: string; snapshot: number };
         [Requests.GetDiagnosticsVersion]: { uri: string; snapshot: number };
@@ -497,11 +503,15 @@ export namespace TypeServerProtocol {
             type: Type;
             snapshot: number;
         };
+        [Requests.GetPythonSearchPaths]: { fromUri: string; snapshot: number };
         [Requests.CombineTypes]: {
             types: Type[];
             snapshot: number;
         };
-        [Requests.GetPythonSearchPaths]: { fromUri: string; snapshot: number };
+        [Requests.CreateInstanceType]: {
+            types: Type;
+            snapshot: number;
+        };
         [Notifications.Initialized]: void;
         [Notifications.ShutDown]: void;
         [Notifications.TextDocumentOpen]: TextDocumentOpenParams;
@@ -514,7 +524,6 @@ export namespace TypeServerProtocol {
 
     export interface Response {
         [Requests.Initialize]: { configRoots: string[] };
-        [Requests.ShutDown]: { success: boolean };
         [Requests.GetSnapshot]: number;
         [Requests.GetDiagnostics]: Diagnostic[] | undefined;
         [Requests.GetDiagnosticsVersion]: number | undefined;
@@ -537,6 +546,7 @@ export namespace TypeServerProtocol {
         [Requests.GetTypeAliasInfo]: TypeAliasInfo | undefined;
         [Requests.GetPythonSearchPaths]: string[] | undefined;
         [Requests.CombineTypes]: Type | undefined;
+        [Requests.CreateInstanceType]: Type | undefined;
     }
 
     export function sendRequest<P extends Params, R extends Response, M extends Requests & keyof P & keyof R & string>(
