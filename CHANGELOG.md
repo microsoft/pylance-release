@@ -1,5 +1,16 @@
 # Changelog
 
+## 2025.6.102 (10 July 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Python snippet is crashing a language server [pylance-release#7399](https://github.com/microsoft/pylance-release/issues/7399)
+-   Bug fix: PEP 695-style type variables report `[object Promise]` on hover-over [pylance-release#7391](https://github.com/microsoft/pylance-release/issues/7391)
+
+Pylance's copy of Pyright has been updated from 1.1.402 to 1.1.403.
+
+-   See Pyright's release notes for details: [1.1.403](https://github.com/microsoft/pyright/releases/tag/1.1.403)
+
 ## 2025.6.101 (2 July 2025) PreRelease
 
 Notable changes:
