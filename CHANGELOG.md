@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.6.103 (15 July 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Added a few MCP tools for pylance [pylance-release#7420](https://github.com/microsoft/pylance-release/issues/7420)
+
 ## 2025.6.102 (10 July 2025) PreRelease
 
 Notable changes:
