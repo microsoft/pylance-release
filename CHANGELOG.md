@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.6.105 (18 July 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance MCP server often fails to start [pylance-release#7424](https://github.com/microsoft/pylance-release/issues/7424)
+
 ## 2025.6.103 (15 July 2025) PreRelease
 
 Notable changes:
