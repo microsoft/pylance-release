@@ -1,0 +1,50 @@
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import NamedStyle
+
+# Sample data
+data = [
+    ["HR001", "Onboarding Assets", "2025-07-28", "Alice Morgan", "HR", "John Smith", "Laptop, ID Card", "Completed", "All returned"],
+    ["IT005", "Access Revocation", "2025-07-29", "Mark Rivera", "IT", "Jane Doe", "Email, VPN, Git Access", "Pending", "Follow-up needed"],
+    ["FIN010", "Financial Handover", "2025-07-29", "Sarah Lee", "Finance", "Tom Allen", "Budget Report, Docs", "In Progress", "Due by Aug 1"],
+]
+
+columns = [
+    "Request ID", "Request Name", "Date", "Task Owner", "Department", 
+    "Handover To", "Items / Tasks Handed Over", "Status", "Notes"
+]
+
+# Create workbook and worksheet
+wb = Workbook()
+ws = wb.active
+ws.title = "Handover Log"
+
+# Add headers and data
+df = pd.DataFrame(data, columns=columns)
+for r in dataframe_to_rows(df, index=False, header=True):
+    ws.append(r)
+
+# Apply auto filter
+ws.auto_filter.ref = ws.dimensions
+
+# Add dropdown for Status column (H2 to H100)
+status_validation = DataValidation(
+    type="list",
+    formula1='"Pending,In Progress,Completed"',
+    allow_blank=True,
+    showDropDown=True
+)
+ws.add_data_validation(status_validation)
+status_validation.add("H2:H100")
+
+# Date formatting style
+date_style = NamedStyle(name="datetime", number_format="YYYY-MM-DD")
+for row in ws.iter_rows(min_row=2, max_row=ws.max_row, min_col=3, max_col=3):
+    for cell in row:
+        cell.style = date_style
+
+# Save the workbook
+wb.save("Handover_Request_Log.xlsx")
+print("Excel file created: Handover_Request_Log.xlsx")
