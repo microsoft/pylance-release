@@ -396,7 +396,7 @@ Pylance provides users with the ability to customize their Python language suppo
     ```
 
 - `python.analysis.supportDocstringTemplate`
-    - Enable/disable support for docstring generation.
+    - Enable/disable support for reStructuredText docstring generation.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true`
@@ -404,9 +404,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Example:
         ```python
         def foo(arg):
-            """
-            |<Trigger completions here
-            """
+            """|<Trigger completion or code action here"""
         ```
 
 - `python.analysis.displayEnglishDiagnostics`

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.7.100 (30 July 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Python extension not starting Pylance [vscode-python#25301](https://github.com/microsoft/vscode-python/issues/25301)
+
 ## 2025.7.1 (24 July 2025) Release
 
 Notable changes:
