@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.7.101 (5 August 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Browser version failing gathering semantic tokens.
+
 ## 2025.7.100 (30 July 2025) PreRelease
 
 Notable changes:
