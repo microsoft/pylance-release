@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.7.102 (13 August 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Typing pytest's fixtures is not usable inside fixtures [pylance-release#7347](https://github.com/microsoft/pylance-release/issues/7347)
+
 ## 2025.7.101 (5 August 2025) PreRelease
 
 Notable changes:
