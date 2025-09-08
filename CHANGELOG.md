@@ -1,5 +1,18 @@
 # Changelog
 
+## 2025.7.103 (8 September 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Memory-leak with the presence of `__builtins__.pyi` [pylance-release#7499](https://github.com/microsoft/pylance-release/issues/7499)
+-   Bug fix: Pylance MCP server often fails to start [pylance-release#7424](https://github.com/microsoft/pylance-release/issues/7424)
+-   Bug fix: Error occurred on priorityQueueBackgroundRunner background thread: {"code":"ERR_WORKER_OUT_OF_MEMORY"} [pylance-release#7400](https://github.com/microsoft/pylance-release/issues/7400)
+-   Bug fix: TypedDict hover text does not show docstrings for inherited key type hints [pylance-release#5006](https://github.com/microsoft/pylance-release/issues/5006)
+
+Pylance's copy of Pyright has been updated from 1.1.403 to 1.1.405.
+
+-   See Pyright's release notes for details: [1.1.404](https://github.com/microsoft/pyright/releases/tag/1.1.404), [1.1.405](https://github.com/microsoft/pyright/releases/tag/1.1.405)
+
 ## 2025.7.102 (13 August 2025) PreRelease
 
 Notable changes:
