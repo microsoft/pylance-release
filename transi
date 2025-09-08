@@ -1,0 +1,129 @@
+import os
+import time
+import argparse
+import subprocess
+from pathlib import Path
+from pydub import AudioSegment
+import whisper
+from tqdm import tqdm
+
+VIDEO_EXTS = {'.mp4', '.mkv', '.mov', '.avi', '.webm', '.flv', '.mpg', '.mpeg'}
+
+def extract_audio(video_path: Path, out_audio: Path):
+    """
+    Usa ffmpeg via pydub/AudioSegment para extrair áudio como wav.
+    """
+    # pydub uses ffmpeg under the hood
+    audio = AudioSegment.from_file(video_path)
+    audio.export(out_audio, format="wav")
+    return out_audio
+
+def save_txt(transcript_text: str, out_path: Path):
+    out_path.write_text(transcript_text, encoding='utf-8')
+
+def save_srt(segments, out_path: Path):
+    # segments: list of dicts com 'start','end','text'
+    def fmt_ts(seconds):
+        h = int(seconds // 3600)
+        m = int((seconds % 3600) // 60)
+        s = int(seconds % 60)
+        ms = int((seconds - int(seconds)) * 1000)
+        return f"{h:02d}:{m:02d}:{s:02d},{ms:03d}"
+    lines = []
+    for i, seg in enumerate(segments, start=1):
+        start = fmt_ts(seg['start'])
+        end = fmt_ts(seg['end'])
+        text = seg['text'].strip()
+        lines.append(f"{i}")
+        lines.append(f"{start} --> {end}")
+        lines.append(text)
+        lines.append("")  # blank line
+    out_path.write_text("\n".join(lines), encoding='utf-8')
+
+def transcribe_file(model, video_path: Path, out_dir: Path, language=None, task="transcribe"):
+    base = video_path.stem
+    out_dir.mkdir(parents=True, exist_ok=True)
+    wav_path = out_dir / f"{base}.wav"
+
+    print(f"[+] Extraindo áudio: {video_path.name}")
+    try:
+        extract_audio(video_path, wav_path)
+    except Exception as e:
+        print(f"[!] Falha ao extrair áudio de {video_path}: {e}")
+        return False
+
+    print(f"[+] Transcrevendo (modelo={model.name}) : {video_path.name}")
+    # whisper.transcribe suporta caminho de arquivo
+    result = model.transcribe(str(wav_path), language=language, task=task)
+
+    # Salva TXT
+    txt_path = out_dir / f"{base}.txt"
+    save_txt(result.get('text',''), txt_path)
+
+    # Salva SRT a partir de segments
+    srt_path = out_dir / f"{base}.srt"
+    segments = result.get('segments', [])
+    save_srt(segments, srt_path)
+
+    print(f"[✓] Concluído: {video_path.name} -> {txt_path.name}, {srt_path.name}")
+    # opcional: remove wav para economizar espaço
+    try:
+        wav_path.unlink()
+    except:
+        pass
+    return True
+
+def find_videos(folder: Path):
+    for p in folder.iterdir():
+        if p.is_file() and p.suffix.lower() in VIDEO_EXTS:
+            yield p
+
+def daemon_loop(input_dir: Path, processed_dir: Path, output_dir: Path, model, poll_interval=10, language=None):
+    processed_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Observando pasta: {input_dir} (intervalo {poll_interval}s). Pressione Ctrl+C para parar.")
+    try:
+        while True:
+            videos = list(find_videos(input_dir))
+            if videos:
+                for v in videos:
+                    # evita reprocessar: mova para processed após tentar processar
+                    target_processed = processed_dir / v.name
+                    try:
+                        success = transcribe_file(model, v, output_dir, language=language)
+                        # move o arquivo original para processed (mesmo que falhe, para não travar o loop)
+                        v.rename(target_processed)
+                    except Exception as e:
+                        print(f"[!] Erro ao processar {v.name}: {e}")
+                        # tenta mover para processed com sufixo .error
+                        try:
+                            v.rename(processed_dir / (v.name + ".error"))
+                        except:
+                            pass
+            time.sleep(poll_interval)
+    except KeyboardInterrupt:
+        print("\nEncerrando daemon.")
+
+def main():
+    parser = argparse.ArgumentParser(description="Daemon simples para transcrever vídeos com Whisper (local).")
+    parser.add_argument("--input", "-i", type=str, default="./videos", help="pasta com vídeos a processar")
+    parser.add_argument("--processed", "-p", type=str, default="./processed", help="pasta para mover vídeos processados")
+    parser.add_argument("--output", "-o", type=str, default="./transcripts", help="pasta de saída das transcrições")
+    parser.add_argument("--model", "-m", type=str, default="small", help="nome do modelo whisper (tiny, base, small, medium, large)")
+    parser.add_argument("--device", "-d", type=str, default="cpu", help="device para rodar o modelo (cpu ou cuda)")
+    parser.add_argument("--interval", type=int, default=10, help="intervalo (s) entre checagens na pasta")
+    parser.add_argument("--language", type=str, default=None, help="forçar linguagem (ex: pt, en). Deixe vazio para autodetect.")
+    args = parser.parse_args()
+
+    input_dir = Path(args.input)
+    processed_dir = Path(args.processed)
+    output_dir = Path(args.output)
+
+    input_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Carregando modelo Whisper '{args.model}' no device '{args.device}' — pode demorar...")
+    model = whisper.load_model(args.model, device=args.device)
+    daemon_loop(input_dir, processed_dir, output_dir, model, poll_interval=args.interval, language=args.language)
+
+if __name__ == "__main__":
+    main()
