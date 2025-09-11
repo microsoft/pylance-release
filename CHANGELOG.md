@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.7.104 (10 September 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: In diagnosticMode 'workspace' adding a package doesn't refresh the errors [pylance-release#7546](https://github.com/microsoft/pylance-release/issues/7546)
+
 ## 2025.7.103 (8 September 2025) PreRelease
 
 Notable changes:
