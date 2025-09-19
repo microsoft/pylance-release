@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025.8.2 (18 September 2025) Release
+
+Notable changes:
+
+-   Bug fix: Diagnostics for closed files not cleared in "openFilesOnly" mode (regression in 2025.8.1) [pylance-release#7565](https://github.com/microsoft/pylance-release/issues/7565)
+-   Bug fix: `python.analysis.extraPaths` not working for directories containing symlinks [pylance-release#7564](https://github.com/microsoft/pylance-release/issues/7564)
+-   Bug fix: Why not listen on 127.0.0.1 instead of randomly opening a port for 0.0.0.0, which poses a security risk [pylance-release#7523](https://github.com/microsoft/pylance-release/issues/7523)
+
 ## 2025.8.1 (16 September 2025) Release
 
 Notable changes:
