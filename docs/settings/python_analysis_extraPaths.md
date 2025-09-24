@@ -62,15 +62,12 @@ The `python.analysis.extraPaths` setting informs Pylance of additional directori
 
 - **Relative Paths**: Interpreted relative to the workspace root.
 - **Absolute Paths**: Supported but less portable.
-- **Wildcards**:
-    - `*`: Matches zero or more characters in a single directory level.
-    - `**`: Matches across multiple directory levels.
 
 Example:
 
 ```json
 {
-    "python.analysis.extraPaths": ["./libs/*", "./common/**/*"]
+    "python.analysis.extraPaths": ["./libs/", "${workspaceFolder}/common/"]
 }
 ```
 
