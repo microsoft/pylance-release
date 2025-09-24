@@ -149,7 +149,6 @@ Add `src` to `python.analysis.extraPaths`:
 ### Avoiding Common Issues
 
 - **Use Relative Paths**: Maintain portability across environments.
-- **Minimize Wildcards**: Excessive use can impact performance.
 - **Document Configurations**: Ensure consistency across team members.
 
 ### Benefits
@@ -163,6 +162,13 @@ Add `src` to `python.analysis.extraPaths`:
 ### Can I use environment variables like `${workspaceFolder}`?
 
 It is supported and it can be used in multi root workspace in vscode so one workspace root can see other roots and import them.
+
+### Can I use wildcards or globs like `./src/**/foo/*`?
+
+No wildcards or globs are not supported. For two reasons:
+
+- Extra paths make every lookup of every import take longer. Wildcard imports would have a high impact on this lookup that are not easy for the user to understand why they're taking so long.
+- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another. 
 
 ### How does this differ from modifying `sys.path`?
 
