@@ -15,44 +15,31 @@
  * The protocol is designed to be extensible, allowing for future additions of new requests and notifications.
  */
 import {
-    CancellationToken,
     Diagnostic,
-    Disposable,
-    FileEvent,
-    NotificationHandler,
-    RequestHandler,
-    WorkspaceFolder,
-} from 'vscode-languageserver';
-
-export interface RequestSender {
-    sendRequest<R>(method: string, params: any, token?: CancellationToken): Promise<R>;
-}
-
-export interface NotificationSender {
-    sendNotification: (method: string, params?: any) => void;
-}
-
-export interface RequestReceiver {
-    onRequest<P, R, E>(method: string, handler: RequestHandler<P, R, E>): Disposable;
-}
-
-export interface NotificationReceiver {
-    onNotification<P>(method: string, handler: NotificationHandler<P>): Disposable;
-}
+    MessageDirection,
+    ProtocolNotificationType,
+    ProtocolRequestType,
+    ProtocolRequestType0,
+    Range,
+} from 'vscode-languageserver-protocol';
 
 export namespace TypeServerProtocol {
-    export const ReturnAttributeName = '__return__'; // Special name for the return value of a function or method.
+    export const ReturnSymbolName = '__return__'; // Special name for the return value of a function or method.
     export const InvalidHandle = -1; // Special value for an invalid handle. This is used to indicate that a type or declaration is not valid.
 
     // Represents a node in an AST (Abstract Syntax Tree) or similar structure.
     export interface Node {
         // URI of the source file containing this node.
         uri: string;
-        // The start byte position (zero-based) of the node in the source file.
-        // Note this is per byte and not per character.
-        start: number;
-        // The length of the node (in number of bytes) in the source file.
-        length: number;
+        // The range of the node in the source file.
+        // This is a zero-based range, meaning the start and end positions are both zero-based
+        // The range uses character offsets the same way the LSP does.
+        range: Range;
+    }
+
+    export enum TypeServerVersion {
+        v0_1_0 = '0.1.0',
+        current = '0.2.0', // The current version of the type server protocol.
     }
 
     // Represents a category of a type, such as class, function, variable, etc.
@@ -84,6 +71,7 @@ export namespace TypeServerProtocol {
         Interface = 1 << 4, // Indicates if the type is an interface (a type that defines a set of methods and properties). In Python this would be a Protocol.
         Generic = 1 << 5, // Indicates if the type is a generic type (a type that can be parameterized with other types).
         FromAlias = 1 << 6, // Indicates if the type came from an alias (a type that refers to another type).
+        Unpacked = 1 << 7, // Indicates if the type is unpacked (used with TypeVarTuple).
     }
 
     // Flags that describe the characteristics of a function or method.
@@ -94,6 +82,10 @@ export namespace TypeServerProtocol {
         Generator = 1 << 1, // Indicates if the function is a generator (can yield values).
         Abstract = 1 << 2, // Indicates if the function is abstract (must be implemented in a subclass).
         Static = 1 << 3, // Indicates if the function has a @staticmethod decorator.
+        // The *args and **kwargs parameters do not need to be present for this
+        // function to be compatible. This is used for Callable[..., x] and
+        // ... type arguments to ParamSpec and Concatenate.
+        GradualCallableForm = 1 << 4,
     }
 
     // Flags that describe the characteristics of a class.
@@ -109,6 +101,7 @@ export namespace TypeServerProtocol {
     export const enum TypeVarFlags {
         None = 0,
         IsParamSpec = 1 << 0, // Indicates if the type variable is a ParamSpec (as defined in PEP 612).
+        IsTypeVarTuple = 1 << 1, // Indicates if the type variable is a TypeVarTuple (as defined in PEP 646).
     }
 
     export interface ModuleName {
@@ -116,6 +109,48 @@ export namespace TypeServerProtocol {
         leadingDots: number;
         // The parts of the module name, split by dots. For example, for `my_module.sub_module`, this would be `['my_module', 'sub_module']`.
         nameParts: string[];
+    }
+
+    // Flags that describe how/what properties are fetched from a type.
+    export const enum FetchPropertiesFlags {
+        None = 0,
+        All = 0xffffffff, // Indicates all flags are set.
+    }
+
+    // Backing flags type used by request params to specify which properties to fetch.
+    // Alias provided to satisfy consumer request for singular name while retaining existing enum.
+    export type FetchPropertyFlags = FetchPropertiesFlags;
+
+    export interface Properties {
+        fetchedPropertiesFlags: FetchPropertiesFlags;
+    }
+
+    export interface AnyProperties extends Properties {
+        // Add type `Any` specific properties here.
+    }
+
+    export interface FunctionProperties extends Properties {
+        // Add function specific properties here.
+    }
+
+    export interface OverloadedProperties extends Properties {
+        // Add overloaded function specific properties here.
+    }
+
+    export interface ClassProperties extends Properties {
+        // Add class specific properties here.
+    }
+
+    export interface ModuleProperties extends Properties {
+        // Add module specific properties here.
+    }
+
+    export interface UnionProperties extends Properties {
+        // Add union specific properties here.
+    }
+
+    export interface TypeVarProperties extends Properties {
+        // Add type variable specific properties here.
     }
 
     export interface Type {
@@ -148,43 +183,13 @@ export namespace TypeServerProtocol {
         // Flags specific to the category. For example, for a class type, this would be ClassFlags.
         // For a function type, this would be FunctionFlags.
         categoryFlags: number;
+
+        // Properties specific to the category, such as function parameters.
+        // These properties will be returned optionally if requested with `fetchPropertiesFlags`.
+        categoryProperties?: Properties;
+
         // Declaration of the type, if available.
         decl: Declaration | undefined;
-    }
-
-    export const enum AttributeFlags {
-        None = 0,
-        IsArgsList = 1 << 0, // Indicates if a parameter is an argument list (e.g., `*args`).
-        IsKwargsDict = 1 << 1, // Indicates if the attribute is a keyword argument dictionary (e.g., `**kwargs`).
-    }
-
-    export interface Attribute {
-        // The name of the attribute. This is the name used to access the attribute in code.
-        // For a function, this would be the name of a parameter or a special name like `__return__` for the return value.
-        name: string;
-
-        // The type of the attribute.
-        type: Type;
-
-        // The type the attribute came from (can be a class, function, module, etc.).
-        owner: Type | undefined;
-
-        // The type the attribute is bound to, if applicable.
-        boundType: Type | undefined;
-        // Flags describing extra data about an attribute.
-        // For example, if the attribute is a parameter, this could indicate if it's a positional or keyword parameter.
-        flags: number;
-        // The declarations for the attribute.
-        decls: Declaration[];
-    }
-
-    // Flags that are used for searching for attributes of a class Type.
-    export const enum AttributeAccessFlags {
-        None = 0,
-        SkipInstanceAttributes = 1 << 0, // Skip instance attributes when searching for attributes of a type.
-        SkipTypeBaseClass = 1 << 1, // Skip members from the base class of a type when searching for members of a type.
-        SkipAttributeAccessOverrides = 1 << 2, // Skip attribute access overrides when searching for members of a type.
-        GetBoundAttributes = 1 << 3, // Look for bound attributes when searching for attributes of a type. That is methods bound specifically to an instance.
     }
 
     // Represents the category of a declaration in the type system.
@@ -208,6 +213,17 @@ export namespace TypeServerProtocol {
         IsDefinedBySlots = 1 << 3, // Indicates if the declaration is defined by slots (a class that uses __slots__).
         UsesLocalName = 1 << 4, // Indicates if the import declaration uses 'as' with a different name (ex: import foo as f).
         UnresolvedImport = 1 << 5, // Indicates if the import declaration is unresolved (the module or symbol could not be found).
+        SimpleParam = 1 << 6, // Indicates if the declaration is a simple parameter (e.g., a function parameter).
+        ArgsListParam = 1 << 7, // Indicates if a declaration is an argument list (e.g., `*args`).
+        KwargsDictParam = 1 << 8, // Indicates if the declaration is a keyword argument dictionary (e.g., `**kwargs`).
+        PositionalParam = 1 << 9, // Indicates if the declaration is a positional parameter.
+        StandardParam = 1 << 10, // Indicates if the declaration is a standard parameter.
+        KeywordParam = 1 << 11, // Indicates if the declaration is a keyword parameter.
+        ExpandedArgsParam = 1 << 12, // Indicates if the declaration is an expanded *args parameter.
+        ReturnType = 1 << 13, // Indicates if the declaration is a return type (e.g., the return value of a function).
+        EnumMember = 1 << 14, // Indicates if the declaration is a member of an enum type.
+        TypeDeclared = 1 << 15, // Indicates if the declaration has an explicitly declared type.
+        SpecializedType = 1 << 16, // Indicates if the declaration is a specialization of a generic type.
     }
 
     // Represents a symbol declaration in the type system.
@@ -240,27 +256,36 @@ export namespace TypeServerProtocol {
         uri: string;
     }
 
-    // Symbol information for a node, which includes
-    // a list of declarations and potentially synthesized types for those declarations.
+    // Flags that are used for searching for symbols.
+    export const enum SymbolSearchFlags {
+        None = 0,
+        SkipInstanceAttributes = 1 << 0, // Skip instance attributes when searching for attributes of a type.
+        SkipTypeBaseClass = 1 << 1, // Skip members from the base class of a type when searching for members of a type.
+        SkipAttributeAccessOverrides = 1 << 2, // Skip attribute access overrides when searching for members of a type.
+        GetBoundAttributes = 1 << 3, // Look for bound attributes when searching for attributes of a type. That is methods bound specifically to an instance.
+        SkipUnreachableCode = 1 << 4, // When searching for a name, skip symbols that are in unreachable code.
+    }
+
+    export const enum SymbolFlags {
+        None = 0,
+        SynthesizedName = 1 << 0, // Indicates if the symbol name was synthesized by the type server and not present in the source code.
+    }
+
+    // Symbol information for a node
     export interface Symbol {
-        // The node for which the declaration information is being requested.
-        node: Node;
         // The name of the symbol found.
         name: string;
+        // The type of the symbol found.
+        type: TypeServerProtocol.Type;
         // The declarations for the symbol.
         // This can include multiple declarations for the same symbol, such as when a symbol is defined in multiple files.
         decls: Declaration[];
-        // Synthesized type information for a declaration that is not directly
-        // represented in the source code, but is derived from the declaration. Other languages
-        // may refer to this as an anonymous type.
-        synthesizedTypes: TypeServerProtocol.Type[];
-    }
-
-    export interface FileSymbolInfo {
-        // The URI of the source file.
-        uri: string;
-        // The symbols in the file.
-        symbols: Symbol[];
+        // Flags giving more information about the symbol.
+        flags: SymbolFlags;
+        // The type that is the semantic parent of this symbol. For example if the symbol is for a parameter,
+        // the parent would be the function or method that contains the parameter.
+        // If the symbol is for a class member, the parent would be the class that contains the member.
+        parent?: Type;
     }
 
     // Options for resolving an import declaration.
@@ -269,28 +294,6 @@ export namespace TypeServerProtocol {
         resolveLocalNames?: boolean; // Whether to resolve local names in the import declaration.
         allowExternallyHiddenAccess?: boolean; // Whether to allow access to members that are hidden by external modules.
         skipFileNeededCheck?: boolean; // Whether to skip checking if the file is needed for the import  resolution.
-    }
-
-    // Who owns file contents?
-    // That depends on the file.
-    // For a file that's open in an IDE, the IDE owns the file contents and forwards those contents and changes to the type server (and language server).
-    // For a file that's not open in an IDE, the file system owns the file contents.
-    // Changes for the file system owned files are sent to the type server (and language server) as file events.
-
-    // Describes a file that's been opened in the language server which the type server needs to be aware of.
-    export interface TextDocumentOpenParams {
-        uri: string;
-        text: string;
-        // The version of the file, which is used to track changes to the file. It will be incremented each time the file is modified.
-        version: number;
-        // Optional: If the file is part of a chain of files, this can be used to indicate the URI of the
-        // file that is automatically 'imported' by this file. This is useful for cases like Jupyter notebooks
-        chainedFileUri?: string;
-    }
-
-    // Describes a file that's been closed in the language server which the type server needs to be aware of.
-    export interface TextDocumentCloseParams {
-        uri: string;
     }
 
     // Parameters for resolving an import
@@ -311,42 +314,39 @@ export namespace TypeServerProtocol {
         PrintTypeVarVariance = 1 << 1,
         // Convert the type into an instance type before printing it.
         ConvertToInstanceType = 1 << 2,
+        // Limit output to legal Python syntax.
+        PythonSyntax = 1 << 3,
     }
 
-    export interface SearchForTypeAttributeParams {
-        // The starting point in the type heirarchy to search for the attribute.
-        startType: Type;
-        // The name of the attribute being requested.
-        attributeName: string;
-        // Flags that control how the attribute is accessed.
-        accessFlags: AttributeAccessFlags;
-        // Optional: The expression node that the member is being accessed from.
-        expressionNode?: Node;
-        // Optional: The type of an instance that the attribute is being accessed from.
-        // Example: type of `a` in `a = MyClass()`, where `MyClass` is a class and `a` is an instance of that class.
-        instanceType?: Type;
-        // The snapshot version of the type server state.
-        snapshot: number;
-    }
-
-    export interface GetTypeAttributesParams {
-        // The type for which the attributes are being requested.
+    export interface GetSymbolsForTypeParams {
+        // The type for which the symbols are being requested. If this is a class, the symbols are based on the members of the class. If this is
+        // a function, the symbols are the parameters and the return value.
         type: Type;
+        // The location where the symbols are being requested. This can help search for symbols.
+        node: Node | undefined;
+        // The name to search for. If undefined, returns all the symbols for the type or node.
+        name: string | undefined;
+        // Flags used to do the search
+        flags: SymbolSearchFlags;
         // The snapshot version of the type server state.
         snapshot: number;
-    }
-    export interface GetDeclarationInfoParams {
-        // The node for which the declaration information is being requested.
-        node: Node;
-        // The name of the symbol being requested. This is optional and can be undefined especially when the node is a name node.
-        // If this node is a module node, this would be the name of the symbol being requested.
-        name?: string;
-        // Whether to skip unreachable code when looking for the symbol declaration.
-        skipUnreachableCode: boolean;
-        // The snapshot version of the type server state.
-        snapshot: number;
+        // Flags indicating which properties to fetch for the type (if any).
+        fetchPropertiesFlags?: FetchPropertyFlags;
     }
 
+    export interface GetSymbolsForNodeParams {
+        // The location to search for symbols from. This node is essentially used to scope the symbol search. It can be a Module node
+        // in order to search for top level symbols.
+        node: Node;
+        // The name to search for. If undefined, returns all the symbols for the type or node.
+        name: string | undefined;
+        // Flags used to do the search
+        flags: SymbolSearchFlags;
+        // The snapshot version of the type server state.
+        snapshot: number;
+        // Flags indicating which properties to fetch for the type (if any).
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
     export interface GetBuiltinTypeParams {
         // The node that is used to scope the builtin type. Every module may have a different set of builtins based on
         // where the module is located.
@@ -355,19 +355,9 @@ export namespace TypeServerProtocol {
         name: string;
         // The snapshot version of the type server state.
         snapshot: number;
+        // Flags indicating which properties to fetch for the type (if any).
+        fetchPropertiesFlags?: FetchPropertyFlags;
     }
-
-    // Represents settings that can be sent to the type server.
-    export type Settings = {
-        [key: string]: any;
-    };
-
-    // Parts of a function, including its parameters and return type.
-    // This is used to provide a string representation of a function's signature.
-    export type FunctionParts = {
-        params: string[];
-        returnType: string;
-    };
 
     export interface TypeAliasInfo {
         // The original name of the alias.
@@ -377,208 +367,338 @@ export namespace TypeServerProtocol {
     }
 
     // Requests and notifications for the type server protocol.
-    export enum Requests {
-        // First request to initialize the type server.
-        Initialize = 'typeServer/initialize',
-        // Request from client to get the current snapshot of the type server.
-        // A snapshot is a point-in-time representation of the type server's state, including all loaded files and their types.
-        // A type server should change its snapshot whenever any type it might have returned is no longer valid. Meaning types are
-        // only usable for the snapshot they were returned with.
-        //
-        // Snapshots are not meant to survive any changes that would make the type server throw away its internal cache. They are merely an
-        // identifier to indicate to the client that the type server will accept requests for types from that snapshot.
-        GetSnapshot = 'typeServer/getSnapshot',
-        // Request to get diagnostics for a specific file.
-        GetDiagnostics = 'typeServer/getDiagnostics',
-        // Request to get the version of diagnostics for a specific file.
-        GetDiagnosticsVersion = 'typeServer/getDiagnosticsVersion',
-        // Request to get the type information for a specific node.
-        GetType = 'typeServer/getType',
-        // Request to get the type information for a specific builtin type.
-        GetBuiltinType = 'typeServer/getBuiltinType',
-        // Request to get the collection of subtypes that make up a union type or the types that makes up a generic type.
-        GetTypeArgs = 'typeServer/getTypeArgs',
-        // Request to find an attribute of a class.
-        SearchForTypeAttribute = 'typeServer/searchForTypeAttribute',
-        // Request to get the attributes of a specific class or the parameters and return value of a specific function.
-        GetTypeAttributes = 'typeServer/getTypeAttributes',
-        // Request to get all overloads of a function or method. The returned value doesn't include the implementation signature.
-        GetOverloads = 'typeServer/getOverloads',
-        // Request to get the overloads that a call node matches.
-        GetMatchingOverloads = 'typeServer/getMatchingOverloads',
-        // Request to get the meta class of a type.
-        GetMetaclass = 'typeServer/getMetaclass',
-        // Request to get the type of a declaration.
-        GetTypeOfDeclaration = 'typeServer/getTypeOfDeclaration',
-        // Request to get symbol declaration information for a node.
-        GetSymbol = 'typeServer/getSymbol',
-        // Request to get all symbols for a file. This is used to get all symbols in a file.
-        GetSymbolsForFile = 'typeServer/getSymbolsForFile',
-        // Request to get the string representation of a function's parts, meaning its parameters and return type.
-        GetFunctionParts = 'typeServer/getFunctionParts',
-        // Request to get the string representation of a type in a human-readable format. This may or may not be the same as the type's "name".
-        GetRepr = 'typeServer/getRepr',
-        // Request to get the docstring for a specific declaration.
-        GetDocString = 'typeServer/getDocString',
-        // Request to resolve an import declaration. Example: `from module import something`. The `something` is the import declaration. Resolving it
-        // means finding the actual declaration of `something` in the module.
-        ResolveImportDeclaration = 'typeServer/resolveImportDeclaration',
-        // Request to resolve an import. This is used to resolve the import name to its location in the file system.
-        ResolveImport = 'typeServer/resolveImport',
-        // Get information about a type alias.
-        // Example: `MyType = List[int]` is a type alias. In this case the List[int] is the type passed to this function but it has the Alias TypeFlag set.
-        // The type alias info will return the name 'MyType' and the args [int]
-        GetTypeAliasInfo = 'typeServer/getTypeAliasInfo',
-        // Request to combine types. This is used to combine multiple types into a single type.
-        // Example:
-        // `if (someCondition) { x = 1 } else { x = "hello" }`. The combined type of `x` would be `int | str`.
-        CombineTypes = 'typeServer/combineTypes',
-        // Request to generate an instance type representation for the provided type.
-        // Example:
-        // Given a class type 'type[MyClass]', the resulting instance type is represented as 'MyClass'.
-        CreateInstanceType = 'typeServer/createInstanceType',
-        // Request to get the search paths that the type server uses for Python modules.
-        GetPythonSearchPaths = 'typeServer/getPythonSearchPaths',
+
+    /**
+     * Request from client to get the current snapshot of the type server.
+     * A snapshot is a point-in-time representation of the type server's state, including all loaded files and their types.
+     * A type server should change its snapshot whenever any type it might have returned is no longer valid. Meaning types are
+     * only usable for the snapshot they were returned with.
+     *
+     * Snapshots are not meant to survive any changes that would make the type server throw away its internal cache. They are merely an
+     * identifier to indicate to the client that the type server will accept requests for types from that snapshot.
+     */
+    export namespace GetSnapshotRequest {
+        export const method = 'typeServer/getSnapshot' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType0<number, never, void, void>(method);
     }
 
-    export enum Notifications {
-        // Notification sent by the server to indicate that the type server has been initialized.
-        Initialized = 'typeServer/initialized',
-        // Notification sent by the server to indicate that the type server has shut down.
-        ShutDown = 'typeServer/shutdown',
-        // Notification sent by the client to indicate that a text document has been opened.
-        TextDocumentOpen = 'textDocument/open',
-        // Notification sent by the client to indicate that a text document has been closed.
-        TextDocumentClose = 'textDocument/close',
-        // Notification sent by the client to indicate that settings have changed.
-        SettingsChange = 'typeServer/settingsChange',
-        // Notification sent by the client to indicate that files have changed.
-        FilesChanged = 'typeServer/filesChanged',
-        // Notification sent by the server to indicate any outstanding snapshots are invalid.
-        SnapshotChanged = 'typeServer/snapshotChanged',
-        // Notification sent by the server to indicate that diagnostics have changed and the client
-        // should re-request diagnostics for the file.
-        DiagnosticsChanged = 'typeServer/diagnosticsChanged',
+    /**
+     * Request to get the version of the protocol the type server supports.
+     *
+     * Returns a string representation of the protocol version (should be semver format)
+     */
+    export namespace GetSupportedProtocolVersionRequest {
+        export const method = 'typeServer/getSupportedProtocolVersion' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType0<string, never, void, void>(method);
     }
 
-    export interface Params {
-        [Requests.Initialize]: { workspace: WorkspaceFolder; initialSettings: string };
-        [Requests.GetSnapshot]: void;
-        [Requests.GetDiagnostics]: { uri: string; snapshot: number };
-        [Requests.GetDiagnosticsVersion]: { uri: string; snapshot: number };
-        [Requests.GetType]: { node: Node; snapshot: number };
-        [Requests.GetBuiltinType]: GetBuiltinTypeParams;
-        [Requests.GetTypeArgs]: { type: Type; snapshot: number };
-        [Requests.SearchForTypeAttribute]: SearchForTypeAttributeParams;
-        [Requests.GetTypeAttributes]: GetTypeAttributesParams;
-        [Requests.GetOverloads]: { type: Type; snapshot: number };
-        [Requests.GetMatchingOverloads]: { callNode: Node; snapshot: number };
-        [Requests.GetMetaclass]: { type: Type; snapshot: number };
-        [Requests.GetTypeOfDeclaration]: { decl: Declaration; snapshot: number };
-        [Requests.GetRepr]: {
-            type: Type;
-            flags: TypeReprFlags;
-            snapshot: number;
-        };
-        [Requests.GetFunctionParts]: {
-            type: Type;
-            flags: TypeReprFlags;
-            snapshot: number;
-        };
-        [Requests.GetDocString]: {
-            type: Type | undefined; // The type of declaration if known.
-            decl: Declaration; // The symbol to get the docstring for.
-            boundObjectOrClass: Type | undefined; // The object or class the docstring is bound to, if applicable.
-            snapshot: number;
-        };
-        [Requests.GetSymbol]: GetDeclarationInfoParams;
-        [Requests.GetSymbolsForFile]: { uri: string; snapshot: number };
-        [Requests.ResolveImportDeclaration]: {
-            decl: Declaration;
-            options: ResolveImportOptions;
-            snapshot: number;
-        };
-        [Requests.ResolveImport]: ResolveImportParams;
-        [Requests.GetTypeAliasInfo]: {
-            type: Type;
-            snapshot: number;
-        };
-        [Requests.GetPythonSearchPaths]: { fromUri: string; snapshot: number };
-        [Requests.CombineTypes]: {
-            types: Type[];
-            snapshot: number;
-        };
-        [Requests.CreateInstanceType]: {
-            types: Type;
-            snapshot: number;
-        };
-        [Notifications.Initialized]: void;
-        [Notifications.ShutDown]: void;
-        [Notifications.TextDocumentOpen]: TextDocumentOpenParams;
-        [Notifications.TextDocumentClose]: TextDocumentCloseParams;
-        [Notifications.SettingsChange]: Settings;
-        [Notifications.FilesChanged]: { changes: FileEvent[] };
-        [Notifications.SnapshotChanged]: { old: number; new: number };
-        [Notifications.DiagnosticsChanged]: { uri: string; snapshot: number; version: number };
+    /**
+     * Request to get diagnostics for a specific file.
+     */
+    export namespace GetDiagnosticsRequest {
+        export const method = 'typeServer/getDiagnostics' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { uri: string; snapshot: number },
+            Diagnostic[] | undefined,
+            never,
+            void,
+            void
+        >(method);
     }
 
-    export interface Response {
-        [Requests.Initialize]: { configRoots: string[] };
-        [Requests.GetSnapshot]: number;
-        [Requests.GetDiagnostics]: Diagnostic[] | undefined;
-        [Requests.GetDiagnosticsVersion]: number | undefined;
-        [Requests.GetType]: Type | undefined;
-        [Requests.GetBuiltinType]: Type | undefined;
-        [Requests.GetTypeArgs]: Type[] | undefined;
-        [Requests.SearchForTypeAttribute]: Attribute | undefined;
-        [Requests.GetTypeAttributes]: Attribute[] | undefined;
-        [Requests.GetOverloads]: Type[] | undefined;
-        [Requests.GetMatchingOverloads]: Type[] | undefined;
-        [Requests.GetMetaclass]: Type | undefined;
-        [Requests.GetTypeOfDeclaration]: Type | undefined;
-        [Requests.GetRepr]: string | undefined;
-        [Requests.GetFunctionParts]: FunctionParts | undefined;
-        [Requests.GetDocString]: string | undefined;
-        [Requests.GetSymbol]: Symbol | undefined;
-        [Requests.GetSymbolsForFile]: FileSymbolInfo | undefined;
-        [Requests.ResolveImportDeclaration]: Declaration | undefined;
-        [Requests.ResolveImport]: string | undefined;
-        [Requests.GetTypeAliasInfo]: TypeAliasInfo | undefined;
-        [Requests.GetPythonSearchPaths]: string[] | undefined;
-        [Requests.CombineTypes]: Type | undefined;
-        [Requests.CreateInstanceType]: Type | undefined;
+    /**
+     * Request to get the version of diagnostics for a specific file.
+     */
+    export namespace GetDiagnosticsVersionRequest {
+        export const method = 'typeServer/getDiagnosticsVersion' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { uri: string; snapshot: number },
+            number | undefined,
+            never,
+            void,
+            void
+        >(method);
     }
 
-    export function sendRequest<P extends Params, R extends Response, M extends Requests & keyof P & keyof R & string>(
-        connection: RequestSender,
-        method: M,
-        params: P[M],
-        token?: CancellationToken
-    ): Promise<R[M]> {
-        return connection.sendRequest(method, params, token);
+    /**
+     * Request to get the type information for a specific node.
+     */
+    export namespace GetTypeRequest {
+        export const method = 'typeServer/getType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { node: Node; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type | undefined,
+            never,
+            void,
+            void
+        >(method);
     }
 
-    export function sendNotification<P extends Params, M extends Notifications & keyof P & string>(
-        connection: NotificationSender,
-        method: M,
-        params: P[M]
-    ): void {
-        connection.sendNotification(method, params);
+    /**
+     * Request to get the type information for a specific builtin type.
+     */
+    export namespace GetBuiltinTypeRequest {
+        export const method = 'typeServer/getBuiltinType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetBuiltinTypeParams, Type | undefined, never, void, void>(method);
     }
 
-    export function onRequest<P extends Params, R extends Response, M extends Requests & keyof P & keyof R & string, E>(
-        connection: RequestReceiver,
-        method: M,
-        handler: RequestHandler<P[M], R[M], E>
-    ): Disposable {
-        return connection.onRequest(method, handler);
+    /**
+     * Request to get the collection of subtypes that make up a union type or the types that makes up a generic type.
+     */
+    export namespace GetTypeArgsRequest {
+        export const method = 'typeServer/getTypeArgs' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type[] | undefined,
+            never,
+            void,
+            void
+        >(method);
     }
 
-    export function onNotification<P extends Params, M extends Notifications & keyof P & string>(
-        connection: NotificationReceiver,
-        method: M,
-        handler: NotificationHandler<P[M]>
-    ): Disposable {
-        return connection.onNotification(method, handler);
+    /**
+     * Request to find symbols from a type.
+     */
+    export namespace GetSymbolsForTypeRequest {
+        export const method = 'typeServer/getSymbolsForType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetSymbolsForTypeParams, Symbol[] | undefined, never, void, void>(
+            method
+        );
+    }
+
+    /**
+     * Request to find symbols from a node.
+     */
+    export namespace GetSymbolsForNodeRequest {
+        export const method = 'typeServer/getSymbolsForNode' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetSymbolsForNodeParams, Symbol[] | undefined, never, void, void>(
+            method
+        );
+    }
+
+    /**
+     * Request to get all overloads of a function or method. The returned value doesn't include the implementation signature.
+     */
+    export namespace GetOverloadsRequest {
+        export const method = 'typeServer/getOverloads' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type[] | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the overloads that a call node matches.
+     */
+    export namespace GetMatchingOverloadsRequest {
+        export const method = 'typeServer/getMatchingOverloads' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { callNode: Node; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type[] | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the meta class of a type.
+     */
+    export namespace GetMetaclassRequest {
+        export const method = 'typeServer/getMetaclass' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the type of a declaration.
+     */
+    export namespace GetTypeOfDeclarationRequest {
+        export const method = 'typeServer/getTypeOfDeclaration' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { decl: Declaration; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the string representation of a type in a human-readable format. This may or may not be the same as the type's "name".
+     */
+    export namespace GetReprRequest {
+        export const method = 'typeServer/getRepr' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; flags: TypeReprFlags; snapshot: number },
+            string | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the docstring for a specific declaration.
+     */
+    export namespace GetDocStringRequest {
+        export const method = 'typeServer/getDocString' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type | undefined; decl: Declaration; boundObjectOrClass: Type | undefined; snapshot: number },
+            string | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to resolve an import declaration. Example: `from module import something`. The `something` is the import declaration. Resolving it
+     * means finding the actual declaration of `something` in the module.
+     */
+    export namespace ResolveImportDeclarationRequest {
+        export const method = 'typeServer/resolveImportDeclaration' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { decl: Declaration; options: ResolveImportOptions; snapshot: number },
+            Declaration | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to resolve an import. This is used to resolve the import name to its location in the file system.
+     */
+    export namespace ResolveImportRequest {
+        export const method = 'typeServer/resolveImport' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<ResolveImportParams, string | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Get information about a type alias.
+     * Example: `MyType = List[int]` is a type alias. In this case the List[int] is the type passed to this function but it has the Alias TypeFlag set.
+     * The type alias info will return the name 'MyType' and the args [int]
+     */
+    export namespace GetTypeAliasInfoRequest {
+        export const method = 'typeServer/getTypeAliasInfo' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            TypeAliasInfo | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to combine types. This is used to combine multiple types into a single type.
+     * Example:
+     * `if (someCondition) { x = 1 } else { x = "hello" }`. The combined type of `x` would be `int | str`.
+     */
+    export namespace CombineTypesRequest {
+        export const method = 'typeServer/combineTypes' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { types: Type[]; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to generate an instance type representation for the provided type.
+     * Example:
+     * Given a class type 'type[MyClass]', the resulting instance type is represented as 'MyClass'.
+     */
+    export namespace CreateInstanceTypeRequest {
+        export const method = 'typeServer/createInstanceType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
+            Type | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the search paths that the type server uses for Python modules.
+     */
+    export namespace GetPythonSearchPathsRequest {
+        export const method = 'typeServer/getPythonSearchPaths' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { fromUri: string; snapshot: number },
+            string[] | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to fetch category properties for the given type.
+     */
+    export namespace FetchTypePropertiesRequest {
+        export const method = 'typeServer/fetchTypeProperties' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            { type: Type; snapshot: number; fetchPropertiesFlags: FetchPropertyFlags },
+            Type,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Notification sent by the server to indicate any outstanding snapshots are invalid.
+     */
+    export namespace SnapshotChangedNotification {
+        export const method = 'typeServer/snapshotChanged' as const;
+        export const messageDirection = MessageDirection.serverToClient;
+        export const type = new ProtocolNotificationType<{ old: number; new: number }, void>(method);
+    }
+
+    /**
+     * Notification sent by the server to indicate that diagnostics have changed and the client
+     * should re-request diagnostics for the file.
+     */
+    export namespace DiagnosticsChangedNotification {
+        export const method = 'typeServer/diagnosticsChanged' as const;
+        export const messageDirection = MessageDirection.serverToClient;
+        export const type = new ProtocolNotificationType<{ uri: string; snapshot: number; version: number }, void>(
+            method
+        );
     }
 }
