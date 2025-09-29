@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.8.3 (29 September 2025) Release
+
+Notable changes:
+
+-   Changes for internal customers and minor bug fixes.
+
 ## 2025.8.2 (18 September 2025) Release
 
 Notable changes:
