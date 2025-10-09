@@ -437,6 +437,12 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true` (default)
         - `false`
 
+- `python.analysis.enableTroubleshootMissingImports`
+    - Enable/disable the Quick Fix for troubleshooting missing imports. This Quick Fix requires the Python Environments extension to be installed and enabled.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 Semantic highlighting
 =====================
 
