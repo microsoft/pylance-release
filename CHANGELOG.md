@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025.8.100 (9 October 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Python issues reported for non-existent `__main__.py.git` [pylance-release#7584](https://github.com/microsoft/pylance-release/issues/7584)
+-   Bug fix: Pylance keeps asking for access to the language models when rejected [pylance-release#7566](https://github.com/microsoft/pylance-release/issues/7566)
+
 ## 2025.8.3 (29 September 2025) Release
 
 Notable changes:
