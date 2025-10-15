@@ -8,6 +8,7 @@
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.indexing": true,
+    "python.analysis.diagnosticMode": "workspace",
     "python.analysis.importFormat": "absolute",
     // "editor.codeActionsOnSave": { "source.fixAll": true },
     // "python.analysis.fixAll": [
@@ -19,5 +20,5 @@
     ],
     "python.analysis.aiCodeActions": {
         "generateSymbol": true
-    }
+    },
 }

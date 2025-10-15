@@ -1208,7 +1208,7 @@ class SimpleBleDevice(object):
 def sphinxexample():
     """
     Sends a message
-    
+        
     :param str sender: The person sending the message
     :param str recipient: The recipient of the message
     :param message_body: The body of the message

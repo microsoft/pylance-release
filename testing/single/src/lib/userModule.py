@@ -8,6 +8,9 @@ from requests import ConnectTimeout
 class MyType:
     def method(self, v: Path) -> ConnectTimeout:
         raise Exception("Hello")
+    
+    def worktree_method(self):
+        pass
 
 class ConvertImportPath:
     pass

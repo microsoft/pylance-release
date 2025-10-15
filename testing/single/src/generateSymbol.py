@@ -17,6 +17,9 @@
 # It uses `o1-mini` model and perf is up to `vscode`. so what it takes is what it takes.
 
 # put caret on `simpleMethod` and run `generate function` code action
+def simpleMethod():
+    raise NotImplementedError
+
 simpleMethod() 
 
 # put caret on `methodWithArguments` and run `generate function` code action

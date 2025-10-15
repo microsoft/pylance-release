@@ -10,7 +10,7 @@ import unknownModule
 unknownIdentifier
 
 # syntax error
-:""
+x = "ddsssss"
 
 # type error (semantic/checker error)
 # if you hover your mouse on the error, you should be able to execute code action

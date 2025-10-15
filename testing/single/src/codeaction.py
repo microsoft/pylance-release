@@ -4,7 +4,12 @@
 
 # place cursor on `os` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add 'import os'` is listed
-os
+import os
+
+from lib import userModule
+
+
+os # type: ignore
 
 # place cursor on `Path` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add 'from pathlib import Path'` is listed
@@ -16,13 +21,13 @@ userModule
 
 # place cursor on `MyType` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Add 'from lib.userModule import MyType'` is listed
-MyType()
+x = userModule.MyType()
 
 
 # place cursor on `sys` and confirm lightbulb shows up
 # and trigger quick fix and confirm `remove unused import` is listed
 # execute the code action and confirm it works as expected
-import sys
+from pathlib import Path
 
 
 # place cursor on `TypeToMove` and confirm lightbulb shows up
@@ -44,7 +49,7 @@ import outerModule
 # place cursor on `hello` and confirm lightbulb shows up
 # and trigger quick fix and confirm `type ignore` entry is listed
 # execute the code action and confirm it added #type: ignore
-a: int = "hello"
+a: int = "hello" # pyright: ignore[reportAssignmentType]
 
 
 # place cursor on `unknownModule` and confirm lightbulb shows up
@@ -59,6 +64,9 @@ import unknownModule
 # execute the code action and confirm it works as expected
 # confirm it can be executed through "Refactoring..." menu as well
 def function():
+    new_func()
+
+def new_func():
     codeToExtract = 1
     print(codeToExtract)
 
@@ -67,13 +75,14 @@ def function():
 # and trigger quick fix and confirm `extract variable` is listed
 # execute the code action and confirm it works as expected
 # confirm it can be executed through "Refactoring..." menu as well
-print(1 + 2 + 3)
+new_var = 1 + 2 + 3
+print(new_var)
 
 
 # place cursor on `userModule` and confirm lightbulb shows up
 # and trigger quick fix and confirm `Convert to relative path` is listed
 # execute the code action and confirm it works as expected
-from lib.userModule import ConvertImportPath
+from lib.userModule import ConvertImportPath, MyType
 
 
 # place cursor on `mailbox` and confirm lightbulb shows up
@@ -87,3 +96,11 @@ import mailbox
 # and trigger quick fix and confirm `Create Type Stub` entry is listed
 # execute the code action and confirm it works as expected
 import zope.event
+
+def double(x):
+    return x * 2
+
+double = double
+print(double(5))  # Output: 10
+
+x = str.format("Hello, {}!", "World")

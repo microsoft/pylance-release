@@ -23,7 +23,7 @@ __break_for_case_ # its here so that code after this is not recognized as body o
 if ch == "a":
     pass
     # type `:` after `else` and see `else` is moved to right position.
-    else
+else:
 
 # Set "autoFormatStrings" to true and add a { into the string below. Make sure
 # it auto adds the `f` on the front. Repeat for the other strings

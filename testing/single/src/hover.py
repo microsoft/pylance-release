@@ -42,3 +42,11 @@ e = MyNumber(0) + MyNumber(1)
 
 # hover on int to see builtin doc string
 i: int
+
+def func1(pos_only: str, /, *, kw_only: str) -> None:
+    pass
+
+def func2(pos_or_kw: str, *, kw_only: str) -> None:
+    pass
+
+# Hovering over `func1` or `func2` shows incorrect signature with `/` instead of `*`
