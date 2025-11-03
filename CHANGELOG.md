@@ -1,5 +1,15 @@
 # Changelog
 
+## 2025.9.100 (3 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance using outdated pandas stubs [pylance-release#7675](https://github.com/microsoft/pylance-release/issues/7675)
+
+Pylance's copy of Pyright has been updated from 1.1.406 to 1.1.407.
+
+-   See Pyright's release notes for details: [1.1.407](https://github.com/microsoft/pyright/releases/tag/1.1.407)
+
 ## 2025.9.1 (21 October 2025) Release
 
 Notable changes:

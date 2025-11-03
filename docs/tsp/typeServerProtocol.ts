@@ -15,7 +15,6 @@
  * The protocol is designed to be extensible, allowing for future additions of new requests and notifications.
  */
 import {
-    Diagnostic,
     MessageDirection,
     ProtocolNotificationType,
     ProtocolRequestType,
@@ -366,7 +365,196 @@ export namespace TypeServerProtocol {
         typeArgs: Type[] | undefined;
     }
 
+    // Parameter interfaces for requests
+    export interface CombineTypesParams {
+        types: Type[];
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface CreateInstanceTypeParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface FetchTypePropertiesParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags: FetchPropertyFlags;
+    }
+
+    export interface GetDocStringParams {
+        type: Type | undefined;
+        decl: Declaration;
+        boundObjectOrClass: Type | undefined;
+        snapshot: number;
+    }
+
+    export interface GetMatchingOverloadsParams {
+        callNode: Node;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetMetaclassParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetOverloadsParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetPythonSearchPathsParams {
+        fromUri: string;
+        snapshot: number;
+    }
+
+    export interface GetReprParams {
+        type: Type;
+        flags: TypeReprFlags;
+        snapshot: number;
+    }
+
+    export interface GetTypeAliasInfoParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetTypeArgsParams {
+        type: Type;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetTypeOfDeclarationParams {
+        decl: Declaration;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface GetTypeParams {
+        node: Node;
+        snapshot: number;
+        fetchPropertiesFlags?: FetchPropertyFlags;
+    }
+
+    export interface ResolveImportDeclarationParams {
+        decl: Declaration;
+        options: ResolveImportOptions;
+        snapshot: number;
+    }
+
     // Requests and notifications for the type server protocol.
+
+    /**
+     * Request to combine types. This is used to combine multiple types into a single type.
+     * Example:
+     * `if (someCondition) { x = 1 } else { x = "hello" }`. The combined type of `x` would be `int | str`.
+     */
+    export namespace CombineTypesRequest {
+        export const method = 'typeServer/combineTypes' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<CombineTypesParams, Type | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Request to generate an instance type representation for the provided type.
+     * Example:
+     * Given a class type 'type[MyClass]', the resulting instance type is represented as 'MyClass'.
+     */
+    export namespace CreateInstanceTypeRequest {
+        export const method = 'typeServer/createInstanceType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<CreateInstanceTypeParams, Type | undefined, never, void, void>(
+            method
+        );
+    }
+
+    /**
+     * Request to fetch category properties for the given type.
+     */
+    export namespace FetchTypePropertiesRequest {
+        export const method = 'typeServer/fetchTypeProperties' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<FetchTypePropertiesParams, Type, never, void, void>(method);
+    }
+
+    /**
+     * Request to get the type information for a specific builtin type.
+     */
+    export namespace GetBuiltinTypeRequest {
+        export const method = 'typeServer/getBuiltinType' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetBuiltinTypeParams, Type | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Request to get the docstring for a specific declaration.
+     */
+    export namespace GetDocStringRequest {
+        export const method = 'typeServer/getDocString' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetDocStringParams, string | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Request to get the overloads that a call node matches.
+     */
+    export namespace GetMatchingOverloadsRequest {
+        export const method = 'typeServer/getMatchingOverloads' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetMatchingOverloadsParams, Type[] | undefined, never, void, void>(
+            method
+        );
+    }
+
+    /**
+     * Request to get the meta class of a type.
+     */
+    export namespace GetMetaclassRequest {
+        export const method = 'typeServer/getMetaclass' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetMetaclassParams, Type | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Request to get all overloads of a function or method. The returned value doesn't include the implementation signature.
+     */
+    export namespace GetOverloadsRequest {
+        export const method = 'typeServer/getOverloads' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetOverloadsParams, Type[] | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Request to get the search paths that the type server uses for Python modules.
+     */
+    export namespace GetPythonSearchPathsRequest {
+        export const method = 'typeServer/getPythonSearchPaths' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            GetPythonSearchPathsParams,
+            string[] | undefined,
+            never,
+            void,
+            void
+        >(method);
+    }
+
+    /**
+     * Request to get the string representation of a type in a human-readable format. This may or may not be the same as the type's "name".
+     */
+    export namespace GetReprRequest {
+        export const method = 'typeServer/getRepr' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<GetReprParams, string | undefined, never, void, void>(method);
+    }
 
     /**
      * Request from client to get the current snapshot of the type server.
@@ -395,72 +583,14 @@ export namespace TypeServerProtocol {
     }
 
     /**
-     * Request to get diagnostics for a specific file.
+     * Request to find symbols from a node.
      */
-    export namespace GetDiagnosticsRequest {
-        export const method = 'typeServer/getDiagnostics' as const;
+    export namespace GetSymbolsForNodeRequest {
+        export const method = 'typeServer/getSymbolsForNode' as const;
         export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { uri: string; snapshot: number },
-            Diagnostic[] | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the version of diagnostics for a specific file.
-     */
-    export namespace GetDiagnosticsVersionRequest {
-        export const method = 'typeServer/getDiagnosticsVersion' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { uri: string; snapshot: number },
-            number | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the type information for a specific node.
-     */
-    export namespace GetTypeRequest {
-        export const method = 'typeServer/getType' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { node: Node; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the type information for a specific builtin type.
-     */
-    export namespace GetBuiltinTypeRequest {
-        export const method = 'typeServer/getBuiltinType' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<GetBuiltinTypeParams, Type | undefined, never, void, void>(method);
-    }
-
-    /**
-     * Request to get the collection of subtypes that make up a union type or the types that makes up a generic type.
-     */
-    export namespace GetTypeArgsRequest {
-        export const method = 'typeServer/getTypeArgs' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type[] | undefined,
-            never,
-            void,
-            void
-        >(method);
+        export const type = new ProtocolRequestType<GetSymbolsForNodeParams, Symbol[] | undefined, never, void, void>(
+            method
+        );
     }
 
     /**
@@ -475,25 +605,16 @@ export namespace TypeServerProtocol {
     }
 
     /**
-     * Request to find symbols from a node.
+     * Get information about a type alias.
+     * Example: `MyType = List[int]` is a type alias. In this case the List[int] is the type passed to this function but it has the Alias TypeFlag set.
+     * The type alias info will return the name 'MyType' and the args [int]
      */
-    export namespace GetSymbolsForNodeRequest {
-        export const method = 'typeServer/getSymbolsForNode' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<GetSymbolsForNodeParams, Symbol[] | undefined, never, void, void>(
-            method
-        );
-    }
-
-    /**
-     * Request to get all overloads of a function or method. The returned value doesn't include the implementation signature.
-     */
-    export namespace GetOverloadsRequest {
-        export const method = 'typeServer/getOverloads' as const;
+    export namespace GetTypeAliasInfoRequest {
+        export const method = 'typeServer/getTypeAliasInfo' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type[] | undefined,
+            GetTypeAliasInfoParams,
+            TypeAliasInfo | undefined,
             never,
             void,
             void
@@ -501,33 +622,12 @@ export namespace TypeServerProtocol {
     }
 
     /**
-     * Request to get the overloads that a call node matches.
+     * Request to get the collection of subtypes that make up a union type or the types that makes up a generic type.
      */
-    export namespace GetMatchingOverloadsRequest {
-        export const method = 'typeServer/getMatchingOverloads' as const;
+    export namespace GetTypeArgsRequest {
+        export const method = 'typeServer/getTypeArgs' as const;
         export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { callNode: Node; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type[] | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the meta class of a type.
-     */
-    export namespace GetMetaclassRequest {
-        export const method = 'typeServer/getMetaclass' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type | undefined,
-            never,
-            void,
-            void
-        >(method);
+        export const type = new ProtocolRequestType<GetTypeArgsParams, Type[] | undefined, never, void, void>(method);
     }
 
     /**
@@ -536,43 +636,18 @@ export namespace TypeServerProtocol {
     export namespace GetTypeOfDeclarationRequest {
         export const method = 'typeServer/getTypeOfDeclaration' as const;
         export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { decl: Declaration; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type | undefined,
-            never,
-            void,
-            void
-        >(method);
+        export const type = new ProtocolRequestType<GetTypeOfDeclarationParams, Type | undefined, never, void, void>(
+            method
+        );
     }
 
     /**
-     * Request to get the string representation of a type in a human-readable format. This may or may not be the same as the type's "name".
+     * Request to get the type information for a specific node.
      */
-    export namespace GetReprRequest {
-        export const method = 'typeServer/getRepr' as const;
+    export namespace GetTypeRequest {
+        export const method = 'typeServer/getType' as const;
         export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; flags: TypeReprFlags; snapshot: number },
-            string | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the docstring for a specific declaration.
-     */
-    export namespace GetDocStringRequest {
-        export const method = 'typeServer/getDocString' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type | undefined; decl: Declaration; boundObjectOrClass: Type | undefined; snapshot: number },
-            string | undefined,
-            never,
-            void,
-            void
-        >(method);
+        export const type = new ProtocolRequestType<GetTypeParams, Type | undefined, never, void, void>(method);
     }
 
     /**
@@ -583,7 +658,7 @@ export namespace TypeServerProtocol {
         export const method = 'typeServer/resolveImportDeclaration' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<
-            { decl: Declaration; options: ResolveImportOptions; snapshot: number },
+            ResolveImportDeclarationParams,
             Declaration | undefined,
             never,
             void,
@@ -601,104 +676,11 @@ export namespace TypeServerProtocol {
     }
 
     /**
-     * Get information about a type alias.
-     * Example: `MyType = List[int]` is a type alias. In this case the List[int] is the type passed to this function but it has the Alias TypeFlag set.
-     * The type alias info will return the name 'MyType' and the args [int]
-     */
-    export namespace GetTypeAliasInfoRequest {
-        export const method = 'typeServer/getTypeAliasInfo' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            TypeAliasInfo | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to combine types. This is used to combine multiple types into a single type.
-     * Example:
-     * `if (someCondition) { x = 1 } else { x = "hello" }`. The combined type of `x` would be `int | str`.
-     */
-    export namespace CombineTypesRequest {
-        export const method = 'typeServer/combineTypes' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { types: Type[]; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to generate an instance type representation for the provided type.
-     * Example:
-     * Given a class type 'type[MyClass]', the resulting instance type is represented as 'MyClass'.
-     */
-    export namespace CreateInstanceTypeRequest {
-        export const method = 'typeServer/createInstanceType' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags?: FetchPropertyFlags },
-            Type | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to get the search paths that the type server uses for Python modules.
-     */
-    export namespace GetPythonSearchPathsRequest {
-        export const method = 'typeServer/getPythonSearchPaths' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { fromUri: string; snapshot: number },
-            string[] | undefined,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
-     * Request to fetch category properties for the given type.
-     */
-    export namespace FetchTypePropertiesRequest {
-        export const method = 'typeServer/fetchTypeProperties' as const;
-        export const messageDirection = MessageDirection.clientToServer;
-        export const type = new ProtocolRequestType<
-            { type: Type; snapshot: number; fetchPropertiesFlags: FetchPropertyFlags },
-            Type,
-            never,
-            void,
-            void
-        >(method);
-    }
-
-    /**
      * Notification sent by the server to indicate any outstanding snapshots are invalid.
      */
     export namespace SnapshotChangedNotification {
         export const method = 'typeServer/snapshotChanged' as const;
         export const messageDirection = MessageDirection.serverToClient;
         export const type = new ProtocolNotificationType<{ old: number; new: number }, void>(method);
-    }
-
-    /**
-     * Notification sent by the server to indicate that diagnostics have changed and the client
-     * should re-request diagnostics for the file.
-     */
-    export namespace DiagnosticsChangedNotification {
-        export const method = 'typeServer/diagnosticsChanged' as const;
-        export const messageDirection = MessageDirection.serverToClient;
-        export const type = new ProtocolNotificationType<{ uri: string; snapshot: number; version: number }, void>(
-            method
-        );
     }
 }
