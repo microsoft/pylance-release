@@ -94,7 +94,7 @@ Alternatively, you can edit your `settings.json` file directly:
 
 ### Q: Why aren't auto-import completions working for some packages?
 
-**A:** By default, Pylance indexes only the top-level modules of packages to optimize performance. If auto-import completions aren't suggesting symbols from deeper submodules, you may need to adjust the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting to increase the indexing depth for those packages.
+**A:** By default, Pylance indexes only the top-level modules of packages to optimize performance. If auto-import completions aren't suggesting symbols from deeper submodules, you may need to adjust the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepapt install screenfetchths.md) setting to increase the indexing depth for those packages.
 
 ### Q: Will enabling auto-import completions affect performance?
 
