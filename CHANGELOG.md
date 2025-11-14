@@ -1,5 +1,14 @@
 # Changelog
 
+## 2025.9.101 (13 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Make Pylance efficient for monorepos (multi-root workspaces) [pylance-release#7666](https://github.com/microsoft/pylance-release/issues/7666)
+-   Bug fix: Pylance crashes in multi-root workspace [pylance-release#7651](https://github.com/microsoft/pylance-release/issues/7651)
+-   Bug fix: Keyword-only separator (\*) incorrectly rendered as positional-only separator (/) in function hover tooltip [pylance-release#7571](https://github.com/microsoft/pylance-release/issues/7571)
+-   Bug fix: How to explicitly specify that Pylance only scans specific a few directories in a large multi-root workspace [pylance-release#5794](https://github.com/microsoft/pylance-release/issues/5794)
+
 ## 2025.9.100 (3 November 2025) PreRelease
 
 Notable changes:
