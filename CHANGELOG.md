@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.9.102 (17 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Can't see my types [pylance-release#7714](https://github.com/microsoft/pylance-release/issues/7714)
+
 ## 2025.9.101 (13 November 2025) PreRelease
 
 Notable changes:
