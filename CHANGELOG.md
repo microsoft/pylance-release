@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.9.103 (18 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Resolved issue where the precomputed Copilot context provider was not functioning correctly.
+
 ## 2025.9.102 (17 November 2025) PreRelease
 
 Notable changes:
