@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.9.104 (19 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Crash with inherited TypedDict [pylance-release#7719](https://github.com/microsoft/pylance-release/issues/7719)
+
 ## 2025.9.103 (18 November 2025) PreRelease
 
 Notable changes:
