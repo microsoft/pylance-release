@@ -174,6 +174,12 @@ If you want to change the indexing depth for all packages, you can set the `name
 ],
 ```
 
+- Pylance treats the entry with "name": "" as a catch-all default that applies only to packages without an exact match in the list.
+- For each package being indexed:
+  - If there’s a config object whose "name" exactly matches that package, Pylance uses that depth (and includeAllSymbols if specified).
+  - Otherwise, if there’s an entry with "name": "", Pylance falls back to its depth (and includeAllSymbols).
+- Entries are not merged or order-dependent—exact matches always override the empty-string default.
+
 - **Explanation**: This setting adjusts the default indexing depth for all packages to 3. Use this cautiously, as it may significantly impact performance.
 
 ## Default Values for Each Language Server Mode
