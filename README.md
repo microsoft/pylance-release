@@ -325,8 +325,6 @@ Pylance provides users with the ability to customize their Python language suppo
     - Accepted values:
         - `source.unusedImports`
         - `source.convertImportFormat`
-        - `source.convertImportStar`
-        - `source.addTypeAnnotation`
 
 - `python.analysis.enablePytestSupport`
     - Enable pytest goto def and inlay hint support for fixtures. 
@@ -512,9 +510,6 @@ Source Code Actions
 
 - `source.convertImportFormat`
     - Convert import format according to `python.analysis.importFormat`.
-
-- `source.convertImportStar`
-    - Convert all wildcard imports (`from module import *`) to explicit imports listing all imported symbols.
 
 - `source.fixall.pylance`
     - Apply the commands listed in the `python.analysis.fixall` setting
