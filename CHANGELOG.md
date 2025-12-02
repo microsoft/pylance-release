@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.10.3 (1 December 2025) Release
+
+Notable changes:
+
+-   This release builds on version 2025.10.1 with additional bug fixes that address the issues listed in 2025.10.2 (which was a rollback release).
+
 ## 2025.10.2 (26 November 2025) Release
 
 This is a rollback to 2025.9.1. Changes from 2025.9.100 to 2025.10.1 have been reverted.
@@ -10,6 +16,49 @@ Notable changes:
 -   Bug fix: Crash when importing inherited TypedDict [pylance-release#7736](https://github.com/microsoft/pylance-release/issues/7736)
 -   Bug fix: [vscode-extension] 2025.10.1 failed upon starting [pylance-release#7735](https://github.com/microsoft/pylance-release/issues/7735)
 -   Bug fix: Error: command 'pylance.registerNotebookStartupCommands' already exists [pylance-release#7734](https://github.com/microsoft/pylance-release/issues/7734)
+
+## 2025.10.1 (24 November 2025) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2025.9.104](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20259104-19-november-2025-prerelease) prerelease build.
+
+## 2025.9.104 (19 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Crash with inherited TypedDict [pylance-release#7719](https://github.com/microsoft/pylance-release/issues/7719)
+
+## 2025.9.103 (18 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Resolved issue where the precomputed Copilot context provider was not functioning correctly.
+
+## 2025.9.102 (17 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Can't see my types [pylance-release#7714](https://github.com/microsoft/pylance-release/issues/7714)
+
+## 2025.9.101 (13 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Make Pylance efficient for monorepos (multi-root workspaces) [pylance-release#7666](https://github.com/microsoft/pylance-release/issues/7666)
+-   Bug fix: Pylance crashes in multi-root workspace [pylance-release#7651](https://github.com/microsoft/pylance-release/issues/7651)
+-   Bug fix: Keyword-only separator (\*) incorrectly rendered as positional-only separator (/) in function hover tooltip [pylance-release#7571](https://github.com/microsoft/pylance-release/issues/7571)
+-   Bug fix: How to explicitly specify that Pylance only scans specific a few directories in a large multi-root workspace [pylance-release#5794](https://github.com/microsoft/pylance-release/issues/5794)
+
+## 2025.9.100 (3 November 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance using outdated pandas stubs [pylance-release#7675](https://github.com/microsoft/pylance-release/issues/7675)
+
+Pylance's copy of Pyright has been updated from 1.1.406 to 1.1.407.
+
+-   See Pyright's release notes for details: [1.1.407](https://github.com/microsoft/pyright/releases/tag/1.1.407)
 
 ## 2025.9.1 (21 October 2025) Release
 
