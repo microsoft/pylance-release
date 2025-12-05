@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025.10.4 (4 December 2025) Release
+
+Notable changes:
+
+-   Bug fix: Refactoring commands not found [pylance-release#7749](https://github.com/microsoft/pylance-release/issues/7749)
+
 ## 2025.10.3 (1 December 2025) Release
 
 Notable changes:
