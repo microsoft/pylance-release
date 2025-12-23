@@ -32,7 +32,6 @@ Pylance provides some awesome features for Python 3, including:
 * Code navigation
 * Type checking mode
 * Native multi-root workspace support
-* IntelliCode compatibility
 * Jupyter Notebooks compatibility
 * Semantic highlighting
 

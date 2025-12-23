@@ -1,9 +1,22 @@
 # Changelog
 
+## 2025.10.100 (11 December 2025) PreRelease
+
+Notable changes:
+
+-   Bug fix: Docstring generation can't be turned off [pylance-release#7767](https://github.com/microsoft/pylance-release/issues/7767)
+-   Bug fix: Disable tagged hints no longer works [pylance-release#7765](https://github.com/microsoft/pylance-release/issues/7765)
+-   Enhancement: Render local figures in DocStrings [pylance-release#7755](https://github.com/microsoft/pylance-release/issues/7755)
+-   Bug fix: Implement abstract class with Copilot is no longer working [pylance-release#7689](https://github.com/microsoft/pylance-release/issues/7689)
+-   Enhancement: offer to add `**/.venv` to `exclude` if user has explicit `exclude` but `.venv` is not part of it and pylance think it is part of user workspace [pylance-release#4777](https://github.com/microsoft/pylance-release/issues/4777)
+-   Bug fix: Pylance shows non-public exports in completion suggestions [pylance-release#4059](https://github.com/microsoft/pylance-release/issues/4059)
+
 ## 2025.10.4 (4 December 2025) Release
 
 Notable changes:
 
+-   Bug fix: **new** Override in Parent Class Prevents "Go to Definition" on Direct Call, but Works on Assigned Variable [pylance-release#7759](https://github.com/microsoft/pylance-release/issues/7759)
+-   Bug fix: Hover result doesn't match inline hint result for pytest fixture decorated functions [pylance-release#7758](https://github.com/microsoft/pylance-release/issues/7758)
 -   Bug fix: Refactoring commands not found [pylance-release#7749](https://github.com/microsoft/pylance-release/issues/7749)
 
 ## 2025.10.3 (1 December 2025) Release
