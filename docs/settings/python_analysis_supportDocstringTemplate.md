@@ -1,5 +1,3 @@
-
-
 # Understanding `python.analysis.supportDocstringTemplate` in Pylance
 
 [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a powerful language server for Python in Visual Studio Code, offering advanced features like IntelliSense, type checking, auto-imports, and more. One of the convenient features available is automatic docstring template generation through the `python.analysis.supportDocstringTemplate` setting.
