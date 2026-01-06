@@ -132,7 +132,7 @@ To enable docstring template generation:
 
 ## Choosing Your Docstring Style
 
-The docstring style is determined by your VS Code settings or workspace configuration. You can configure the preferred style using the autoDocstring extension settings, or Pylance will use sensible defaults based on your project structure.
+Pylance automatically detects and uses the appropriate docstring style based on your project's existing patterns. If no existing pattern is detected, it defaults to Google style.
 
 **Note:** While Pylance generates the template structure, you should customize the descriptions to accurately document your code's behavior.
 
