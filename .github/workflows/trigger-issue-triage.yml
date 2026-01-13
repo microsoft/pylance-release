@@ -1,0 +1,29 @@
+# This workflow file should be added to the microsoft/pylance-release repository
+# It triggers the issue triage workflow in microsoft/pyrx when a new issue is created
+
+name: Trigger Issue Triage
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  trigger-triage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: pyrx
+
+      - name: Trigger pyrx issue triage workflow
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: microsoft/pyrx
+          event-type: pylance-issue-created
+          client-payload: '{"issue_number": ${{ github.event.issue.number }}}'
