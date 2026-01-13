@@ -7,6 +7,9 @@ on:
   issues:
     types: [opened]
 
+# Limit GITHUB_TOKEN permissions - we use a GitHub App token for cross-repo dispatch
+permissions: {}
+
 jobs:
   trigger-triage:
     runs-on: ubuntu-latest
