@@ -1,5 +1,36 @@
 # Changelog
 
+## 2025.12.100 (13 January 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance’s reStructuredText docstring rendering does not handle simple reference names like `text_` [pylance-release#7806](https://github.com/microsoft/pylance-release/issues/7806)
+-   Bug fix: Pylance crashes 5 times in a row and didn't restart again [pylance-release#7785](https://github.com/microsoft/pylance-release/issues/7785)
+-   Bug fix: externally invisible symbols showing up in completion [pylance-release#7781](https://github.com/microsoft/pylance-release/issues/7781)
+-   Bug fix: go to def on named parameter doesnt work [pylance-release#7761](https://github.com/microsoft/pylance-release/issues/7761)
+-   Bug fix: Magic Python textmate changes broke constants [pylance-release#7751](https://github.com/microsoft/pylance-release/issues/7751)
+-   Enhancement: Is it possible to add a feature that allows Python DocStrings to be displayed in a target language (for example, in Chinese), or to utilize Copliot to automatically generate Chinese-language docstrings? [pylance-release#7679](https://github.com/microsoft/pylance-release/issues/7679)
+-   Bug fix: Bug with dunder methods [pylance-release#7660](https://github.com/microsoft/pylance-release/issues/7660)
+-   Bug fix: Editable packages installed with uv are not resolved [pylance-release#7650](https://github.com/microsoft/pylance-release/issues/7650)
+-   Bug fix: enablePytestSupport for files other than test\_\*.py [pylance-release#7603](https://github.com/microsoft/pylance-release/issues/7603)
+-   Bug fix: Pylance doesn't color classes' generic types for 3.12 syntax [pylance-release#7593](https://github.com/microsoft/pylance-release/issues/7593)
+-   Bug fix: Extract variable/method ignores multi-selection [pylance-release#7611](https://github.com/microsoft/pylance-release/issues/7611)
+-   Bug fix: Autocompletion with NoneType instead of None when NoneType is imported, feature of bug? [pylance-release#7452](https://github.com/microsoft/pylance-release/issues/7452)
+-   Bug fix: convert import format code action not working with auto "src" detection [pylance-release#7419](https://github.com/microsoft/pylance-release/issues/7419)
+-   Bug fix: Pylance fails to suggest dunder methods like **getitem** [pylance-release#7408](https://github.com/microsoft/pylance-release/issues/7408)
+-   Bug fix: Incorrect Hover Tooltip Precedence for String Literals (TypedDict Key vs. Module Name) [pylance-release#7253](https://github.com/microsoft/pylance-release/issues/7253)
+-   Bug fix: Automatically figure out index depth for namespace package [pylance-release#7248](https://github.com/microsoft/pylance-release/issues/7248)
+-   Bug fix: Feature Request - full list of available code actions [pylance-release#7163](https://github.com/microsoft/pylance-release/issues/7163)
+-   Bug fix: Pylance "add import" sometimes suggests imports from local files that import the object, instead of just the object's definition [pylance-release#7140](https://github.com/microsoft/pylance-release/issues/7140)
+-   Bug fix: How to change my tmp folder? [pylance-release#7078](https://github.com/microsoft/pylance-release/issues/7078)
+-   Bug fix: "Implement all inherited abstract classes" doesn't handle generic base classes properly [pylance-release#5752](https://github.com/microsoft/pylance-release/issues/5752)
+-   Enhancement: Proposal: Use Nearest Configuration File [pylance-release#5564](https://github.com/microsoft/pylance-release/issues/5564)
+-   Bug fix: Pydantic dataclass objects not correctly recognized anymore if dataclass decorator uses () [pylance-release#7801](https://github.com/microsoft/pylance-release/issues/7801)
+
+Pylance's copy of Pyright has been updated from 1.1.407 to 1.1.408.
+
+-   See Pyright's release notes for details: [1.1.408](https://github.com/microsoft/pyright/releases/tag/1.1.408)
+
 ## 2025.10.100 (11 December 2025) PreRelease
 
 Notable changes:
