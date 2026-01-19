@@ -2,7 +2,8 @@
 
 This document provides a comprehensive overview of the most requested features and bugs in the Pylance extension, based on community feedback from GitHub Discussions and Issues, sorted by number of reactions (👍).
 
-Last Updated: January 19, 2026
+**Last Updated:** January 19, 2026  
+**Maintenance:** This document is maintained by the community and should be updated quarterly or when significant changes occur in top-requested items.
 
 ## Top Features and Enhancements
 
@@ -217,10 +218,10 @@ Last Updated: January 19, 2026
 
 ## Summary Statistics
 
-- **Total Issues Analyzed:** 40+
-- **Closed/Completed:** ~90%
-- **Still Open:** ~10%
-- **Average Reactions (Top 20):** 50+ reactions
+- **Total Issues Analyzed:** 43
+- **Closed/Completed:** 38 (88%)
+- **Still Open:** 5 (12%)
+- **Average Reactions (Top 20):** 52 reactions
 - **Peak Reactions:** 367 reactions (#4972 - Class Hierarchy)
 
 ## Key Themes

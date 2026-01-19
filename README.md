@@ -9,7 +9,7 @@ Pylance is the default language support for [Python in Visual Studio Code](https
 The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
 
 Community Feedback
-==================
+------------------
 Interested in what features and improvements the community is requesting? Check out our [Most Requested Features and Bugs](MOST_REQUESTED_FEATURES_AND_BUGS.md) document to see what's being prioritized based on community feedback.
 
 Quick Start
