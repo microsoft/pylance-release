@@ -1,5 +1,20 @@
 # Changelog
 
+## 2025.12.101 (22 January 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Stdlib docs don't support the 'autoTranslateDocStrings' [pylance-release#7831](https://github.com/microsoft/pylance-release/issues/7831)
+-   Bug fix: Pylance completion proposes to implement Protocol, but only methods are being added and not attributes [pylance-release#7528](https://github.com/microsoft/pylance-release/issues/7528)
+-   Bug fix: Pylance does not detect **init** calls on cls argument in class methods [pylance-release#7447](https://github.com/microsoft/pylance-release/issues/7447)
+-   Bug fix: High CPU on starting pylance from get_pytest_options.py [pylance-release#7134](https://github.com/microsoft/pylance-release/issues/7134)
+-   Bug fix: dynamic auto import [pylance-release#7106](https://github.com/microsoft/pylance-release/issues/7106)
+-   Enhancement: Please support autocompletion on String Enums without accessing value attribute [pylance-release#7072](https://github.com/microsoft/pylance-release/issues/7072)
+-   Enhancement: Provide a new feature that let users to filter out certain types from our system so it doesn't show up in any UI [pylance-release#7068](https://github.com/microsoft/pylance-release/issues/7068)
+-   Bug fix: Completion unavailable for properties [pylance-release#6965](https://github.com/microsoft/pylance-release/issues/6965)
+-   Bug fix: Color Python Properties [pylance-release#6958](https://github.com/microsoft/pylance-release/issues/6958)
+-   Bug fix: Double-click to insert variable-length tuple inserts a 1-length tuple if `typing.Tuple` is imported [pylance-release#6932](https://github.com/microsoft/pylance-release/issues/6932)
+
 ## 2025.12.100 (13 January 2026) PreRelease
 
 Notable changes:
