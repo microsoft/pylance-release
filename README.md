@@ -209,6 +209,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
+    - If `depth` is set to `0`, the entry is treated as an *exclude prefix* and is removed from the index. Exclusions are module-boundary aware: `pydantic.v1` excludes `pydantic.v1` and `pydantic.v1.*`, but does not exclude `pydantic.v10`.
     - Default value:
         ```jsonc
         [
@@ -240,6 +241,13 @@ Pylance provides users with the ability to customize their Python language suppo
         [
             { "name": "sklearn", "depth": 2, "includeAllSymbols": true },
             { "name": "matplotlib", "depth": 3, "includeAllSymbols": false }
+        ]
+        ```
+    - Exclusion example:
+        ```jsonc
+        [
+            { "name": "ctypes", "depth": 0 },
+            { "name": "pydantic.v1", "depth": 0 }
         ]
         ```
     - Performance Consideration:
