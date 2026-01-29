@@ -1,5 +1,16 @@
 # Changelog
 
+## 2025.12.102 (28 January 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: "Cannot find a symbol to move" when moving symbol from/to filename with leading digit [pylance-release#5638](https://github.com/microsoft/pylance-release/issues/5638)
+-   Enhancement: use different default package index depth when requirement/pyproject.toml exists. [pylance-release#6831](https://github.com/microsoft/pylance-release/issues/6831)
+-   Bug fix: add code action to update existing import statements. [pylance-release#6818](https://github.com/microsoft/pylance-release/issues/6818)
+-   Bug fix: Unable to show docstrings and source using aliased import and stub file [pylance-release#6627](https://github.com/microsoft/pylance-release/issues/6627)
+-   Bug fix: `Add XXX to extraPaths` code action adds path to settings.json even a config file is present [pylance-release#6327](https://github.com/microsoft/pylance-release/issues/6327)
+-   Enhancement: Special-case functools.wraps decorator support [pylance-release#2716](https://github.com/microsoft/pylance-release/discussions/2716)
+
 ## 2025.12.101 (22 January 2026) PreRelease
 
 Notable changes:
