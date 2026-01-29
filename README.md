@@ -440,17 +440,29 @@ Pylance provides users with the ability to customize their Python language suppo
     }
     ```
 
-- `python.analysis.supportDocstringTemplate`
-    - Enable/disable support for reStructuredText docstring generation.
+- [`python.analysis.supportDocstringTemplate`](docs/settings/python_analysis_supportDocstringTemplate.md)
+    - Enable/disable automatic docstring template generation. When enabled, typing `"""` at a docstring position will automatically generate a template with parameter descriptions, return types, and other relevant sections. Supports multiple docstring styles including Google, NumPy, and Sphinx formats.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
-        - `true`
-        - `false` (default)
+        - `true`: Enables automatic docstring template generation
+        - `false` (default): Disables the feature
     - Example:
         ```python
-        def foo(arg):
-            """|<Trigger completion or code action here"""
+        def calculate_total(price, quantity, discount=0):
+            """  # Type """ here to generate a template
+            # Auto-generates:
+            # """[Summary]
+            #
+            # Args:
+            #     price: [description]
+            #     quantity: [description]
+            #     discount: [description] (default: 0)
+            #
+            # Returns:
+            #     [description]
+            # """
         ```
+    - Alternative: Use code action (Quick Fix) by pressing `Ctrl+.` after typing `"""` to manually trigger template generation
 
 - `python.analysis.displayEnglishDiagnostics`
     - Display diagnostics in English regardless of VS Code's display language.
