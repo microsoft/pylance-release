@@ -1,5 +1,24 @@
 # Changelog
 
+## 2025.12.103 (6 February 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: add back rename shadown stdlib code action [pylance-release#7850](https://github.com/microsoft/pylance-release/issues/7850)
+-   Bug fix: add extra path doesn't work with execution environment [pylance-release#7847](https://github.com/microsoft/pylance-release/issues/7847)
+-   Bug fix: Custom sorting of import auto-completes to allow `_private` sub-modules and members to be sorted at the end of the list [pylance-release#7401](https://github.com/microsoft/pylance-release/issues/7401)
+-   Bug fix: Docstring tooltips over parameters not displaying for packages which use Python stubs [pylance-release#6777](https://github.com/microsoft/pylance-release/issues/6777)
+-   Bug fix: Pylance autocompletes decorator of the function instead of function itself in inheritance [pylance-release#6450](https://github.com/microsoft/pylance-release/issues/6450)
+-   Bug fix: "Move symbol to..." refactor does not honor Import Format setting. [pylance-release#6440](https://github.com/microsoft/pylance-release/issues/6440)
+-   Enhancement: Offer `self.` completions for methods and attributes [pylance-release#5773](https://github.com/microsoft/pylance-release/issues/5773)
+-   Bug fix: Wrong auto-completion for `TypedDict` keys when assigning to a variable annotated as `Literal` [pylance-release#5652](https://github.com/microsoft/pylance-release/issues/5652)
+-   Bug fix: Rename function must also handle first argument of Annotated if it is string [pylance-release#5600](https://github.com/microsoft/pylance-release/issues/5600)
+-   Bug fix: Auto import grouping doesnt add blank line between groups in specific order [pylance-release#5554](https://github.com/microsoft/pylance-release/issues/5554)
+-   Enhancement: When "Move symbol" code actions are disabled, tell user why the symbol cannot be moved [pylance-release#5551](https://github.com/microsoft/pylance-release/issues/5551)
+-   Bug fix: Overriding `__getattribute__` messes up utility of "Go to Definition" [pylance-release#5421](https://github.com/microsoft/pylance-release/issues/5421)
+-   Bug fix: Descriptor type shown in autocomplete popover is incorrect [pylance-release#5299](https://github.com/microsoft/pylance-release/issues/5299)
+-   Bug fix: Semantic highlighing doesn't differentiate parameter passing by its name from usage inside the function [pylance-release#2913](https://github.com/microsoft/pylance-release/issues/2913)
+
 ## 2025.12.102 (28 January 2026) PreRelease
 
 Notable changes:

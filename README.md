@@ -576,8 +576,10 @@ Refactorings
 - Move symbols to file...
 - Move symbols to new file...
 - Convert to explicit imports (for `from module import *`)
+- Convert to module import (for `from x import y`)
 - Convert import to relative path / absolute path (and Convert all... variants)
 - Add type annotation (at cursor)
+- Rename module (shadows stdlib module)
 - Implement all abstract classes
 - Add pytest fixture type annotation (and Add all... variants)
 
@@ -602,8 +604,14 @@ Source (whole-file) code actions
 - `source.convertImportStar`
     - Convert all wildcard imports (`from module import *`) to explicit imports listing all imported symbols.
 
+- `source.convertImportToModule`
+    - Convert `from x import y` style imports into module imports.
+
 - `source.addTypeAnnotation`
     - Add type annotations throughout the file where they can be inferred.
+
+- `source.renameShadowedStdlibImports`
+    - Rename imported user modules that shadow stdlib module names.
 
 - `source.fixAll.pylance`
     - Apply the commands listed in the `python.analysis.fixAll` setting
