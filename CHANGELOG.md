@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025.12.104 (10 February 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Hover isn't working for pytest fixtures [pylance-release#7861](https://github.com/microsoft/pylance-release/issues/7861)
+-   Bug fix: Go to declaration is not working for == [pylance-release#7860](https://github.com/microsoft/pylance-release/issues/7860)
+
 ## 2025.12.103 (6 February 2026) PreRelease
 
 Notable changes:
