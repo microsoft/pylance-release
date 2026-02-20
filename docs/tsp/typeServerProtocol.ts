@@ -65,7 +65,8 @@ export namespace TypeServerProtocol {
         v0_1_0 = '0.1.0', // Initial protocol version
         v0_2_0 = '0.2.0', // Added new request types and fields
         v0_3_0 = '0.3.0', // Switch to more complex types
-        current = '0.4.0', // Switch to Type union and using stubs
+        v0_4_0 = '0.4.0', // Switch to Type union and using stubs
+        current = '0.5.0', // Added DeclarationFlags and InstanceMember flag to RegularDeclaration
     }
     // Flags that describe the characteristics of a type.
     // These flags can be combined using bitwise operations.
@@ -428,6 +429,30 @@ export namespace TypeServerProtocol {
         Synthesized, // Declaration created by type checker (no source node)
     }
 
+    // Flags that provide extra information about a declaration.
+    // These flags can be combined using bitwise operations.
+    export const enum DeclarationFlags {
+        None = 0,
+        ClassMember = 1 << 0, // Indicates if the declaration is a class-level variable declared in the class body (not assigned via self).
+        Constant = 1 << 1, // Indicates if the declaration is a constant (a variable that cannot be changed).
+        Final = 1 << 2, // Indicates if the declaration is a final variable (cannot be reassigned).
+        IsDefinedBySlots = 1 << 3, // Indicates if the declaration is defined by __slots__.
+        UsesLocalName = 1 << 4, // Indicates if the import declaration uses 'as' with a different name.
+        UnresolvedImport = 1 << 5, // Indicates if the import declaration is unresolved (the module or symbol could not be found).
+        SimpleParam = 1 << 6, // Indicates if the declaration is a simple parameter (e.g., a function parameter).
+        ArgsListParam = 1 << 7, // Indicates if a declaration is an argument list (e.g., `*args`).
+        KwargsDictParam = 1 << 8, // Indicates if the declaration is a keyword argument dictionary (e.g., `**kwargs`).
+        PositionalParam = 1 << 9, // Indicates if the declaration is a positional parameter.
+        StandardParam = 1 << 10, // Indicates if the declaration is a standard parameter.
+        KeywordParam = 1 << 11, // Indicates if the declaration is a keyword parameter.
+        ExpandedArgsParam = 1 << 12, // Indicates if the declaration is an expanded *args parameter.
+        ReturnType = 1 << 13, // Indicates if the declaration is a return type (e.g., the return value of a function).
+        EnumMember = 1 << 14, // Indicates if the declaration is a member of an enum type.
+        TypeDeclared = 1 << 15, // Indicates if the declaration has an explicitly declared type.
+        SpecializedType = 1 << 16, // Indicates if the declaration is a specialization of a generic type.
+        InstanceMember = 1 << 17, // Indicates if the declaration is an instance variable assigned via self in a method (e.g., self.member = value).
+    }
+
     /**
      * Base interface for all declaration types.
      * Provides the discriminator field for the Declaration union.
@@ -459,6 +484,7 @@ export namespace TypeServerProtocol {
      *
      * Fields:
      * - category: Type of declaration (Variable, Function, Class, etc.)
+     * - flags: Additional characteristics of the declaration (e.g., ClassMember, InstanceMember, Final)
      * - node: AST node pointing to the declaration location
      * - name: Name of the declared symbol (undefined for anonymous/implicit declarations)
      *
@@ -468,7 +494,10 @@ export namespace TypeServerProtocol {
      *     return str(x)
      *
      * class MyClass:  # Class declaration
-     *     x: int      # Variable declaration
+     *     x: int      # Variable declaration with ClassMember flag
+     *
+     *     def __init__(self):
+     *         self.y = 0  # Variable declaration with InstanceMember flag
      *
      * T = TypeVar('T')  # TypeParam declaration
      * ```
@@ -478,6 +507,10 @@ export namespace TypeServerProtocol {
         // Determines how the declaration should be interpreted.
         // Example: DeclarationCategory.Function for `def foo():`.
         category: DeclarationCategory;
+
+        // Bitfield of DeclarationFlags providing extra information about the declaration.
+        // Example: DeclarationFlags.ClassMember for a class-level variable, DeclarationFlags.InstanceMember for self.member assignments.
+        flags?: DeclarationFlags;
 
         // AST node pointing to the declaration location in source code.
         // Contains file URI and range information.

@@ -1,6 +1,6 @@
 {
     "metaData": {
-        "version": "0.2.0"
+        "version": "0.3.0"
     },
     "requests": [
         {
@@ -2008,7 +2008,7 @@
                 {
                     "name": "ClassMember",
                     "value": 1,
-                    "documentation": "Indicates if the declaration is a method (a function defined within a class)."
+                    "documentation": "Indicates if the declaration is a class-level variable declared in the class body (not assigned via self)."
                 },
                 {
                     "name": "Constant",
@@ -2089,6 +2089,11 @@
                     "name": "SpecializedType",
                     "value": 65536,
                     "documentation": "Indicates if the declaration is a specialization of a generic type."
+                },
+                {
+                    "name": "InstanceMember",
+                    "value": 131072,
+                    "documentation": "Indicates if the declaration is an instance variable assigned via self in a method (e.g., self.member = value)."
                 }
             ],
             "documentation": "Flags that describe extra information about a declaration."

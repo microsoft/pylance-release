@@ -7,7 +7,11 @@ from typing import Generic, TypeVar
 T = TypeVar("T", int, float)
 
 class Box(Generic[T]):
+    # class-level variable - confirm it shows `classvar` modifier
+    default_label: str = "box"
+
     def __init__(self, v: T):
+        # instance variable assigned via self - confirm it shows `membervar` modifier
         self._value = v
 
     def __add__(self, v: "Box[T]") -> "Box[T]":
