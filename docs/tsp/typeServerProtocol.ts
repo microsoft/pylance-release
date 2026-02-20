@@ -66,7 +66,7 @@ export namespace TypeServerProtocol {
         v0_2_0 = '0.2.0', // Added new request types and fields
         v0_3_0 = '0.3.0', // Switch to more complex types
         v0_4_0 = '0.4.0', // Switch to Type union and using stubs
-        current = '0.5.0', // Added DeclarationFlags and InstanceMember flag to RegularDeclaration
+        current = '0.5.0', // Added DeclarationFlags (renamed ClassMember→ClassAttribute, added InstanceMember) and flags field to RegularDeclaration
     }
     // Flags that describe the characteristics of a type.
     // These flags can be combined using bitwise operations.
@@ -433,7 +433,7 @@ export namespace TypeServerProtocol {
     // These flags can be combined using bitwise operations.
     export const enum DeclarationFlags {
         None = 0,
-        ClassMember = 1 << 0, // Indicates if the declaration is a class-level variable declared in the class body (not assigned via self).
+        ClassAttribute = 1 << 0, // Indicates if the declaration is a class attribute (method, class variable, or instance variable), as opposed to a standalone local variable or function.
         Constant = 1 << 1, // Indicates if the declaration is a constant (a variable that cannot be changed).
         Final = 1 << 2, // Indicates if the declaration is a final variable (cannot be reassigned).
         IsDefinedBySlots = 1 << 3, // Indicates if the declaration is defined by __slots__.
@@ -484,7 +484,7 @@ export namespace TypeServerProtocol {
      *
      * Fields:
      * - category: Type of declaration (Variable, Function, Class, etc.)
-     * - flags: Additional characteristics of the declaration (e.g., ClassMember, InstanceMember, Final)
+     * - flags: Additional characteristics of the declaration (e.g., ClassAttribute, InstanceMember, Final)
      * - node: AST node pointing to the declaration location
      * - name: Name of the declared symbol (undefined for anonymous/implicit declarations)
      *
@@ -494,7 +494,7 @@ export namespace TypeServerProtocol {
      *     return str(x)
      *
      * class MyClass:  # Class declaration
-     *     x: int      # Variable declaration with ClassMember flag
+     *     x: int      # Variable declaration with ClassAttribute flag
      *
      *     def __init__(self):
      *         self.y = 0  # Variable declaration with InstanceMember flag
@@ -509,7 +509,7 @@ export namespace TypeServerProtocol {
         category: DeclarationCategory;
 
         // Bitfield of DeclarationFlags providing extra information about the declaration.
-        // Example: DeclarationFlags.ClassMember for a class-level variable, DeclarationFlags.InstanceMember for self.member assignments.
+        // Example: DeclarationFlags.ClassAttribute for a class-level variable or method, DeclarationFlags.InstanceMember for self.member assignments.
         flags?: DeclarationFlags;
 
         // AST node pointing to the declaration location in source code.

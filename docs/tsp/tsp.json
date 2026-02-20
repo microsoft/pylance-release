@@ -2006,9 +2006,9 @@
                     "value": 0
                 },
                 {
-                    "name": "ClassMember",
+                    "name": "ClassAttribute",
                     "value": 1,
-                    "documentation": "Indicates if the declaration is a class-level variable declared in the class body (not assigned via self)."
+                    "documentation": "Indicates if the declaration is a class attribute (method, class variable, or instance variable), as opposed to a standalone local variable or function."
                 },
                 {
                     "name": "Constant",
