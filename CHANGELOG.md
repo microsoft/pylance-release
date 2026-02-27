@@ -1,5 +1,35 @@
 # Changelog
 
+## 2026.1.100 (26 February 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Semantic token types of TypeAlias of Union, Callable, Literal, ParamSpec, TypeVar, Never, and Any are variable when it should be class [pylance-release#7908](https://github.com/microsoft/pylance-release/issues/7908)
+-   Bug fix: Autocompletion tooltip shows wrong value for underscored floats [pylance-release#7906](https://github.com/microsoft/pylance-release/issues/7906)
+-   Bug fix: Pylance does not link to classes in param type, only shows formatted text [pylance-release#7902](https://github.com/microsoft/pylance-release/issues/7902)
+-   Bug fix: Ignoring notebook errors is hard to figure out what to do [pylance-release#7899](https://github.com/microsoft/pylance-release/issues/7899)
+-   Bug fix: "Expand selection" can't select string without quotes in multiword f/r/b-strings [pylance-release#7896](https://github.com/microsoft/pylance-release/issues/7896)
+-   Enhancement: MCP server: consider using OS ephemeral ports to avoid collisions with dev servers [pylance-release#7886](https://github.com/microsoft/pylance-release/issues/7886)
+-   Bug fix: MCP `pylanceRunCodeSnippet` timeout units are undocumented (milliseconds); `timeout=0` causes immediate cancellation [pylance-release#7869](https://github.com/microsoft/pylance-release/issues/7869)
+-   Bug fix: inherit all decorators when override a member. [pylance-release#7840](https://github.com/microsoft/pylance-release/issues/7840)
+-   Bug fix: inlay hints for return type changes on mouse hover [pylance-release#7620](https://github.com/microsoft/pylance-release/issues/7620)
+-   Bug fix: Possible error in rendering google-style docstring with nested list in argument description [pylance-release#7568](https://github.com/microsoft/pylance-release/issues/7568)
+-   Bug fix: Insertion of `Callable` doesn't import symbol though symbol is missing [pylance-release#7296](https://github.com/microsoft/pylance-release/issues/7296)
+-   Bug fix: Suffix role markers in reStructuredText docstrings [pylance-release#7015](https://github.com/microsoft/pylance-release/issues/7015)
+-   Enhancement: Show Preview of Constant Values on Hover [pylance-release#6870](https://github.com/microsoft/pylance-release/issues/6870)
+-   Bug fix: Incorrect Rendering of the Return Section of Google Style Docstrings with Type Annotations Inside [pylance-release#6720](https://github.com/microsoft/pylance-release/issues/6720)
+-   Bug fix: Pylance is generating invalid type annotations (with misattributed module names) for typing.Any in completions and inlays. [pylance-release#6544](https://github.com/microsoft/pylance-release/issues/6544)
+-   Bug fix: when config file is added, pylance doesn't detect it automatically [pylance-release#6078](https://github.com/microsoft/pylance-release/issues/6078)
+-   Bug fix: Function Docstrings Obscured By Decorators That Return Protocols [pylance-release#5840](https://github.com/microsoft/pylance-release/issues/5840)
+-   Bug fix: Auto import doesn't suggest re-exports in stdlib [pylance-release#5731](https://github.com/microsoft/pylance-release/issues/5731)
+-   Bug fix: String interpolation (f strings) is breaking autocomplete [pylance-release#5659](https://github.com/microsoft/pylance-release/issues/5659)
+-   Enhancement: Creation of `py.typed` is not detected [pylance-release#5648](https://github.com/microsoft/pylance-release/issues/5648)
+-   Enhancement: Previously-checked literals are offered in `match`/`case` [pylance-release#5140](https://github.com/microsoft/pylance-release/issues/5140)
+-   Enhancement: Go-to-definition and find-all-references don't work on TypedDict properties [pylance-release#5138](https://github.com/microsoft/pylance-release/issues/5138)
+-   Enhancement: Pylance doesn't show docstring for pandas [pylance-release#4881](https://github.com/microsoft/pylance-release/issues/4881)
+-   Enhancement: Hover over variable obtained via `__getattr__` should not say it is a `function` [pylance-release#4809](https://github.com/microsoft/pylance-release/issues/4809)
+-   Enhancement: Display default parameter values instead of ellipses [pylance-release#3296](https://github.com/microsoft/pylance-release/issues/3296)
+
 ## 2026.1.1 (18 February 2026) Release
 
 Notable changes:
