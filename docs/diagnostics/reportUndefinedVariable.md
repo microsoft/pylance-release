@@ -22,3 +22,4 @@
 4. Set `python.analysis.typeCheckingMode` to 'basic' or stricter in VS Code to catch more undefined variable issues.
 5. Use `# pyright: ignore[reportUndefinedVariable]` to suppress this diagnostic for special cases.
 6. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUndefinedVariable) for more details.
+
