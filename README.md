@@ -147,6 +147,18 @@ Pylance provides users with the ability to customize their Python language suppo
     - Note:
         - For non-`py.typed` libraries, only symbols exported via a package `__init__.py` `__all__` are included.
 
+- `python.analysis.includeVenvInWorkspaceSymbols`
+    - Include symbols from installed third-party packages (venv `site-packages`) in Workspace Symbol search.
+    - Default value: `false`
+    - Performance Consideration:
+        - Enabling this setting may significantly slow down Workspace Symbol search for large virtual environments.
+        - Only takes effect when `python.analysis.indexing` is enabled.
+    - Note:
+        - Only symbols from packages installed in `site-packages` (or `dist-packages` on Debian/Ubuntu) are included. Standard library symbols are excluded.
+        - For non-`py.typed` libraries, only symbols exported via a package `__init__.py` `__all__` are included.
+        - When the search query is empty, venv/library symbols are not returned (the result set would be too large). User-code symbols are always returned regardless of the query.
+        - The depth of sub-packages searched depends on `python.analysis.packageIndexDepths`. By default, only top-level modules (depth 1) are indexed. To include symbols from deeper sub-modules (e.g., `django.views`), increase the `depth` for the corresponding package in `packageIndexDepths`.
+
 - `python.analysis.diagnosticSeverityOverrides`
     - Used to allow a user to override the severity levels for individual diagnostics should they desire.
     - Accepted severity values:

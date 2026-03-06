@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026.1.101 (5 March 2026) PreRelease
+
+Notable changes:
+
+-   Enhancement: How to search python function definitions across all installed packages [pylance-release#7903](https://github.com/microsoft/pylance-release/issues/7903)
+-   Bug fix: reportCallIssue : False error message: No overloads for "sorted" match the provided arguments [pylance-release#7878](https://github.com/microsoft/pylance-release/issues/7878)
+-   Bug fix: Moving Folders And Multiple Files - Python Imports Not Refactoring [pylance-release#7051](https://github.com/microsoft/pylance-release/issues/7051)
+-   Bug fix: Pytest fixtures and tests do not have autocompletion for types [pylance-release#5203](https://github.com/microsoft/pylance-release/issues/5203)
+
 ## 2026.1.100 (26 February 2026) PreRelease
 
 Notable changes:
