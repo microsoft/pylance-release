@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.1.102 (12 March 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance is crashing every ~10 minutes - handleover error [pylance-release#7866](https://github.com/microsoft/pylance-release/issues/7866)
+-   Bug fix: .bashrc env vars for Python are ignored after latest release [pylance-release#7904](https://github.com/microsoft/pylance-release/issues/7904)
+-   Enhancement: [macOS] False "Match statements require Python 3.10 or newer" [pylance-release#7884](https://github.com/microsoft/pylance-release/issues/7884)
+
 ## 2026.1.101 (5 March 2026) PreRelease
 
 Notable changes:

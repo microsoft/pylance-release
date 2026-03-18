@@ -61,6 +61,7 @@ Pylance provides users with the ability to customize their Python language suppo
         | python.analysis.useLibraryCodeForTypes    | false       | true       | true       |
         | python.analysis.enablePytestSupport       | false       | true       | true       |
         | python.analysis.indexing                  | false       | true       | true       |
+        | python.analysis.indexing.followSymlinkedFolders | true | true | true |
         | python.analysis.autoImportCompletions     | false       | false      | true       |
         | python.analysis.showOnlyDirectDependenciesInAutoImport | false | false | true     |
         | python.analysis.packageIndexDepths        | See | settings | below |
@@ -212,6 +213,20 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false`
     - Performance Consideration:
         - Disabling indexing by setting `python.analysis.indexing` to `false` can improve performance by reducing resource consumption, especially in large projects, at the cost of making features like auto-imports and workspace symbol search find fewer symbols.
+
+- `python.analysis.indexing.followSymlinkedFolders`
+    - Used to specify whether user-file indexing should follow files that are located under symlinked folders in the workspace.
+    - Default value: `true`
+    - Available values:
+        - `true` (default)
+        - `false`
+    - Performance Consideration:
+        - Disabling this setting can improve indexing performance in workspaces that contain symlinks into very large directory trees.
+    - Note:
+        - This setting affects only user-file indexing. It does not change how installed third-party libraries are indexed, including packages in `site-packages` or `dist-packages`.
+        - Symlinked individual files are still indexed; this setting only controls files discovered under symlinked folders.
+        - Only takes effect when `python.analysis.indexing` is enabled.
+        - This can change which import suggestions are offered. For example, if the same symbol could be imported as `from lib import Symbol` or `from symlinked import Symbol`, turning this setting off can prevent `from symlinked import Symbol` from being offered when `symlinked` is reached through a symlinked folder.
 
 - [`python.analysis.userFileIndexingLimit`](docs/settings/python_analysis_userFileIndexingLimit.md)
     - Maximum number of user files to index in the workspace. Indexing files is a performance-intensive task. Please use this setting to limit the number of files you want us to index. If you enter -1, we will index all files.
