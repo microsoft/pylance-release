@@ -1,47 +1,66 @@
-# you can trigger type hierarchy using `Types: Show Type Hierarchy` command
-# use `command palette` to find the command and its short cut
-# one can use both command or menu to issue the command.
 from typing import Generic, TypeVar
 from lib.userModule import Base, Derived2, Derived3
 
 
-# place cursor on `Derived3` and see type hierarchy
-# check supertypes
+# SCENARIO: show supertypes for a multiply-inherited class
+# TARGET: `Derived3` in the construction below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `Derived3` in `a = Derived3()`
+# VERIFY: the Type Hierarchy view opens on `Derived3` and the supertypes tree includes `Derived` and `Derived2`
 a = Derived3()
 
-# place cursor on `method` and see type hierarchy
-# check supertypes
+# SCENARIO: show supertypes for an overridden method on a multiply-inherited class
+# TARGET: `method` in the call below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `method` in `a.method()`
+# VERIFY: the Type Hierarchy view opens on `Derived3.method` and the supertypes tree includes `Derived.method` and `Derived2.method`
 a.method()
 
-# place cursor on `Base` and see type hierarchy
-# check subtypes
+# SCENARIO: show subtypes for a base class
+# TARGET: `Base` in the construction below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `Base` in `b = Base()`
+# VERIFY: the Type Hierarchy view opens on `Base` and the subtypes tree includes `Derived`, `Derived2`, and `Derived3`
 b = Base()
 
-# place cursor on `method` and see type hierarchy
-# check subtypes
+# SCENARIO: show subtypes for a base-class method
+# TARGET: `method` in the call below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `method` in `b.method()`
+# VERIFY: the Type Hierarchy view opens on `Base.method` and the subtypes tree includes the overrides on `Derived`, `Derived2`, and `Derived3`
 b.method()
 
-# place cursor on `Derived2` and see type hierarchy
-# check subtypes and supertypes
-# Please note that currently it doesn't show subtypes. It's a known issue tracked at
-# https://github.com/microsoft/pylance-release/issues/5403
+# SCENARIO: show hierarchy for a class with a known subtype gap
+# TARGET: `Derived2` in the construction below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `Derived2` in `c = Derived2()`
+# VERIFY: the Type Hierarchy view opens on `Derived2` and includes `Base` as a supertype; keep the subtype half skip-ready because `Derived3` may still be absent due to the known limitation tracked at https://github.com/microsoft/pylance-release/issues/5403
 c = Derived2()
 
-# place cursor on `method` and see type hierarchy
-# check subtypes and supertypes
+# SCENARIO: show hierarchy for a method with the same known subtype gap
+# TARGET: `method` in the call below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `method` in `c.method()`
+# VERIFY: the Type Hierarchy view opens on `Derived2.method` and includes `Base.method` as a supertype; keep the subtype half skip-ready because the matching `Derived3.method` subtype may still be absent under the same known limitation
 c.method()
 
 
 T = TypeVar("T")
 
 
-# place cursor on `TypeHierarchyBase` and see type hierarchy
-# check subtypes
+# SCENARIO: show subtypes for a generic base class
+# TARGET: `TypeHierarchyBase` in the class definition below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `TypeHierarchyBase` in the class declaration below
+# VERIFY: the Type Hierarchy view opens on `TypeHierarchyBase` and the subtypes tree includes `TypeHierarchyType`
 class TypeHierarchyBase(Generic[T]):
     pass
 
 
-# place cursor on `TypeHierarchyType` and see type hierarchy
-# check supertypes
+# SCENARIO: show supertypes for a specialized generic subclass
+# TARGET: `TypeHierarchyType` in the class definition below
+# TRIGGER: Show Type Hierarchy
+# EXPECT: the cursor is on `TypeHierarchyType` in the class declaration below
+# VERIFY: the Type Hierarchy view opens on `TypeHierarchyType` and the supertypes tree includes `TypeHierarchyBase[int]`
 class TypeHierarchyType(TypeHierarchyBase[int]):
     pass

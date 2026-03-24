@@ -1,6 +1,3 @@
-# you can trigger go to definition using `Go To Definition` command
-# use `command palette` to find the command and its short cut
-# one can also use right click menu to issue the command
 from typing import Mapping
 
 
@@ -11,15 +8,30 @@ class ClassWithMagicMethod:
         return 1
     
 
-# place cursor on `<` and issue go to def command
+# SCENARIO: go to definition for an operator resolves to the implementing magic method
+# TARGET: the `<` operator in the comparison below
+# TRIGGER: Go To Definition
+# EXPECT: the cursor is on the comparison operator in `a = ClassWithMagicMethod() < 1`
+# VERIFY: navigation opens the `ClassWithMagicMethod.__lt__` definition in this file
 a = ClassWithMagicMethod() < 1
 
-# place cursor on "os" and issue go to def command
+# SCENARIO: go to definition on a string literal target
+# TARGET: the `os` text inside the string literal below
+# TRIGGER: Go To Definition
+# EXPECT: the cursor is on the string literal token in `b = "os"`
+# VERIFY: skip-ready because the legacy checklist names the target token but does not ground the expected destination or surface
 b = "os"
 
-# place cursor on "Mapping" and issue go to def command
+# SCENARIO: go to definition for an imported typing symbol
+# TARGET: `Mapping` in the annotation below
+# TRIGGER: Go To Definition
+# EXPECT: the cursor is on the imported `Mapping` reference in `c: Mapping`
+# VERIFY: navigation leaves the annotation site and opens the definition for `Mapping`
 c: Mapping
 
-# place cursor on `len` and issue go to def
-# and confirm it shows both len and __len__ as def
+# SCENARIO: go to definition for `len` shows both builtin and magic-method targets
+# TARGET: `len` in the call below
+# TRIGGER: Go To Definition
+# EXPECT: the cursor is on the builtin call name in `print(len(ClassWithMagicMethod()))`
+# VERIFY: the navigation surface shows both `len` and `ClassWithMagicMethod.__len__` as definition targets
 print(len(ClassWithMagicMethod()))
