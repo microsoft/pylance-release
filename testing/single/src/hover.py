@@ -6,7 +6,12 @@ def foo(a: int) -> str:
     return "hello"
 
 
-# hover on `foo`` and confirm signature and doc comment
+# SCENARIO: hover over a user-defined function call target
+# TARGET: `foo` in the call expression below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the function symbol
+# VERIFY: the hover includes the function signature with `a: int` and `-> str`, and it includes `doc comment`
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 foo(10)
 
 
@@ -14,18 +19,42 @@ class MyDict(TypedDict):
     name: str
 
 
-# hover on `name` and confirm signature
+# SCENARIO: hover over a TypedDict field used as a keyword argument
+# TARGET: `name` in `MyDict(name="hello")` below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the TypedDict field
+# VERIFY: the hover identifies the `name` field and shows that its value type is `str`
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 a = MyDict(name="hello")
 
-# hover on `name` and confirm signature
+# SCENARIO: hover over a TypedDict field used as a string key
+# TARGET: the `"name"` key in the dict literal below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the TypedDict field mapping
+# VERIFY: the hover identifies the `name` field and shows that its value type is `str`
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 b: MyDict = {"name": "hello"}
 
-# hover on `os` and confirm it shows tooltip for `os` module
+# SCENARIO: hover over the `os` token inside a string literal
+# TARGET: `os` inside the string literal on the assignment below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the `os` token
+# VERIFY: the hover identifies the `os` module and shows module documentation text
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 c = "os"
 
-# hover on `typing` and `TypedDict` and confirm it shows tooltip for `typing` and `TypedDict`
-# Please note that currently it doesn't shows tooltip for `TypedDict`. It's a known issue tracked at
-# https://github.com/microsoft/pylance-release/issues/5171
+# SCENARIO: hover over the `typing` token inside a qualified string literal
+# TARGET: `typing` inside the string literal `"typing.TypedDict"` below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the `typing` token
+# VERIFY: the hover identifies the `typing` module and shows module documentation text
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
+# SCENARIO: hover over the `TypedDict` token inside a qualified string literal
+# TARGET: `TypedDict` inside the string literal `"typing.TypedDict"` below
+# TRIGGER: Hover
+# EXPECT: a hover widget may or may not open for this token depending on product behavior
+# VERIFY: record whether `TypedDict` resolves to a class hover or reproduces the known limitation tracked by microsoft/pylance-release#5171
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 d = "typing.TypedDict"
 
 
@@ -37,8 +66,18 @@ class MyNumber:
         return MyNumber(self._value + v._value)
 
 
-# hover on `+` and confirm it shows tooltip for `__add__`
+# SCENARIO: hover over an overloaded operator
+# TARGET: `+` in the expression below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the operator implementation
+# VERIFY: the hover references `__add__` and shows that the operation returns `MyNumber`
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 e = MyNumber(0) + MyNumber(1)
 
-# hover on int to see builtin doc string
+# SCENARIO: hover over a built-in type annotation
+# TARGET: `int` in the annotation below
+# TRIGGER: Hover
+# EXPECT: a hover widget opens for the built-in type
+# VERIFY: the hover shows the built-in `int` type header and includes documentation text beneath it
+# RECOVER: move the caret away or dismiss the hover widget before the next scenario
 i: int
