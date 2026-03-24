@@ -1,4 +1,5 @@
 # SCENARIO: quick-fix driven code actions
+# ENV: reuse C:\dd\pylance-release\.venv
 # TARGET: use the exact token or selection named in each scenario block below
 # TRIGGER: Quick Fix, either from the lightbulb or the explicit Quick Fix command
 # EXPECT: the named code-action entry is visible before execution
