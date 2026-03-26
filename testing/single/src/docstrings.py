@@ -1,23 +1,36 @@
-# This file is for testing different types of docstrings and verifying they display
-# correctly.
-# Try it with `python.analysis.supportRestructuredText` both true and false. 
+# ENV: reuse ../.venv
+# DEPS: bootstrap from ../requirements.txt when numpy-backed hover checks need to be installed in the selected interpreter
+# SCENARIO: inspect rendered docstring hover for `numpy.zeros`
+# TARGET: `zeros` in `np.zeros([1, 2, 3])` below
+# TRIGGER: Hover
+# EXPECT: the hover surface opens on the numpy symbol with its docstring content
+# VERIFY: the rendered markdown stays readable without broken tables, stray control text, or malformed parameter sections
+# RECOVER: dismiss the hover
 import numpy as np
 
-# Hover over zeroes and ensure the markdown looks correct.
-# `Correct` is subjective, but basically ensure that the markdown looks like
-# you would want it to look. There isn't weird lines appearing in the middle of things (like a table not displaying)
-# There isn't weird characters appearing in the middle of things
-# Parameters are consistently represented
-# Gifs/Links/Images show up
 z = np.zeros([1, 2, 3])
 
-# Hover over take and ensure the markdown looks correct.
+# SCENARIO: inspect rendered docstring hover for `numpy.take`
+# TARGET: `take` in `np.take(z, [0])` below
+# TRIGGER: Hover
+# EXPECT: the hover surface opens on the numpy symbol with its docstring content
+# VERIFY: the rendered markdown stays readable and the parameter/return sections remain well-formed
+# RECOVER: dismiss the hover
 t = np.take(z, [0])
 
-# Go to definition on `take` and hover over all of the methods found there.
-# Ensure that all methods (which have docstrings) display markdown that is rendered correctly
+# SCENARIO: inspect docstring rendering after Go to Definition on `take`
+# TARGET: `take` in `np.take(z, [0])` above
+# TRIGGER: Go to Definition, then hover the docstring-bearing definitions surfaced there
+# EXPECT: navigation opens the backing definition surface for the selected numpy symbol
+# VERIFY: the hovered definitions encountered through that navigation still render their docstrings cleanly
+# RECOVER: return to this file after inspection
 
-# Hover over each of these functions and verify they're rendering output in a way that makes sense (this is kind of subjective)
+# SCENARIO: inspect rendering of local reStructuredText-heavy docstrings
+# TARGET: the function names defined below in this file, starting with `pythonorg`
+# TRIGGER: Hover each function name in turn
+# EXPECT: the hover surface opens for each local symbol
+# VERIFY: links, images, headings, lists, literal blocks, and parameter sections render in a readable way that matches the docstring structure
+# RECOVER: dismiss the hover between functions
 def pythonorg():
     """
     This is Python version 3.14.0 alpha 0

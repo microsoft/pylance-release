@@ -3,6 +3,7 @@
 # TRIGGER: Go To Implementations or Find All Implementations
 # EXPECT: the cursor is on `method` in the abstract base declaration below
 # VERIFY: the navigation or results surface shows only `Derived1.method`
+# RECOVER: none
 from abc import ABC, abstractmethod
 class BaseWithAbstractMethod(ABC):
     @abstractmethod
@@ -18,6 +19,7 @@ class Derived1(BaseWithAbstractMethod):
 # TRIGGER: Go To Implementations or Find All Implementations
 # EXPECT: the cursor is on `method` in the concrete base declaration below
 # VERIFY: the navigation or results surface shows `BaseWithConcreteMethod.method`, `Intermediate.method`, and `Derived2.method`
+# RECOVER: none
 class BaseWithConcreteMethod(ABC):
     def method(self):
         ...
@@ -36,6 +38,7 @@ class Derived2(Intermediate):
 # TRIGGER: Go To Implementations or Find All Implementations
 # EXPECT: the cursor is on `method` in `class A`
 # VERIFY: the navigation or results surface shows `A.method`, `B.method`, and `C.method`
+# RECOVER: none
 class A:
     def method(self): pass
 
@@ -53,6 +56,7 @@ x.method()
 # TRIGGER: Go To Implementations or Find All Implementations
 # EXPECT: the cursor is on `protocolMethod` in the protocol declaration below
 # VERIFY: the navigation or results surface shows `MyProtocol.protocolMethod` and `Implementation.protocolMethod`
+# RECOVER: none
 from typing import Protocol
 class MyProtocol(Protocol):
     def protocolMethod(self):
@@ -68,6 +72,7 @@ class Implementation:
 # TRIGGER: Go To Implementations or Find All Implementations
 # EXPECT: the cursor is on `methodWithMismatchedSignature` in the protocol declaration below
 # VERIFY: the navigation or results surface shows only `MyProtocol2.methodWithMismatchedSignature`
+# RECOVER: none
 from typing import Protocol
 class MyProtocol2(Protocol):
     def methodWithMismatchedSignature(self):

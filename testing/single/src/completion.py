@@ -1,10 +1,14 @@
-# you can trigger suggestion (completion) explicitly using `Trigger Suggestion` command
-# use `command palette` to find the command and its short cut
-# also make sure to expand completion item tooltip (>) to see them
+# ENV: reuse ../.venv
+# DEPS: bootstrap from ../requirements.txt when package-backed completion checks need pandas or other workspace dependencies
+# SCENARIO: show auto-import completion for `os`
+# TARGET: the standalone `os` line below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the standalone symbol target
+# VERIFY: the suggestion list includes `os` as an auto-import completion entry
+# RECOVER: dismiss the completion list without committing the item
 from typing import Literal, TypedDict, overload
 
 
-# bring up completion after `os` and confirm tooltip and `os` is added as `auto import` 
 os
 
 class MyDict(TypedDict):
@@ -14,42 +18,85 @@ class MyDict(TypedDict):
 
 a = MyDict(name="Hello", age=10)
 
-# bring up typed dict key completion inside of `[]` and confirm `name` and `age` are suggested
+# SCENARIO: show TypedDict key completion inside `a[]`
+# TARGET: the empty brackets in `a[]` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens inside the subscript position
+# VERIFY: the suggestion list includes `name` and `age`
+# RECOVER: dismiss the completion list without committing the item
 a[]
 
 
 d = { "some key": 1, "another#2": "#2" }
 d["#3 key"] = 3
 
-# bring up regular dict completion inside of `[]` and confirm all keys are suggested
+# SCENARIO: show regular dict key completion inside `d[]`
+# TARGET: the empty brackets in `d[]` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens inside the subscript position
+# VERIFY: the suggestion list includes `"some key"`, `"another#2"`, and `"#3 key"`
+# RECOVER: dismiss the completion list without committing the item
 d[]
 
-# bring up string literal completion inside of `""` and confirm 2 literals are suggested
+# SCENARIO: show literal-string completions inside `e = ""`
+# TARGET: the empty string literal in `e: Literal[...] = ""` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens inside the string literal
+# VERIFY: the suggestion list includes `"Hello"` and `"There"`
+# RECOVER: dismiss the completion list without committing the item
 e: Literal["Hello", "There"] = ""
 
-# bring up string literal completion between `""` and confirm `"Hello"` and `"There"` are suggested
+# SCENARIO: show literal-string completions inside `case ""`
+# TARGET: the empty string literal in the `case ""` pattern below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens inside the pattern literal
+# VERIFY: the suggestion list includes `"Hello"` and `"There"`
+# RECOVER: dismiss the completion list without committing the item
 match e:
     case ""
 
-# bring up symbol completion after `My` and confirm tooltip and `MyDict` is suggested
+# SCENARIO: show symbol completion for `MyDict`
+# TARGET: `My` on the standalone line below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the symbol prefix
+# VERIFY: the suggestion list includes `MyDict`
+# RECOVER: dismiss the completion list without committing the item
 My
 
-# bring up symbol completion after `import` and confirm all top level modules are suggested
+# SCENARIO: show top-level module completions after `import`
+# TARGET: the trailing space in `import ` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the import target
+# VERIFY: the suggestion list includes top-level modules such as `argparse`
+# RECOVER: dismiss the completion list without committing the item
 import 
 
-# bring up symbol completion after `import` and confirm all symbols under pandas 
-# including sub modules are suggested
+# SCENARIO: show pandas symbol completions after `from pandas import`
+# TARGET: the trailing space in `from pandas import ` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the pandas-import target
+# VERIFY: the suggestion list includes pandas symbols or submodules such as `concat`
+# RECOVER: dismiss the completion list without committing the item
 from pandas import 
 
 from lib.userModule import MyType
 
-# bring up override completion after `me` and confirm `method` is suggested
-# commit the completion and confirm all necessary imports are inserted.
+# SCENARIO: show override completion suggestion after `def me`
+# TARGET: the partial member name `me` in `def me` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the partial member target
+# VERIFY: the suggestion list includes the override entry `method`
+# RECOVER: dismiss the completion list without committing the item
 class Derived(MyType):
     def me
 
 
-# bring up overload completion after `ha` and confirm `handle` is suggested
+# SCENARIO: show overload completion suggestion after `def ha`
+# TARGET: the partial member name `ha` in the second overload stub below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the partial member target
+# VERIFY: the suggestion list includes the overload entry `handle`
+# RECOVER: dismiss the completion list without committing the item
 class TypeWithOverload:
     @overload
     def handle(self, a: int) -> str:
@@ -58,11 +105,20 @@ class TypeWithOverload:
     @overload
     def ha
 
-# bring up named parameter completion after `sep` and confirm `sep=` is suggested
+# SCENARIO: show named-parameter completion for `sep`
+# TARGET: `sep` in `print("Hello", sep)` below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the named-parameter target
+# VERIFY: the suggestion list includes `sep=`
+# RECOVER: dismiss the completion list without committing the item
 print("Hello", sep)
 
 
-# bring up override completion after `__init__` and confirm `__init__` is suggested
-# commit the completion and confirm the generated code. also verify undo work.
+# SCENARIO: show built-in override completion suggestion for `__init__`
+# TARGET: the partial member name `__init__` in the class below
+# TRIGGER: Trigger Suggestion
+# EXPECT: the completion list opens at the built-in override target
+# VERIFY: the suggestion list includes the built-in override entry `__init__`
+# RECOVER: dismiss the completion list without committing the item
 class BuiltInMethod:
     def __init__

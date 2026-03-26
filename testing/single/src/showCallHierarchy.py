@@ -7,6 +7,7 @@ def func1():
 # TRIGGER: Show Call Hierarchy
 # EXPECT: the cursor is on `func2` in `def func2():`
 # VERIFY: the Call Hierarchy view opens on `func2`, incoming calls include `func3`, and toggling to outgoing calls shows `func1`
+# RECOVER: none
 def func2():
     func1()
 
@@ -24,6 +25,7 @@ from math import sqrt
 # TRIGGER: Show Call Hierarchy
 # EXPECT: the cursor is on the alias binding `s` in the import above
 # VERIFY: the Call Hierarchy view opens for the aliased symbol and incoming calls include `callByAlias`
+# RECOVER: none
 def callByAlias():
     s(1)
 
@@ -33,6 +35,7 @@ def callByAlias():
 # TRIGGER: Show Call Hierarchy
 # EXPECT: the cursor is on `sqrt` in the non-aliased import above
 # VERIFY: the Call Hierarchy view opens for `sqrt` and incoming calls include `callByName`
+# RECOVER: none
 def callByName():
     sqrt(1)
 
@@ -52,6 +55,7 @@ class Derived(Base):
     # TRIGGER: Show Call Hierarchy
     # EXPECT: the cursor is on `method` in `def method(self):` within `Derived`
     # VERIFY: the Call Hierarchy view treats the override set as one symbol family and surfaces callers from both `BaseConsumer.consumer` and `DerivedConsumer.consumer`
+    # RECOVER: none
     def method(self):
         pass
 

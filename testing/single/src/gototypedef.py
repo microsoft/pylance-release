@@ -6,6 +6,7 @@ myVariable: int = 1
 # TRIGGER: Go To Type Definition
 # EXPECT: the cursor is on the variable reference in `print(myVariable)`
 # VERIFY: navigation opens the builtin `int` declaration rather than the local `myVariable: int = 1` assignment
+# RECOVER: none
 print(myVariable)
 
 
@@ -19,4 +20,5 @@ a = MyType()
 # TRIGGER: Go To Type Definition
 # EXPECT: the cursor is on the member access in the final line below
 # VERIFY: navigation opens the builtin `str` declaration for the member type
+# RECOVER: none
 a.name

@@ -13,6 +13,7 @@ class ClassWithMagicMethod:
 # TRIGGER: Go To Definition
 # EXPECT: the cursor is on the comparison operator in `a = ClassWithMagicMethod() < 1`
 # VERIFY: navigation opens the `ClassWithMagicMethod.__lt__` definition in this file
+# RECOVER: none
 a = ClassWithMagicMethod() < 1
 
 # SCENARIO: go to definition on a string literal target
@@ -20,6 +21,7 @@ a = ClassWithMagicMethod() < 1
 # TRIGGER: Go To Definition
 # EXPECT: the cursor is on the string literal token in `b = "os"`
 # VERIFY: skip-ready because the legacy checklist names the target token but does not ground the expected destination or surface
+# RECOVER: none
 b = "os"
 
 # SCENARIO: go to definition for an imported typing symbol
@@ -27,6 +29,7 @@ b = "os"
 # TRIGGER: Go To Definition
 # EXPECT: the cursor is on the imported `Mapping` reference in `c: Mapping`
 # VERIFY: navigation leaves the annotation site and opens the definition for `Mapping`
+# RECOVER: none
 c: Mapping
 
 # SCENARIO: go to definition for `len` shows both builtin and magic-method targets
@@ -34,4 +37,5 @@ c: Mapping
 # TRIGGER: Go To Definition
 # EXPECT: the cursor is on the builtin call name in `print(len(ClassWithMagicMethod()))`
 # VERIFY: the navigation surface shows both `len` and `ClassWithMagicMethod.__len__` as definition targets
+# RECOVER: none
 print(len(ClassWithMagicMethod()))

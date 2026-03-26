@@ -3,6 +3,7 @@
 # TRIGGER: Find All References
 # EXPECT: the cursor is on the imported `Path` symbol in `from zipfile import Path`
 # VERIFY: the references view includes this import site and the `Path("path")` constructor call in `m.method(v=Path("path"))`
+# RECOVER: none
 from zipfile import Path
 from lib.userModule import Derived, MyType
 
@@ -11,6 +12,7 @@ from lib.userModule import Derived, MyType
 # TRIGGER: Find All References
 # EXPECT: the cursor is on `MyType` in `m = MyType()`
 # VERIFY: the references view includes the declaration in `lib/userModule.py`, the import in this file, and the construction below
+# RECOVER: none
 m = MyType()
 
 # SCENARIO: find all references for a user-defined method call
@@ -18,6 +20,7 @@ m = MyType()
 # TRIGGER: Find All References
 # EXPECT: the cursor is on `method` in `m.method(v=Path("path"))`
 # VERIFY: the references view includes the declaration in `lib/userModule.py` and this call site
+# RECOVER: none
 m.method(v=Path("path"))
 
 class FindConstructor:
@@ -26,6 +29,7 @@ class FindConstructor:
     # TRIGGER: Find All References
     # EXPECT: the cursor is on `__init__` in `def __init__(self) -> None:`
     # VERIFY: the references view includes this constructor definition and the `FindConstructor()` instantiation at `c = FindConstructor()`
+    # RECOVER: none
     def __init__(self) -> None:
         pass
 
@@ -38,4 +42,5 @@ d = Derived()
 # TRIGGER: Find All References
 # EXPECT: the cursor is on `method` in `d.method()`
 # VERIFY: the references view includes `Base.method`, `Derived.method`, and this call site so the override chain is represented
+# RECOVER: none
 d.method()
