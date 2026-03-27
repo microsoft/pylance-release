@@ -12,8 +12,8 @@ print("Hello world")
 
 # SCENARIO: hover over code inside expanded interactive-window cell content
 # TARGET: the `print` token from the first executed cell after expanding that cell in the interactive window
-# TRIGGER: in the interactive window, expand the first executed cell and hover over `print`
-# EXPECT: the expanded cell content is visible and `print` is hoverable
+# TRIGGER: in the interactive window, double-click the first executed cell to expand its source content, then hover over `print`
+# EXPECT: the executed cell source expands in-place and `print` is visible as a hover target
 # VERIFY: the hover surfaces documentation for the built-in `print`
 # RECOVER: collapse or close the expanded cell view if it stays open and blocks later steps
 
@@ -38,14 +38,14 @@ print("After restart")
 
 # SCENARIO: hover over code inside expanded cell content after restart
 # TARGET: the `print` token from the `print("After restart")` cell after expanding that cell in the interactive window
-# TRIGGER: in the interactive window, expand the post-restart executed cell and hover over `print`
-# EXPECT: the expanded cell content is visible after the restart-sensitive execution
+# TRIGGER: in the interactive window, double-click the post-restart executed cell to expand its source content, then hover over `print`
+# EXPECT: the post-restart executed cell source expands in-place and `print` is visible as a hover target
 # VERIFY: the hover surfaces documentation for the built-in `print`
 # RECOVER: collapse or close the expanded cell view before moving on
 
 # SCENARIO: interactive-window input completions and execution
 # TARGET: the interactive-window input box after the restart-sensitive checks above
-# TRIGGER: skip until this scenario names the exact text to type, the completion entry to expect, and the code to execute
-# EXPECT: skip; the legacy checklist only says to try completions and execution without naming a deterministic completion or output
-# VERIFY: rewrite this scenario with the exact input text, expected completion item, and expected execution result before treating it as executable
-# RECOVER: no recovery needed because this item should stay skipped until it is rewritten with concrete evidence
+# TRIGGER: type `pri` in the interactive-window input box, trigger completions, commit the `print` completion, finish the line as `print("Interactive input OK")`, and execute it
+# EXPECT: the completion list includes `print` for the partial `pri` input and the completed line remains executable in the interactive window
+# VERIFY: committing the completion inserts `print`, and executing `print("Interactive input OK")` shows `Interactive input OK` in the interactive window output
+# RECOVER: clear any leftover text from the interactive-window input box before ending the file run

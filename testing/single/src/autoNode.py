@@ -4,5 +4,5 @@
 # TARGET: the `"python.analysis.nodeExecutable"` setting in the active `user` or `remote` `settings.json`
 # TRIGGER: set `"python.analysis.nodeExecutable": "auto"`, save `settings.json`, and reload the VS Code window
 # EXPECT: the setting is saved as `"auto"` before the reload and Pylance restarts during the reload
-# VERIFY: the Pylance Output window contains `(Client) Running with node:` followed by a node path, and Windows Task Manager shows the Pylance process running under `node` rather than `code` with `--max-old-space-size=8192`
+# VERIFY: open the `ms-python.python.Python Language Server` log file after the reload and confirm it contains `(Client) Running with node:` followed by a node path; use this log-backed VS Code surface as the folder-mode proof that auto node selection took effect
 # RECOVER: restore the original `python.analysis.nodeExecutable` value or remove the setting, save `settings.json`, and reload the VS Code window again
