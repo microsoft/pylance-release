@@ -1,21 +1,35 @@
-# you can trigger find all reference using `References: Find All Reference` command 
-# use `command palette` to find the command and its short cut
-# or the command can be issued using right-click menu
-
-# put cursor on `Path` and run find all references
+# SCENARIO: find all references for an imported stdlib symbol
+# TARGET: `Path` in the import line below
+# TRIGGER: Find All References
+# EXPECT: the cursor is on the imported `Path` symbol in `from zipfile import Path`
+# VERIFY: the references view includes this import site and the `Path("path")` constructor call in `m.method(v=Path("path"))`
+# RECOVER: none
 from zipfile import Path
 from lib.userModule import Derived, MyType
 
-# put cursor on `MyType` and run find all references
+# SCENARIO: find all references for an imported user type
+# TARGET: `MyType` in the construction below
+# TRIGGER: Find All References
+# EXPECT: the cursor is on `MyType` in `m = MyType()`
+# VERIFY: the references view includes the declaration in `lib/userModule.py`, the import in this file, and the construction below
+# RECOVER: none
 m = MyType()
 
-# put cursor on `method` and run find all references
+# SCENARIO: find all references for a user-defined method call
+# TARGET: `method` in the call below
+# TRIGGER: Find All References
+# EXPECT: the cursor is on `method` in `m.method(v=Path("path"))`
+# VERIFY: the references view includes the declaration in `lib/userModule.py` and this call site
+# RECOVER: none
 m.method(v=Path("path"))
 
 class FindConstructor:
-    # put cursor on `__init__` and run find all references
-    # and confirm all object instantiation expressions are found as well
-    # such as FindConstructor()
+    # SCENARIO: find all references for a constructor includes object creation
+    # TARGET: `__init__` in the definition below
+    # TRIGGER: Find All References
+    # EXPECT: the cursor is on `__init__` in `def __init__(self) -> None:`
+    # VERIFY: the references view includes this constructor definition and the `FindConstructor()` instantiation at `c = FindConstructor()`
+    # RECOVER: none
     def __init__(self) -> None:
         pass
 
@@ -23,6 +37,10 @@ c = FindConstructor()
 
 d = Derived()
 
-# put cursor on `method` and run find all references
-# and confirm that it found all overriden methods
+# SCENARIO: find all references for an override-aware method symbol
+# TARGET: `method` in the call below
+# TRIGGER: Find All References
+# EXPECT: the cursor is on `method` in `d.method()`
+# VERIFY: the references view includes `Base.method`, `Derived.method`, and this call site so the override chain is represented
+# RECOVER: none
 d.method()

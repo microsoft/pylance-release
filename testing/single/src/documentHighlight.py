@@ -1,24 +1,38 @@
-# you can trigger document highlight using `Trigger Symbol Highlight` 
-# use `command palette` to find the command and its short cut
-# but that said, it will automatically run if you put cursor on top
-# of supported symbol
-
 from typing import Literal
 
-# place cursor on `variable` and confirm all `variable` referenced in the document
-# is highlighted
+# SCENARIO: highlight all references to a local variable
+# TARGET: `variable` in the assignment below
+# TRIGGER: Trigger Symbol Highlight
+# EXPECT: the cursor is on `variable` in `variable = "Hello"`
+# VERIFY: document highlights cover the assignment, `print(variable)`, and the `for ch in variable:` reference as the same symbol
+# RECOVER: none
 variable = "Hello"
 
 print(variable)
 
-# place cursor on `ch` and confirm the same
+# SCENARIO: highlight all references to a loop variable
+# TARGET: `ch` in the loop below
+# TRIGGER: Trigger Symbol Highlight
+# EXPECT: the cursor is on `ch` in `for ch in variable:`
+# VERIFY: document highlights cover both the loop binding and `print(ch)` as the same symbol
+# RECOVER: none
 for ch in variable:
     print(ch)
 
 
-# place cursor on `ConstructorHR` and confirm all references are highlighted
+# SCENARIO: highlight all references to a class symbol within the file
+# TARGET: `ConstructorHR` in the class definition below
+# TRIGGER: Trigger Symbol Highlight
+# EXPECT: the cursor is on `ConstructorHR` in `class ConstructorHR:`
+# VERIFY: document highlights cover the class definition, both type annotations in `foo`, and the `ConstructorHR()` construction
+# RECOVER: none
 class ConstructorHR:
-    # place cursor on `__init__` and confirm all references of object creation are highlighted
+    # SCENARIO: highlight constructor references through object creation
+    # TARGET: `__init__` in the method definition below
+    # TRIGGER: Trigger Symbol Highlight
+    # EXPECT: the cursor is on `__init__` in `def __init__(self):`
+    # VERIFY: document highlights include the `ConstructorHR()` object creation in `return ConstructorHR()` as the constructor reference
+    # RECOVER: none
     def __init__(self):
         pass
 

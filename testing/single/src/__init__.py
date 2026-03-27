@@ -1,1 +1,1 @@
-# Empty
+# SUPPORT FILE: package marker for the folder-mode scenario directory; not a standalone runnable entry.

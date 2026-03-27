@@ -1,34 +1,37 @@
-# test copilot generate symbol feature
-#
-# * NOTE *
-# 1. The very first time, vscode will ask consent to use copilot unless you already did it, 
-#    it only works if that is accepted.
-# 2. Make sure `interpreter` is selected, otherwise, it won't work.
-#
-# * What to test *
-# Since it is using copilot, rather than legacy imperative implementation, 
-# outcome is not deterministic. so one can't check the exact same result from the same input. 
-# but the benefit is, copilot is very flexible and can handle a lot more variations.
-# 
-# Try some variations of the following examples and check it generates acceptable code 
-# such as no syntax errors, not messing up existing code and etc
-#
-# * Perf *
-# It uses `o1-mini` model and perf is up to `vscode`. so what it takes is what it takes.
-
-# put caret on `simpleMethod` and run `generate function` code action
+# ENV: reuse ../.venv
+# SCENARIO: generate a simple function with Copilot code action
+# TARGET: `simpleMethod` in the call below
+# TRIGGER: run the `generate function` code action
+# EXPECT: Copilot consent is already accepted and the selected interpreter is valid for the workspace
+# VERIFY: generated code is inserted without syntax errors and without corrupting surrounding code structure
+# RECOVER: undo until the file matches its original text
 simpleMethod() 
 
-# put caret on `methodWithArguments` and run `generate function` code action
+# SCENARIO: generate a parameterized function with Copilot code action
+# TARGET: `methodWithArguments` in the call below
+# TRIGGER: run the `generate function` code action
+# EXPECT: Copilot consent is already accepted and the selected interpreter is valid for the workspace
+# VERIFY: generated code reflects the call shape well enough to leave syntactically valid surrounding code in place
+# RECOVER: undo until the file matches its original text
 methodWithArguments(10, "hello")
 
-# put caret on `SimpleClass` and run `generate class` code action
+# SCENARIO: generate a simple class with Copilot code action
+# TARGET: `SimpleClass` in the construction below
+# TRIGGER: run the `generate class` code action
+# EXPECT: Copilot consent is already accepted and the selected interpreter is valid for the workspace
+# VERIFY: generated code inserts a syntactically valid class definition without damaging nearby code
+# RECOVER: undo until the file matches its original text
 c = SimpleClass()
 
 left = 1
 right = 2
 
-# put caret on `ComplexClass` and run `generate class` code action
+# SCENARIO: generate a stateful class with Copilot code action
+# TARGET: `ComplexClass` in the construction below
+# TRIGGER: run the `generate class` code action
+# EXPECT: Copilot consent is already accepted and the selected interpreter is valid for the workspace
+# VERIFY: generated code handles the constructor shape and member access well enough to leave syntactically valid surrounding code in place
+# RECOVER: undo until the file matches its original text
 f = ComplexClass(left, right)
 
 a = f.left

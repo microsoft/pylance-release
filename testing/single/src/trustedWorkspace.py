@@ -1,12 +1,13 @@
-# you can change trusted workspace mode using `Workspaces: Manage Workspace Trust` command
-# use `command palette` to find the command and its short cut
+# ENV: reuse ../.venv
+# DEPS: bootstrap from ../requirements.txt when pytest-backed trust checks need the selected interpreter populated
+# SCENARIO: verify analysis changes between trusted and restricted workspace modes
+# TARGET: the `pytest` and bundled symbols referenced in the construction below
+# TRIGGER: run `Workspaces: Manage Workspace Trust`, switch to restricted mode, inspect symbol resolution, then switch back to trusted mode
+# EXPECT: the workspace trust flow can be opened from the command palette
+# VERIFY: `pytest`-provided symbols stop resolving in restricted mode while bundled symbols such as `Path` still remain inspectable, then full resolution returns after switching back to trusted mode
+# RECOVER: return the workspace to trusted mode before leaving the scenario
 
 from pathlib import Path
 from pytest import Cache, Config, PytestPluginManager
 
-# open `Workspace Trust` window and put vscode in `restricted mode`
-# and confirm `pytest` and anything under it is no longer resolved.
-# but one we bundled is still working
-# you can confirm by hover `Path` and `Config` and etc
-# after that, put vscode back into `trusted mode` and confirm everything works again.
 c = Cache(Path("path"), Config(PytestPluginManager()))

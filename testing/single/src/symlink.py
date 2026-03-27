@@ -1,49 +1,44 @@
-# test symbolic link handling
-
-# open vscode terminal (`View: Toggle Terminal`) and go to `src/linked` folder
-# and create symbolic link `shared_link.py` to `shared.py`
-
-# for windows, run this from terminal
-# make sure you are in `src/linked` folder using (> pwd)
-#
-# powershell command
-# $currentLocation = Get-Location; Start-Process powershell -Verb RunAs -ArgumentList "-Command", "New-Item -ItemType SymbolicLink -Path '$currentLocation/shared_link.py' -Target '$currentLocation/shared.py'"
-
-# for linux (WSL) and mac, run this from terminal
-# make sure you are in `src/linked` folder using (> pwd)
-#
-# ln -s shared.py shared_link.py
-
-# go to def on `shared` and `SharedType` and confirm both opened its own
-# editor with correct path.
-# and change content in one of them and make sure the other see the changes as well
-#
-# also, run find all references on `SharedType` and confirm it finds only corresponding one but not both
+# SCENARIO: verify navigation resolves both sides of the linked shared-module pair correctly
+# TARGET: `shared` and `SharedType` in the imports below
+# TRIGGER: create `src/linked/shared_link.py` as a symlink to `src/linked/shared.py`, then use Go to Definition and Find All References on the linked symbols
+# EXPECT: the symlink exists before navigation starts
+# VERIFY: navigation opens the correct underlying paths for each symbol and Find All References stays scoped to the selected declaration rather than merging both copies indiscriminately
+# RECOVER: delete `src/linked/shared_link.py` after the check
 from linked.shared import SharedType as shared1
 from linked.shared_link import SharedType as shared2
 
 
 import linked.shared as shared
 
-# rename `RenameType` to `RenameType1` and undo
+# SCENARIO: rename `RenameType` through the shared module alias
+# TARGET: `RenameType` in `shared.RenameType()` below
+# TRIGGER: Rename Symbol
+# EXPECT: rename is available on the selected symbol
+# VERIFY: the rename updates the selected symbol and undo restores the original text
+# RECOVER: undo until the file matches its original text
 a = shared.RenameType()
 
 
-# rename `SharedType` to `SharedType1` and undo
-# confirm only `SharedType` in `src/linked/shared.py` is renamed when you rename,
-# but when `shared.py` is saved, `SharedType` in `src/linked/shared_link.py` should also be renamed.
-#
-# Note that when "files.refactoring.autoSave" is `true` (default), `shared.py` is saved
-# immediately and therefore both files will show the change.
+# SCENARIO: rename `SharedType` and observe symlink-backed propagation
+# TARGET: `SharedType` in `shared.SharedType()` below
+# TRIGGER: Rename Symbol
+# EXPECT: rename is available on the selected symbol
+# VERIFY: the source declaration is renamed first and the symlinked twin reflects the saved change once the backing file is written
+# RECOVER: undo until the file matches its original text and remove the created symlink if needed
 b = shared.SharedType()
 
-# try to rename `shared`, we need to decide whether we should allow it or not since it will break
-# symlink. (currently allowed)
+# SCENARIO: inspect rename availability on the imported module alias `shared`
+# TARGET: `shared` in the import below
+# TRIGGER: Rename Symbol
+# EXPECT: rename availability can be inspected on the imported module alias
+# VERIFY: record whether rename remains available even though the alias points at a symlink-backed module path
+# RECOVER: undo if any rename is committed
 import linked.shared
 
-# try to rename `shared_link1`, it should work
+# SCENARIO: inspect rename availability on the symlinked module import
+# TARGET: `shared_link` in the import below
+# TRIGGER: Rename Symbol
+# EXPECT: rename availability can be inspected on the imported symlink target
+# VERIFY: the symlinked module import remains renameable when the underlying workspace flow supports it
+# RECOVER: undo if any rename is committed
 import linked.shared_link
-
-# once all test are done. delete `shared_link.py`
-# for window, do `del shared_link.py`
-# for linux and mac, do `rm shared_link.py`
