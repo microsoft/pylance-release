@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.2.1 (30 March 2026) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2026.1.102](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20261102-12-march-2026-prerelease) prerelease build.
+
 ## 2026.1.102 (12 March 2026) PreRelease
 
 Notable changes:
