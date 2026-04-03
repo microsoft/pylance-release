@@ -61,7 +61,7 @@ Pylance provides users with the ability to customize their Python language suppo
         | python.analysis.useLibraryCodeForTypes    | false       | true       | true       |
         | python.analysis.enablePytestSupport       | false       | true       | true       |
         | python.analysis.indexing                  | false       | true       | true       |
-        | python.analysis.indexing.followSymlinkedFolders | true | true | true |
+        | python.analysis.userFileIndexFollowSymlinkedFolders | true | true | true |
         | python.analysis.autoImportCompletions     | false       | false      | true       |
         | python.analysis.showOnlyDirectDependenciesInAutoImport | false | false | true     |
         | python.analysis.packageIndexDepths        | See | settings | below |
@@ -214,7 +214,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling indexing by setting `python.analysis.indexing` to `false` can improve performance by reducing resource consumption, especially in large projects, at the cost of making features like auto-imports and workspace symbol search find fewer symbols.
 
-- `python.analysis.indexing.followSymlinkedFolders`
+- `python.analysis.userFileIndexFollowSymlinkedFolders`
     - Used to specify whether user-file indexing should follow files that are located under symlinked folders in the workspace.
     - Default value: `true`
     - Available values:
@@ -395,6 +395,14 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false`
     - Performance Consideration:
         - Disabling pytest support by setting `python.analysis.enablePytestSupport` to `false` can improve performance by reducing the overhead associated with providing IntelliSense features for pytest fixtures.
+
+- `python.analysis.enableDjangoSupport` [Experimental]
+    - Enables Django support in Pylance. When enabled, Pylance detects Django projects and provides IntelliSense for ORM-generated model attributes (e.g. `objects`, reverse relations, and field descriptors) by merging virtual content into your source files via a file overlay.
+    - Requires a native binary that is only available on Windows (x64/ARM64), macOS (Apple Silicon), and Linux (x64/ARM64). On unsupported platforms this setting is silently ignored.
+    - Default value: `false`
+    - Accepted values:
+        - `true`
+        - `false` (default)
 
 - `python.analysis.autoFormatStrings`
     - When typing a `{` in a string, automatically puts an `f` on the front of the string. 

@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026.2.100 (3 April 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance crashes when VSCode Python REPL is opened with a `uv tool` installed Ipython3 [pylance-release#7947](https://github.com/microsoft/pylance-release/issues/7947)
+-   Bug fix: Intermittent incorrect autofill of type annotation [pylance-release#7934](https://github.com/microsoft/pylance-release/issues/7934)
+-   Bug fix: No auto import completions for the `rich` library [pylance-release#7925](https://github.com/microsoft/pylance-release/issues/7925)
+-   Bug fix: Pylance crashes with EISDIR when workspace contains a .env directory instead of a .env file [pylance-release#7915](https://github.com/microsoft/pylance-release/issues/7915)
+-   Enhancement: Syntax highlighting doesn't work with escape characters [pylance-release#7863](https://github.com/microsoft/pylance-release/issues/7863)
+-   Bug fix: Signature help doesn't work with @wrap [pylance-release#7848](https://github.com/microsoft/pylance-release/issues/7848)
+-   Bug fix: Restructured text for empty references is removing `_` on the end or front of the reference text [pylance-release#7829](https://github.com/microsoft/pylance-release/issues/7829)
+-   Enhancement: Feature Request - live output for `pylanceRunCodeSnippet` [pylance-release#7595](https://github.com/microsoft/pylance-release/issues/7595)
+-   Bug fix: Pytest fixture completions don't work in test class functions [pylance-release#7351](https://github.com/microsoft/pylance-release/issues/7351)
+-   Bug fix: Dismiss certain notifications. [pylance-release#7343](https://github.com/microsoft/pylance-release/issues/7343)
+-   Bug fix: Inserting inlay return types is missing originating module for generic types [pylance-release#7165](https://github.com/microsoft/pylance-release/issues/7165)
+-   Bug fix: Suppress diagnostic for terminal scheme [pylance-release#7148](https://github.com/microsoft/pylance-release/issues/7148)
+-   Bug fix: Deleting a cell/scrolling causes error in language server (pylance) [pylance-release#7110](https://github.com/microsoft/pylance-release/issues/7110)
+-   Bug fix: String literal type for variable causes incorrect hints for TypedDict keys [pylance-release#6801](https://github.com/microsoft/pylance-release/issues/6801)
+-   Bug fix: Method docs line break render incorrect [pylance-release#6605](https://github.com/microsoft/pylance-release/issues/6605)
+-   Enhancement: add `LanguageServerMode` in status bar item [pylance-release#6503](https://github.com/microsoft/pylance-release/issues/6503)
+-   Bug fix: Wildcard imports trip up module discovery? `not a known attribute of module` [pylance-release#6398](https://github.com/microsoft/pylance-release/issues/6398)
+-   Bug fix: No suggestion for container of `Literal` with fallback [pylance-release#6123](https://github.com/microsoft/pylance-release/issues/6123)
+-   Bug fix: `Files to analyze` count doesn't stack in multi-workspace scenarios [pylance-release#5884](https://github.com/microsoft/pylance-release/issues/5884)
+-   Enhancement: Offer jedi users to switch to pylance (if they have pylance installed) [pylance-release#5770](https://github.com/microsoft/pylance-release/issues/5770)
+-   Enhancement: Provide command to generate partial stubs in typings folder [pylance-release#5526](https://github.com/microsoft/pylance-release/issues/5526)
+-   Enhancement: Add a feature to disable following symlinks when indexing repository [pylance-release#5158](https://github.com/microsoft/pylance-release/issues/5158)
+-   Bug fix: [Bug] F2 Renames Shadowed Variables Globally [pylance-release#4914](https://github.com/microsoft/pylance-release/issues/4914)
+-   Enhancement: Django. support django orm autocompletion [pylance-release#3704](https://github.com/microsoft/pylance-release/issues/3704)
+
 ## 2026.2.1 (30 March 2026) Release
 
 Notable changes:
