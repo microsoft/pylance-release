@@ -14,7 +14,7 @@ The default value is `false`.
 "python.analysis.typeEvaluation.enableReachabilityAnalysis": false
 ```
 
-**Important**: This setting only affects code that is unreachable *because of type analysis*. Code that is unreachable regardless of types (e.g., code after an unconditional `return`) is always reported as unreachable, regardless of this setting.
+**Important**: This setting only affects code that is unreachable _because of type analysis_. Code that is unreachable regardless of types (e.g., code after an unconditional `return`) is always reported as unreachable, regardless of this setting.
 
 ### Example
 
@@ -89,8 +89,8 @@ In codebases that interface with dynamic or untyped code, static type analysis m
 
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._

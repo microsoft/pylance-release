@@ -104,8 +104,8 @@ def func(param: Optional[int] = None):
 
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
