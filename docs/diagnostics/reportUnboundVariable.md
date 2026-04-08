@@ -18,20 +18,15 @@
 ## Examples
 
 ```python
-def process(flag: bool) -> str:
-    if flag:
-        result = "done"
-    return result  # Error: "result" is possibly unbound
+x: int
+print(x)  # Error: "x" is unbound
 ```
 
 **Fix — initialize the variable before use:**
 
 ```python
-def process(flag: bool) -> str:
-    result = ""
-    if flag:
-        result = "done"
-    return result  # OK
+x: int = 0
+print(x)  # OK
 ```
 
 ## Common Fixes & Workarounds

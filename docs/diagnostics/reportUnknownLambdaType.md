@@ -18,6 +18,8 @@ transform = lambda x: x + 1  # Parameter 'x' has unknown type
 **Fix — add type annotations to the lambda:**
 
 ```python
+from collections.abc import Callable
+
 transform: Callable[[int], int] = lambda x: x + 1
 ```
 

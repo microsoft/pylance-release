@@ -1,6 +1,6 @@
 ## Overview
 
-`reportUnknownArgumentType` is a diagnostic in Pylance and Pyright that warns when an argument passed to a function or method has an unknown type. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
+`reportUnknownArgumentType` is a diagnostic in Pylance and Pyright that warns when an argument passed to a function or method has an unknown type. This rule is primarily active in strict mode (`typeCheckingMode: "strict"`), where `Any` types from untyped libraries are treated as unknown. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
 
 ## Representative Issues
 
@@ -15,8 +15,11 @@
 ```python
 import json
 
-data = json.loads('{"key": 1}')  # json.loads returns Any
-process(data)  # Argument type is Unknown
+def process(data: dict[str, int]) -> None:
+    pass
+
+raw = json.loads('{"key": 1}')  # json.loads returns Any
+process(raw)  # Argument type is Unknown (in strict mode)
 ```
 
 **Fix — narrow the type before passing:**

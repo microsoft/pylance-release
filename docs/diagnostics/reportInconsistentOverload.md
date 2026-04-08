@@ -18,8 +18,8 @@ def parse(value: str) -> str: ...
 @overload
 def parse(value: int) -> int: ...
 
-def parse(value):  # Implementation doesn't annotate params/return
-    return value
+def parse(value: str | int) -> str:  # Returns str, but overload 2 says int
+    return str(value)
 ```
 
 **Fix — make overloads consistent and implementation compatible:**

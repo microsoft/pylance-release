@@ -10,19 +10,22 @@
 ## Examples
 
 ```python
-from typing import Optional  # In Python 3.10+, consider using X | None instead
+from typing_extensions import deprecated
 
-import imp  # Warning: "imp" is deprecated, use "importlib" instead
+@deprecated("Use new_function instead")
+def old_function() -> None:
+    pass
+
+old_function()  # Warning: "old_function" is deprecated
 ```
 
 **Fix — use the recommended alternative:**
 
 ```python
-import importlib  # Modern replacement for imp
+def new_function() -> None:
+    pass
 
-# Instead of Optional[str], use union syntax (Python 3.10+):
-def greet(name: str | None) -> str:
-    return f"Hello, {name or 'stranger'}"
+new_function()  # No warning
 ```
 
 ## Common Fixes & Workarounds

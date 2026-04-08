@@ -32,9 +32,9 @@ from typing import overload
 @overload
 def process(x: int) -> str: ...
 @overload
-def process(x: float) -> int: ...  # Different param types
+def process(x: str) -> int: ...  # Different param types
 
-def process(x: int | float) -> str | int:
+def process(x: int | str) -> str | int:
     if isinstance(x, int):
         return str(x)
     return int(x)

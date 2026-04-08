@@ -13,17 +13,16 @@
 **Error:**
 
 ```python
-def is_ready(check: bool) -> bool:
-    if check == True:   # Unnecessary comparison — check is already bool
-        return True
-    return False
+x: str = "hello"
+if x is None:  # Condition always evaluates to False — str cannot be None
+    print("unreachable")
 ```
 
-**Fix — use the bool directly:**
+**Fix — remove the unnecessary comparison:**
 
 ```python
-def is_ready(check: bool) -> bool:
-    return check
+x: str = "hello"
+print(x)  # No unnecessary check
 ```
 
 Another common case — comparing incompatible types:

@@ -35,6 +35,13 @@ def describe(color: Color) -> str:
 **Fix — handle all cases:**
 
 ```python
+from enum import Enum
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
 def describe(color: Color) -> str:
     match color:
         case Color.RED:
@@ -48,7 +55,13 @@ def describe(color: Color) -> str:
 **Fix — add a catch-all case:**
 
 ```python
+from enum import Enum
 from typing import assert_never
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
 
 def describe(color: Color) -> str:
     match color:

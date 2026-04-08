@@ -32,10 +32,11 @@ class User(BaseModel):  # Base class is untyped
 # Option 2: Create a local stub file (untyped_lib.pyi)
 # class BaseModel: ...
 
-# Option 3: Use a typed alternative
-from pydantic import BaseModel
+# Option 3: Use a typed base class directly
+class BaseModel:
+    pass
 
-class User(BaseModel):
+class User(BaseModel):  # Base class now has type info
     name: str
 ```
 

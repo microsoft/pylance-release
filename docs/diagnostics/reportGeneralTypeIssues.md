@@ -1,22 +1,30 @@
 ## Overview
 
-`reportGeneralTypeIssues` is a diagnostic that flags a wide range of type-related issues in Python code, such as incorrect type hints, improper use of generics, and mismatches between type annotations and actual usage. This helps developers catch subtle bugs and improve code quality.
+`reportGeneralTypeIssues` is a diagnostic that flags a wide range of type-related issues in Python code, such as protocol mismatches, incorrect type narrowing, and improper use of generics. Some patterns that were originally reported under this umbrella (such as assignment and return type mismatches) have since been split into more specific rules like `reportAssignmentType`, `reportReturnType`, and `reportArgumentType`.
 
 ## Examples
 
 **Error:**
 
 ```python
-def double(value: int) -> int:
-    return value * 2
+from typing import final
 
-result: str = double(5)  # Type 'int' is not assignable to type 'str'
+@final
+class Base:
+    pass
+
+class Child(Base):  # Error: Base class "Base" is marked final and cannot be subclassed
+    pass
 ```
 
 **Fix — correct the annotation or the value:**
 
 ```python
-result: int = double(5)
+class Base:
+    pass
+
+class Child(Base):  # OK — Base is not marked final
+    pass
 ```
 
 Another common case — incompatible return type:

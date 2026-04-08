@@ -13,15 +13,15 @@
 **Error:**
 
 ```python
-my_set: set[list[int]] = set()      # list is not hashable
-my_dict: dict[list[int], str] = {}  # list cannot be a dict key
+my_set: set[list[int]] = {[1, 2, 3]}      # list is not hashable
+my_dict: dict[list[int], str] = {[1]: "a"}  # list cannot be a dict key
 ```
 
 **Fix — use a hashable type:**
 
 ```python
-my_set: set[tuple[int, ...]] = set()      # tuple is hashable
-my_dict: dict[tuple[int, ...], str] = {}  # tuple can be a dict key
+my_set: set[tuple[int, ...]] = {(1, 2, 3)}      # tuple is hashable
+my_dict: dict[tuple[int, ...], str] = {(1,): "a"}  # tuple can be a dict key
 ```
 
 For custom classes, implement `__hash__`:

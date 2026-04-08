@@ -33,9 +33,9 @@ pip install my_custom_module
 
 ```python
 try:
-    import optional_module
+    import optional_module  # pyright: ignore[reportMissingImports]
 except ImportError:
-    optional_module = None  # pyright: ignore[reportMissingImports]
+    optional_module = None
 ```
 
 ## Common Fixes & Workarounds

@@ -17,31 +17,29 @@
 
 ## Examples
 
-**Error:**
+```python
+x: 1 + 2  # Error: binary operator not allowed in type expression
+```
+
+**Fix — use valid type forms:**
+
+```python
+from typing import Literal
+x: Literal[3]  # Use Literal for value types
+```
+
+Another common case:
 
 ```python
 def process(items: list[int] | str[float]) -> None:  # str is not generic
     pass
 ```
 
-**Fix — use valid type forms:**
+Fix:
 
 ```python
 def process(items: list[int] | str) -> None:
     pass
-```
-
-Another common case:
-
-```python
-x: 1 + 2  # Expressions are not valid type annotations
-```
-
-Fix:
-
-```python
-from typing import Literal
-x: Literal[3]  # Use Literal for value types
 ```
 
 ## Common Fixes & Workarounds

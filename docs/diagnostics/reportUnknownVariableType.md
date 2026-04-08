@@ -1,6 +1,6 @@
 ## Overview
 
-`reportUnknownVariableType` is a diagnostic in Pylance and Pyright that warns when a variable's type cannot be determined. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
+`reportUnknownVariableType` is a diagnostic in Pylance and Pyright that warns when a variable's type cannot be determined. This rule is primarily active in strict mode (`typeCheckingMode: "strict"`), where `Any` types from untyped libraries are treated as unknown. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
 
 ## Representative Issues
 
