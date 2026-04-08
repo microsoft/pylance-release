@@ -47,5 +47,6 @@ greet(str(42))  # OK
 
 ## See Also
 
+- [How to Use Type Narrowing to Fix Type Errors](../howto/type-narrowing.md) — use `isinstance` or other checks to narrow argument types before passing
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

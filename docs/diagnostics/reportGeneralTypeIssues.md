@@ -67,5 +67,6 @@ def greet(name: str) -> str | None:
 
 ## See Also
 
+- [How to Use Type Narrowing to Fix Type Errors](../howto/type-narrowing.md) — narrow union types with `isinstance`, `is None` checks, and type guards
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

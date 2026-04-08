@@ -21,6 +21,7 @@ Step-by-step guides for common Pylance workflows and troubleshooting.
 | [Reading Pylance Logs](howto/reading-pylance-logs.md)         | Use trace logging to diagnose import resolution and settings                       |
 | [Remote Development](howto/remote-development.md)             | Use Pylance with SSH, WSL, containers, and Codespaces                              |
 | [Settings Troubleshooting](howto/settings-troubleshooting.md) | Diagnose settings precedence, config file overrides, and common conflicts          |
+| [Type Narrowing](howto/type-narrowing.md)                     | Use `isinstance`, `is None`, and type guards to fix type errors                    |
 | [Unresolved Imports](howto/unresolved-imports.md)             | Fix `reportMissingImports` and related import errors                               |
 
 ---

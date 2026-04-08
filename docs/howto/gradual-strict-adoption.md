@@ -254,6 +254,7 @@ See [Settings Troubleshooting](settings-troubleshooting.md) for the full precede
 
 ## Related Guides
 
+- [Type Narrowing](type-narrowing.md) — fix type errors using `isinstance`, `is None`, and type guards
 - [Settings Troubleshooting](settings-troubleshooting.md) — config file precedence and override rules
 - [CI Type Checking](ci-type-checking.md) — enforce type checking in your build pipeline
 - [Performance Tuning](performance-tuning.md) — manage resource usage as you add more checking

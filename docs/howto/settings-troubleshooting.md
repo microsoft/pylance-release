@@ -146,6 +146,23 @@ VS Code settings support these variables:
 
 ---
 
+## Completions or Auto-Imports Not Showing
+
+**Symptom**: Typing a known library symbol (like `requests.get`) doesn't show completions or auto-import suggestions.
+
+### Quick Checks
+
+1. Is [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) set to `false`? → This is the default in `"default"` mode. Set it to `true` to see auto-import suggestions in the completion list.
+2. Is the correct Python interpreter selected? → **Ctrl+Shift+P → Python: Select Interpreter**. Packages must be installed in the selected environment.
+3. Is [`indexing`](../settings/python_analysis_indexing.md) disabled? → Without indexing, auto-imports only work for open files and standard library.
+4. Is [`languageServerMode`](../settings/python_analysis_languageServerMode.md) set to `"light"`? → Light mode disables indexing. Switch to `"default"` or `"full"`.
+
+> **Note**: Even with `autoImportCompletions` off, the **quick fix** (light bulb / Ctrl+.) "Add import" code action still works for unresolved names.
+
+See [How to Configure Auto-Imports in Pylance](auto-import-guide.md) for the full guide.
+
+---
+
 ## Diagnostics Missing for Some Files
 
 **Symptom**: No errors, warnings, or IntelliSense for some files.
@@ -201,10 +218,11 @@ When settings aren't working as expected:
 
 ### Q: Pylance shows wrong Python version features (e.g., `match` statements flagged as errors)
 
-Pylance determines the Python version from two sources:
+Pylance determines the Python version from (highest to lowest priority):
 
-1. **`pythonVersion` in config file** (`pyrightconfig.json` or `[tool.pyright]`) — highest priority
-2. **Selected Python interpreter** in VS Code (shown in the status bar)
+1. **`pythonVersion` in config file** (`pyrightconfig.json` or `[tool.pyright]`)
+2. **Selected Python interpreter** in VS Code (shown in the bottom status bar)
+3. **Auto-detected** from default Python on PATH
 
 If Pylance flags valid syntax (like `match` on 3.10+), the detected version is wrong. Fix:
 
@@ -218,6 +236,8 @@ If Pylance flags valid syntax (like `match` on 3.10+), the detected version is w
 Or select the correct interpreter: **Ctrl+Shift+P → Python: Select Interpreter** and choose the 3.12 environment.
 
 **Diagnosis**: check the Output panel (Pylance) for the line `Assuming Python version X.Y` to see what version Pylance is using.
+
+> **Note**: The old `python.pythonPath` setting is deprecated and ignored. Pylance reads the interpreter from the Python extension's selection, not from `python.pythonPath`. If you changed `python.pythonPath` and it had no effect, use **Python: Select Interpreter** instead.
 
 Similarly, `pythonPlatform` (default: auto-detected from OS) can be set to `"Linux"`, `"Windows"`, or `"Darwin"` if you're developing for a different platform than your current OS.
 

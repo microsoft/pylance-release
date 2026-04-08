@@ -40,5 +40,6 @@ def get_first(items: Optional[list[int]]) -> int:
 
 ## See Also
 
+- [How to Use Type Narrowing to Fix Type Errors](../howto/type-narrowing.md) — check for `None` before subscripting
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
