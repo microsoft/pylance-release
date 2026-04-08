@@ -75,14 +75,16 @@ Pylance shows a **yellow warning squiggle** in `settings.json` for any setting t
 
 [`languageServerMode`](../settings/python_analysis_languageServerMode.md) sets defaults for several settings. You can **override any individual setting** even when a mode is active — the mode only sets defaults, it doesn't lock them.
 
-| Setting                                                                           | `"light"` Default | `"default"` Default | `"full"` Default |
-| --------------------------------------------------------------------------------- | ----------------- | ------------------- | ---------------- |
-| [`exclude`](../settings/python_analysis_exclude.md)                               | `["**"]`          | `[]`                | `[]`             |
-| [`indexing`](../settings/python_analysis_indexing.md)                             | `false`           | `true`              | `true`           |
-| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"off"`             | (unchanged)      |
-| [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | `false`           | `true`              | `true`           |
-| [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | (unchanged)       | `false`             | `true`           |
-| [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | (unchanged)       | `2000`              | `-1` (unlimited) |
+| Setting                                                                           | `"light"` Default  | `"default"` Default | `"full"` Default   |
+| --------------------------------------------------------------------------------- | ------------------ | ------------------- | ------------------ |
+| [`exclude`](../settings/python_analysis_exclude.md)                               | **`["**"]`**       | `[]`                | `[]`               |
+| [`indexing`](../settings/python_analysis_indexing.md)                             | **`false`**        | `true`              | `true`             |
+| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | **`"off"`**        | `"off"`             | `"off"`            |
+| [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | **`false`**        | `true`              | `true`             |
+| [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | `false`            | `false`             | **`true`**         |
+| [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | `2000`             | `2000`              | **`-1`** (unlimited) |
+
+**Bold** values are actively overridden by the mode; non-bold values are the VS Code default (`package.json`) left unchanged.
 
 See [How to Tune Pylance Performance](performance-tuning.md) for guidance on choosing a mode.
 
@@ -152,7 +154,7 @@ VS Code settings support these variables:
 
 ### Quick Checks
 
-1. Is [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) set to `false`? → This is the default in `"default"` mode. Set it to `true` to see auto-import suggestions in the completion list.
+1. Is [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) set to `false`? → This is the Pylance default in `"default"` and `"light"` modes (only `"full"` mode enables it automatically). Set it to `true` to see auto-import suggestions in the completion list.
 2. Is the correct Python interpreter selected? → **Ctrl+Shift+P → Python: Select Interpreter**. Packages must be installed in the selected environment.
 3. Is [`indexing`](../settings/python_analysis_indexing.md) disabled? → Without indexing, auto-imports only work for open files and standard library.
 4. Is [`languageServerMode`](../settings/python_analysis_languageServerMode.md) set to `"light"`? → Light mode disables indexing. Switch to `"default"` or `"full"`.

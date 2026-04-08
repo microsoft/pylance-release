@@ -63,7 +63,7 @@ if x is not None:      # Preferred
 
 if x is None:
     return             # Early return narrows x to non-None after this line
-    
+
 assert x is not None   # Narrows x to non-None from here onward
 ```
 
@@ -157,23 +157,23 @@ def process(val: tuple[int] | tuple[int, str]):
 
 Pylance supports these narrowing expressions:
 
-| Pattern | Example | Narrows both `if`/`else`? |
-|---|---|---|
-| `x is None` / `x is not None` | `if x is not None:` | Yes |
-| `isinstance(x, T)` | `if isinstance(x, str):` | Yes |
-| `issubclass(x, T)` | `if issubclass(cls, Base):` | Yes |
-| `type(x) is T` / `type(x) == T` | `if type(x) is int:` | Yes |
-| `x is C` (class identity) | `if x is MyClass:` | Yes |
-| Truthiness (`if x:`) | `if name:` | Partial (falsy values overlap) |
-| `x == L` (literal comparison) | `if x == "hello":` | Depends on type |
-| `x in collection` | `if x in valid_set:` | Yes |
-| `S in D` (TypedDict key check) | `if "name" in d:` | Yes |
-| `len(x) == L` (tuple length) | `if len(t) == 2:` | Yes |
-| `x.field is/== V` (discriminator) | `if obj.kind == "a":` | Yes |
-| `callable(x)` | `if callable(x):` | Yes |
-| `bool(x)` | Same as truthiness | Partial |
-| Aliased conditions | `is_valid = x is not None; if is_valid:` | Yes |
-| User-defined `TypeGuard` / `TypeIs` | `if is_str_list(x):` | See below |
+| Pattern                             | Example                                  | Narrows both `if`/`else`?      |
+| ----------------------------------- | ---------------------------------------- | ------------------------------ |
+| `x is None` / `x is not None`       | `if x is not None:`                      | Yes                            |
+| `isinstance(x, T)`                  | `if isinstance(x, str):`                 | Yes                            |
+| `issubclass(x, T)`                  | `if issubclass(cls, Base):`              | Yes                            |
+| `type(x) is T` / `type(x) == T`     | `if type(x) is int:`                     | Yes                            |
+| `x is C` (class identity)           | `if x is MyClass:`                       | Yes                            |
+| Truthiness (`if x:`)                | `if name:`                               | Partial (falsy values overlap) |
+| `x == L` (literal comparison)       | `if x == "hello":`                       | Depends on type                |
+| `x in collection`                   | `if x in valid_set:`                     | Yes                            |
+| `S in D` (TypedDict key check)      | `if "name" in d:`                        | Yes                            |
+| `len(x) == L` (tuple length)        | `if len(t) == 2:`                        | Yes                            |
+| `x.field is/== V` (discriminator)   | `if obj.kind == "a":`                    | Yes                            |
+| `callable(x)`                       | `if callable(x):`                        | Yes                            |
+| `bool(x)`                           | Same as truthiness                       | Partial                        |
+| Aliased conditions                  | `is_valid = x is not None; if is_valid:` | Yes                            |
+| User-defined `TypeGuard` / `TypeIs` | `if is_str_list(x):`                     | See below                      |
 
 For the full list, see Pyright's [Type Guards documentation](https://microsoft.github.io/pyright/#/type-concepts-advanced?id=type-guards).
 
@@ -233,24 +233,35 @@ def process(val: str | None):
         print(val.upper())     # May error — narrowing was reset
 ```
 
-### Narrowing doesn't propagate into closures
+### Narrowing in closures depends on mutation
+
+Pyright retains narrowing for variables captured by closures **if** it can prove the variable is not reassigned after the closure is defined and does not use a `nonlocal` or `global` binding. If either condition is violated, the narrowed type is lost:
 
 ```python
 def process(val: str | None):
     if val is not None:
-        # val is str here
         def inner():
-            print(val.upper())  # Error — val might be None by the time inner() runs
+            print(val.upper())  # OK — val is not reassigned after inner() is defined
+        inner()
+
+def process_broken(val: str | None):
+    if val is not None:
+        def inner():
+            print(val.upper())  # Error — val is reassigned below, so narrowing is lost
+        val = None              # Reassignment after closure definition
+        inner()
 ```
 
-**Fix** — capture in a local:
+If you hit this, capture the narrowed value in a local before the closure:
 
 ```python
-def process(val: str | None):
+def process_safe(val: str | None):
     if val is not None:
-        captured = val  # captured is str (narrowed and captured)
+        captured = val  # captured is str (narrowed, not reassigned)
         def inner():
             print(captured.upper())  # OK
+        val = None
+        inner()
 ```
 
 ### Unsupported expression forms
@@ -285,7 +296,8 @@ from typing import Any
 
 def process(data: Any):
     if isinstance(data, dict):
-        for key in data:  # data is dict[str, Any]
+        # data is narrowed to dict here
+        for key in data:
             print(key)
 ```
 
