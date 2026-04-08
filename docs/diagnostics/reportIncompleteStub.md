@@ -16,18 +16,18 @@
 ```python
 # my_lib.pyi (stub file)
 def public_func(x: int) -> str: ...
-# Missing declarations for other exports the library provides
+
+def __getattr__(name: str) -> object: ...  # Indicates the stub is incomplete
 ```
 
-**Fix — complete the stub or add a catch-all:**
+A module-level `__getattr__` in a stub tells Pyright the stub doesn't declare all exports — any attribute access would silently return `object`, hiding real type errors.
+
+**Fix — complete the stub and remove `__getattr__`:**
 
 ```python
 # my_lib.pyi
 def public_func(x: int) -> str: ...
-def other_func(y: float) -> None: ...  # Add missing declarations
-
-# Or add a module-level __getattr__ as a fallback:
-def __getattr__(name: str) -> object: ...
+def other_func(y: float) -> None: ...  # Add all missing declarations
 ```
 
 ## Common Fixes & Workarounds

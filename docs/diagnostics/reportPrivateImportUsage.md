@@ -19,21 +19,20 @@
 **Error:**
 
 ```python
-from some_package._internal import helper  # Importing private module
-from some_package import _private_func     # Importing private symbol
+# some_package is a py.typed library.
+# Its __init__.py imports helper from _internal without re-exporting it.
+from some_package import helper  # "helper" is not exported from "some_package"
 ```
 
-**Fix — use the public API:**
+In a `py.typed` package, symbols imported into `__init__.py` are considered private unless they appear in `__all__` or are re-exported using the `import X as X` pattern.
+
+**Fix — use the public API or import from the declared source:**
 
 ```python
-from some_package import helper       # Use the public re-export
-from some_package import public_func  # Use the public name
+from some_package._internal import helper  # Import from the source module directly
 ```
 
-If the library doesn’t expose a public API for what you need, consider:
-
-- Filing a feature request with the library maintainer
-- Using `# pyright: ignore[reportPrivateImportUsage]` as a last resort
+Or ask the library maintainer to add `helper` to `__all__` or re-export it explicitly.
 
 ## Common Fixes & Workarounds
 

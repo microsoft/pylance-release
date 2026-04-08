@@ -11,28 +11,30 @@
 
 ## Examples
 
-**Error:**
+**Error (strict mode):**
 
 ```python
-import json
+from untyped_lib import get_value  # Library without type stubs
 
-result = json.loads('{"key": 1}')  # result has unknown type (Any)
+result = get_value()  # Type of "result" is unknown
 ```
 
-**Fix — add a type annotation:**
+When a library has no type stubs and no `py.typed` marker, all imports resolve to unknown types in strict mode (with `useLibraryCodeForTypes` disabled).
 
-```python
-import json
+**Fix — install type stubs or add annotations:**
 
-result: dict[str, int] = json.loads('{"key": 1}')
+The best fix is to install type stubs for the library:
+
+```bash
+pip install types-some_library
 ```
 
-For variables from untyped libraries:
+If stubs are not available, add a type annotation to make the variable type known:
 
 ```python
-from untyped_lib import get_value  # Returns Any
+from typing import cast
 
-value: str = get_value()  # Annotate to make type known
+result: dict[str, int] = cast(dict[str, int], get_value())
 ```
 
 ## Common Fixes & Workarounds

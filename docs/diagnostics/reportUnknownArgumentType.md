@@ -10,34 +10,39 @@
 
 ## Examples
 
-**Error:**
+**Error (strict mode):**
 
 ```python
-import json
+from untyped_lib import get_value  # Library without type stubs
 
 def process(data: dict[str, int]) -> None:
     pass
 
-raw = json.loads('{"key": 1}')  # json.loads returns Any
-process(raw)  # Argument type is Unknown (in strict mode)
+raw = get_value()
+process(raw)  # Argument type is unknown
 ```
 
-**Fix — narrow the type before passing:**
+When a library has no type stubs and no `py.typed` marker, all imports resolve to unknown types in strict mode (with `useLibraryCodeForTypes` disabled).
+
+**Fix — install type stubs or add annotations:**
+
+The best fix is to install type stubs for the library:
+
+```bash
+pip install types-some_library
+```
+
+If stubs are not available, annotate the result so the argument type is known:
 
 ```python
-import json
-from typing import Any, cast
+from typing import cast
 
-raw: Any = json.loads('{"key": 1}')
-data: dict[str, int] = cast(dict[str, int], raw)
+def process(data: dict[str, int]) -> None:
+    pass
+
+# Use cast to explicitly assert the type
+data: dict[str, int] = cast(dict[str, int], get_value())
 process(data)  # Argument type is now known
-```
-
-Or add a type annotation:
-
-```python
-data: dict[str, int] = json.loads('{"key": 1}')
-process(data)
 ```
 
 ## Common Fixes & Workarounds
