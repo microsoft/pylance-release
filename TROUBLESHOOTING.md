@@ -71,9 +71,12 @@ files by default. It will only use import hooks if you set `editable-backend` to
 
 #### meson-python
 
-Packages installed via [meson-python](https://meson-python.readthedocs.io/en/latest/) do **not** support `compat_mode=strict` or `compat_mode=compat`. 
-As a result, Pylance cannot resolve modules from editable installs made with meson-python. 
-This limitation is expected to persist, and users may encounter type checking issues with these packages.
+Packages installed via [meson-python](https://meson-python.readthedocs.io/en/latest/) do **not** support `compat_mode=strict` or `compat_mode=compat`.  
+As a result, Pylance cannot resolve modules from editable installs made with meson-python.  
+
+As a workaround, users can manually add the package path to `python.analysis.extraPaths` in Pylance to help resolve imports. However, this requires manual configuration and does not fully replicate proper editable install behavior, so type checking issues may still occur.
+
+This limitation is expected to persist.
 
 ### Migrating from the Microsoft Python Language Server to Pylance
 
