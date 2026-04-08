@@ -208,11 +208,20 @@ When settings aren't working as expected:
 
 ### Q: What's the difference between `include`, `exclude`, and `ignore`?
 
-| Setting                                                    | Effect on File Discovery | Effect on Diagnostics  | Effect on Import Resolution                                                                 |
-| ---------------------------------------------------------- | ------------------------ | ---------------------- | ------------------------------------------------------------------------------------------- |
-| Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | No diagnostics         | Still resolved if the module is on Pylance's search path (project root, `extraPaths`, etc.) |
-| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | No diagnostics         | Still resolved if imported by an included file                                              |
-| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed | Resolved normally                                                                           |
+These three settings control which files Pylance discovers, analyzes, and reports diagnostics for. They work at different stages of the pipeline:
+
+| Setting                                                    | File Discovery             | Diagnostics (closed file)                    | Diagnostics (open file)                | Import Resolution                                                                           |
+| ---------------------------------------------------------- | -------------------------- | -------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| In [`include`](../settings/python_analysis_include.md)     | ✅ Discovered and tracked  | ✅ Yes (in `workspace` mode)                 | ✅ Yes                                 | Resolved normally                                                                           |
+| Not in [`include`](../settings/python_analysis_include.md) | ❌ Not discovered          | ❌ No                                        | ✅ Yes (open files are always checked) | Still resolved if the module is on Pylance's search path (project root, `extraPaths`, etc.) |
+| In [`exclude`](../settings/python_analysis_exclude.md)     | ❌ Not discovered          | ❌ No                                        | ✅ Yes (open files are always checked) | Still resolved if imported by an included file                                              |
+| In [`ignore`](../settings/python_analysis_ignore.md)       | ✅ Discovered and analyzed | ❌ **No** (diagnostics suppressed at source) | ❌ **No** (suppressed even when open)  | Resolved normally                                                                           |
+
+**Key differences:**
+
+- **`exclude`** removes files from Pylance's file discovery. Excluded files don't get diagnostics when closed, but **opening** an excluded file in VS Code triggers analysis — you'll see diagnostics while it's open.
+- **`ignore`** is stronger: files are still discovered and analyzed (so imports resolve correctly), but **diagnostics are unconditionally suppressed** — even when the file is open in the editor. Use `ignore` for files like generated code where you want import resolution to work but don't want errors shown.
+- **`include`** controls which directories Pylance scans. Files outside `include` behave like excluded files — no diagnostics when closed, but opening them triggers analysis.
 
 ### Q: Does `autoSearchPaths` work with execution environments?
 
