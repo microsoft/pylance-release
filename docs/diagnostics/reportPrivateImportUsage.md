@@ -20,7 +20,7 @@
 
 ```python
 from some_package._internal import helper  # Importing private module
-from some_package import _private_func      # Importing private symbol
+from some_package import _private_func     # Importing private symbol
 ```
 
 **Fix — use the public API:**

@@ -21,7 +21,7 @@
 def func(
     b=dict(),      # Warning: Call expression not allowed in default value
     c=max(3, 4),   # Warning: Call expression not allowed in default value
-    d=[],           # Warning: Mutable default value
+    d=[],          # Warning: Mutable default value
 ):
     pass
 ```

@@ -23,7 +23,7 @@
 **Error:**
 
 ```python
-import os          # 'os' is imported but never used
+import os             # 'os' is imported but never used
 from sys import argv  # 'argv' is imported but never used
 
 def main():

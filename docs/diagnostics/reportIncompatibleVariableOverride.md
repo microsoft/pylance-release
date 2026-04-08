@@ -23,7 +23,7 @@ class Base:
 
 class Child(Base):
     value: str = "hello"  # Error: Variable "value" overrides class "Base"
-                           #   with incompatible type "str" (base type: "int")
+                          #   with incompatible type "str" (base type: "int")
 ```
 
 **Fix — use a compatible type:**
