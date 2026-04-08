@@ -36,6 +36,26 @@ pip install types-requests types-PyYAML
 3. Contribute type stubs to the typeshed repository or the library itself if missing.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportMissingTypeStubs) for options to adjust or suppress this diagnostic if needed.
 
+### Stub-package version mismatches
+
+Stub-only packages (like `boto3-stubs`, `types-requests`) must match the version of the library they describe. If you install `types-requests==2.28.0` but have `requests==2.31.0`, the stubs may define different APIs, causing false errors.
+
+Fix: keep stub-package versions aligned with library versions:
+
+```bash
+pip install requests==2.31.0 types-requests==2.31.0
+```
+
+For AWS SDK stubs (`boto3-stubs`, `mypy-boto3-*`), install matching versions and the service-specific sub-packages:
+
+```bash
+pip install 'boto3-stubs[s3,ec2]'  # installs service stubs for s3 and ec2
+```
+
+**Diagnosis**: run `pip list | grep types-` (or `pip list | grep stubs`) and compare versions against the library they describe.
+
+If a stub package produces errors itself (e.g., internal stub inconsistencies), check for newer versions or file an issue on the stub package's repository.
+
 ## See Also
 
 - [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) — use library source when type stubs are missing

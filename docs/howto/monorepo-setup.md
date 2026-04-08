@@ -252,6 +252,18 @@ import _editable_finder; _editable_finder.install(...)
 - [`extraPaths`](../settings/python_analysis_extraPaths.md) — array of additional search paths (overrides the global [`extraPaths`](../settings/python_analysis_extraPaths.md) for files in this environment)
 - Any [diagnostic rule](https://microsoft.github.io/pyright/#/configuration?id=type-check-diagnostics-settings) — e.g. `"reportMissingImports": "warning"`
 
+Example with different strictness per directory:
+
+```jsonc
+{
+    "typeCheckingMode": "basic",
+    "strict": ["src/core"],
+    "executionEnvironments": [{ "root": "src/core" }, { "root": "src/legacy" }, { "root": "tests" }],
+}
+```
+
+This applies `strict` mode to all files under `src/core/` (equivalent to adding `# pyright: strict` to each file) while the rest of the project uses `basic`.
+
 **Important**: If file A (in environment 1) imports file B (in environment 2), imports from B use environment 2's [`extraPaths`](../settings/python_analysis_extraPaths.md), not environment 1's.
 
 ### Use Nearest Configuration
@@ -846,7 +858,7 @@ The following variables are supported in Pylance path settings (in `pyrightconfi
 
 ### Monorepo-Specific Performance Issues
 
-**Multi-root workspace overhead**: Each workspace folder creates a separate analyzer. With many folders (>10), combined memory can exceed the Node.js heap limit (default 8 GB).
+**Multi-root workspace overhead**: Each workspace folder creates a separate analyzer. With many folders (>10), combined memory can exceed the Node.js heap limit (4 GB under VS Code's built-in runtime, 8 GB with external Node via `languageServerMode: "full"`).
 
 **Mitigations**:
 
@@ -1034,7 +1046,7 @@ grep -rl "tool.pyright" . --include="pyproject.toml"               # Linux/macOS
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists | Yellow warning: VS Code setting ignored                                            | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)    |
 | Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                           | Paths break when adding/removing workspace folders                                 | Use `${workspaceFolder}` variables or absolute paths                                                                                               |
-| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                                            | Each folder analyzes all its files — combined memory can exceed 8 GB heap limit    | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
+| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                                            | Each folder analyzes all its files — combined memory can exceed the heap limit     | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
 | Editable install + wrong interpreter selected                                                                                                                       | `.pth` files exist but Pylance looks in wrong `site-packages`                      | Select the interpreter whose `site-packages` contains the `.pth` files                                                                             |
 | Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                                                | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` | Repeat common paths in each environment's `extraPaths`                                                                                             |
 
@@ -1211,7 +1223,7 @@ Enable trace logging and check the **Output → Pylance** panel. See [How to Rea
 
 ### Q: Why does Pylance crash with many workspace folders?
 
-Each workspace folder creates a separate analyzer service. With many folders (>10–20), the combined memory usage can exceed the Node.js heap limit (default 8 GB). See [How to Tune Pylance Performance — Per-Folder Memory](performance-tuning.md#per-folder-memory-in-multi-root-workspaces) for mitigations.
+Each workspace folder creates a separate analyzer service. With many folders (>10–20), the combined memory usage can exceed the Node.js heap limit. See [How to Tune Pylance Performance — Per-Folder Memory](performance-tuning.md#per-folder-memory-in-multi-root-workspaces) for details on heap limits and mitigations.
 
 ### Q: My .env file with PYTHONPATH is being ignored. Why?
 
@@ -1365,7 +1377,7 @@ See [How to Use Pylance in Remote Development Environments](remote-development.m
 **Monorepo-specific patterns**:
 
 - **Suppress warnings for generated/vendored code**: Drop a `pyrightconfig.json` with `"typeCheckingMode": "off"` in that directory (requires [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md))
-- **Stricter settings for core packages**: Use [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) with different `typeCheckingMode` per subtree
+- **Stricter settings for core packages**: Use the top-level `strict` array to apply strict mode to specific directories, combined with [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) for per-subtree diagnostic overrides
 
 ### Q: How do I set up a conda monorepo?
 
@@ -1374,6 +1386,30 @@ See [How to Use Editable Installs with Pylance — Conda FAQ](editable-installs.
 - Conda does not natively support editable installs — use `pip install -e` inside the conda env
 - Use `--config-settings editable_mode=compat` for setuptools
 - If editable installs aren't feasible, add source directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)
+
+### Q: How do I set up Pylance in a hybrid JS+Python monorepo (pnpm, lerna, npm workspaces)?
+
+Pylance only cares about the Python parts of your workspace. The key steps:
+
+1. **Exclude JS tooling directories** from analysis:
+
+```json
+{
+    "python.analysis.exclude": ["**/node_modules", "**/dist", "**/build", "**/.next"]
+}
+```
+
+2. **Point Pylance at Python packages** using `extraPaths` or `executionEnvironments` — the JS package manager layout is transparent to Pylance.
+
+3. **Separate `pyrightconfig.json`**: Place it at the Python project root (e.g., `services/api/pyrightconfig.json`), not the JS monorepo root. Alternatively, use `executionEnvironments` in a root config to scope Python analysis:
+
+```json
+{
+    "executionEnvironments": [{ "root": "services/api", "extraPaths": ["services/shared"] }, { "root": "scripts" }]
+}
+```
+
+4. If VS Code opens at the JS monorepo root, use a [multi-root workspace](https://code.visualstudio.com/docs/editor/multi-root-workspaces) with separate folders for JS and Python, or set `python.analysis.extraPaths` to point to the Python source directories.
 
 ### Q: How do I run Pyright type checking in CI/CD for a monorepo?
 

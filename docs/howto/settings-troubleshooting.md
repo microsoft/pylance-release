@@ -31,22 +31,41 @@ Pylance reads settings from these sources, listed from **highest** to **lowest**
 | 4        | User settings (`settings.json`)                                                                                  | Global                                                               |
 | 5        | [`languageServerMode`](../settings/python_analysis_languageServerMode.md) defaults                               | Implicit defaults set by the selected mode                           |
 
+### When both pyrightconfig.json and pyproject.toml exist
+
+If a workspace folder contains **both** a `pyrightconfig.json` and a `pyproject.toml` with a `[tool.pyright]` section, `pyrightconfig.json` wins. The `pyproject.toml` `[tool.pyright]` section is ignored entirely.
+
+### Per-file comment overrides
+
+Individual Python files can override the project-wide mode with `# pyright:` comments at the top of the file:
+
+```python
+# pyright: strict
+# pyright: reportUnusedImport=false
+```
+
+These per-file comments override both config files and VS Code settings for that file. See [How to Gradually Adopt Strict Type Checking](gradual-strict-adoption.md) for practical usage.
+
 ---
 
 ## pyrightconfig.json Overrides VS Code Settings
 
 When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` (with `[tool.pyright]`) exists in a workspace folder, the following VS Code settings **are ignored** — the config file takes precedence:
 
-| Ignored VS Code Setting                                                                                     | Where to Set Instead                                                                                      |
-| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md)                                   | `"extraPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)             |
-| [`python.analysis.include`](../settings/python_analysis_include.md)                                         | `"include"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                |
-| [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                         | `"exclude"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                |
-| [`python.analysis.ignore`](../settings/python_analysis_ignore.md)                                           | `"ignore"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                 |
-| [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)                       | `"typeCheckingMode"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)       |
-| [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md)                                       | `"stubPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)               |
-| [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)           | `"useLibraryCodeForTypes"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
-| [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) | `"reportXxx"` rules in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)        |
+| Ignored VS Code Setting                                                                                     | Where to Set Instead                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md)                                   | `"extraPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                        |
+| [`python.analysis.include`](../settings/python_analysis_include.md)                                         | `"include"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                           |
+| [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                         | `"exclude"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                           |
+| [`python.analysis.ignore`](../settings/python_analysis_ignore.md)                                           | `"ignore"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                            |
+| [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)                       | `"typeCheckingMode"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                  |
+| [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md)                                       | `"stubPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                          |
+| [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)           | `"useLibraryCodeForTypes"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                            |
+| [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) | `"reportXxx"` rules in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                   |
+| [`python.analysis.typeshedPaths`](../settings/python_analysis_typeshedPaths.md)                             | `"typeshedPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                      |
+| [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                         | `"autoSearchPaths"` is always `true` in Pyright CLI; config file `extraPaths` takes precedence                                                                       |
+| `python.analysis.venvPath`                                                                                  | `"venvPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                          |
+| `python.analysis.typeEvaluation.*`                                                                          | Corresponding settings in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) (e.g. `"strictListInference"`, `"enableExperimentalFeatures"`) |
 
 Pylance shows a **yellow warning squiggle** in `settings.json` for any setting that a config file overrides. The warning message reads: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used."_
 
@@ -104,8 +123,10 @@ VS Code settings support these variables:
 | Config file exists + `extraPaths` in `settings.json`                                                                                      | VS Code setting ignored, yellow warning squiggle                                                                        | Move `extraPaths` into the config file                                                                                                             |
 | `autoSearchPaths: true` + [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Auto-detected `src/` only applies to the **default** environment, not explicitly defined ones                           | Add `"src"` to each environment's `extraPaths`                                                                                                     |
 | `useNearestConfiguration: true` + `exclude: ["**"]`                                                                                       | All virtual workspaces are excluded                                                                                     | Set `exclude` to only what you actually want excluded                                                                                              |
-| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                  | Each folder analyzes all its files — combined memory can exceed 8 GB heap limit                                         | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
+| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                  | Each folder analyzes all its files — combined memory can exceed the heap limit                                          | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
 | Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                      | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` for files in that environment        | Repeat common paths in each environment's `extraPaths`                                                                                             |
+
+> **Memory note**: By default Pylance runs inside VS Code's Node.js runtime, which caps the heap at ~4 GB (V8 pointer compression). If you hit "JavaScript heap out of memory" errors, set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` to run in an external Node.js process with an 8 GB default. See [How to Tune Pylance Performance — Node.js Heap Limit](performance-tuning.md#nodejs-heap-limit) for details.
 
 ---
 
@@ -177,6 +198,28 @@ When settings aren't working as expected:
 ### Q: Does `autoSearchPaths` work with execution environments?
 
 [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (default: `true`) auto-adds a `src/` directory to the search path if it exists and doesn't contain `__init__.py`. When execution environments are defined in a config file, the auto-detected `src/` path goes into the default execution environment but **does not** automatically apply to explicitly defined execution environments. Add `src` to each environment's [`extraPaths`](../settings/python_analysis_extraPaths.md) if needed.
+
+### Q: Pylance shows wrong Python version features (e.g., `match` statements flagged as errors)
+
+Pylance determines the Python version from two sources:
+
+1. **`pythonVersion` in config file** (`pyrightconfig.json` or `[tool.pyright]`) — highest priority
+2. **Selected Python interpreter** in VS Code (shown in the status bar)
+
+If Pylance flags valid syntax (like `match` on 3.10+), the detected version is wrong. Fix:
+
+```json
+// pyrightconfig.json
+{
+    "pythonVersion": "3.12"
+}
+```
+
+Or select the correct interpreter: **Ctrl+Shift+P → Python: Select Interpreter** and choose the 3.12 environment.
+
+**Diagnosis**: check the Output panel (Pylance) for the line `Assuming Python version X.Y` to see what version Pylance is using.
+
+Similarly, `pythonPlatform` (default: auto-detected from OS) can be set to `"Linux"`, `"Windows"`, or `"Darwin"` if you're developing for a different platform than your current OS.
 
 ---
 

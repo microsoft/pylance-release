@@ -52,6 +52,17 @@ def process():
 5. Add type hints to function parameters for clarity and correctness.
 6. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnusedVariable) for details on configuring or disabling this diagnostic.
 
+### Variables used only in f-strings
+
+Pylance tracks variable usage inside f-string expressions (`f"{value}"`). If you see a false positive `reportUnusedVariable` for a variable that appears in an f-string, ensure you are on the latest Pylance version. If the issue persists, it may be a bug — please report it on the [Pylance issue tracker](https://github.com/microsoft/pylance-release/issues).
+
+As a workaround, prefix with underscore (`_value`) or suppress the diagnostic for that line:
+
+```python
+value = compute()
+print(f"{value}")  # value IS used here — Pylance should not warn
+```
+
 ## See Also
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic

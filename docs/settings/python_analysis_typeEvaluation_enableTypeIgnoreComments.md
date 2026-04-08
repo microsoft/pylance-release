@@ -86,6 +86,10 @@ If you disable `# type: ignore` support, you can still address type errors throu
 
 **A:** The setting applies globally to the workspace. You can use a `pyrightconfig.json` with `include`/`exclude` to scope the configuration to specific directories.
 
+## Related Diagnostics
+
+- [`reportUnnecessaryTypeIgnoreComment`](../diagnostics/reportUnnecessaryTypeIgnoreComment.md) — fires when a `# type: ignore` comment suppresses nothing (the diagnostic it targets no longer exists)
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

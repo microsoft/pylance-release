@@ -173,6 +173,16 @@ Potentially, yes, but only if you have a complete enough typeshed-style tree for
 
 - [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — bundled typeshed and custom typeshed paths
 
+## Troubleshooting
+
+If your custom typeshed isn't being picked up:
+
+1. **Check the Output panel**: Open **Output → Pylance** for errors about missing or malformed typeshed directories.
+2. **Enable trace logging**: Add `"python.analysis.logLevel": "Trace"` to settings and look for typeshed resolution messages. See [Reading Pylance Logs](../howto/reading-pylance-logs.md).
+3. **Verify directory structure**: The path must point to a directory containing a `stdlib/` subdirectory with a `VERSIONS` file.
+4. **Restart**: Run **"Python: Restart Language Server"** after changing this setting.
+5. **Config file override**: If a `pyrightconfig.json` exists with `typeshedPath` set, the VS Code setting is ignored. See [Settings Troubleshooting](../howto/settings-troubleshooting.md).
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

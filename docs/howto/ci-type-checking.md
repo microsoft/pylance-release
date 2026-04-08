@@ -10,6 +10,7 @@
 - [Multi-Package Projects](#multi-package-projects)
 - [Differences from Pylance in the Editor](#differences-from-pylance-in-the-editor)
 - [Tips](#tips)
+- [Pre-commit Hook](#pre-commit-hook)
 - [FAQ](#faq)
 
 ---
@@ -96,6 +97,46 @@ If your editor uses [`useNearestConfiguration`](../settings/python_analysis_useN
 
 ---
 
+## Different Severity in CI vs Editor
+
+A common requirement is strict errors in CI but softer warnings in the editor. Since `pyrightconfig.json` overrides VS Code settings when present, use this approach:
+
+**Option A: CI-only config file**
+
+Keep no `pyrightconfig.json` in the workspace (so VS Code settings apply for editing). Create a CI-specific config:
+
+```json
+// pyrightconfig.ci.json
+{
+    "typeCheckingMode": "standard",
+    "reportUnusedImport": "error",
+    "reportReturnType": "error"
+}
+```
+
+In CI, run:
+
+```bash
+npx pyright --project pyrightconfig.ci.json
+```
+
+In VS Code, use `settings.json` with softer settings:
+
+```json
+{
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": "information"
+    }
+}
+```
+
+**Option B: Shared config + VS Code per-file overrides**
+
+Use `pyrightconfig.json` for CI (strict). Developers add `# pyright: reportUnusedImport=information` in files they're actively editing.
+
+---
+
 ## Tips
 
 - **Pin the Pyright version**: `npx pyright@1.1.390` to avoid surprise breakage from upstream updates
@@ -103,6 +144,41 @@ If your editor uses [`useNearestConfiguration`](../settings/python_analysis_useN
 - **Install dependencies first**: Pyright needs to see installed packages in `site-packages` to resolve third-party imports. Run `pip install -e .` or `pip install -r requirements.txt` before `npx pyright`
 - **Editable installs**: Use `--config-settings editable_mode=compat` if using setuptools, so Pyright can follow `.pth` files. See [How to Use Editable Installs with Pylance](editable-installs.md)
 - **`extraPaths` in VS Code only?** If your editor uses `extraPaths` in VS Code settings (not in a config file), replicate them in a `pyrightconfig.json` for CI, since Pyright CLI doesn't read VS Code settings
+
+---
+
+## Pre-commit Hook
+
+You can run Pyright as a [pre-commit](https://pre-commit.com/) hook using the official mirror:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+    - repo: https://github.com/RobertCraigie/pyright-python
+      rev: v1.1.400 # pin to a recent version
+      hooks:
+          - id: pyright
+```
+
+Alternatively, use the simpler local hook approach:
+
+```yaml
+repos:
+    - repo: local
+      hooks:
+          - id: pyright
+            name: pyright
+            entry: npx pyright
+            language: node
+            types: [python]
+            pass_filenames: false
+```
+
+**Tips for pre-commit**:
+
+- Set `pass_filenames: false` — Pyright analyzes the whole project, not individual files
+- Pin the version to avoid surprise breakage
+- Ensure your virtual environment is active so Pyright can find installed packages
 
 ---
 

@@ -75,6 +75,14 @@ If your codebase has many unannotated functions and the resulting diagnostics ar
 
 **A:** No. This setting applies to your own source files. Third-party library analysis is controlled by other settings such as [`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md).
 
+## Related Diagnostics
+
+When this setting is disabled, unannotated functions are not fully analyzed, so these diagnostics will not fire for them:
+
+- [`reportMissingParameterType`](../diagnostics/reportMissingParameterType.md) — parameter missing type annotation
+- [`reportUnknownParameterType`](../diagnostics/reportUnknownParameterType.md) — parameter has unknown type
+- [`reportReturnType`](../diagnostics/reportReturnType.md) — return value type mismatch
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

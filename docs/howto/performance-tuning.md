@@ -108,9 +108,13 @@ In multi-root workspaces, you can also **exclude entire workspace folders** you'
 
 ## Node.js Heap Limit
 
-Pylance's default heap limit is 8 GB (`--max-old-space-size=8192`). If you hit "JavaScript heap out of memory" errors or "Extension host terminated unexpectedly," you can increase it:
+By default, Pylance runs inside VS Code's built-in Node.js runtime, which uses [pointer compression](https://v8.dev/blog/pointer-compression). This limits the effective heap to approximately **4 GB**, regardless of system RAM.
 
-1. Set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` (downloads a standalone Node.js):
+When `languageServerMode` is `"full"` (or `python.analysis.nodeExecutable` is set), Pylance launches in a separate Node.js process where the `--max-old-space-size=8192` argument takes effect, raising the limit to **8 GB**.
+
+If you hit "JavaScript heap out of memory" errors or "Extension host terminated unexpectedly," switch to an external Node.js runtime and optionally increase the heap:
+
+1. Set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` (downloads a standalone Node.js) or set `languageServerMode` to `"full"` (which does this automatically):
 
     ```json
     {
@@ -118,7 +122,7 @@ Pylance's default heap limit is 8 GB (`--max-old-space-size=8192`). If you hit "
     }
     ```
 
-2. Increase [`python.analysis.nodeArguments`](../settings/python_analysis_nodeArguments.md):
+2. Optionally increase [`python.analysis.nodeArguments`](../settings/python_analysis_nodeArguments.md) beyond the 8 GB default:
 
     ```json
     {
@@ -130,12 +134,13 @@ Pylance's default heap limit is 8 GB (`--max-old-space-size=8192`). If you hit "
 
 ### Recommended Heap Sizes
 
-| Project Size                | Recommended `--max-old-space-size` |
-| --------------------------- | ---------------------------------- |
-| Small (< 500 files)         | 8192 (default)                     |
-| Medium (500–5,000 files)    | 8192–12288                         |
-| Large (5,000–20,000 files)  | 12288–16384                        |
-| Very large (> 20,000 files) | 16384–32768                        |
+These apply only when running with an external Node.js (`nodeExecutable` or `languageServerMode: "full"`):
+
+| Project Size                 | Recommended `--max-old-space-size` |
+| ---------------------------- | ---------------------------------- |
+| Small–Medium (< 5,000 files) | 8192 (default with external Node)  |
+| Large (5,000–20,000 files)   | 12288–16384                        |
+| Very large (> 20,000 files)  | 16384–32768                        |
 
 > **Tip**: Increasing heap doesn't fix the root cause — it gives Pylance more room to work. Prefer reducing Pylance's workload first (fewer workspace folders, `"openFilesOnly"`, proper `exclude` patterns, disable indexing).
 
@@ -203,7 +208,7 @@ In multi-root workspaces, each workspace folder creates a separate analyzer serv
 
 ### Q: Why does Pylance crash with many workspace folders?
 
-Each workspace folder creates a separate analyzer service. With many folders (>10–20), the combined memory usage can exceed the Node.js heap limit (default 8 GB). Mitigations:
+Each workspace folder creates a separate analyzer service. With many folders (>10–20), the combined memory usage can exceed the Node.js heap limit. Mitigations:
 
 1. Use [`languageServerMode`](../settings/python_analysis_languageServerMode.md)`: "light"` to minimize per-folder memory
 2. Exclude folders you're not working on

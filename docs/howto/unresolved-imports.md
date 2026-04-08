@@ -385,6 +385,41 @@ The [`extraPaths`](../settings/python_analysis_extraPaths.md) entry should point
 
 ---
 
+## Using `TYPE_CHECKING` for Type-Only Imports
+
+Python's `typing.TYPE_CHECKING` constant is `False` at runtime but `True` for type checkers like Pylance. This is commonly used for:
+
+- **Avoiding circular imports**: Import a type only for annotations, not at runtime.
+- **Reducing startup cost**: Skip heavy imports that are only needed for type hints.
+
+```python
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from heavy_module import HeavyClass
+
+def process(obj: HeavyClass) -> None:  # Pylance resolves this
+    ...
+```
+
+### How Pylance handles `TYPE_CHECKING` blocks
+
+- Pylance treats `TYPE_CHECKING` as `True` and analyzes imports inside the block.
+- Names imported under `TYPE_CHECKING` are available for type annotations.
+- `from __future__ import annotations` (PEP 563) makes all annotations string-based, so the imported names don't need to exist at runtime.
+- Without `from __future__ import annotations`, you must use string annotations (`"HeavyClass"`) for names imported only under `TYPE_CHECKING`, or you'll get a runtime `NameError`.
+
+### Common errors
+
+| Error                                             | Cause                                                                    | Fix                                                                                                |
+| ------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `"HeavyClass" is not defined` at runtime          | Used `TYPE_CHECKING` import without `from __future__ import annotations` | Add `from __future__ import annotations` or use `"HeavyClass"` as a string annotation              |
+| Pylance shows errors inside `TYPE_CHECKING` block | The imported module has its own errors                                   | Fix the errors in the imported module, or add to [`ignore`](../settings/python_analysis_ignore.md) |
+| Circular import persists in Pylance               | Both modules import each other under `TYPE_CHECKING`                     | This is valid — Pylance handles `TYPE_CHECKING` circular imports. The error is likely elsewhere    |
+
+---
+
 ## Related Guides
 
 - [How to Use Editable Installs with Pylance](editable-installs.md) — build backend compatibility and `.pth` file troubleshooting
