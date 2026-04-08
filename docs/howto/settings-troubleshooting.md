@@ -208,11 +208,11 @@ When settings aren't working as expected:
 
 ### Q: What's the difference between `include`, `exclude`, and `ignore`?
 
-| Setting                                                    | Effect on File Discovery | Effect on Diagnostics  | Effect on Import Resolution                                                         |
-| ---------------------------------------------------------- | ------------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
+| Setting                                                    | Effect on File Discovery | Effect on Diagnostics  | Effect on Import Resolution                                                                 |
+| ---------------------------------------------------------- | ------------------------ | ---------------------- | ------------------------------------------------------------------------------------------- |
 | Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | No diagnostics         | Still resolved if the module is on Pylance's search path (project root, `extraPaths`, etc.) |
-| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | No diagnostics         | Still resolved if imported by an included file                                      |
-| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed | Resolved normally                                                                   |
+| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | No diagnostics         | Still resolved if imported by an included file                                              |
+| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed | Resolved normally                                                                           |
 
 ### Q: Does `autoSearchPaths` work with execution environments?
 
