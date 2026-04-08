@@ -4,9 +4,40 @@
 
 ## Representative Issues
 
--   [#8377](https://github.com/microsoft/pyright/issues/8377): Ensure Pyright is invoked with the project root directory to maintain correct import resolution behavior, especially when using editable installations within the same environment.
--   [#9236](https://github.com/microsoft/pyright/issues/9236): Ensure that static type checkers like `pyright` correctly interpret the types in the standard library, especially when there are updates or corrections in newer Python versions.
--   [#9237](https://github.com/microsoft/pyright/issues/9237): Always follow the correct syntax for comments in directives to avoid errors with static type checkers like Pyright.
+- [#8377](https://github.com/microsoft/pyright/issues/8377): Ensure Pyright is invoked with the project root directory to maintain correct import resolution behavior, especially when using editable installations within the same environment.
+- [#9236](https://github.com/microsoft/pyright/issues/9236): Ensure that static type checkers like `pyright` correctly interpret the types in the standard library, especially when there are updates or corrections in newer Python versions.
+- [#9237](https://github.com/microsoft/pyright/issues/9237): Always follow the correct syntax for comments in directives to avoid errors with static type checkers like Pyright.
+
+## Examples
+
+**Error:**
+
+```python
+my_set: set[list[int]] = set()  # list is not hashable
+my_dict: dict[list[int], str] = {}  # list cannot be a dict key
+```
+
+**Fix — use a hashable type:**
+
+```python
+my_set: set[tuple[int, ...]] = set()  # tuple is hashable
+my_dict: dict[tuple[int, ...], str] = {}  # tuple can be a dict key
+```
+
+For custom classes, implement `__hash__`:
+
+```python
+class Point:
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
+
+    def __hash__(self) -> int:
+        return hash((self.x, self.y))
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Point) and self.x == other.x and self.y == other.y
+```
 
 ## Common Fixes & Workarounds
 

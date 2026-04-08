@@ -4,8 +4,35 @@
 
 ## Representative Issues
 
--   [#2080](https://github.com/microsoft/pyright/issues/2080): Warn or error on unreachable statements/expressions, providing clearer diagnostic messages.
--   [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, suppress the warning by adding an `else` clause.
+- [#2080](https://github.com/microsoft/pyright/issues/2080): Warn or error on unreachable statements/expressions, providing clearer diagnostic messages.
+- [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, suppress the warning by adding an `else` clause.
+
+## Examples
+
+**Error:**
+
+```python
+def greet(name: str) -> str:
+    if isinstance(name, str):  # Always True — name is already str
+        return f"Hello, {name}"
+    return "Hello"              # Unreachable
+```
+
+**Fix — remove the redundant check:**
+
+```python
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+```
+
+If the function genuinely accepts multiple types, widen the parameter annotation:
+
+```python
+def greet(name: str | int) -> str:
+    if isinstance(name, str):
+        return f"Hello, {name}"
+    return f"Hello, #{name}"
+```
 
 ## Common Fixes & Workarounds
 

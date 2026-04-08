@@ -4,9 +4,32 @@
 
 ## Representative Issues
 
--   [#5218](https://github.com/microsoft/pyright/issues/5218): Ensure that collection membership checks are performed with compatible types to avoid unnecessary diagnostics.
--   [#6087](https://github.com/microsoft/pyright/issues/6087): Adjust `reportUnnecessaryContains` to correctly handle cases where values are equal but of different types.
--   [#7354](https://github.com/microsoft/pyright/issues/7354): Direct comparisons between objects of different types will always evaluate to False unless explicitly overridden.
+- [#5218](https://github.com/microsoft/pyright/issues/5218): Ensure that collection membership checks are performed with compatible types to avoid unnecessary diagnostics.
+- [#6087](https://github.com/microsoft/pyright/issues/6087): Adjust `reportUnnecessaryContains` to correctly handle cases where values are equal but of different types.
+- [#7354](https://github.com/microsoft/pyright/issues/7354): Direct comparisons between objects of different types will always evaluate to False unless explicitly overridden.
+
+## Examples
+
+**Error:**
+
+```python
+def has_item(items: list[int], key: str) -> bool:
+    return key in items  # str can never be contained in list[int]
+```
+
+**Fix — use compatible types:**
+
+```python
+def has_item(items: list[int], key: int) -> bool:
+    return key in items
+```
+
+Or update the container type:
+
+```python
+def has_item(items: list[int | str], key: str) -> bool:
+    return key in items
+```
 
 ## Common Fixes & Workarounds
 

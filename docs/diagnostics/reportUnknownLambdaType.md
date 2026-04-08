@@ -4,8 +4,29 @@
 
 ## Representative Issues
 
--   [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
--   [#7039](https://github.com/microsoft/pyright/issues/7039): Ensure that the `owner` argument in the `__set_name__` method can be used to infer the type of the descriptor.
+- [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
+- [#7039](https://github.com/microsoft/pyright/issues/7039): Ensure that the `owner` argument in the `__set_name__` method can be used to infer the type of the descriptor.
+
+## Examples
+
+**Error:**
+
+```python
+transform = lambda x: x + 1  # Parameter 'x' has unknown type
+```
+
+**Fix — add type annotations to the lambda:**
+
+```python
+transform: Callable[[int], int] = lambda x: x + 1
+```
+
+Or use a named function with annotations:
+
+```python
+def transform(x: int) -> int:
+    return x + 1
+```
 
 ## Common Fixes & Workarounds
 

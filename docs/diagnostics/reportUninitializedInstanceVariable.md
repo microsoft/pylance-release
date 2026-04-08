@@ -4,14 +4,52 @@
 
 ## Representative Issues
 
--   [#2184](https://github.com/microsoft/pyright/issues/2184): When using `Optional` return types, ensure functions include explicit return statements for all possible outcomes.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
--   [#2721](https://github.com/microsoft/pyright/issues/2721): Use `isinstance` for clearer type narrowing with coroutines.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure TOML comments use correct line endings.
--   [#6376](https://github.com/microsoft/pyright/issues/6376): Consider adding diagnostic rules to your configuration file instead of using the "all" default.
--   [#7192](https://github.com/microsoft/pyright/issues/7192): Avoid redeclaring variables with the same type to prevent shadowing.
--   [#7193](https://github.com/microsoft/pyright/issues/7193): After an `isinstance` check, set the variable to the correct type to avoid false positives.
+- [#2184](https://github.com/microsoft/pyright/issues/2184): When using `Optional` return types, ensure functions include explicit return statements for all possible outcomes.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
+- [#2721](https://github.com/microsoft/pyright/issues/2721): Use `isinstance` for clearer type narrowing with coroutines.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure TOML comments use correct line endings.
+- [#6376](https://github.com/microsoft/pyright/issues/6376): Consider adding diagnostic rules to your configuration file instead of using the "all" default.
+- [#7192](https://github.com/microsoft/pyright/issues/7192): Avoid redeclaring variables with the same type to prevent shadowing.
+- [#7193](https://github.com/microsoft/pyright/issues/7193): After an `isinstance` check, set the variable to the correct type to avoid false positives.
+
+## Examples
+
+**Error:**
+
+```python
+class User:
+    name: str
+    email: str
+
+    def __init__(self, name: str):
+        self.name = name
+        # email is declared but never set in __init__
+```
+
+**Fix — initialize all declared variables:**
+
+```python
+class User:
+    name: str
+    email: str
+
+    def __init__(self, name: str, email: str = ""):
+        self.name = name
+        self.email = email
+```
+
+Or use `Optional` if the variable may not always be set:
+
+```python
+class User:
+    name: str
+    email: str | None
+
+    def __init__(self, name: str):
+        self.name = name
+        self.email = None
+```
 
 ## Common Fixes & Workarounds
 

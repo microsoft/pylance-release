@@ -4,7 +4,37 @@
 
 ## Representative Issues
 
--   [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+- [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+
+## Examples
+
+**Error:**
+
+```python
+from typing import overload
+
+@overload
+def parse(value: str) -> str: ...
+@overload
+def parse(value: int) -> int: ...
+
+def parse(value):  # Implementation doesn't annotate params/return
+    return value
+```
+
+**Fix — make overloads consistent and implementation compatible:**
+
+```python
+from typing import overload
+
+@overload
+def parse(value: str) -> str: ...
+@overload
+def parse(value: int) -> int: ...
+
+def parse(value: str | int) -> str | int:
+    return value
+```
 
 ## Common Fixes & Workarounds
 

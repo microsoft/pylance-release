@@ -4,13 +4,40 @@
 
 ## Representative Issues
 
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
--   [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files.
--   [#2912](https://github.com/microsoft/pyright/issues/2912): Use type aliases to explicitly define base classes for subclasses.
--   [#3251](https://github.com/microsoft/pyright/issues/3251): Pyright should support namespace packages to align with modern Python packaging techniques.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure comments in TOML files use correct line endings and do not contain unsupported control characters.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
+- [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files.
+- [#2912](https://github.com/microsoft/pyright/issues/2912): Use type aliases to explicitly define base classes for subclasses.
+- [#3251](https://github.com/microsoft/pyright/issues/3251): Pyright should support namespace packages to align with modern Python packaging techniques.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure comments in TOML files use correct line endings and do not contain unsupported control characters.
+
+## Examples
+
+**Error:**
+
+```python
+from untyped_lib import BaseModel  # BaseModel has no type info
+
+class User(BaseModel):  # Base class is untyped
+    name: str
+```
+
+**Fix — use a typed base class or add a stub:**
+
+```python
+# Option 1: Install type stubs for the library
+# pip install types-untyped-lib
+
+# Option 2: Create a local stub file (untyped_lib.pyi)
+# class BaseModel: ...
+
+# Option 3: Use a typed alternative
+from pydantic import BaseModel
+
+class User(BaseModel):
+    name: str
+```
 
 ## Common Fixes & Workarounds
 

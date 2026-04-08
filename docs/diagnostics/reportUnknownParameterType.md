@@ -4,10 +4,35 @@
 
 ## Representative Issues
 
--   [#4382](https://github.com/microsoft/pylance-release/issues/4382): Ensure that the correct version of static analysis tools is used and verify that all necessary dependencies, including type stubs, are correctly installed.
--   [#5202](https://github.com/microsoft/pylance-release/issues/5202): Always provide detailed type annotations in library stubs to enhance the accuracy of static analysis tools like Pylance.
--   [#1117](https://github.com/microsoft/pyright/issues/1117): Always include type hints for all class members to help static analysis tools like Pyright accurately infer types.
--   [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files to aid static analysis tools like pyright.
+- [#4382](https://github.com/microsoft/pylance-release/issues/4382): Ensure that the correct version of static analysis tools is used and verify that all necessary dependencies, including type stubs, are correctly installed.
+- [#5202](https://github.com/microsoft/pylance-release/issues/5202): Always provide detailed type annotations in library stubs to enhance the accuracy of static analysis tools like Pylance.
+- [#1117](https://github.com/microsoft/pyright/issues/1117): Always include type hints for all class members to help static analysis tools like Pyright accurately infer types.
+- [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files to aid static analysis tools like pyright.
+
+## Examples
+
+**Error:**
+
+```python
+def process(data):  # Parameter 'data' has unknown type
+    return data.strip()
+```
+
+**Fix — add a type annotation:**
+
+```python
+def process(data: str) -> str:
+    return data.strip()
+```
+
+For callbacks with complex signatures:
+
+```python
+from collections.abc import Callable
+
+def apply(func: Callable[[int], str], value: int) -> str:
+    return func(value)
+```
 
 ## Common Fixes & Workarounds
 

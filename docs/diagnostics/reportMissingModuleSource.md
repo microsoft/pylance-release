@@ -22,6 +22,29 @@
 - [#8558](https://github.com/microsoft/pyright/issues/8558): Ensure that callable objects are correctly handled and compatible with the expected types in static type checking contexts.
 - [#8902](https://github.com/microsoft/pyright/issues/8902): Ensure that static analysis tools are configured to handle inline script metadata correctly when using `pipx run` for scripts that depend on non-standard libraries.
 
+## Examples
+
+**Error:**
+
+```python
+import cv2  # Module source cannot be found (compiled C extension)
+```
+
+**Fix — install type stubs or configure Pylance:**
+
+```bash
+# Install type stubs for the library
+pip install opencv-stubs
+```
+
+Or add the module’s install location to `extraPaths` in your Pylance/Pyright config:
+
+```json
+{
+    "python.analysis.extraPaths": ["./path/to/compiled/modules"]
+}
+```
+
 ## Common Fixes & Workarounds
 
 1. Install the required module or package in your Python environment.

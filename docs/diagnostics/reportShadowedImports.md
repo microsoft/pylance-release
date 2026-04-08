@@ -4,14 +4,45 @@
 
 ## Representative Issues
 
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#4777](https://github.com/microsoft/pylance-release/issues/4777): When configuring `exclude` paths in a project for static analysis tools like Pylance, it's crucial to balance comprehensive exclusion with the inclusion of necessary workspace components.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
--   [#6446](https://github.com/microsoft/pylance-release/issues/6446): Always set Pylance-specific defaults in pyrightconfig.json to avoid unintended changes when enabling configuration files.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
--   [#7192](https://github.com/microsoft/pyright/issues/7192): Avoid redeclaring variables with the same type to prevent shadowing and ensure clear variable identification.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#4777](https://github.com/microsoft/pylance-release/issues/4777): When configuring `exclude` paths in a project for static analysis tools like Pylance, it's crucial to balance comprehensive exclusion with the inclusion of necessary workspace components.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
+- [#6446](https://github.com/microsoft/pylance-release/issues/6446): Always set Pylance-specific defaults in pyrightconfig.json to avoid unintended changes when enabling configuration files.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
+- [#7192](https://github.com/microsoft/pyright/issues/7192): Avoid redeclaring variables with the same type to prevent shadowing and ensure clear variable identification.
+
+## Examples
+
+**Error:**
+
+```python
+import json
+
+def json():  # Shadows the 'json' module import
+    return "{}"
+```
+
+**Fix — rename the local symbol:**
+
+```python
+import json
+
+def get_json():  # No longer shadows the import
+    return "{}"
+```
+
+Another common case — a local file shadows a stdlib module:
+
+```
+# If your project has a file named 'json.py':
+myproject/
+  json.py       # Shadows the stdlib 'json' module
+  main.py
+```
+
+Fix: rename your file (e.g., `json_utils.py`).
 
 ## Common Fixes & Workarounds
 

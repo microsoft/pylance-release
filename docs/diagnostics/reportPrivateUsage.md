@@ -4,18 +4,45 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
--   [#3853](https://github.com/microsoft/pylance-release/issues/3853): Configure Pylance's packageIndexDepths and ensure the correct Python environment for accurate auto-imports.
--   [#3855](https://github.com/microsoft/pylance-release/issues/3855): Enable Python indexing in VSCode settings for auto-imports.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in Pyright's config to prevent analysis of unwanted folders.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
--   [#5755](https://github.com/microsoft/pylance-release/issues/5755): Avoid accessing functions with a leading underscore from other modules.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
--   [#7001](https://github.com/microsoft/pylance-release/issues/7001): Prefer 'openFilesOnly' diagnostic mode for large projects.
--   [#1443](https://github.com/microsoft/pyright/issues/1443): Use comments to indicate strict type checking for new files and configure directories in pyrightconfig.json.
--   [#1462](https://github.com/microsoft/pyright/issues/1462): Always verify that configuration settings are respected by CLI tools.
--   [#2277](https://github.com/microsoft/pyright/issues/2277): Use alias imports to indicate public interface symbols in `py.typed` libraries.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
+- [#3853](https://github.com/microsoft/pylance-release/issues/3853): Configure Pylance's packageIndexDepths and ensure the correct Python environment for accurate auto-imports.
+- [#3855](https://github.com/microsoft/pylance-release/issues/3855): Enable Python indexing in VSCode settings for auto-imports.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in Pyright's config to prevent analysis of unwanted folders.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
+- [#5755](https://github.com/microsoft/pylance-release/issues/5755): Avoid accessing functions with a leading underscore from other modules.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
+- [#7001](https://github.com/microsoft/pylance-release/issues/7001): Prefer 'openFilesOnly' diagnostic mode for large projects.
+- [#1443](https://github.com/microsoft/pyright/issues/1443): Use comments to indicate strict type checking for new files and configure directories in pyrightconfig.json.
+- [#1462](https://github.com/microsoft/pyright/issues/1462): Always verify that configuration settings are respected by CLI tools.
+- [#2277](https://github.com/microsoft/pyright/issues/2277): Use alias imports to indicate public interface symbols in `py.typed` libraries.
+
+## Examples
+
+```python
+# my_module.py
+class MyClass:
+    _internal_value = 42
+    __private_value = "secret"
+
+# other_module.py
+from my_module import MyClass
+
+obj = MyClass()
+print(obj._internal_value)   # Warning: "_internal_value" is private
+print(obj.__private_value)   # Warning: "__private_value" is private
+```
+
+**Fix — use the public API or expose needed values:**
+
+```python
+class MyClass:
+    _internal_value = 42
+
+    @property
+    def value(self) -> int:
+        return self._internal_value  # Accessed through a public property
+```
 
 ## Common Fixes & Workarounds
 

@@ -4,14 +4,39 @@
 
 ## Representative Issues
 
--   [#2943](https://github.com/microsoft/pylance-release/issues/2943): Ensure that the use of `# type: ignore` comments is respected and correctly flagged by static analysis tools.
--   [#3343](https://github.com/microsoft/pylance-release/issues/3343): Ensure that the `pyproject.toml` file is correctly configured to allow Pylance to perform accurate background analysis of the workspace.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
--   [#2839](https://github.com/microsoft/pyright/issues/2839): Whenever possible, avoid using `# type: ignore` comments to maintain clean and accurate type annotations.
--   [#3381](https://github.com/microsoft/pyright/issues/3381): Consider implementing specific error codes in Pyright that MyPy can understand and suppress, reducing manual intervention.
+- [#2943](https://github.com/microsoft/pylance-release/issues/2943): Ensure that the use of `# type: ignore` comments is respected and correctly flagged by static analysis tools.
+- [#3343](https://github.com/microsoft/pylance-release/issues/3343): Ensure that the `pyproject.toml` file is correctly configured to allow Pylance to perform accurate background analysis of the workspace.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
+- [#2839](https://github.com/microsoft/pyright/issues/2839): Whenever possible, avoid using `# type: ignore` comments to maintain clean and accurate type annotations.
+- [#3381](https://github.com/microsoft/pyright/issues/3381): Consider implementing specific error codes in Pyright that MyPy can understand and suppress, reducing manual intervention.
+
+## Examples
+
+**Error:**
+
+```python
+def add(a: int, b: int) -> int:
+    return a + b  # type: ignore  # No error to suppress here
+```
+
+**Fix — remove the unnecessary comment:**
+
+```python
+def add(a: int, b: int) -> int:
+    return a + b
+```
+
+If using `# pyright: ignore` with specific error codes:
+
+```python
+x: int = 1
+y: int = x  # pyright: ignore[reportGeneralTypeIssues]  # No such error here
+```
+
+Remove the comment to keep the codebase clean.
 
 ## Common Fixes & Workarounds
 

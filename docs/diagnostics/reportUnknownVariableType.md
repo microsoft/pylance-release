@@ -4,10 +4,36 @@
 
 ## Representative Issues
 
--   [#1023](https://github.com/microsoft/pylance-release/issues/1023): Avoid using literal types within tuples for collection elements to prevent incorrect type inference and concatenation issues.
--   [#3192](https://github.com/microsoft/pylance-release/issues/3192): Ensure matplotlib type stubs match the library's actual return types, especially for subscriptable objects like ndarray and subplot arrays.
--   [#4382](https://github.com/microsoft/pylance-release/issues/4382): Ensure that the correct version of static analysis tools is used and verify that all necessary dependencies, including type stubs, are correctly installed.
--   [#5648](https://github.com/microsoft/pylance-release/issues/5648): Ensure that the `py.typed` file is correctly configured and placed to be recognized by Pylance's type checking system.
+- [#1023](https://github.com/microsoft/pylance-release/issues/1023): Avoid using literal types within tuples for collection elements to prevent incorrect type inference and concatenation issues.
+- [#3192](https://github.com/microsoft/pylance-release/issues/3192): Ensure matplotlib type stubs match the library's actual return types, especially for subscriptable objects like ndarray and subplot arrays.
+- [#4382](https://github.com/microsoft/pylance-release/issues/4382): Ensure that the correct version of static analysis tools is used and verify that all necessary dependencies, including type stubs, are correctly installed.
+- [#5648](https://github.com/microsoft/pylance-release/issues/5648): Ensure that the `py.typed` file is correctly configured and placed to be recognized by Pylance's type checking system.
+
+## Examples
+
+**Error:**
+
+```python
+import json
+
+result = json.loads('{"key": 1}')  # result has unknown type (Any)
+```
+
+**Fix — add a type annotation:**
+
+```python
+import json
+
+result: dict[str, int] = json.loads('{"key": 1}')
+```
+
+For variables from untyped libraries:
+
+```python
+from untyped_lib import get_value  # Returns Any
+
+value: str = get_value()  # Annotate to make type known
+```
 
 ## Common Fixes & Workarounds
 

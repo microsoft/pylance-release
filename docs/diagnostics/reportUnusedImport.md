@@ -18,6 +18,31 @@
 - [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
 - [#715](https://github.com/microsoft/pylance-release/issues/715): When using generic types like dictionaries in Python, prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax to ensure compatibility across different Python versions.
 
+## Examples
+
+**Error:**
+
+```python
+import os          # 'os' is imported but never used
+from sys import argv  # 'argv' is imported but never used
+
+def main():
+    print("hello")
+```
+
+**Fix — remove unused imports:**
+
+```python
+def main():
+    print("hello")
+```
+
+If the import is needed for re-export (e.g., in `__init__.py`), use the explicit re-export form:
+
+```python
+from mymodule import MyClass as MyClass  # Explicit re-export
+```
+
 ## Common Fixes & Workarounds
 
 1. Remove unused import statements from your code.

@@ -4,9 +4,38 @@
 
 ## Representative Issues
 
--   [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files to aid static analysis tools like pyright.
--   [#3066](https://github.com/microsoft/pyright/issues/3066): Enhance the diagnostic tool to differentiate between completely unknown and partially unknown variable types.
--   [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
+- [#1759](https://github.com/microsoft/pyright/issues/1759): Ensure that libraries used in a project include type information or provide stub files to aid static analysis tools like pyright.
+- [#3066](https://github.com/microsoft/pyright/issues/3066): Enhance the diagnostic tool to differentiate between completely unknown and partially unknown variable types.
+- [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
+
+## Examples
+
+**Error:**
+
+```python
+import json
+
+data = json.loads('{"key": 1}')  # json.loads returns Any
+process(data)  # Argument type is Unknown
+```
+
+**Fix — narrow the type before passing:**
+
+```python
+import json
+from typing import Any, cast
+
+raw: Any = json.loads('{"key": 1}')
+data: dict[str, int] = cast(dict[str, int], raw)
+process(data)  # Argument type is now known
+```
+
+Or add a type annotation:
+
+```python
+data: dict[str, int] = json.loads('{"key": 1}')
+process(data)
+```
 
 ## Common Fixes & Workarounds
 

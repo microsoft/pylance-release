@@ -4,9 +4,35 @@
 
 ## Representative Issues
 
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#9579](https://github.com/microsoft/pyright/issues/9579): Always ensure that coroutine calls are either awaited or explicitly checked for truthiness to avoid bugs where the coroutine is silently ignored.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#9579](https://github.com/microsoft/pyright/issues/9579): Always ensure that coroutine calls are either awaited or explicitly checked for truthiness to avoid bugs where the coroutine is silently ignored.
+
+## Examples
+
+**Error:**
+
+```python
+import asyncio
+
+async def fetch_data() -> str:
+    return "data"
+
+async def main():
+    fetch_data()  # Coroutine created but never awaited
+```
+
+**Fix — await the coroutine:**
+
+```python
+import asyncio
+
+async def fetch_data() -> str:
+    return "data"
+
+async def main():
+    result = await fetch_data()  # Now the coroutine runs
+```
 
 ## Common Fixes & Workarounds
 

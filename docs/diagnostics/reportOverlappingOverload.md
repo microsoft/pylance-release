@@ -4,9 +4,41 @@
 
 ## Representative Issues
 
--   [#10014](https://github.com/microsoft/pyright/issues/10014): Avoid using default keyword arguments in overloads to prevent false positives for overlapping overloads.
--   [#7084](https://github.com/microsoft/pyright/issues/7084): Avoid using multiple TypeVars in function signatures without a clear reason to distinguish different overloads.
--   [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+- [#10014](https://github.com/microsoft/pyright/issues/10014): Avoid using default keyword arguments in overloads to prevent false positives for overlapping overloads.
+- [#7084](https://github.com/microsoft/pyright/issues/7084): Avoid using multiple TypeVars in function signatures without a clear reason to distinguish different overloads.
+- [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+
+## Examples
+
+**Error:**
+
+```python
+from typing import overload
+
+@overload
+def process(x: int) -> str: ...
+@overload
+def process(x: int) -> int: ...  # Overlaps with first overload
+
+def process(x: int) -> str | int:
+    return str(x)
+```
+
+**Fix — make overloads non-overlapping:**
+
+```python
+from typing import overload
+
+@overload
+def process(x: int) -> str: ...
+@overload
+def process(x: float) -> int: ...  # Different param types
+
+def process(x: int | float) -> str | int:
+    if isinstance(x, int):
+        return str(x)
+    return int(x)
+```
 
 ## Common Fixes & Workarounds
 

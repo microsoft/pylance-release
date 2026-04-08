@@ -4,14 +4,37 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
--   [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer `typing.Dict` over `dict[t, t]` for compatibility.
--   [#2721](https://github.com/microsoft/pyright/issues/2721): Use `isinstance` for clearer type narrowing with coroutines.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure TOML comments use correct line endings.
--   [#5411](https://github.com/microsoft/pyright/issues/5411): Use explicit `AsyncGenerator` type annotation for async generator functions.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
+- [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer `typing.Dict` over `dict[t, t]` for compatibility.
+- [#2721](https://github.com/microsoft/pyright/issues/2721): Use `isinstance` for clearer type narrowing with coroutines.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure TOML comments use correct line endings.
+- [#5411](https://github.com/microsoft/pyright/issues/5411): Use explicit `AsyncGenerator` type annotation for async generator functions.
+
+## Examples
+
+```python
+# Warning: Implicit string concatenation — did you miss a comma or operator?
+func1("first argument" "second argument")
+
+# This is OK (multi-line string continuation inside parentheses):
+func1(
+    "This is a very long string that "
+    "spans multiple lines."
+)
+```
+
+**Fix — use explicit concatenation or a comma:**
+
+```python
+# If these were meant to be separate arguments:
+func1("first argument", "second argument")
+
+# If this was meant to be one combined string:
+func1("first argument" + " second argument")
+```
 
 ## Common Fixes & Workarounds
 

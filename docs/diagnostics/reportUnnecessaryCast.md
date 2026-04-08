@@ -4,8 +4,26 @@
 
 ## Representative Issues
 
--   [#450](https://github.com/microsoft/pyright/issues/450): Avoid using `type: ignore` comments unless absolutely necessary; instead, use more specific error handling methods like casts or asserts to manage type errors.
--   [#7990](https://github.com/microsoft/pyright/issues/7990): Use `TypeIs` for specific type checks and avoid unnecessary checks that could be simplified or removed.
+- [#450](https://github.com/microsoft/pyright/issues/450): Avoid using `type: ignore` comments unless absolutely necessary; instead, use more specific error handling methods like casts or asserts to manage type errors.
+- [#7990](https://github.com/microsoft/pyright/issues/7990): Use `TypeIs` for specific type checks and avoid unnecessary checks that could be simplified or removed.
+
+## Examples
+
+**Error:**
+
+```python
+from typing import cast
+
+def process(value: int) -> int:
+    return cast(int, value)  # Cast is unnecessary; value is already int
+```
+
+**Fix — remove the redundant cast:**
+
+```python
+def process(value: int) -> int:
+    return value
+```
 
 ## Common Fixes & Workarounds
 

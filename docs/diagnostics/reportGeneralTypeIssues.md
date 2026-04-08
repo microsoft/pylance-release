@@ -2,17 +2,52 @@
 
 `reportGeneralTypeIssues` is a diagnostic that flags a wide range of type-related issues in Python code, such as incorrect type hints, improper use of generics, and mismatches between type annotations and actual usage. This helps developers catch subtle bugs and improve code quality.
 
+## Examples
+
+**Error:**
+
+```python
+def double(value: int) -> int:
+    return value * 2
+
+result: str = double(5)  # Type 'int' is not assignable to type 'str'
+```
+
+**Fix — correct the annotation or the value:**
+
+```python
+result: int = double(5)
+```
+
+Another common case — incompatible return type:
+
+```python
+def greet(name: str) -> str:
+    if not name:
+        return None  # 'None' is not assignable to 'str'
+    return f"Hello, {name}"
+```
+
+Fix:
+
+```python
+def greet(name: str) -> str | None:
+    if not name:
+        return None
+    return f"Hello, {name}"
+```
+
 ## Representative Issues
 
--   [#1023](https://github.com/microsoft/pylance-release/issues/1023): Avoid using literal types within tuples for collection elements to prevent incorrect type inference and concatenation issues.
--   [#1034](https://github.com/microsoft/pylance-release/issues/1034): Ensure type hints match actual constructor arguments.
--   [#1068](https://github.com/microsoft/pylance-release/issues/1068): Use 'TypeGuard' to indicate type checks within functions.
--   [#106](https://github.com/microsoft/pylance-release/issues/106): Ensure all necessary imports are included and referenced.
--   [#1094](https://github.com/microsoft/pylance-release/issues/1094): Use covariant TypeVar for assignment between related types.
--   [#1095](https://github.com/microsoft/pylance-release/issues/1095): Avoid unnecessary type arguments in annotations.
--   [#1274](https://github.com/microsoft/pylance-release/issues/1274): Correctly type function parameters.
--   [#1290](https://github.com/microsoft/pylance-release/issues/1290): Use independent TypeVar declarations for nested generic classes.
--   [#1295](https://github.com/microsoft/pylance-release/issues/1295): Ensure correct order of parent class inheritance in protocols.
+- [#1023](https://github.com/microsoft/pylance-release/issues/1023): Avoid using literal types within tuples for collection elements to prevent incorrect type inference and concatenation issues.
+- [#1034](https://github.com/microsoft/pylance-release/issues/1034): Ensure type hints match actual constructor arguments.
+- [#1068](https://github.com/microsoft/pylance-release/issues/1068): Use 'TypeGuard' to indicate type checks within functions.
+- [#106](https://github.com/microsoft/pylance-release/issues/106): Ensure all necessary imports are included and referenced.
+- [#1094](https://github.com/microsoft/pylance-release/issues/1094): Use covariant TypeVar for assignment between related types.
+- [#1095](https://github.com/microsoft/pylance-release/issues/1095): Avoid unnecessary type arguments in annotations.
+- [#1274](https://github.com/microsoft/pylance-release/issues/1274): Correctly type function parameters.
+- [#1290](https://github.com/microsoft/pylance-release/issues/1290): Use independent TypeVar declarations for nested generic classes.
+- [#1295](https://github.com/microsoft/pylance-release/issues/1295): Ensure correct order of parent class inheritance in protocols.
 
 ## Common Fixes & Workarounds
 

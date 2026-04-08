@@ -4,10 +4,30 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
--   [#3332](https://github.com/microsoft/pyright/issues/3332): Always specify the module path when referencing submodules within larger modules to avoid syntax and import errors.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
+- [#3332](https://github.com/microsoft/pyright/issues/3332): Always specify the module path when referencing submodules within larger modules to avoid syntax and import errors.
+
+## Examples
+
+**Error:**
+
+```python
+# my_module.pyi (stub file)
+print("loading")  # Executable statement not allowed in stubs
+
+def greet(name: str) -> str: ...
+```
+
+**Fix — keep only declarations in stubs:**
+
+```python
+# my_module.pyi
+def greet(name: str) -> str: ...
+```
+
+Stubs should contain only declarations (functions, classes, variables with type annotations) and `...` as placeholders.
 
 ## Common Fixes & Workarounds
 

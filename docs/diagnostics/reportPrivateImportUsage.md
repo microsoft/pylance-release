@@ -4,15 +4,36 @@
 
 ## Representative Issues
 
--   [#2943](https://github.com/microsoft/pylance-release/issues/2943): Ensure that the use of '# type: ignore' comments is respected and correctly flagged by static analysis tools.
--   [#3003](https://github.com/microsoft/pylance-release/issues/3003): Ensure Pylint plugins are installed and configured, and VSCode parses their diagnostics into editor warnings.
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
--   [#7001](https://github.com/microsoft/pylance-release/issues/7001): Prefer 'openFilesOnly' diagnostic mode for large projects.
--   [#2277](https://github.com/microsoft/pyright/issues/2277): Use alias imports to indicate public interface symbols in `py.typed` libraries.
--   [#2639](https://github.com/microsoft/pyright/issues/2639): Ensure symbols are explicitly re-exported if they should be part of the public API.
--   [#8377](https://github.com/microsoft/pyright/issues/8377): Invoke Pyright with the project root directory for correct import resolution.
+- [#2943](https://github.com/microsoft/pylance-release/issues/2943): Ensure that the use of '# type: ignore' comments is respected and correctly flagged by static analysis tools.
+- [#3003](https://github.com/microsoft/pylance-release/issues/3003): Ensure Pylint plugins are installed and configured, and VSCode parses their diagnostics into editor warnings.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
+- [#7001](https://github.com/microsoft/pylance-release/issues/7001): Prefer 'openFilesOnly' diagnostic mode for large projects.
+- [#2277](https://github.com/microsoft/pyright/issues/2277): Use alias imports to indicate public interface symbols in `py.typed` libraries.
+- [#2639](https://github.com/microsoft/pyright/issues/2639): Ensure symbols are explicitly re-exported if they should be part of the public API.
+- [#8377](https://github.com/microsoft/pyright/issues/8377): Invoke Pyright with the project root directory for correct import resolution.
+
+## Examples
+
+**Error:**
+
+```python
+from some_package._internal import helper  # Importing private module
+from some_package import _private_func      # Importing private symbol
+```
+
+**Fix — use the public API:**
+
+```python
+from some_package import helper       # Use the public re-export
+from some_package import public_func  # Use the public name
+```
+
+If the library doesn’t expose a public API for what you need, consider:
+
+- Filing a feature request with the library maintainer
+- Using `# pyright: ignore[reportPrivateImportUsage]` as a last resort
 
 ## Common Fixes & Workarounds
 

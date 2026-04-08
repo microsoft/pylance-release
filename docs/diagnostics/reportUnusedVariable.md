@@ -17,6 +17,32 @@
 - [#2046](https://github.com/microsoft/pyright/issues/2046): Consider providing type hints or using function parameters to avoid runtime errors and improve code correctness. Implementing a feature to report unused function parameters would be beneficial for users who rely on such checks.
 - [#2307](https://github.com/microsoft/pyright/issues/2307): Ensure that configuration settings for unused variables are correctly applied and respected by the language server.
 
+## Examples
+
+**Error:**
+
+```python
+def process():
+    result = compute()  # 'result' is never used
+    print("done")
+```
+
+**Fix — use or remove the variable:**
+
+```python
+def process():
+    result = compute()
+    print(result)     # Now used
+```
+
+For intentionally unused values, prefix with underscore:
+
+```python
+def process():
+    _result = compute()  # Convention for intentionally unused
+    print("done")
+```
+
 ## Common Fixes & Workarounds
 
 1. Remove variables that are never used in your code.

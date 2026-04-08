@@ -4,16 +4,45 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
--   [#6403](https://github.com/microsoft/pylance-release/issues/6403): Ensure that your configuration settings do not interfere with the proper functioning of decorators and their dynamically added attributes.
--   [#990](https://github.com/microsoft/pylance-release/issues/990): Ensure all diagnostic severity rules in configuration files are accurately named to prevent misdirected diagnostics.
--   [#2524](https://github.com/microsoft/pyright/issues/2524): Ensure that bound methods have their `__self__` attribute correctly typed to the instance type, enhancing type safety and clarity.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
--   [#6510](https://github.com/microsoft/pyright/issues/6510): When working with functions or methods in Python, avoid reading or writing attributes directly on them as it can lead to incomplete type inference and potential runtime errors.
--   [#6814](https://github.com/microsoft/pyright/issues/6814): Ensure that overridden symbols in subclasses are correctly aligned with the base class definitions to avoid type violations related to incompatible variable overrides.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
+- [#6403](https://github.com/microsoft/pylance-release/issues/6403): Ensure that your configuration settings do not interfere with the proper functioning of decorators and their dynamically added attributes.
+- [#990](https://github.com/microsoft/pylance-release/issues/990): Ensure all diagnostic severity rules in configuration files are accurately named to prevent misdirected diagnostics.
+- [#2524](https://github.com/microsoft/pyright/issues/2524): Ensure that bound methods have their `__self__` attribute correctly typed to the instance type, enhancing type safety and clarity.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
+- [#6510](https://github.com/microsoft/pyright/issues/6510): When working with functions or methods in Python, avoid reading or writing attributes directly on them as it can lead to incomplete type inference and potential runtime errors.
+- [#6814](https://github.com/microsoft/pyright/issues/6814): Ensure that overridden symbols in subclasses are correctly aligned with the base class definitions to avoid type violations related to incompatible variable overrides.
+
+## Examples
+
+```python
+def my_func():
+    pass
+
+a = my_func.__annotations__  # OK: __annotations__ is a known attribute
+
+# Error: Cannot access attribute "bar" for class "function"
+c = my_func.bar
+
+# Error: Cannot assign attribute "baz" for class "function"
+my_func.baz = 3
+```
+
+**Fix — use a class or dict instead of attaching attributes to functions:**
+
+```python
+class MyCallable:
+    bar: str = "hello"
+    baz: int = 0
+
+    def __call__(self):
+        pass
+
+my_func = MyCallable()
+c = my_func.bar  # OK
+```
 
 ## Common Fixes & Workarounds
 
