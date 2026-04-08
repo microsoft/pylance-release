@@ -15,3 +15,8 @@
 2. Avoid dynamically constructing or modifying `__all__` at runtime.
 3. If you need dynamic exports, consider using explicit imports and exports instead.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnsupportedDunderAll) to adjust the severity or disable this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

@@ -15,3 +15,8 @@
 2. Double-check logic in assertions to ensure they are meaningful and not trivially true.
 3. Use explicit type annotations and consistent type stubs to avoid confusion.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportAssertAlwaysTrue) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

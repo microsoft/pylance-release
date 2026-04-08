@@ -17,3 +17,8 @@
 4. Match default argument types to their annotated parameter types.
 5. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportInvalidStubStatement) for details on configuring this diagnostic.
 6. Suppress this diagnostic with `# pyright: reportInvalidStubStatement=false` if you have a special case.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

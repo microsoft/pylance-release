@@ -21,3 +21,8 @@
 4. Remove or adjust unused or redundant `TypeVar` definitions to avoid unnecessary warnings.
 5. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportInvalidTypeVarUse) for details on configuring this diagnostic.
 6. Suppress specific diagnostics with `# pyright: reportInvalidTypeVarUse=false` if needed for special cases.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

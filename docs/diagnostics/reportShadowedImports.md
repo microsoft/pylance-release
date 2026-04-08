@@ -19,3 +19,8 @@
 2. Refactor your code to use unique names for local variables and imports.
 3. Review your import statements and ensure they are not being unintentionally shadowed later in the code.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportShadowedImports) to adjust the severity or disable this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

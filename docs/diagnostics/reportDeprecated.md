@@ -4,8 +4,26 @@
 
 ## Representative Issues
 
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+
+## Examples
+
+```python
+from typing import Optional  # In Python 3.10+, consider using X | None instead
+
+import imp  # Warning: "imp" is deprecated, use "importlib" instead
+```
+
+**Fix — use the recommended alternative:**
+
+```python
+import importlib  # Modern replacement for imp
+
+# Instead of Optional[str], use union syntax (Python 3.10+):
+def greet(name: str | None) -> str:
+    return f"Hello, {name or 'stranger'}"
+```
 
 ## Common Fixes & Workarounds
 
@@ -13,3 +31,8 @@
 2. Review library and Python release notes for deprecation warnings and migration guides.
 3. Refactor code to remove or update deprecated usages.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportDeprecated) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

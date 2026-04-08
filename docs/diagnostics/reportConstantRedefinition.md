@@ -4,14 +4,35 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
--   [#715](https://github.com/microsoft/pylance-release/issues/715): When using generic types like dictionaries in Python, prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax to ensure compatibility across different Python versions.
--   [#2974](https://github.com/microsoft/pyright/issues/2974): Explicitly type instance variables at the point of definition to avoid unintended type inference from multiple assignments.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
--   [#5265](https://github.com/microsoft/pyright/issues/5265): Use a single assignment to define constants in Python to avoid issues with static type checking tools like pyright.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): When configuring file exclusions in a Python project, it's crucial to accurately exclude unnecessary folders like .venv to improve performance.
+- [#715](https://github.com/microsoft/pylance-release/issues/715): When using generic types like dictionaries in Python, prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax to ensure compatibility across different Python versions.
+- [#2974](https://github.com/microsoft/pyright/issues/2974): Explicitly type instance variables at the point of definition to avoid unintended type inference from multiple assignments.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use the correct line endings and do not contain unsupported control characters to avoid parse errors.
+- [#5265](https://github.com/microsoft/pyright/issues/5265): Use a single assignment to define constants in Python to avoid issues with static type checking tools like pyright.
+
+## Examples
+
+```python
+MAX_RETRIES = 3
+MAX_RETRIES = 5  # Warning: "MAX_RETRIES" is declared as Final and
+                 #   cannot be reassigned
+```
+
+**Fix — use a single assignment for constants:**
+
+```python
+MAX_RETRIES = 5  # Define only once
+```
+
+**Fix — use a variable (non-constant) name if reassignment is intended:**
+
+```python
+max_retries = 3
+max_retries = 5  # OK: lowercase name is not treated as a constant
+```
 
 ## Common Fixes & Workarounds
 
@@ -20,3 +41,8 @@
 3. Explicitly type instance variables at the point of definition to prevent unintended type inference.
 4. Exclude unnecessary folders (like `.venv`) from your project configuration to improve performance.
 5. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportConstantRedefinition) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

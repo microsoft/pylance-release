@@ -15,3 +15,8 @@
 3. If you need to use a custom object as a key, implement the `__hash__` and `__eq__` methods appropriately.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnhashable) for details on configuring this diagnostic.
 5. Suppress this diagnostic with `# pyright: reportUnhashable=false` if you have a special case.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

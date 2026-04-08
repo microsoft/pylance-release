@@ -24,3 +24,8 @@
 3. Suppress specific import cycle warnings with `# pyright: reportImportCycles=none` in affected files.
 4. Ensure your Python environment and type stubs are consistent and properly configured.
 5. See the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportImportCycles) for details on configuring this rule.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

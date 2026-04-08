@@ -21,3 +21,8 @@
 2. If the result is intentionally unused, consider using a comment or a clearly named variable (e.g., `_unused`) to indicate this.
 3. Review your code for places where a function call's result should be used or returned.
 4. Adjust your Pyright or Pylance configuration if you want to change the severity or disable this diagnostic. See the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnusedCallResult) for details.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
