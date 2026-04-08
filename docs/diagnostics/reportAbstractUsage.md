@@ -4,8 +4,32 @@
 
 ## Representative Issues
 
--   [#7328](https://github.com/microsoft/pyright/issues/7328): Ensure that any overridden method in a subclass calls the corresponding method in the parent class, if it exists and is abstract.
--   [#8017](https://github.com/microsoft/pyright/issues/8017): Ensure a clean and properly installed version of pyright to avoid errors related to corrupted installations.
+- [#7328](https://github.com/microsoft/pyright/issues/7328): Ensure that any overridden method in a subclass calls the corresponding method in the parent class, if it exists and is abstract.
+- [#8017](https://github.com/microsoft/pyright/issues/8017): Ensure a clean and properly installed version of pyright to avoid errors related to corrupted installations.
+
+## Examples
+
+```python
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self) -> str:
+        pass
+
+# Error: Cannot instantiate abstract class "Animal"
+a = Animal()
+```
+
+**Fix — implement all abstract methods in a subclass:**
+
+```python
+class Dog(Animal):
+    def speak(self) -> str:
+        return "Woof!"
+
+d = Dog()  # OK
+```
 
 ## Common Fixes & Workarounds
 
@@ -13,3 +37,8 @@
 2. If overriding an abstract method, ensure the implementation is complete and does not call an unimplemented abstract method from the parent class.
 3. Check for typos or signature mismatches in method definitions.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportAbstractUsage) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

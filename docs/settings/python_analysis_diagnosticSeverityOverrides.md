@@ -219,6 +219,27 @@ Not directly. This setting changes a rule globally for the workspace. If you wan
 
 Sometimes that is appropriate, but often the better fix is to improve Pylance's understanding of the code by restructuring imports, adding stubs, or adjusting workspace configuration.
 
+## Related Diagnostics
+
+Every `report*` diagnostic rule can be overridden with this setting. Commonly overridden rules:
+
+| Rule                                                                   | Common override | Reason                                       |
+| ---------------------------------------------------------------------- | --------------- | -------------------------------------------- |
+| [`reportMissingImports`](../diagnostics/reportMissingImports.md)       | `"warning"`     | Lower severity while migrating environments  |
+| [`reportUnusedImport`](../diagnostics/reportUnusedImport.md)           | `"information"` | Keep visible without blocking                |
+| [`reportUnknownMemberType`](../diagnostics/reportUnknownMemberType.md) | `"none"`        | Noisy with untyped dependencies              |
+| [`reportUnusedCallResult`](../diagnostics/reportUnusedCallResult.md)   | `"none"`        | Many calls legitimately ignore return values |
+| [`reportReturnType`](../diagnostics/reportReturnType.md)               | `"error"`       | Promote to catch real bugs earlier           |
+
+For the complete list of configurable rules, see the [documentation index](../INDEX.md#diagnostic-rules).
+
+## See Also
+
+- [How to Gradually Adopt Strict Type Checking](../howto/gradual-strict-adoption.md) — using overrides for incremental strictness
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides `diagnosticSeverityOverrides`
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — when to fix imports vs suppress diagnostics
+- [Pyright diagnostic rule reference](https://microsoft.github.io/pyright/#/configuration?id=type-check-rule-overrides) — full list of available rule names and defaults
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

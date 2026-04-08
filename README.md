@@ -1,45 +1,44 @@
-Pylance
-=====================
+# Pylance
+
 ### Fast, feature-rich language support for Python
 
 This repository is for providing feedback and documentation on the [Pylance language server extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to [Pyright](https://github.com/microsoft/pyright) to make improvements to the core typing engine that powers the Pylance experience.
 
-Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency. 
+Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency.
 
 The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
 
-Quick Start
-============
+# Quick Start
+
 1. Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) from the marketplace. Pylance will be installed as an optional extension.
 1. Open a Python (.py) file and the Pylance extension will activate.
 
 Note: If you've previously set a language server and want to try Pylance, make sure you've set `"python.languageServer": "Default" or "Pylance"` in your settings.json file using the text editor, or using the Settings Editor UI.
 
-Features
-=========
+# Features
 
 ![ features ](images/all-features.gif)
 
 Pylance provides some awesome features for Python 3, including:
 
-* Docstrings
-* Signature help, with type information
-* Parameter suggestions
-* Code completion
-* Auto-imports (as well as add and remove import code actions)
-* As-you-type reporting of code errors and warnings (diagnostics)
-* Code outline
-* Code navigation
-* Type checking mode
-* Native multi-root workspace support
-* Jupyter Notebooks compatibility
-* Semantic highlighting
+- Docstrings
+- Signature help, with type information
+- Parameter suggestions
+- Code completion
+- Auto-imports (as well as add and remove import code actions)
+- As-you-type reporting of code errors and warnings (diagnostics)
+- Code outline
+- Code navigation
+- Type checking mode
+- Native multi-root workspace support
+- Jupyter Notebooks compatibility
+- Semantic highlighting
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
-Settings and Customization
-===============
-Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the `settings.json` file in your workspace, or edited through the Settings Editor UI. 
+# Settings and Customization
+
+Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the `settings.json` file in your workspace, or edited through the Settings Editor UI.
 
 - [`python.analysis.languageServerMode`](docs/settings/python_analysis_languageServerMode.md)
     - Offers predefined configurations to help users optimize Pylance's performance based on their development needs. It controls how many IntelliSense features Pylance provides, allowing you to choose between full language service functionality or a lightweight experience optimized for performance.
@@ -54,40 +53,40 @@ Pylance provides users with the ability to customize their Python language suppo
         - `full`: Designed for users seeking the most extensive feature set. This mode enables most of Pylance's features, offering the richest IntelliSense experience. Ideal for those who want access to the full range of available functionality.
     - Individual settings can be configured to override the defaults set by `languageServerMode`.
     - Default settings based on mode are:
-      
-        | Mode                           | light      | default    | full       |
-        | :----------------------------- | :--------- | :--------- | :--------- |
-        | python.analysis.exclude                   | ["**"]      | []         | []         |
-        | python.analysis.useLibraryCodeForTypes    | false       | true       | true       |
-        | python.analysis.enablePytestSupport       | false       | true       | true       |
-        | python.analysis.indexing                  | false       | true       | true       |
-        | python.analysis.userFileIndexFollowSymlinkedFolders | true | true | true |
-        | python.analysis.autoImportCompletions     | false       | false      | true       |
-        | python.analysis.showOnlyDirectDependenciesInAutoImport | false | false | true     |
-        | python.analysis.packageIndexDepths        | See | settings | below |
-        | python.analysis.regenerateStdLibIndices   | false       | false      | true       |
-        | python.analysis.userFileIndexingLimit     | 2000        | 2000       | -1         |
-        | python.analysis.includeAliasesFromUserFiles | false     | false      | true       |
-        | python.analysis.functionReturnTypes       | false       | false      | true       |
-        | python.analysis.pytestParameters          | false       | false      | true       |
-        | python.analysis.supportRestructuredText   | false       | true      | true       |
-        | python.analysis.supportDocstringTemplate  | false       | false      | true       |
-        | python.analysis.nodeExecutable            | ""          | ""         | "auto"     |
 
-- `python.analysis.typeCheckingMode`
+        | Mode                                                   | light  | default  | full   |
+        | :----------------------------------------------------- | :----- | :------- | :----- |
+        | python.analysis.exclude                                | ["**"] | []       | []     |
+        | python.analysis.useLibraryCodeForTypes                 | false  | true     | true   |
+        | python.analysis.enablePytestSupport                    | false  | true     | true   |
+        | python.analysis.indexing                               | false  | true     | true   |
+        | python.analysis.userFileIndexFollowSymlinkedFolders    | true   | true     | true   |
+        | python.analysis.autoImportCompletions                  | false  | false    | true   |
+        | python.analysis.showOnlyDirectDependenciesInAutoImport | false  | false    | true   |
+        | python.analysis.packageIndexDepths                     | See    | settings | below  |
+        | python.analysis.regenerateStdLibIndices                | false  | false    | true   |
+        | python.analysis.userFileIndexingLimit                  | 2000   | 2000     | -1     |
+        | python.analysis.includeAliasesFromUserFiles            | false  | false    | true   |
+        | python.analysis.functionReturnTypes                    | false  | false    | true   |
+        | python.analysis.pytestParameters                       | false  | false    | true   |
+        | python.analysis.supportRestructuredText                | false  | true     | true   |
+        | python.analysis.supportDocstringTemplate               | false  | false    | true   |
+        | python.analysis.nodeExecutable                         | ""     | ""       | "auto" |
+
+- [`python.analysis.typeCheckingMode`](docs/settings/python_analysis_typeCheckingMode.md)
     - Used to specify the level of type checking analysis performed.
-    - Default: `off`. 
+    - Default: `off`.
         > Note that the value of this setting can be overridden by having a pyrightconfig.json or a pyproject.toml. For more information see this [link](https://aka.ms/AArua4c).
     - Available values:
         - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced.
         - `basic`: All rules from `off` + `basic` type checking rules.
         - `standard`: All rules from `basic` + `standard` type checking rules.
         - `strict`: All rules from `standard` + `strict` type checking rules.
-        > You can refer to [pyright](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) documentation to reference the default type checking rules for each of the type checking modes. 
+            > You can refer to [pyright](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) documentation to reference the default type checking rules for each of the type checking modes.
     - Performance Consideration:
         - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by disabling type checking analysis, which can be resource-intensive, especially in large codebases.
 
-- `python.analysis.diagnosticMode`
+- [`python.analysis.diagnosticMode`](docs/settings/python_analysis_diagnosticMode.md)
     - Used to allow a user to specify what files they want the language server to analyze to get problems flagged in their code.
     - Available values:
         - `workspace`
@@ -105,7 +104,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Excluding unnecessary files or directories can significantly improve performance by reducing the scope of analysis. For example, setting `python.analysis.exclude` to `["**"]` will exclude all files except those currently open, minimizing resource consumption.
 
-- `python.analysis.useNearestConfiguration` (**Experimental**)
+- [`python.analysis.useNearestConfiguration`](docs/settings/python_analysis_useNearestConfiguration.md) (**Experimental**)
     - When enabled, Pylance will search for and use `pyrightconfig.json` or `pyproject.toml` files in subdirectories, creating virtual workspaces for each configuration. This allows different type-checking settings for different parts of your codebase.
     - Default value: `false`
     - Available values:
@@ -116,21 +115,21 @@ Pylance provides users with the ability to customize their Python language suppo
         - Virtual workspaces respect `python.analysis.exclude` patterns.
         - Only `pyproject.toml` files containing `[tool.pyright]` sections are discovered.
         - **Important**: Files in different virtual workspaces are isolated from each other. If you need files in one workspace to import from another workspace, you must configure `extraPaths` in your `pyrightconfig.json` or `pyproject.toml` to reference the other workspace directories. For example:
-          ```json
-          {
-            "extraPaths": ["../other-workspace"]
-          }
-          ```
+            ```json
+            {
+                "extraPaths": ["../other-workspace"]
+            }
+            ```
 
 - [`python.analysis.ignore`](docs/settings/python_analysis_ignore.md)
     - Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
 
-- `python.analysis.stubPath`
+- [`python.analysis.stubPath`](docs/settings/python_analysis_stubPath.md)
     - Used to allow a user to specify a path to a directory that contains custom type stubs. Each package's type stub file(s) are expected to be in its own subdirectory.
     - Default value: `./typings`
 
-- `python.analysis.autoSearchPaths`
+- [`python.analysis.autoSearchPaths`](docs/settings/python_analysis_autoSearchPaths.md)
     - Used to automatically add search paths based on some predefined names (like `src`).
     - Available values:
         - `true` (default)
@@ -140,7 +139,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     - Default value: empty array
 
-- `python.analysis.includeExtraPathSymbolsInSymbolSearch`
+- [`python.analysis.includeExtraPathSymbolsInSymbolSearch`](docs/settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md)
     - Include symbols from `python.analysis.extraPaths` in Workspace Symbol search.
     - Default value: `false`
     - Performance Consideration:
@@ -148,7 +147,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Note:
         - For non-`py.typed` libraries, only symbols exported via a package `__init__.py` `__all__` are included.
 
-- `python.analysis.includeVenvInWorkspaceSymbols`
+- [`python.analysis.includeVenvInWorkspaceSymbols`](docs/settings/python_analysis_includeVenvInWorkspaceSymbols.md)
     - Include symbols from installed third-party packages (venv `site-packages`) in Workspace Symbol search.
     - Default value: `false`
     - Performance Consideration:
@@ -160,7 +159,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - When the search query is empty, venv/library symbols are not returned (the result set would be too large). User-code symbols are always returned regardless of the query.
         - The depth of sub-packages searched depends on `python.analysis.packageIndexDepths`. By default, only top-level modules (depth 1) are indexed. To include symbols from deeper sub-modules (e.g., `django.views`), increase the `depth` for the corresponding package in `packageIndexDepths`.
 
-- `python.analysis.diagnosticSeverityOverrides`
+- [`python.analysis.diagnosticSeverityOverrides`](docs/settings/python_analysis_diagnosticSeverityOverrides.md)
     - Used to allow a user to override the severity levels for individual diagnostics should they desire.
     - Accepted severity values:
         - `error` (red squiggle)
@@ -169,6 +168,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `none` (disables the rule)
     - Available rules to use as keys can be found [here](DIAGNOSTIC_SEVERITY_RULES.md)
     - Example:
+
     ```json
     {
         "python.analysis.diagnosticSeverityOverrides": {
@@ -182,6 +182,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Used to allow a user to override the behavior of type evaluator should they desire.
     - Available rules to use as subkeys can be found [here](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#type-evaluation-settings)
     - Example:
+
     ```json
     {
         "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
@@ -236,30 +237,28 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - [`python.analysis.packageIndexDepths`](docs/settings/python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis. By default, only top-level modules are indexed (depth = 1). To index submodules, increase depth by 1 for each level of submodule you want to index.
-    - If `depth` is set to `0`, the entry is treated as an *exclude prefix* and is removed from the index. Exclusions are module-boundary aware: `pydantic.v1` excludes `pydantic.v1` and `pydantic.v1.*`, but does not exclude `pydantic.v10`.
+    - If `depth` is set to `0`, the entry is treated as an _exclude prefix_ and is removed from the index. Exclusions are module-boundary aware: `pydantic.v1` excludes `pydantic.v1` and `pydantic.v1.*`, but does not exclude `pydantic.v10`.
     - Default value:
         ```jsonc
         [
-            { "name": "sklearn", "depth": 2 }, 
-            { "name": "matplotlib", "depth": 2 }, 
-            { "name": "scipy", "depth": 2 }, 
-            { "name": "django", "depth": 2 }, 
-            { "name": "flask", "depth": 2 }, 
-            { "name": "fastapi", "depth": 2 }
+            { "name": "sklearn", "depth": 2 },
+            { "name": "matplotlib", "depth": 2 },
+            { "name": "scipy", "depth": 2 },
+            { "name": "django", "depth": 2 },
+            { "name": "flask", "depth": 2 },
+            { "name": "fastapi", "depth": 2 },
         ]
         ```
         or in `full` mode
         ```jsonc
-        [
-            { "name": "", "depth": 4,  "includeAllSymbols": true }
-        ]
+        [{ "name": "", "depth": 4, "includeAllSymbols": true }]
         ```
     - Accepted values:
         ```jsonc
         {
             "name": "package name (str)",
             "depth": "depth to scan (int)",
-            "includeAllSymbols": "whether to include all symbols (bool)"
+            "includeAllSymbols": "whether to include all symbols (bool)",
         }
         ```
         If `includeAllSymbols` is set to `false`, only symbols in each package's `__all__` are included. When it's set to `true`, Pylance will index every module/top level symbol declarations in the file.
@@ -267,14 +266,14 @@ Pylance provides users with the ability to customize their Python language suppo
         ```jsonc
         [
             { "name": "sklearn", "depth": 2, "includeAllSymbols": true },
-            { "name": "matplotlib", "depth": 3, "includeAllSymbols": false }
+            { "name": "matplotlib", "depth": 3, "includeAllSymbols": false },
         ]
         ```
     - Exclusion example:
         ```jsonc
         [
             { "name": "ctypes", "depth": 0 },
-            { "name": "pydantic.v1", "depth": 0 }
+            { "name": "pydantic.v1", "depth": 0 },
         ]
         ```
     - Performance Consideration:
@@ -320,7 +319,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.importFormat`
+- [`python.analysis.importFormat`](docs/settings/python_analysis_importFormat.md)
     - Defines the default format for import module.
     - Accepted values:
         - `absolute` (default)
@@ -334,7 +333,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling `python.analysis.completeFunctionParens` can slightly improve performance by reducing the overhead during code completion, though the impact is minimal.
 
-- `python.analysis.inlayHints.variableTypes`
+- [`python.analysis.inlayHints.variableTypes`](docs/settings/python_analysis_inlayHints_variableTypes.md)
     - Enable/disable inlay hints for variable types.
     - Accepted values:
         - `true`
@@ -342,7 +341,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling inlay hints for variable types by setting `python.analysis.inlayHints.variableTypes` to `false` can improve performance by reducing the processing required to generate these hints, which can be beneficial in large codebases.
 
-- `python.analysis.inlayHints.functionReturnTypes`
+- [`python.analysis.inlayHints.functionReturnTypes`](docs/settings/python_analysis_inlayHints_functionReturnTypes.md)
     - Enable/disable inlay hints for function return types.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
@@ -351,7 +350,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling inlay hints for function return types can improve performance by reducing the overhead of generating these hints.
 
-- `python.analysis.inlayHints.callArgumentNames`
+- [`python.analysis.inlayHints.callArgumentNames`](docs/settings/python_analysis_inlayHints_callArgumentNames.md)
     - Enable/disable inlay hints for call argument names.
     - Accepted values:
         - `off` (default)
@@ -360,7 +359,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Setting `python.analysis.inlayHints.callArgumentNames` to `off` can improve performance by reducing the processing needed to display argument names during function calls.
 
-- `python.analysis.inlayHints.pytestParameters`
+- [`python.analysis.inlayHints.pytestParameters`](docs/settings/python_analysis_inlayHints_pytestParameters.md)
     - Enable/disable inlay hints for pytest function parameters.
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
@@ -379,7 +378,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling inlay hints for pytest parameters can improve performance by reducing the overhead associated with generating these hints.
 
-- `python.analysis.fixAll`
+- [`python.analysis.fixAll`](docs/settings/python_analysis_fixAll.md)
     - The set of commands to run when doing a fix all.
     - Accepted values:
         - `source.unusedImports`
@@ -387,8 +386,8 @@ Pylance provides users with the ability to customize their Python language suppo
         - `source.convertImportStar`
         - `source.addTypeAnnotation`
 
-- `python.analysis.enablePytestSupport`
-    - Enable pytest goto def and inlay hint support for fixtures. 
+- [`python.analysis.enablePytestSupport`](docs/settings/python_analysis_enablePytestSupport.md)
+    - Enable pytest goto def and inlay hint support for fixtures.
     - Default value: `true` (or `false` in `light` mode)
     - Accepted values:
         - `true` (default)
@@ -405,35 +404,35 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false` (default)
 
 - `python.analysis.autoFormatStrings`
-    - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
+    - When typing a `{` in a string, automatically puts an `f` on the front of the string.
     - Accepted values:
         - `true`
         - `false` (default)
     - Performance Consideration:
         - Disabling `python.analysis.autoFormatStrings` can slightly improve performance by reducing the processing required during string formatting, though the impact is minimal.
 
-- `python.analysis.nodeExecutable`
+- [`python.analysis.nodeExecutable`](docs/settings/python_analysis_nodeExecutable.md)
     - Path to a node executable to use to run Pylance. If this value is empty, Pylance uses VS Code's node executable. If set to `auto`, it will automatically download a version from [nodejs](https://nodejs.org/dist/)
     - Set this value when you are having out of memory issues. Using a custom node executable allows Pylance to allocate more memory.
     - Accepted values:
         - `any executable path` or `auto`
 
--   `python.analysis.nodeArguments`
-    -   Extra arguments to pass to node when using `python.analysis.nodeExecutable`. Defaults to `--max-old-space-size=8192`
-    -   Accepted values:
-        -   `Any argument that node accepts`
+- [`python.analysis.nodeArguments`](docs/settings/python_analysis_nodeArguments.md)
+    - Extra arguments to pass to node when using `python.analysis.nodeExecutable`. Defaults to `--max-old-space-size=8192`
+    - Accepted values:
+        - `Any argument that node accepts`
 
 - `python.analysis.autoIndent`
     - Automatically adjust indentation based on language semantics when typing Python code.
     - Accepted values:
         - `true` (default)
-        - `false` 
+        - `false`
 
 - `python.analysis.autoSplitStrings`
     - Automatically add quote and line continuation characters when splitting strings.
     - Accepted values:
         - `true` (default)
-        - `false` 
+        - `false`
 
 - `python.analysis.autoTranslateDocstrings`
     - Automatically translate Python docstrings in hover tooltips to the user's preferred language using GitHub Copilot.
@@ -451,7 +450,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Default value: `false` (or `true` in `full` mode)
     - Accepted values:
         - `true` (default)
-        - `false` 
+        - `false`
     - Performance Consideration:
         - Disabling support for reStructuredText in docstrings by setting `python.analysis.supportRestructuredText` to `false` can improve performance by reducing the overhead of parsing complex docstrings.
 
@@ -465,6 +464,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `generateSymbol`
         - `implementAbstractClasses`
     - Example:
+
     ```json
     {
         "python.analysis.aiCodeActions": {
@@ -523,8 +523,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-Semantic highlighting
-=====================
+# Semantic highlighting
 
 Visual Studio Code uses TextMate grammars as the main tokenization engine. TextMate grammars work on a single file as input and break it up based on lexical rules expressed in regular expressions.
 
@@ -562,36 +561,36 @@ Semantic colors can be customized in settings.json by associating the Pylance se
     - overridden
     - callable
 
-The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to. 
+The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to.
 
 Example of customizing semantic colors in settings.json:
 
 ```jsonc
 {
     "editor.semanticTokenColorCustomizations": {
-        "[One Dark Pro]": { // Apply to this theme only
+        "[One Dark Pro]": {
+            // Apply to this theme only
             "enabled": true,
             "rules": {
                 "magicFunction:python": "#ee0000",
                 "function.declaration:python": "#990000",
                 "*.decorator:python": "#0000dd",
                 "*.typeHint:python": "#5500aa",
-                "*.typeHintComment:python": "#aaaaaa"
-            }
-        }
-    }
+                "*.typeHintComment:python": "#aaaaaa",
+            },
+        },
+    },
 }
 ```
 
-Code Actions
-============
+# Code Actions
 
 Pylance provides a set of code actions that are available through the lightbulb menu (or `Ctrl+.` / `Cmd+.`).
 The exact titles can vary depending on context (e.g. the unresolved symbol name), but the actions below are what
 Pylance can offer.
 
-Quick Fixes
------------
+## Quick Fixes
+
 - Remove unused import
 - Remove all unused imports
 - Add import: `...` (adds a missing import for an unresolved symbol)
@@ -604,8 +603,8 @@ Quick Fixes
 - Learn more about import resolution
 - Fix formatted string (for specific diagnostics that provide a fix)
 
-Refactorings
-------------
+## Refactorings
+
 - Extract Variable
 - Extract Method
 - Move symbols to file...
@@ -618,8 +617,8 @@ Refactorings
 - Implement all abstract classes
 - Add pytest fixture type annotation (and Add all... variants)
 
-AI-assisted code actions (require Copilot)
-----------------------------------------
+## AI-assisted code actions (require Copilot)
+
 - Generate docstring (for empty docstrings)
 - Generate docstring (with Copilot)
 - Generate function `...` / Generate class `...`
@@ -628,8 +627,8 @@ AI-assisted code actions (require Copilot)
 - Convert lambda to named function
 - Implement all abstract classes (with Copilot)
 
-Source (whole-file) code actions
---------------------------------
+## Source (whole-file) code actions
+
 - `source.unusedImports`
     - Remove all unused imports in a file
 
@@ -651,13 +650,13 @@ Source (whole-file) code actions
 - `source.fixAll.pylance`
     - Apply the commands listed in the `python.analysis.fixAll` setting
 
-Troubleshooting
-===============
+# Troubleshooting
+
 Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
 
-Contributing
-===============
-Pylance leverages Microsoft's open-source static type checking tool, Pyright, to provide performant language support for Python. 
+# Contributing
+
+Pylance leverages Microsoft's open-source static type checking tool, Pyright, to provide performant language support for Python.
 
 Code contributions are welcomed via the [Pyright](https://github.com/microsoft/pyright) repo.
 
@@ -665,11 +664,10 @@ Pylance ships with a collection of type stubs for popular modules to provide fas
 
 For information on getting started, refer to the [CONTRIBUTING instructions](https://github.com/microsoft/pyright/blob/main/CONTRIBUTING.md).
 
+# Feedback
 
-Feedback
-===============
-* File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
-* [Tweet us](https://twitter.com/pythonvscode/) with other feedback
+- File a bug in [GitHub Issues](https://github.com/microsoft/pylance-release/issues/new/choose)
+- [Tweet us](https://twitter.com/pythonvscode/) with other feedback
 
 # License
 

@@ -87,6 +87,14 @@ In codebases that interface with dynamic or untyped code, static type analysis m
 
 **A:** The setting applies globally to the workspace. There is no per-file override. You can use a `pyrightconfig.json` with `include`/`exclude` to scope the configuration to specific directories.
 
+## Related Diagnostics
+
+Reachability analysis interacts with these diagnostic rules:
+
+- [`reportUnnecessaryComparison`](../diagnostics/reportUnnecessaryComparison.md) — comparison always has the same result
+- [`reportUnnecessaryIsInstance`](../diagnostics/reportUnnecessaryIsInstance.md) — `isinstance()` check always true or false
+- [`reportUnnecessaryContains`](../diagnostics/reportUnnecessaryContains.md) — `in` check always has the same result
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

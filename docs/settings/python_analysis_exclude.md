@@ -36,9 +36,9 @@ You can add the `python.analysis.exclude` setting to your Visual Studio Code wor
 To modify your settings in `settings.json`:
 
 1. **Open Settings (JSON)**:
-   - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
+    - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
 2. **Add the Setting**:
-   - Include the `python.analysis.exclude` setting with the paths you want to exclude.
+    - Include the `python.analysis.exclude` setting with the paths you want to exclude.
 
 Example:
 
@@ -51,9 +51,9 @@ Example:
 ### Specifying Paths
 
 - **Wildcard Characters**:
-  - `**`: Matches any directory or multiple levels of directories.
-  - `*`: Matches any sequence of zero or more characters.
-  - `?`: Matches a single character.
+    - `**`: Matches any directory or multiple levels of directories.
+    - `*`: Matches any sequence of zero or more characters.
+    - `?`: Matches a single character.
 - **Relative Paths**: Paths are typically specified relative to the workspace root.
 - **Absolute Paths**: Can be used but are less common and may reduce portability.
 
@@ -189,15 +189,18 @@ my_project/
 
 The pattern `**/src/**` does not match `src/` because there is no folder preceding `src`. Similarly, `src/**/module1` does not match `src/module1/` because there is no folder between `src` and `module1`. However, `src/**/module2` successfully matches `module2/` because `module1` exists between `src` and `module2`.
 
+## Related Settings
+
+- [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
+- [`python.analysis.ignore`](python_analysis_ignore.md): Suppresses diagnostics without excluding files.
+- [`python.analysis.diagnosticMode`](python_analysis_diagnosticMode.md): Controls whether diagnostics run on all files or only open files.
+
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — per-subfolder exclusion patterns
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — using `exclude` to reduce analysis scope
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides `exclude`
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
-
----
-
-For more information on Pylance settings and customization, refer to the [Pylance README](https://github.com/microsoft/pylance-release#settings-and-customization) and the [Pyright Configuration Documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md).
-
----
-
-*"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."*
-

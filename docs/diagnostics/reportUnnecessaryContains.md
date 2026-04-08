@@ -4,9 +4,32 @@
 
 ## Representative Issues
 
--   [#5218](https://github.com/microsoft/pyright/issues/5218): Ensure that collection membership checks are performed with compatible types to avoid unnecessary diagnostics.
--   [#6087](https://github.com/microsoft/pyright/issues/6087): Adjust `reportUnnecessaryContains` to correctly handle cases where values are equal but of different types.
--   [#7354](https://github.com/microsoft/pyright/issues/7354): Direct comparisons between objects of different types will always evaluate to False unless explicitly overridden.
+- [#5218](https://github.com/microsoft/pyright/issues/5218): Ensure that collection membership checks are performed with compatible types to avoid unnecessary diagnostics.
+- [#6087](https://github.com/microsoft/pyright/issues/6087): Adjust `reportUnnecessaryContains` to correctly handle cases where values are equal but of different types.
+- [#7354](https://github.com/microsoft/pyright/issues/7354): Direct comparisons between objects of different types will always evaluate to False unless explicitly overridden.
+
+## Examples
+
+**Error:**
+
+```python
+def has_item(items: list[int], key: str) -> bool:
+    return key in items  # str can never be contained in list[int]
+```
+
+**Fix — use compatible types:**
+
+```python
+def has_item(items: list[int], key: int) -> bool:
+    return key in items
+```
+
+Or update the container type:
+
+```python
+def has_item(items: list[int | str], key: str) -> bool:
+    return key in items
+```
 
 ## Common Fixes & Workarounds
 
@@ -14,3 +37,8 @@
 2. Refactor code to remove redundant or logically impossible membership checks.
 3. Use explicit type conversions or assertions where needed for clarity and correctness.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnnecessaryContains) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

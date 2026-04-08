@@ -4,8 +4,26 @@
 
 ## Representative Issues
 
--   [#450](https://github.com/microsoft/pyright/issues/450): Avoid using `type: ignore` comments unless absolutely necessary; instead, use more specific error handling methods like casts or asserts to manage type errors.
--   [#7990](https://github.com/microsoft/pyright/issues/7990): Use `TypeIs` for specific type checks and avoid unnecessary checks that could be simplified or removed.
+- [#450](https://github.com/microsoft/pyright/issues/450): Avoid using `type: ignore` comments unless absolutely necessary; instead, use more specific error handling methods like casts or asserts to manage type errors.
+- [#7990](https://github.com/microsoft/pyright/issues/7990): Use `TypeIs` for specific type checks and avoid unnecessary checks that could be simplified or removed.
+
+## Examples
+
+**Error:**
+
+```python
+from typing import cast
+
+def process(value: int) -> int:
+    return cast(int, value)  # Cast is unnecessary; value is already int
+```
+
+**Fix — remove the redundant cast:**
+
+```python
+def process(value: int) -> int:
+    return value
+```
 
 ## Common Fixes & Workarounds
 
@@ -13,3 +31,8 @@
 2. Use explicit type annotations or asserts only when needed for clarity or type narrowing.
 3. Prefer more specific error handling or type checking methods over broad `type: ignore` comments.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnnecessaryCast) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

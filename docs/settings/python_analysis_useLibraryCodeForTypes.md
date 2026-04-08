@@ -144,6 +144,24 @@ Pylance no longer reports type errors related to `unknownlib`, and your code rem
 
 **A:** The `python.analysis.useLibraryCodeForTypes` setting is global and cannot be used to disable type checking for specific libraries. To manage type checking for particular libraries, you can create stub files for the library through [`python.analysis.stubPath`](python_analysis_stubPath.md), point Pylance at a custom typeshed tree through [`python.analysis.typeshedPaths`](python_analysis_typeshedPaths.md) when the problem is typeshed-based, or use `# type: ignore` comments in your code.
 
+## Related Diagnostics
+
+When `useLibraryCodeForTypes` is `false`, untyped libraries return `Unknown` types, which can trigger strict-mode rules:
+
+- [`reportUnknownVariableType`](../diagnostics/reportUnknownVariableType.md) — variable is `Unknown`
+- [`reportUnknownArgumentType`](../diagnostics/reportUnknownArgumentType.md) — argument is `Unknown`
+- [`reportUnknownMemberType`](../diagnostics/reportUnknownMemberType.md) — attribute returns `Unknown`
+- [`reportUnknownParameterType`](../diagnostics/reportUnknownParameterType.md) — parameter is `Unknown`
+- [`reportMissingTypeStubs`](../diagnostics/reportMissingTypeStubs.md) — no type stubs found for a library
+
+If these rules are noisy for specific libraries, consider adding stubs via [`stubPath`](python_analysis_stubPath.md) or installing type stubs (`pip install types-<package>`).
+
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — when library code analysis affects import resolution
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — performance impact of analyzing library source
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides this setting
+
 ---
 
 _For more detailed information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

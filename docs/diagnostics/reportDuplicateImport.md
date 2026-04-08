@@ -4,12 +4,41 @@
 
 ## Representative Issues
 
--   [#1969](https://github.com/microsoft/pylance-release/issues/1969): Ensure that `python.analysis.indexing` is enabled to maintain an up-to-date index of available modules and symbols, which helps in providing accurate auto-import suggestions.
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#3793](https://github.com/microsoft/pylance-release/issues/3793): Ensure that the configuration settings for Pylance/Pyright are correctly applied to suppress errors in Python library files.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#715](https://github.com/microsoft/pylance-release/issues/715): When using generic types like dictionaries in Python, prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax to ensure compatibility across different Python versions.
+- [#1969](https://github.com/microsoft/pylance-release/issues/1969): Ensure that `python.analysis.indexing` is enabled to maintain an up-to-date index of available modules and symbols, which helps in providing accurate auto-import suggestions.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#3793](https://github.com/microsoft/pylance-release/issues/3793): Ensure that the configuration settings for Pylance/Pyright are correctly applied to suppress errors in Python library files.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#715](https://github.com/microsoft/pylance-release/issues/715): When using generic types like dictionaries in Python, prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax to ensure compatibility across different Python versions.
+
+## Examples
+
+```python
+import os
+import os  # Error: Import "os" is duplicated
+
+from typing import List
+from typing import List  # Error: Import "List" is duplicated
+```
+
+**Fix — remove duplicate imports:**
+
+```python
+import os
+
+from typing import List
+```
+
+**Fix — consolidate multiple imports from the same module:**
+
+```python
+# Before (not an error, but cleaner when consolidated):
+from typing import List
+from typing import Dict
+
+# After:
+from typing import Dict, List
+```
 
 ## Common Fixes & Workarounds
 
@@ -18,3 +47,8 @@
 3. Enable `python.analysis.indexing` to improve auto-import suggestions and avoid accidental duplicates.
 4. Ensure your configuration settings are correctly applied to suppress unnecessary errors.
 5. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportDuplicateImport) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

@@ -4,19 +4,45 @@
 
 ## Representative Issues
 
--   [#1506](https://github.com/microsoft/pylance-release/issues/1506): Adjust diagnostic severity overrides in IDE settings to control type-checking behavior after updates.
--   [#2385](https://github.com/microsoft/pylance-release/issues/2385): Update type stubs in typeshed to indicate non-Optional attributes when parameters like PIPE guarantee their presence.
--   [#2424](https://github.com/microsoft/pylance-release/issues/2424): Avoid using `NoReturn` with complex overloads and unions, as the current implementation does not fully support this scenario.
--   [#2751](https://github.com/microsoft/pylance-release/issues/2751): Ensure that variables holding optional types are properly initialized and checked before accessing their attributes.
--   [#3358](https://github.com/microsoft/pylance-release/issues/3358): Users can revert to previous default type checking settings by adjusting configurations in their IDE.
--   [#3809](https://github.com/microsoft/pylance-release/issues/3809): Adjust the diagnostic settings in your code editor to disable specific rules causing false positives or errors.
--   [#3942](https://github.com/microsoft/pylance-release/issues/3942): Always check the type of an object before attempting to access its members, especially with multiple possible types.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#4360](https://github.com/microsoft/pylance-release/issues/4360): Always ensure that optional members are properly handled by checking for `None` before accessing them.
--   [#4690](https://github.com/microsoft/pylance-release/issues/4690): Ensure that type annotations are explicit and align with the actual behavior of functions, especially with potential `None` values.
--   [#4950](https://github.com/microsoft/pylance-release/issues/4950): Use `typing.overload` to clarify the return types of functions with different outputs based on input parameters.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
--   [#5671](https://github.com/microsoft/pylance-release/issues/5671): Prefer using an `if` statement for conditional checks instead of relying on exception handling to control flow.
+- [#1506](https://github.com/microsoft/pylance-release/issues/1506): Adjust diagnostic severity overrides in IDE settings to control type-checking behavior after updates.
+- [#2385](https://github.com/microsoft/pylance-release/issues/2385): Update type stubs in typeshed to indicate non-Optional attributes when parameters like PIPE guarantee their presence.
+- [#2424](https://github.com/microsoft/pylance-release/issues/2424): Avoid using `NoReturn` with complex overloads and unions, as the current implementation does not fully support this scenario.
+- [#2751](https://github.com/microsoft/pylance-release/issues/2751): Ensure that variables holding optional types are properly initialized and checked before accessing their attributes.
+- [#3358](https://github.com/microsoft/pylance-release/issues/3358): Users can revert to previous default type checking settings by adjusting configurations in their IDE.
+- [#3809](https://github.com/microsoft/pylance-release/issues/3809): Adjust the diagnostic settings in your code editor to disable specific rules causing false positives or errors.
+- [#3942](https://github.com/microsoft/pylance-release/issues/3942): Always check the type of an object before attempting to access its members, especially with multiple possible types.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#4360](https://github.com/microsoft/pylance-release/issues/4360): Always ensure that optional members are properly handled by checking for `None` before accessing them.
+- [#4690](https://github.com/microsoft/pylance-release/issues/4690): Ensure that type annotations are explicit and align with the actual behavior of functions, especially with potential `None` values.
+- [#4950](https://github.com/microsoft/pylance-release/issues/4950): Use `typing.overload` to clarify the return types of functions with different outputs based on input parameters.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode.
+- [#5671](https://github.com/microsoft/pylance-release/issues/5671): Prefer using an `if` statement for conditional checks instead of relying on exception handling to control flow.
+
+## Examples
+
+```python
+from typing import Optional
+
+def get_upper(text: Optional[str]) -> str:
+    return text.upper()  # Error: "upper" is not a known attribute of "None"
+```
+
+**Fix — check for None before accessing the member:**
+
+```python
+def get_upper(text: Optional[str]) -> str:
+    if text is not None:
+        return text.upper()
+    return ""
+```
+
+**Fix — use an assertion if you know the value is not None:**
+
+```python
+def get_upper(text: Optional[str]) -> str:
+    assert text is not None
+    return text.upper()
+```
 
 ## Common Fixes & Workarounds
 
@@ -26,3 +52,9 @@
 4. Refactor code to avoid accessing members of values that may be `None`.
 5. Use `typing.overload` to clarify function return types when needed.
 6. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportOptionalMemberAccess) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [How to Use Type Narrowing to Fix Type Errors](../howto/type-narrowing.md) — check for `None` before accessing members
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

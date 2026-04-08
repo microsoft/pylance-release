@@ -4,10 +4,45 @@
 
 ## Representative Issues
 
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#4286](https://github.com/microsoft/pyright/issues/4286): Ensure that Protocol classes are consistently imported from the `typing_extensions` module to avoid runtime issues with static type checkers.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types to avoid runtime errors and type checking issues.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#4286](https://github.com/microsoft/pyright/issues/4286): Ensure that Protocol classes are consistently imported from the `typing_extensions` module to avoid runtime issues with static type checkers.
+
+## Examples
+
+**Error:**
+
+```python
+my_string = "helper"
+
+__all__ = ["main_func", my_string]  # Non-literal string in __all__
+
+def main_func(): ...
+def helper(): ...
+```
+
+**Fix — use only string literals:**
+
+```python
+__all__ = ["main_func", "helper"]  # All entries are string literals
+
+def main_func(): ...
+def helper(): ...
+```
+
+Another unsupported pattern:
+
+```python
+__all__ = ["a"]
+__all__ += ["b"]  # Augmented assignment not supported by type checkers
+```
+
+Fix by assigning the full list at once:
+
+```python
+__all__ = ["a", "b"]
+```
 
 ## Common Fixes & Workarounds
 
@@ -15,3 +50,8 @@
 2. Avoid dynamically constructing or modifying `__all__` at runtime.
 3. If you need dynamic exports, consider using explicit imports and exports instead.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnsupportedDunderAll) to adjust the severity or disable this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

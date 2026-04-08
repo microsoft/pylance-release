@@ -144,6 +144,11 @@ No. It affects how Pylance formats new imports and how import-conversion actions
 
 It affects the formatting choice for new imports, but standard library and third-party imports remain absolute rather than being rewritten as relative imports.
 
+## Related Settings
+
+- [`python.analysis.fixAll`](python_analysis_fixAll.md): Configure Fix All to include `source.convertImportFormat` for automatic format conversion on save.
+- [`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md): Controls whether auto-import suggestions appear in completions.
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.
