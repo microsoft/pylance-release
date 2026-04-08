@@ -41,8 +41,20 @@ This guide covers all the approaches, explains when to use each, and shows how t
 - [Feature Impact](#feature-impact)
     - [How Setup Affects Features](#how-setup-affects-features)
     - [What Each Feature Needs](#what-each-feature-needs)
+- [Detect Your Current Setup](#detect-your-current-setup)
+    - [Triage Questions](#triage-questions)
+    - [Quick Diagnostic Commands](#quick-diagnostic-commands)
+    - [Common Setup Conflicts](#common-setup-conflicts)
+- [Setting Interaction Reference](#setting-interaction-reference)
+    - [pyrightconfig.json Overrides VS Code Settings](#pyrightconfigjson-overrides-vs-code-settings)
+    - [languageServerMode Default Overrides](#languageservermode-default-overrides)
+    - [Common Problematic Combinations](#common-problematic-combinations)
 - [Troubleshooting](#troubleshooting)
     - [Import Could Not Be Resolved](#import-could-not-be-resolved)
+    - [Import Could Not Be Resolved from Source](#import-could-not-be-resolved-from-source)
+    - [Stub File Not Found](#stub-file-not-found)
+    - [Circular Import Detected](#circular-import-detected)
+    - [Works at Runtime but Pylance Shows Errors](#works-at-runtime-but-pylance-shows-errors)
     - [Wrong Python Interpreter](#wrong-python-interpreter)
     - [Slow Startup or High Memory](#slow-startup-or-high-memory)
     - [Auto-Import Suggests Wrong Packages](#auto-import-suggests-wrong-packages)
@@ -50,8 +62,26 @@ This guide covers all the approaches, explains when to use each, and shows how t
     - [Diagnostics Missing for Some Files](#diagnostics-missing-for-some-files)
     - [Editable Install Not Recognized](#editable-install-not-recognized)
     - [Settings Not Taking Effect](#settings-not-taking-effect)
+    - [Reading Pylance Import Resolution Logs](#reading-pylance-import-resolution-logs)
+- [Working with Generated Code](#working-with-generated-code)
 - [Diagnostic Checklist](#diagnostic-checklist)
 - [FAQ](#faq)
+    - [Multi-root vs execution environments](#q-should-i-use-multi-root-workspace-or-execution-environments)
+    - [extraPaths + executionEnvironments](#q-can-i-use-both-extrapaths-and-executionenvironments)
+    - [autoSearchPaths + execution environments](#q-does-pythonanalysisautosearchpaths-work-with-execution-environments)
+    - [Debug import resolution](#q-how-do-i-debug-import-resolution)
+    - [Many workspace folders crash](#q-why-does-pylance-crash-with-many-workspace-folders)
+    - [.env / PYTHONPATH ignored](#q-my-env-file-with-pythonpath-is-being-ignored-why)
+    - [uv workspace setup](#q-how-do-i-set-up-a-uv-workspace-monorepo)
+    - [PYTHONPATH vs extraPaths](#q-can-i-use-pythonpath-environment-variable-instead-of-extrapaths)
+    - [Namespace packages](#q-how-do-i-handle-namespace-packages-no-__init__py-in-a-monorepo)
+    - [include / exclude / ignore](#q-whats-the-difference-between-include-exclude-and-ignore)
+    - [Cross-folder imports](#q-how-do-i-make-pylance-see-packages-across-workspace-folders)
+    - [Poetry monorepo setup](#q-how-do-i-set-up-a-poetry-monorepo)
+    - [Docker / Remote SSH / WSL](#q-how-do-i-use-pylance-in-docker-dev-containers-remote-ssh-or-wsl)
+    - [diagnosticSeverityOverrides in monorepos](#q-how-do-i-use-diagnosticseverityoverrides-in-a-monorepo)
+    - [Conda monorepo setup](#q-how-do-i-set-up-a-conda-monorepo)
+    - [CI/CD with Pyright](#q-how-do-i-run-pyright-type-checking-in-cicd-for-a-monorepo)
 
 ---
 
@@ -139,6 +169,7 @@ The table below shows compatibility with the **default** Pylance behavior. On Py
 | **PDM**              | Path-based `.pth` | ✅ Yes              | No change needed (unless `editable-backend = "editables"`)                                                                                                                                                                                                                  |
 | **Flit**             | Path-based `.pth` | ✅ Yes              | No change needed                                                                                                                                                                                                                                                            |
 | **Maturin**          | Path-based `.pth` | ✅ Yes              | No change needed                                                                                                                                                                                                                                                            |
+| **Poetry**           | Path-based `.pth` | ✅ Yes              | Use `poetry install` with path dependencies in `pyproject.toml`                                                                                                                                                                                                             |
 | **meson-python**     | Import hooks      | ❌ No               | Enable `enableEditableInstalls` on Python 3.13+                                                                                                                                                                                                                             |
 
 #### Fixing setuptools Editable Installs
@@ -952,6 +983,13 @@ This completely prevents Pylance from creating an analyzer for that folder, savi
 
 ### Performance Settings Summary
 
+**Diagnosing per-folder memory usage**: In multi-root workspaces, identifying which folder consumes the most memory helps target optimizations:
+
+1. Open **Help → Toggle Developer Tools → Console**.
+2. Run `process.memoryUsage()` to see the extension host's total heap.
+3. Narrow by temporarily removing workspace folders one at a time from `.code-workspace` and checking if memory drops.
+4. For the offending folder, apply targeted fixes: switch to `"openFilesOnly"`, disable indexing, or tighten `exclude` patterns for that folder only.
+
 **For very large monorepos (>100k files, >10 workspace folders)**:
 
 ```json
@@ -1023,6 +1061,133 @@ Enabling these may slow down workspace symbol search.
 
 ---
 
+## Detect Your Current Setup
+
+Before troubleshooting, identify which setup approach your workspace uses. Check these indicators:
+
+| Indicator                                                                                                                                                                                        | What It Means                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.code-workspace` file present                                                                                                                                                                   | **Multi-root workspace** (Approach 2 or 3)                                                                                                                      |
+| Multiple folders listed in VS Code Explorer sidebar                                                                                                                                              | **Multi-root workspace** — check `.code-workspace` for per-folder settings                                                                                      |
+| [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) with [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | **Execution environments** (Approach 3)                                                                                                                         |
+| `pyproject.toml` with `[tool.pyright]` containing [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options)                                | **Execution environments** (Approach 3)                                                                                                                         |
+| [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` at workspace root (without `executionEnvironments`)                        | **Single root with config file** — VS Code settings that the config overrides are ignored (see [Setting Interaction Reference](#setting-interaction-reference)) |
+| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) in `settings.json`                                                                                                     | **Extra paths** (Approach 1) — check if config file also exists (they conflict)                                                                                 |
+| `__editable__*.pth` files in `site-packages`                                                                                                                                                     | **Editable installs** (Approach 4)                                                                                                                              |
+| [`python.analysis.useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)`: true` in `settings.json`                                                                   | **Nearest configuration** (Approach 5)                                                                                                                          |
+| Multiple [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) files in subdirectories                                                                                     | Likely **nearest configuration** (if enabled) or **multi-root workspace**                                                                                       |
+| None of the above                                                                                                                                                                                | **Single root with defaults** — Pylance analyzes the workspace root as one project                                                                              |
+
+### Triage Questions
+
+When a user reports a monorepo issue, these questions quickly narrow down the cause:
+
+1. **What error message do you see?** → Jump to the matching [Troubleshooting](#troubleshooting) section
+2. **Does the import work at runtime?** (`python -c "import mypackage"`) → If yes, see [Works at Runtime but Pylance Shows Errors](#works-at-runtime-but-pylance-shows-errors)
+3. **Do you have a `pyrightconfig.json` or `pyproject.toml` with `[tool.pyright]`?** → If yes, VS Code settings may be ignored (see [pyrightconfig.json Overrides](#pyrightconfigjson-overrides-vs-code-settings))
+4. **How are you opening the repo?** Single folder (`code .`) vs `.code-workspace` file → Determines if multi-root isolation applies
+5. **Are you using editable installs?** → Check `.pth` file contents (path-based vs import-hook)
+6. **What `languageServerMode` are you using?** → `"light"` changes many defaults (see [languageServerMode Default Overrides](#languageservermode-default-overrides))
+
+### Quick Diagnostic Commands
+
+Run these in the VS Code integrated terminal to gather facts:
+
+```bash
+# 1. Which Python interpreter is Pylance using?
+#    (click the Python version in the status bar to verify)
+python -c "import sys; print(sys.prefix)"
+
+# 2. What's in sys.path? (shows runtime search order)
+python -c "import sys; print('\n'.join(sys.path))"
+
+# 3. Any editable installs?
+ls .venv/lib/python*/site-packages/__editable__*.pth 2>/dev/null   # Linux/macOS
+Get-ChildItem .venv\Lib\site-packages\__editable__*.pth 2>$null    # Windows
+
+# 4. Import-hook or path-based .pth?
+cat .venv/lib/python*/site-packages/__editable__*.pth              # Linux/macOS
+Get-Content .venv\Lib\site-packages\__editable__*.pth              # Windows
+# Lines starting with "import" = import-hook (Pylance can't follow these)
+# Plain paths = path-based (Pylance reads these)
+
+# 5. Any pyrightconfig.json files?
+find . -name "pyrightconfig.json" -not -path "*/node_modules/*"    # Linux/macOS
+Get-ChildItem -Recurse -Filter pyrightconfig.json -Exclude node_modules  # Windows
+
+# 6. Any pyproject.toml with [tool.pyright]?
+grep -rl "tool.pyright" . --include="pyproject.toml"               # Linux/macOS
+```
+
+### Common Setup Conflicts
+
+| Conflict                                                                                                                                                                           | Symptom                                                                                                                | Resolution                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists                | Yellow warning: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used"_ | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
+| Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                          | Paths break when adding/removing workspace folders                                                                     | Use `${workspaceFolder}` variables or absolute paths                                                                                            |
+| [`languageServerMode`](../settings/python_analysis_languageServerMode.md)`: "light"` + [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)`: true` | Virtual workspaces created but all files excluded                                                                      | Switch to `"default"` mode, or explicitly set [`exclude`](../settings/python_analysis_exclude.md) to a narrower pattern                         |
+| Editable install + wrong interpreter selected                                                                                                                                      | `.pth` files exist but Pylance looks in wrong `site-packages`                                                          | Select the interpreter whose `site-packages` contains the `.pth` files                                                                          |
+
+---
+
+## Setting Interaction Reference
+
+Some settings interact in non-obvious ways. This section documents the combinations that cause the most confusion.
+
+### `pyrightconfig.json` Overrides VS Code Settings
+
+When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` (with `[tool.pyright]`) exists in a workspace folder, the following VS Code settings **are ignored** — the config file takes precedence:
+
+| Ignored VS Code Setting                                                                                     | Where to Set Instead                                                                                      |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md)                                   | `"extraPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)             |
+| [`python.analysis.include`](../settings/python_analysis_include.md)                                         | `"include"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                |
+| [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                         | `"exclude"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                |
+| [`python.analysis.ignore`](../settings/python_analysis_ignore.md)                                           | `"ignore"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                 |
+| [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)                       | `"typeCheckingMode"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)       |
+| [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md)                                       | `"stubPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)               |
+| [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                         | `"autoSearchPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)        |
+| [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)           | `"useLibraryCodeForTypes"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
+| [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) | `"reportXxx"` rules in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)        |
+
+Pylance shows a yellow warning squiggle in `settings.json` for any setting that a config file overrides. The warning message reads: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used."_
+
+### `languageServerMode` Default Overrides
+
+[`languageServerMode`](../settings/python_analysis_languageServerMode.md) sets defaults for several settings. You can **override any individual setting** even when a mode is active — the mode only sets defaults, it doesn't lock them.
+
+| Setting                                                                           | `"light"` Default | `"default"` Default | `"full"` Default |
+| --------------------------------------------------------------------------------- | ----------------- | ------------------- | ---------------- |
+| [`exclude`](../settings/python_analysis_exclude.md)                               | `["**"]`          | `[]`                | `[]`             |
+| [`indexing`](../settings/python_analysis_indexing.md)                             | `false`           | `true`              | `true`           |
+| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"standard"`        | (unchanged)      |
+| [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | `false`           | `true`              | `true`           |
+| [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | (unchanged)       | `false`             | `true`           |
+| [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | (unchanged)       | `2000`              | `-1` (unlimited) |
+
+**Example**: Enable indexing in light mode:
+
+```json
+{
+    "python.analysis.languageServerMode": "light",
+    "python.analysis.indexing": true
+}
+```
+
+### Common Problematic Combinations
+
+| Combination                                                                                                                               | What Happens                                                                                                            | Fix                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `light` mode + `diagnosticMode: "workspace"`                                                                                              | `exclude: ["**"]` means no files are discovered, so `"workspace"` mode has nothing to analyze                           | Either switch to `"default"` mode, or explicitly set `exclude` to a narrower pattern                                                               |
+| `light` mode + `indexing: true` (explicit)                                                                                                | Works — indexing is enabled because you explicitly set it. But `exclude: ["**"]` limits what gets indexed to open files | Also explicitly set `exclude` to include the directories you need                                                                                  |
+| Config file exists + `extraPaths` in `settings.json`                                                                                      | VS Code setting ignored, yellow warning squiggle                                                                        | Move `extraPaths` into the config file                                                                                                             |
+| `autoSearchPaths: true` + [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Auto-detected `src/` only applies to the **default** environment, not explicitly defined ones                           | Add `"src"` to each environment's `extraPaths`                                                                                                     |
+| `useNearestConfiguration: true` + `exclude: ["**"]`                                                                                       | All virtual workspaces are excluded                                                                                     | Set `exclude` to only what you actually want excluded                                                                                              |
+| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                  | Each folder analyzes all its files — combined memory can exceed 8GB heap limit                                          | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
+| Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                      | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` for files in that environment        | Repeat common paths in each environment's `extraPaths`, or put shared packages in a location already on `sys.path`                                 |
+
+---
+
 ## Troubleshooting
 
 ### Import Could Not Be Resolved
@@ -1082,6 +1247,182 @@ Enabling these may slow down workspace symbol search.
 | [`include`](../settings/python_analysis_include.md) setting excludes the file                  | Verify [`python.analysis.include`](../settings/python_analysis_include.md) covers your files |
 | File is in [`exclude`](../settings/python_analysis_exclude.md) patterns                        | Remove from [`python.analysis.exclude`](../settings/python_analysis_exclude.md)              |
 | Namespace package (no `__init__.py`)                                                           | Pylance supports namespace packages, but verify structure                                    |
+| Missing `__init__.py` in a regular package                                                     | Add `__init__.py` to each package directory (even if empty) unless using namespace packages  |
+
+### Import Could Not Be Resolved from Source
+
+**Symptom**: `Import "mypackage" could not be resolved from source` `Pylance(reportMissingModuleSource)`
+
+**What it means**: Pylance found a type stub (`.pyi`) for the package but could not find the corresponding Python source (`.py`). This is different from `reportMissingImports` — the import _does_ resolve (via stubs), but the source code is missing.
+
+**Common causes in monorepos**:
+
+| Cause                                                                                | Fix                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Package is a C extension or native library (`.so` / `.pyd`)                          | Safe to ignore — native extensions don't have `.py` source. Suppress with `"reportMissingModuleSource": "none"` in [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) |
+| Package installed as `.pyc`-only (compiled wheel without source)                     | Install a source distribution, or suppress the diagnostic                                                                                                                                                      |
+| Stubs installed separately (e.g., `types-requests`) but main package not in the venv | Install the main package: `pip install requests`                                                                                                                                                               |
+| Stub-only package with no corresponding runtime package                              | Suppress for that specific package: `# type: ignore[reportMissingModuleSource]`                                                                                                                                |
+
+### Stub File Not Found
+
+**Symptom**: `Stub file not found for "mypackage"` `Pylance(reportMissingTypeStubs)`
+
+**What it means**: The package is installed and importable, but it has no type stubs (no `.pyi` files) and is not marked as `py.typed`. This diagnostic is **off by default** and only appears in `strict` type-checking mode (where it's an error).
+
+**Common causes and fixes**:
+
+| Cause                                            | Fix                                                                                                                                                                                                                         |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Third-party package without type support         | Install stubs if available: `pip install types-mypackage`                                                                                                                                                                   |
+| No stubs available for the package               | Suppress: `"reportMissingTypeStubs": "none"` in [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md), or create a stub file in [`stubPath`](../settings/python_analysis_stubPath.md) |
+| Package _is_ typed but missing `py.typed` marker | Report to the package maintainer, or create a local stub                                                                                                                                                                    |
+
+### Circular Import Detected
+
+**Symptom**: `Cycle detected in import chain` `Pylance(reportImportCycles)` — followed by a list of file paths forming the cycle.
+
+**What it means**: Files form a circular dependency (A imports B, B imports C, C imports A). This diagnostic is **off by default** — you only see it when `reportImportCycles` is explicitly enabled.
+
+**Mitigation strategies**:
+
+- **Move shared types to a separate module** that both sides can import without creating a cycle
+- **Use `TYPE_CHECKING` imports** for type-only references:
+
+    ```python
+    from __future__ import annotations
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from mypackage.models import User  # only used for type hints, not at runtime
+    ```
+
+- **Restructure the dependency** so the cycle is broken at the module level
+- **Suppress per-file**: `# pyright: reportImportCycles=false` at the top of files where circular imports are intentional
+
+### Works at Runtime but Pylance Shows Errors
+
+**Symptom**: `import mypackage` works in the terminal (`python -c "import mypackage"` succeeds), but Pylance shows `reportMissingImports`.
+
+This is the most common monorepo complaint pattern. It happens because Pylance does **static analysis** and cannot execute dynamic Python mechanisms.
+
+**Things Pylance cannot follow**:
+
+| Runtime Mechanism                                           | Why Pylance Can't Follow It                                                                                                                  | Fix                                                                                                                       |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Import-hook `.pth` files** (lines starting with `import`) | Pylance reads `.pth` files but only processes plain path lines — it skips `import` lines                                                     | Reinstall with `--config-settings editable_mode=compat`, or enable `enableEditableInstalls` on Python 3.13+               |
+| **`sys.path.append()` / `sys.path.insert()`** in code       | Pylance does not execute Python code — dynamic path modifications are invisible                                                              | Add the path to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                         |
+| **`PYTHONPATH` environment variable**                       | Pylance does not read environment variables                                                                                                  | Add directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                              |
+| **`pkgutil.extend_path()` in `__init__.py`**                | Pylance resolves namespace packages statically — it picks the first match rather than merging all `sys.path` entries at runtime              | Add all contributing directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                             |
+| **`importlib` dynamic imports**                             | All programmatic imports are invisible to static analysis                                                                                    | Use regular `import` statements or `TYPE_CHECKING` import blocks for type checking                                        |
+| **Namespace packages across separate roots**                | Python merges same-named packages from different `sys.path` entries; Pylance resolves to the first match                                     | Put all contributing directories in [`extraPaths`](../settings/python_analysis_extraPaths.md) so Pylance sees all sources |
+| **pytest `conftest.py` path injection**                     | pytest adds `conftest.py` directories and `rootdir` to `sys.path` at runtime; Pylance has no awareness of pytest's path logic                | Add test root directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                    |
+| **Django `INSTALLED_APPS` / app autodiscovery**             | Django dynamically discovers and imports apps via settings; Pylance can't execute `django.setup()`                                           | Add each app's parent directory to [`extraPaths`](../settings/python_analysis_extraPaths.md)                              |
+| **Conda environment path layout**                           | Conda environments store packages in `lib/pythonX.Y/site-packages` under the conda prefix, which may differ from a venv layout               | Select the conda interpreter in VS Code status bar; verify with `python -c "import sys; print(sys.prefix)"`               |
+| **`sys.modules` patching**                                  | Some libraries inject modules into `sys.modules` at runtime (e.g., aliasing `pkg` → `pkg_v2`); Pylance cannot follow runtime module aliasing | Use `TYPE_CHECKING` imports for the real module name, or add a type stub                                                  |
+| **`site.addsitedir()`**                                     | Adds directories to `sys.path` at runtime and processes `.pth` files; Pylance does not call `site.addsitedir()`                              | Add the directories to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                  |
+
+**Framework-specific examples**:
+
+**pytest**: If tests import helper modules from a `tests/` directory via conftest:
+
+```
+monorepo/
+├── src/mypackage/
+├── tests/
+│   ├── conftest.py      # pytest adds this dir to sys.path
+│   └── helpers/
+│       └── test_utils.py
+```
+
+pytest makes `from helpers.test_utils import ...` work at runtime but Pylance can't see it. Fix:
+
+```json
+{
+    "python.analysis.extraPaths": ["./tests"]
+}
+```
+
+**Django**: If your project uses app discovery via `INSTALLED_APPS`:
+
+```
+monorepo/
+├── myproject/
+│   └── settings.py  # INSTALLED_APPS = ["users", "billing"]
+├── users/
+│   └── models.py
+└── billing/
+    └── models.py
+```
+
+Django resolves `from users.models import User` at runtime because `django.setup()` manipulates `sys.path`. Fix:
+
+```json
+{
+    "python.analysis.extraPaths": ["."]
+}
+```
+
+Or add the project root to [`extraPaths`](../settings/python_analysis_extraPaths.md) in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration).
+
+**Flask**: If your Flask project uses blueprints or app factories spanning multiple packages:
+
+```
+monorepo/
+├── app/
+│   ├── __init__.py       # create_app() factory
+│   └── extensions.py     # db = SQLAlchemy()
+├── blueprints/
+│   ├── auth/
+│   │   └── routes.py     # from app.extensions import db
+│   └── api/
+│       └── routes.py     # from app.extensions import db
+└── tests/
+    └── conftest.py
+```
+
+Flask's app factory pattern uses `from app.extensions import db` which works at runtime because the project root is on `sys.path`. Fix:
+
+```json
+{
+    "python.analysis.extraPaths": ["."]
+}
+```
+
+**pytest cross-package conftest sharing**: In a monorepo where multiple packages share test fixtures:
+
+```
+monorepo/
+├── conftest.py              # shared fixtures for all packages
+├── packages/
+│   ├── core/
+│   │   ├── src/core/
+│   │   └── tests/
+│   │       ├── conftest.py  # imports from root conftest
+│   │       └── test_core.py
+│   └── api/
+│       ├── src/api/
+│       └── tests/
+│           ├── conftest.py
+│           └── test_api.py  # uses fixtures from root + local conftest
+└── tests/
+    └── helpers/
+        └── factories.py     # shared test factory functions
+```
+
+pytest makes the root `conftest.py` and `tests/helpers/` accessible via `sys.path` manipulation. Pylance can't see these. Fix:
+
+```json
+{
+    "python.analysis.extraPaths": [".", "./tests", "./packages/core/src", "./packages/api/src"]
+}
+```
+
+**Diagnosis workflow**:
+
+1. **Confirm the runtime path**: `python -c "import mypackage; print(mypackage.__file__)"`
+2. **Check Pylance's search paths**: Enable `"python.analysis.logLevel": "Trace"` and look in **Output → Pylance** for the import resolution log (see [Reading Pylance Import Resolution Logs](#reading-pylance-import-resolution-logs))
+3. **Compare**: Is the directory containing `mypackage` in Pylance's search paths? If not, add it to [`extraPaths`](../settings/python_analysis_extraPaths.md)
 
 ### Wrong Python Interpreter
 
@@ -1110,6 +1451,13 @@ Enabling these may slow down workspace symbol search.
 | Indexing many files                                                                              | Reduce [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md) or set [`indexing`](../settings/python_analysis_indexing.md)`: false` |
 | Virtual environments inside workspace                                                            | Ensure venvs are auto-excluded (check [`exclude`](../settings/python_analysis_exclude.md) settings)                                                          |
 | Redundant file discovery (older Pylance)                                                         | Update to latest Pylance version                                                                                                                             |
+
+> **Node.js heap limit**: Pylance's default heap limit is 8GB (`--max-old-space-size=8192`). If you hit "JavaScript heap out of memory" errors, you can:
+>
+> 1. **Increase the heap limit** — set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` (downloads a standalone Node.js) and increase [`python.analysis.nodeArguments`](../settings/python_analysis_nodeArguments.md) to e.g. `["--max-old-space-size=16384"]`.
+> 2. **Reduce Pylance's workload** — fewer workspace folders, `"openFilesOnly"`, disable indexing.
+>
+> See [Pylance memory management](https://aka.ms/AApf7ox) for more information.
 
 **Quick fix for very large monorepos**:
 
@@ -1206,6 +1554,138 @@ The [`extraPaths`](../settings/python_analysis_extraPaths.md) entry should point
 | [`languageServerMode`](../settings/python_analysis_languageServerMode.md) override                     | Explicitly set the individual setting to override the mode default |
 | Pylance needs restart                                                                                  | Run "Python: Restart Language Server"                              |
 
+### Reading Pylance Import Resolution Logs
+
+When `"python.analysis.logLevel": "Trace"` is enabled, Pylance writes detailed import resolution output to the **Output** panel (select **Pylance** from the dropdown). Here's how to read it.
+
+**Enable trace logging** (add to `settings.json`):
+
+```json
+{
+    "python.analysis.logLevel": "Trace"
+}
+```
+
+> **Warning**: Trace logging significantly increases output volume and may impact performance. Enable it temporarily for diagnosis, then remove it.
+
+**Import resolution search order**: Pylance tries these locations in order, stopping at the first match:
+
+| Priority | Search Location                                                      | Log Prefix                                                 |
+| -------- | -------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 1        | [`stubPath`](../settings/python_analysis_stubPath.md) (custom stubs) | `Looking in stubPath '...'`                                |
+| 2        | Execution environment root (project root)                            | `Looking in root directory of execution environment '...'` |
+| 3        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries    | `Looking in extraPath '...'`                               |
+| 4        | Typeshed stdlib stubs                                                | `Looking for typeshed stdlib path`                         |
+| 5        | Python interpreter search paths (`site-packages`)                    | `Looking in python search path '...'`                      |
+| 6        | Typeshed third-party stubs                                           | `Looking for typeshed third-party path`                    |
+
+**What to look for**:
+
+- `Resolved import with file '...'` — Pylance found the module. The path tells you _where_ it resolved to.
+- `Did not find file '...' or '...'` — exhausted options in that search location, trying the next.
+- `Partially resolved import with directory '...'` — found a directory but no `__init__.py` or module file.
+- `No python interpreter search path` — Pylance has no site-packages path. Check that the correct interpreter is selected.
+
+**Example: successful import resolution**
+
+A successful resolution looks like this — Pylance finds the module in one of its search locations and stops:
+
+```
+Looking in root directory of execution environment '/workspace'
+Attempting to resolve using root path '/workspace'
+Resolved import with file '/workspace/packages/shared/src/shared/utils.py'
+```
+
+This tells you the import resolved from the project root. If the path looks wrong (e.g., resolving to `site-packages` instead of your workspace source), adjust [`extraPaths`](../settings/python_analysis_extraPaths.md) so the preferred source has higher priority.
+
+**Example: diagnosing a missing cross-package import**
+
+If you see this sequence:
+
+```
+Looking in stubPath '/workspace/typings'
+Did not find file '.../mypackage.pyi' or '.../mypackage.py'
+Looking in root directory of execution environment '/workspace'
+Did not find file '.../mypackage.pyi' or '.../mypackage.py'
+Looking in python search path '/workspace/.venv/lib/python3.11/site-packages'
+Did not find file '.../mypackage.pyi' or '.../mypackage.py'
+```
+
+This means Pylance checked `stubPath`, the workspace root, and `site-packages` but never found `mypackage`. The fix depends on how `mypackage` should be found:
+
+- If it's a workspace package: Add its parent directory to [`extraPaths`](../settings/python_analysis_extraPaths.md)
+- If it should be in `site-packages`: Check the interpreter selection or `pip install` it
+- If it's an editable install: Check the `.pth` file contents (see [Editable Install Not Recognized](#editable-install-not-recognized))
+
+**Note**: Import resolution logs are separate from `verboseOutput` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration). The `logLevel: "Trace"` setting controls Pylance's log output, while `verboseOutput` is a Pyright-level setting for additional CLI diagnostics.
+
+---
+
+### Working with Generated Code
+
+Monorepos often contain generated Python files (protobuf/gRPC stubs, SQLAlchemy models, Django migrations, Pydantic datamodel-code-generator output). These files can cause noisy diagnostics or missing type information.
+
+**Strategy 1: Add generated output to [`extraPaths`](../settings/python_analysis_extraPaths.md)**
+
+If your build step generates Python files in an output directory:
+
+```
+monorepo/
+├── proto/
+│   └── service.proto
+├── generated/          # protoc output: service_pb2.py, service_pb2_grpc.py
+├── packages/api/
+│   └── src/api/
+│       └── client.py   # from generated.service_pb2 import ServiceRequest
+```
+
+```json
+{
+    "python.analysis.extraPaths": ["./generated"]
+}
+```
+
+**Strategy 2: Use [`stubPath`](../settings/python_analysis_stubPath.md) for hand-written stubs**
+
+If generated code is complex or has missing type info, create `.pyi` stub files:
+
+```json
+{
+    "python.analysis.stubPath": "./typestubs"
+}
+```
+
+```
+monorepo/
+├── typestubs/
+│   └── generated/
+│       ├── __init__.pyi
+│       └── service_pb2.pyi   # hand-written or mypy-protobuf generated
+```
+
+**Strategy 3: Suppress diagnostics for generated files with [`ignore`](../settings/python_analysis_ignore.md)**
+
+To keep Pylance from reporting errors in generated code you don't want to fix:
+
+```json
+{
+    "python.analysis.ignore": ["generated/**"]
+}
+```
+
+This still allows imports _from_ generated code to resolve — it only suppresses diagnostics _in_ those files.
+
+**Strategy 4: Use [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md) with a relaxed config**
+
+Drop a `pyrightconfig.json` in the generated directory:
+
+```json
+// generated/pyrightconfig.json
+{
+    "typeCheckingMode": "off"
+}
+```
+
 ---
 
 ## Diagnostic Checklist
@@ -1250,7 +1730,7 @@ Yes. [`extraPaths`](../settings/python_analysis_extraPaths.md) at the global lev
 
 ### Q: How do I debug import resolution?
 
-Enable verbose logging:
+Enable trace logging and check the **Output → Pylance** panel:
 
 ```json
 {
@@ -1258,7 +1738,7 @@ Enable verbose logging:
 }
 ```
 
-Open the **Output** panel, select **Pylance**, and look for lines showing where Pylance searches for imports. You'll see each search path tried in order.
+The log shows each search location Pylance tries (stubPath → project root → extraPaths → typeshed → site-packages) and whether it resolved or failed. See [Reading Pylance Import Resolution Logs](#reading-pylance-import-resolution-logs) for a detailed walkthrough of the log format, search order, and how to interpret the output.
 
 ### Q: Why does Pylance crash with many workspace folders?
 
@@ -1379,3 +1859,215 @@ pip install -e ../shared --config-settings editable_mode=compat
 ```
 
 **Option C: Single root** with [`extraPaths`](../settings/python_analysis_extraPaths.md) (avoids the multi-root overhead entirely)
+
+### Q: How do I set up a Poetry monorepo?
+
+[Poetry](https://python-poetry.org/) supports path dependencies between packages. With a layout like:
+
+```
+monorepo/
+├── pyproject.toml          # root project
+├── packages/
+│   ├── core/
+│   │   └── pyproject.toml
+│   └── api/
+│       └── pyproject.toml
+```
+
+1. Declare path dependencies in each package's `pyproject.toml`:
+
+    ```toml
+    # packages/api/pyproject.toml
+    [tool.poetry.dependencies]
+    core = { path = "../core", develop = true }
+    ```
+
+2. Run `poetry install` in each package (or from the root if using a workspace plugin like `poetry-monorepo`).
+
+3. Verify `.pth` files are created:
+
+    ```bash
+    find .venv/lib -name "*.pth" | xargs cat
+    ```
+
+4. Select the Poetry-managed venv as the Python interpreter in VS Code.
+
+Poetry uses path-based `.pth` files for editable installs, which Pylance reads natively. No additional `extraPaths` or config changes are needed.
+
+### Q: How do I use Pylance in Docker Dev Containers, Remote SSH, or WSL?
+
+When working in [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers), [Remote SSH](https://code.visualstudio.com/docs/remote/ssh), or [WSL](https://code.visualstudio.com/docs/remote/wsl):
+
+- **Use relative paths in [`extraPaths`](../settings/python_analysis_extraPaths.md)**: Absolute paths break across environments. Always use workspace-relative paths:
+
+    ```json
+    // ✅ Portable — works in any container, WSL, or remote host
+    { "python.analysis.extraPaths": ["./packages/shared/src"] }
+
+    // ❌ Breaks in containers — host path doesn't exist inside the container
+    { "python.analysis.extraPaths": ["/home/user/monorepo/packages/shared/src"] }
+    ```
+
+- **Commit settings files**: Check `.vscode/settings.json` or `.code-workspace` files into the repo so every environment gets the same Pylance configuration.
+
+- **Use editable installs** (`pip install -e`) as the most portable approach — they rely on the interpreter's `site-packages` path, which works identically in any environment.
+
+- If using `pyrightconfig.json`, paths are already relative to the config file location, so they are naturally portable.
+
+- **Dev Container setup** (`devcontainer.json`): Configure Pylance settings in the `customizations.vscode.settings` block so they apply automatically inside the container:
+
+    ```jsonc
+    // .devcontainer/devcontainer.json
+    {
+        "image": "mcr.microsoft.com/devcontainers/python:3.12",
+        "postCreateCommand": "pip install -e ./packages/core -e ./packages/api",
+        "customizations": {
+            "vscode": {
+                "extensions": ["ms-python.vscode-pylance"],
+                "settings": {
+                    "python.analysis.extraPaths": ["./packages/core/src", "./packages/api/src"],
+                    "python.analysis.typeCheckingMode": "basic",
+                },
+            },
+        },
+    }
+    ```
+
+- **WSL note**: When opening a repo in WSL, VS Code runs Pylance on the Linux side. Ensure the Python interpreter path in the status bar points to a Linux path (e.g., `/home/user/.venv/bin/python`), not a Windows path. Windows Python interpreters are not usable from WSL.
+
+- **Remote SSH**: Pylance runs entirely on the remote machine. Ensure Node.js and Python are available there. If you use [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md), the path must be valid on the remote host — setting it to `"auto"` is the safest approach for mixed local/remote workflows. Note that `nodeExecutable` has `"scope": "machine"`, so a global (User Settings) value set for your local machine will also be sent to the remote — override it in the remote machine's settings if needed.
+
+- **GitHub Codespaces**: Works like Dev Containers. Add Pylance settings to `devcontainer.json` (see example above) and they apply automatically when the Codespace is created.
+
+### Q: How do I use [`diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) in a monorepo?
+
+[`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) lets you adjust the severity of specific diagnostics. In monorepos, common uses include:
+
+**Suppress warnings for generated or vendored code** (via `pyrightconfig.json` per directory):
+
+```json
+// vendor/pyrightconfig.json — relaxed rules for third-party vendored code
+{
+    "typeCheckingMode": "off"
+}
+```
+
+**Suppress `reportMissingModuleSource` for C extension packages**:
+
+```json
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    }
+}
+```
+
+**Use stricter settings for core packages and relaxed settings for scripts**:
+
+```toml
+# pyrightconfig.json at root
+{
+    "executionEnvironments": [
+        { "root": "packages/core", "typeCheckingMode": "strict" },
+        { "root": "scripts", "typeCheckingMode": "basic" }
+    ]
+}
+```
+
+> **Note**: `diagnosticSeverityOverrides` set in VS Code `settings.json` will be **ignored** if a `pyrightconfig.json` or `[tool.pyright]` section exists in the project. Move overrides into the config file in that case. See [pyrightconfig.json Overrides VS Code Settings](#pyrightconfigjson-overrides-vs-code-settings).
+
+### Q: How do I set up a conda monorepo?
+
+[Conda](https://docs.conda.io/) environments store packages in a different layout than pip venvs. In a monorepo:
+
+1. **Create and activate the conda environment**:
+
+    ```bash
+    conda create -n monorepo python=3.12
+    conda activate monorepo
+    ```
+
+2. **Install local packages as editable**:
+
+    ```bash
+    # conda does not natively support editable installs, so use pip inside conda:
+    pip install -e ./packages/core --config-settings editable_mode=compat
+    pip install -e ./packages/api --config-settings editable_mode=compat
+    ```
+
+3. **Select the conda interpreter in VS Code**: Click the Python version in the status bar and choose the conda environment (e.g., `~/anaconda3/envs/monorepo/bin/python`).
+
+4. **Verify Pylance sees the packages**:
+
+    ```bash
+    python -c "import core; print(core.__file__)"
+    ```
+
+**Common pitfall**: If you install packages with `conda install` instead of `pip install -e`, Pylance will find the packages in `site-packages` (stubs or compiled) but may not have source code for Go to Definition. Use editable installs for source packages you're actively developing.
+
+**If editable installs aren't feasible** (e.g., C extensions built with conda-build), add source directories to [`extraPaths`](../settings/python_analysis_extraPaths.md):
+
+```json
+{
+    "python.analysis.extraPaths": ["./packages/core/src", "./packages/api/src"]
+}
+```
+
+### Q: How do I run Pyright type checking in CI/CD for a monorepo?
+
+[Pyright](https://github.com/microsoft/pyright) can run as a standalone CLI in CI to validate the same type checking that Pylance performs in the editor.
+
+**Single-root monorepo with `pyrightconfig.json`**:
+
+```yaml
+# .github/workflows/typecheck.yml
+name: Type Check
+on: [push, pull_request]
+jobs:
+    pyright:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+            - run: pip install -e ./packages/core -e ./packages/api
+            - run: npx pyright
+```
+
+Pyright reads `pyrightconfig.json` (or `[tool.pyright]` in `pyproject.toml`) from the repo root and applies the same `extraPaths`, `executionEnvironments`, and diagnostic settings.
+
+**Multi-package monorepo** (separate config per package):
+
+```yaml
+# .github/workflows/typecheck.yml
+jobs:
+    pyright:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                package: [core, api, worker]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+            - run: pip install -e ./packages/${{ matrix.package }}
+            - run: npx pyright --project packages/${{ matrix.package }}
+```
+
+**With [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)**: Pyright CLI does not support `useNearestConfiguration` (that is a Pylance-only VS Code setting). In CI, either use a root `pyrightconfig.json` with [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options), or run `npx pyright --project <path>` separately per package.
+
+**Tips**:
+
+- Pin the Pyright version: `npx pyright@1.1.390` to avoid surprise breakage.
+- Use the same `typeCheckingMode` in CI as in your editor config.
+- If your editor uses [`extraPaths`](../settings/python_analysis_extraPaths.md) in VS Code settings (not in a config file), replicate them in a `pyrightconfig.json` for CI, since Pyright CLI doesn't read VS Code settings.
+
+---
+
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
+
+---
+
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
