@@ -75,14 +75,14 @@ Pylance shows a **yellow warning squiggle** in `settings.json` for any setting t
 
 [`languageServerMode`](../settings/python_analysis_languageServerMode.md) sets defaults for several settings. You can **override any individual setting** even when a mode is active — the mode only sets defaults, it doesn't lock them.
 
-| Setting                                                                           | `"light"` Default  | `"default"` Default | `"full"` Default   |
-| --------------------------------------------------------------------------------- | ------------------ | ------------------- | ------------------ |
-| [`exclude`](../settings/python_analysis_exclude.md)                               | **`["**"]`**       | `[]`                | `[]`               |
-| [`indexing`](../settings/python_analysis_indexing.md)                             | **`false`**        | `true`              | `true`             |
-| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | **`"off"`**        | `"off"`             | `"off"`            |
-| [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | **`false`**        | `true`              | `true`             |
-| [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | `false`            | `false`             | **`true`**         |
-| [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | `2000`             | `2000`              | **`-1`** (unlimited) |
+| Setting                                                                           | `"light"` Default | `"default"` Default | `"full"` Default     |
+| --------------------------------------------------------------------------------- | ----------------- | ------------------- | -------------------- |
+| [`exclude`](../settings/python_analysis_exclude.md)                               | **`["**"]`\*\*    | `[]`                | `[]`                 |
+| [`indexing`](../settings/python_analysis_indexing.md)                             | **`false`**       | `true`              | `true`               |
+| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | **`"off"`**       | `"off"`             | `"off"`              |
+| [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | **`false`**       | `true`              | `true`               |
+| [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | `false`           | `false`             | **`true`**           |
+| [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | `2000`            | `2000`              | **`-1`** (unlimited) |
 
 **Bold** values are actively overridden by the mode; non-bold values are the VS Code default (`package.json`) left unchanged.
 
