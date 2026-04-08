@@ -69,7 +69,7 @@ Pylance tries these locations in order, stopping at the first match:
 
 A successful resolution looks like this — Pylance finds the module in one of its search locations and stops:
 
-```
+```text
 Looking in root directory of execution environment '/workspace'
 Attempting to resolve using root path '/workspace'
 Resolved import with file '/workspace/packages/shared/src/shared/utils.py'
@@ -83,7 +83,7 @@ This tells you the import resolved from the project root. If the path looks wron
 
 If you see this sequence:
 
-```
+```text
 Looking in stubPath '/workspace/typings'
 Did not find file '.../mypackage.pyi' or '.../mypackage.py'
 Looking in root directory of execution environment '/workspace'

@@ -10,7 +10,7 @@ Pylance reads configuration from multiple sources with specific precedence rules
 - [pyrightconfig.json Overrides VS Code Settings](#pyrightconfigjson-overrides-vs-code-settings)
 - [languageServerMode Default Overrides](#languageservermode-default-overrides)
 - [VS Code Settings Scopes](#vs-code-settings-scopes)
-- [Variable Substitution in Settings](#variable-substitution-in-settings)
+- [Variable Substitution](#variable-substitution)
 - [Common Problematic Combinations](#common-problematic-combinations)
 - [Settings Not Taking Effect](#settings-not-taking-effect)
 - [Diagnostics Missing for Some Files](#diagnostics-missing-for-some-files)
@@ -45,7 +45,6 @@ When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuratio
 | [`python.analysis.ignore`](../settings/python_analysis_ignore.md)                                           | `"ignore"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                 |
 | [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)                       | `"typeCheckingMode"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)       |
 | [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md)                                       | `"stubPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)               |
-| [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                         | `"autoSearchPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)        |
 | [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)           | `"useLibraryCodeForTypes"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
 | [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) | `"reportXxx"` rules in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)        |
 
@@ -61,7 +60,7 @@ Pylance shows a **yellow warning squiggle** in `settings.json` for any setting t
 | --------------------------------------------------------------------------------- | ----------------- | ------------------- | ---------------- |
 | [`exclude`](../settings/python_analysis_exclude.md)                               | `["**"]`          | `[]`                | `[]`             |
 | [`indexing`](../settings/python_analysis_indexing.md)                             | `false`           | `true`              | `true`           |
-| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"standard"`        | (unchanged)      |
+| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"off"`             | (unchanged)      |
 | [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | `false`           | `true`              | `true`           |
 | [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | (unchanged)       | `false`             | `true`           |
 | [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | (unchanged)       | `2000`              | `-1` (unlimited) |
@@ -86,11 +85,11 @@ In multi-root workspaces, folder-level settings override workspace-level setting
 
 VS Code settings support these variables:
 
-| Variable                        | Resolves To                              | Notes                                                         |
-| ------------------------------- | ---------------------------------------- | ------------------------------------------------------------- |
-| `${workspaceFolder}`            | Root of the current workspace folder     | In multi-root, refers to the folder the setting is in         |
-| `${workspaceFolder:folderName}` | Root of the named workspace folder       | Useful for cross-folder references in `.code-workspace` files |
-| `${env:VAR_NAME}`               | Value of environment variable `VAR_NAME` | Not read by Pylance — only in terminal/task contexts          |
+| Variable                                               | Resolves To                           | Notes                                                          |
+| ------------------------------------------------------ | ------------------------------------- | -------------------------------------------------------------- |
+| `${workspaceFolder}`                                   | Root of the current workspace folder  | In multi-root, refers to the folder the setting is in          |
+| `${workspaceFolder:folderName}`                        | Root of the named workspace folder    | Useful for cross-folder references in `.code-workspace` files  |
+| `${env:HOME}`, `${env:USERNAME}`, `${env:VIRTUAL_ENV}` | Value of these specific env vars only | Only these three are supported — arbitrary `${env:VAR}` is not |
 
 > **Note**: [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) does **not** support VS Code variable substitution. Paths in config files are relative to the config file location.
 

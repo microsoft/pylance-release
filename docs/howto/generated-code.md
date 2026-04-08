@@ -19,7 +19,7 @@ Projects often contain generated Python files — protobuf/gRPC stubs, SQLAlchem
 
 If your build step generates Python files in an output directory, add that directory to [`extraPaths`](../settings/python_analysis_extraPaths.md) so Pylance can resolve imports from it:
 
-```
+```text
 project/
 ├── proto/
 │   └── service.proto
@@ -48,7 +48,7 @@ If generated code is complex or has missing type info, create `.pyi` stub files 
 }
 ```
 
-```
+```text
 project/
 ├── typestubs/
 │   └── generated/

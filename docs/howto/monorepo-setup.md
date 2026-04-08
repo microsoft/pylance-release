@@ -120,7 +120,7 @@ An [editable install](https://pip.pypa.io/en/stable/topics/local-project-install
 
 **How Pylance detects editable installs**: Pylance reads `.pth` files in `site-packages`. These files contain directory paths that extend the import search path.
 
-```
+```text
 # Example .pth file content (path-based — works with Pylance):
 /home/user/monorepo/packages/shared/src
 ```
@@ -208,13 +208,13 @@ Get-ChildItem -Recurse .venv\Lib\site-packages\*.pth | Select-String "your_packa
 
 A working `.pth` file looks like:
 
-```
+```text
 /absolute/path/to/your/package/src
 ```
 
 A **dynamic** `.pth` file (ignored by default, but supported on Python 3.13+ with `enableEditableInstalls`) looks like:
 
-```
+```text
 import _editable_finder; _editable_finder.install(...)
 ```
 
@@ -266,7 +266,7 @@ import _editable_finder; _editable_finder.install(...)
 
 **Example**: With this structure:
 
-```
+```text
 monorepo/
 ├── packages/
 │   ├── api/
@@ -286,7 +286,7 @@ Each package gets its own analysis scope without needing a `.code-workspace` fil
 
 ### How They Relate
 
-```
+```text
                     ┌───────────────────────────────┐
                     │  Python Interpreter Selection │
                     │  (per workspace folder)       │
@@ -356,7 +356,7 @@ Open the monorepo root in VS Code and add package source directories to [`extraP
 
 **Monorepo structure**:
 
-```
+```text
 monorepo/
 ├── .vscode/
 │   └── settings.json
@@ -440,7 +440,7 @@ Create a `.code-workspace` file with each package as a separate folder.
 
 Or use per-folder `.vscode/settings.json` files:
 
-```
+```text
 packages/
 ├── api/
 │   ├── .vscode/
@@ -612,7 +612,7 @@ Let Pylance auto-discover configurations in subdirectories.
 
 **Step 2**: Add [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` in each package:
 
-```
+```text
 monorepo/
 ├── .vscode/
 │   └── settings.json          ← enable useNearestConfiguration
@@ -751,7 +751,7 @@ In a `.code-workspace` file, you can set per-folder overrides:
 
 Each folder can have its own `.vscode/settings.json`:
 
-```
+```text
 monorepo/
 ├── packages/
 │   ├── api/
@@ -1060,7 +1060,7 @@ The most common monorepo import problems fall into these categories:
 
 **pytest cross-package conftest sharing**: In a monorepo where multiple packages share test fixtures:
 
-```
+```text
 monorepo/
 ├── conftest.py              # shared fixtures for all packages
 ├── packages/
@@ -1265,7 +1265,7 @@ Pylance supports [PEP 420](https://peps.python.org/pep-0420/) namespace packages
 2. Do **not** add `__init__.py` to the namespace root
 3. Each sub-package that contributes to the namespace should have its own `__init__.py`
 
-```
+```text
 monorepo/
 ├── packages/
 │   ├── core/
@@ -1320,7 +1320,7 @@ pip install -e ../shared --config-settings editable_mode=compat
 
 [Poetry](https://python-poetry.org/) supports path dependencies between packages. With a layout like:
 
-```
+```text
 monorepo/
 ├── pyproject.toml          # root project
 ├── packages/

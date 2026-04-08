@@ -161,7 +161,7 @@ This is one of the most common complaint patterns. It happens because Pylance do
 
 **pytest**: If tests import helper modules from a `tests/` directory via conftest:
 
-```
+```text
 project/
 ├── src/mypackage/
 ├── tests/
@@ -180,7 +180,7 @@ pytest makes `from helpers.test_utils import ...` work at runtime but Pylance ca
 
 **Django**: If your project uses app discovery via `INSTALLED_APPS`:
 
-```
+```text
 myproject/
 ├── myproject/
 │   └── settings.py  # INSTALLED_APPS = ["users", "billing"]
@@ -202,7 +202,7 @@ Or add the project root to [`extraPaths`](../settings/python_analysis_extraPaths
 
 **Flask**: If your Flask project uses blueprints or app factories spanning multiple packages:
 
-```
+```text
 myproject/
 ├── app/
 │   ├── __init__.py       # create_app() factory
@@ -306,7 +306,7 @@ Pylance supports [PEP 420](https://peps.python.org/pep-0420/) namespace packages
 2. Do **not** add `__init__.py` to the namespace root
 3. Each sub-package that contributes to the namespace should have its own `__init__.py`
 
-```
+```text
 project/
 ├── packages/
 │   ├── core/

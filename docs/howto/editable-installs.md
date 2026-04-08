@@ -61,6 +61,8 @@ To enable this:
 }
 ```
 
+> **Warning**: This setting is currently **experimental** and may cause Pylance to stop working. Use it with caution and be prepared to disable it if you encounter issues.
+
 **Requirements**:
 
 - Python 3.13 or later selected as the interpreter

@@ -25,7 +25,7 @@ Pylance runs as a language server inside VS Code and can consume significant CPU
 | --------------------------------------------------------------------------------- | ----------------- | ------------------- | ---------------- |
 | [`exclude`](../settings/python_analysis_exclude.md)                               | `["**"]`          | `[]`                | `[]`             |
 | [`indexing`](../settings/python_analysis_indexing.md)                             | `false`           | `true`              | `true`           |
-| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"standard"`        | (unchanged)      |
+| [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md)             | `"off"`           | `"off"`             | (unchanged)      |
 | [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) | `false`           | `true`              | `true`           |
 | [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md)   | (unchanged)       | `false`             | `true`           |
 | [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md)   | (unchanged)       | `2000`              | `-1` (unlimited) |
