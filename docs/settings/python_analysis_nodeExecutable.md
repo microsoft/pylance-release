@@ -91,6 +91,11 @@ The bundled Node.js runtime in Visual Studio Code has [pointer compression](http
 
 **A:** When set to `"auto"`, Pylance checks [https://nodejs.org/dist/](https://nodejs.org/dist/) to identify and download the correct Node.js version for your platform. It verifies the downloaded file's checksum, caches it locally, and uses this verified Node.js binary for analysis.
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — using a dedicated Node.js process for larger heap
+- [How to Set Up Pylance for Remote Development](../howto/remote-development.md) — node executable paths in remote environments
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

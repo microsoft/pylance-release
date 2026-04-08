@@ -61,6 +61,10 @@ Or remove the setting entirely.
 - [`python.analysis.languageServerMode`](python_analysis_languageServerMode.md) — reduces memory usage by limiting features
 - [`python.analysis.diagnosticMode`](python_analysis_diagnosticMode.md) — `"openFilesOnly"` reduces memory by analyzing fewer files
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — heap size and node arguments for large workspaces
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

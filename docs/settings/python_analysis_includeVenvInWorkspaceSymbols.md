@@ -48,6 +48,11 @@ The depth of sub-packages searched is controlled by [`python.analysis.packageInd
 - [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md): Controls how deep into each package Pylance indexes sub-modules.
 - [`python.analysis.includeExtraPathSymbolsInSymbolSearch`](python_analysis_includeExtraPathSymbolsInSymbolSearch.md): Similar setting for including symbols from [`python.analysis.extraPaths`](python_analysis_extraPaths.md) directories.
 
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — venv symbols in workspace search
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — performance impact of venv symbol search
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

@@ -129,6 +129,11 @@ No. It means diagnostics are reported only for open files. Other language-servic
 
 Not usually. Use `diagnosticMode` when you want to control analysis scope globally. Use [`python.analysis.ignore`](python_analysis_ignore.md) when you want to suppress diagnostics only for specific paths.
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — using `diagnosticMode` to reduce resource usage
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — `diagnosticMode` in multi-root workspaces
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

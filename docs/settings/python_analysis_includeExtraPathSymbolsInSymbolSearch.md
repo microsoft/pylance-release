@@ -50,6 +50,11 @@ Enabling this setting may slow down Workspace Symbol search because Pylance need
 - [`python.analysis.indexing`](python_analysis_indexing.md): Must be enabled for symbol indexing. If indexing is disabled, this setting has no effect.
 - [`python.analysis.includeVenvInWorkspaceSymbols`](python_analysis_includeVenvInWorkspaceSymbols.md): Similar setting for including symbols from the active venv's `site-packages`.
 
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — symbol search across `extraPaths` directories
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — performance impact of searching extra paths
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

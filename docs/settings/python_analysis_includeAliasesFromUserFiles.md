@@ -21,7 +21,7 @@ def helper_function():
 from .utils import helper_function
 
 # main.py
-# Trying to use 'helper_function' might not prompt an auto-import suggestion 
+# Trying to use 'helper_function' might not prompt an auto-import suggestion
 # from '__init__.py' unless the "python.analysis.includeAliasesFromUserFiles" is enabled.
 ```
 
@@ -44,9 +44,9 @@ Alternatively, you can edit your `settings.json` file directly:
 
 1. **Open Settings (JSON)**: Open the command palette and type `Preferences: Open Settings (JSON)`.
 2. **Add or Modify the Setting**:
-   ```json
-   "python.analysis.includeAliasesFromUserFiles": true
-   ```
+    ```json
+    "python.analysis.includeAliasesFromUserFiles": true
+    ```
 
 ## When and Why to Enable `includeAliasesFromUserFiles`
 
@@ -108,7 +108,7 @@ The alias symbol with the highest score will be chosen. In case of a tie, the sy
 
 For example, the alias symbol from `usage.py` has the lowest score and will be disregarded. The alias symbols from `__init__.py`, `redundant.py`, and `all.py` each have 1 point, but the one from `__init__.py` has the shortest import module path, so it will be selected. If `__init__.py` had used `from .utils import helper_function as helper_function` instead, it would have received 2 points and be selected.
 
-Unlike auto-import suggestions in  the completion list, the add/search import for code action will display all available alias symbols, allowing you to choose one. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and continue suggesting it for future imports.
+Unlike auto-import suggestions in the completion list, the add/search import for code action will display all available alias symbols, allowing you to choose one. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and continue suggesting it for future imports.
 
 ### Consistent Import Paths
 
@@ -146,12 +146,17 @@ Excluding alias symbols by default helps optimize Pylance's performance. User fi
 
 Currently, the `python.analysis.includeAliasesFromUserFiles` setting applies globally or per-workspace in Visual Studio Code settings. You can adjust the setting in your workspace's `settings.json` to enable it for a specific project.
 
+## Related Settings
+
+- [`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md): Controls whether auto-import suggestions appear in completions.
+- [`python.analysis.indexing`](python_analysis_indexing.md): Must be enabled for alias symbol indexing.
+
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
 ---

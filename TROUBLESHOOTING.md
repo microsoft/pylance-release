@@ -10,6 +10,8 @@ in [Filing an issue](#filing-an-issue).
 
 ### Unresolved import warnings
 
+> **See also:** [Fixing unresolved imports](docs/howto/unresolved-imports.md) for a comprehensive guide.
+
 If you're getting a warning about an unresolved import, first ensure that the
 package is installed into your environment if it is a library (`pip`, `pipenv`, etc).
 If the warning is about importing _your own_ code (and not a library), continue reading.
@@ -37,21 +39,25 @@ This list can be extended to other paths within the workspace (or even with
 code outside the workspace in more complicated setups). Relative paths will
 be taken as relative to the workspace root.
 
-Note that if you are coming to Pylance from using the Microsoft Python Language Server, this setting has changed from `python.autoComplete.extraPaths` to `python.analysis.extraPaths`.
+Note that if you are coming to Pylance from using the Microsoft Python Language Server, this setting has changed from `python.autoComplete.extraPaths` to [`python.analysis.extraPaths`](docs/settings/python_analysis_extraPaths.md).
 
 ### Editable install modules not found
+
+> **See also:** [Working with editable installs](docs/howto/editable-installs.md) for more detail.
 
 If you want to use static analysis tools with an editable install, you should configure the editable install to use `.pth` files that contain file paths rather than executable lines (prefixed with `import`) that install import hooks. See your package manager’s documentation for details on how to do this. We have provided some basic information for common package managers below.
 
 Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pylance and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pylance will be unable to find the corresponding source files.
 
 #### pip / setuptools
+
 `pip` (`setuptools`) supports two ways to avoid import hooks:
+
 - [compat mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html#legacy-behavior)
 - [strict mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html#strict-editable-installs)
 
-
 #### uv
+
 [uv](https://docs.astral.sh/uv/reference/settings/#config-settings) can be
 configured to avoid import hooks with
 
@@ -61,10 +67,12 @@ config-settings = { editable_mode = "compat" }
 ```
 
 #### Hatch / Hatchling
+
 [Hatchling](https://hatch.pypa.io/latest/config/build/#dev-mode) uses path-based `.pth` files by
 default. It will only use import hooks if you set `dev-mode-exact` to `true`.
 
 #### PDM
+
 [PDM](https://pdm.fming.dev/latest/pyproject/build/#editable-build-backend) uses path-based `.pth`
 files by default. It will only use import hooks if you set `editable-backend` to
 `"editables"`.
@@ -84,18 +92,22 @@ you are running an official build and are still running into issues, please file
 
 ### Packages do not resolve on install when using WSL
 
+> **See also:** [Remote development](docs/howto/remote-development.md) for WSL, SSH, and Dev Container guidance.
+
 If you are using Pylance in a WSL environment, make sure your workspace is located under a WSL folder (`/home/...`) and not shared with Windows (`/mnt/...`).
 See issues [#1443](https://github.com/microsoft/pylance-release/issues/1443#issuecomment-867863124) and [vscode-remote-release#5000](https://github.com/microsoft/vscode-remote-release/issues/5000).
 
 ### Pylance is crashing
 
-Although we attempt to prevent Pylance from crashing, sometimes certain configurations can cause problems for Pylance. One particular problem is the amount of memory that Pylance is allowed to allocate when running inside of VS Code. VS Code ships with [pointer compression](https://www.electronjs.org/blog/v8-memory-cage) enabled. This makes VS Code run faster, but limits the amount of memory that Pylance can use. With some configurations, we may need more than 4GB of memory in order to analyze your project. 
+> **See also:** [Performance tuning](docs/howto/performance-tuning.md) for strategies to reduce memory usage and analysis time.
+
+Although we attempt to prevent Pylance from crashing, sometimes certain configurations can cause problems for Pylance. One particular problem is the amount of memory that Pylance is allowed to allocate when running inside of VS Code. VS Code ships with [pointer compression](https://www.electronjs.org/blog/v8-memory-cage) enabled. This makes VS Code run faster, but limits the amount of memory that Pylance can use. With some configurations, we may need more than 4GB of memory in order to analyze your project.
 
 If you think you're hitting an out-of-memory situation, you can alleviate this problem in a number of ways:
 
-#### Provide your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with. 
+#### Provide your own [Node.js](https://nodejs.org/en/download/) executable to run Pylance with.
 
-Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit). 
+Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit).
 
 To specify your own Node.js executable, set this setting in your User settings.json or Remote settings.json and restart VS Code:
 
@@ -103,7 +115,9 @@ To specify your own Node.js executable, set this setting in your User settings.j
 "python.analysis.nodeExecutable": "<path to node.js exe>"
 ```
 
-* If you set `auto` as `the path to the Node.js executable`, pylance will automatically download the appropriate version from [Node](https://nodejs.org/dist/) and use it without requiring manual installation. This will also work in remote environments.
+See [`python.analysis.nodeExecutable`](docs/settings/python_analysis_nodeExecutable.md) for full details on this setting.
+
+- If you set `auto` as `the path to the Node.js executable`, pylance will automatically download the appropriate version from [Node](https://nodejs.org/dist/) and use it without requiring manual installation. This will also work in remote environments.
 
 The location of your User settings.json depends upon how you're connecting:
 
@@ -122,7 +136,7 @@ For more details, visit [--max-old-space-size](https://nodejs.org/api/cli.html#-
 
 #### Exclude unneeded `*.py` files from analysis
 
-To minimize memory usage by Pylance, exclude unneeded `*.py` files using `python.analysis.exclude`. For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
+To minimize memory usage by Pylance, exclude unneeded `*.py` files using [`python.analysis.exclude`](docs/settings/python_analysis_exclude.md). For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
 
 For environments with multiple root workspaces, place the `.vscode/settings.json` in the root directory of each workspace instead of using `settings` section in a `*.code-workspace` file.
 
@@ -130,15 +144,14 @@ For environments with multiple root workspaces, place the `.vscode/settings.json
 
 When filing an issue, make sure you do the following:
 
--   Check existing issues for the same problem (also see the "Known Issues" section above for widespread problems).
--   Enable trace logging by adding `"python.analysis.logLevel": "Trace"` to your settings.json configuration file or by using the `Pylance: Start Logging` command.
-    -   Adding this will cause a large amount of info to be printed to the Python output panel.
-        This should not be left long term, as the performance impact of the logging is significant.
-        Use `Pylance: Stop Logging` to disable trace logging when you are done.
--   Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "__Python Language Server__" in the dropdown on the right.  
--   Copy the entire log starting with "Pylance language server XXX (pyright xxx) starting"
-    
--   State the environment where your code is running; i.e. Python version, the virtual environment type, etc.
-    -   If using a virtual environment, please include the requirements.txt file.
-    -   If working with a conda environment, attach the environment.yml file.
--   A code example (or any other additional information) we can use to reproduce the issue.
+- Check existing issues for the same problem (also see the "Known Issues" section above for widespread problems).
+- Enable trace logging by adding `"python.analysis.logLevel": "Trace"` to your settings.json configuration file or by using the `Pylance: Start Logging` command.
+    - Adding this will cause a large amount of info to be printed to the Python output panel.
+      This should not be left long term, as the performance impact of the logging is significant.
+      Use `Pylance: Stop Logging` to disable trace logging when you are done.
+- Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "**Python Language Server**" in the dropdown on the right.
+- Copy the entire log starting with "Pylance language server XXX (pyright xxx) starting"
+- State the environment where your code is running; i.e. Python version, the virtual environment type, etc.
+    - If using a virtual environment, please include the requirements.txt file.
+    - If working with a conda environment, attach the environment.yml file.
+- A code example (or any other additional information) we can use to reproduce the issue.

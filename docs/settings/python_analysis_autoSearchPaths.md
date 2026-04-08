@@ -117,6 +117,12 @@ When execution environments are defined in a `pyrightconfig.json` file, the auto
 - [`python.analysis.extraPaths`](python_analysis_extraPaths.md): Manually add directories to the import search path. Additive with `autoSearchPaths`.
 - [`python.analysis.stubPath`](python_analysis_stubPath.md): Directory containing custom type stubs.
 
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — how `autoSearchPaths` fits into import resolution
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — `autoSearchPaths` behavior with `src/` layouts
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — `autoSearchPaths` with execution environments
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

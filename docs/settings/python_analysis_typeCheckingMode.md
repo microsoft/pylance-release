@@ -177,6 +177,11 @@ No. `off` disables the broader type-checking rule set, but Pylance still reports
 
 Usually only if the codebase is already well annotated or the team is prepared for the cleanup work. Many projects adopt `basic` or `standard` first and then use [`python.analysis.diagnosticSeverityOverrides`](python_analysis_diagnosticSeverityOverrides.md) to smooth the path toward stricter checking.
 
+## See Also
+
+- [How to Set Up CI Type Checking](../howto/ci-type-checking.md) — using `typeCheckingMode` in CI pipelines
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides the VS Code setting
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

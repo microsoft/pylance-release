@@ -169,6 +169,10 @@ Prefer `stubPath` when you are adding or correcting stubs for specific packages 
 
 Potentially, yes, but only if you have a complete enough typeshed-style tree for that runtime. If you point `typeshedPaths` at a partial folder that does not provide the needed `stdlib` layout, you can end up with missing or incorrect built-in and standard-library typing.
 
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — bundled typeshed and custom typeshed paths
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

@@ -190,6 +190,12 @@ Yes. You can use either an absolute path or a workspace-relative path.
 
 By default, Pylance uses `typings` as the stub directory name. If that directory does not exist in your workspace, there are simply no extra custom stubs to load.
 
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — using custom stubs to resolve import errors
+- [How to Handle Generated Code](../howto/generated-code.md) — providing stubs for generated modules
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — stub paths in multi-package projects
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

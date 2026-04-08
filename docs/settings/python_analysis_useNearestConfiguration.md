@@ -158,6 +158,11 @@ typeCheckingMode = "standard"
 - [`python.analysis.exclude`](python_analysis_exclude.md): Exclude patterns that filter out virtual workspaces.
 - [`python.analysis.languageServerMode`](python_analysis_languageServerMode.md): Controls language server mode; `light` mode effectively disables `useNearestConfiguration`.
 
+## See Also
+
+- [How to Set Up CI Type Checking](../howto/ci-type-checking.md) — per-subtree config for CI pipelines
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — multi-config monorepo patterns
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

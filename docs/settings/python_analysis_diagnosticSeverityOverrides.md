@@ -219,6 +219,12 @@ Not directly. This setting changes a rule globally for the workspace. If you wan
 
 Sometimes that is appropriate, but often the better fix is to improve Pylance's understanding of the code by restructuring imports, adding stubs, or adjusting workspace configuration.
 
+## See Also
+
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides `diagnosticSeverityOverrides`
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — when to fix imports vs suppress diagnostics
+- [Pyright diagnostic rule reference](https://microsoft.github.io/pyright/#/configuration?id=type-check-rule-overrides) — full list of available rule names and defaults
+
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.

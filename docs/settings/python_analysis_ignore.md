@@ -98,14 +98,17 @@ This way, Pylance won't show errors or warnings for the generated code but will 
 
 **A:** Most of the time, users would want to use `python.analysis.exclude` rather than `python.analysis.ignore`. The `exclude` setting removes files from processing, ensuring no errors or warnings appear from those files. `ignore` should only be used in situations where files are included in the workspace but you want to suppress diagnostics specifically without excluding them entirely, such as for complex file structures.
 
+## Related Settings
+
+- [`python.analysis.exclude`](python_analysis_exclude.md): Excludes files from analysis entirely.
+- [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
+
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `ignore` vs `exclude` for generated or vendored code
+- [How to Handle Generated Code](../howto/generated-code.md) — suppressing diagnostics for code generation output
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — include/exclude/ignore interaction
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
-
----
-
-_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation._
-
----
-
-_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._

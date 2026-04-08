@@ -48,47 +48,42 @@ The `python.analysis.autoImportCompletions` setting in Pylance allows you to ena
 To adjust this setting in Visual Studio Code:
 
 1. **Open the Settings**:
-
-   - Click on the gear icon in the lower-left corner and select **Settings**.
+    - Click on the gear icon in the lower-left corner and select **Settings**.
 
 2. **Search for the Setting**:
-
-   - In the search bar at the top, type `python.analysis.autoImportCompletions`.
+    - In the search bar at the top, type `python.analysis.autoImportCompletions`.
 
 3. **Modify the Setting**:
-
-   - Check the box to set it to `true` (enable auto-import completions), or uncheck it to set it to `false` (disable auto-import completions).
+    - Check the box to set it to `true` (enable auto-import completions), or uncheck it to set it to `false` (disable auto-import completions).
 
 Alternatively, you can edit your `settings.json` file directly:
 
 1. **Open the Settings (JSON)**:
-
-   - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
+    - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
 
 2. **Add the Setting**:
+    - Add or modify the following line in your `settings.json` file:
 
-   - Add or modify the following line in your `settings.json` file:
-
-   ```json
-   "python.analysis.autoImportCompletions": true
-   ```
+    ```json
+    "python.analysis.autoImportCompletions": true
+    ```
 
 ## Related Settings
 
 - [`python.analysis.indexing`](python_analysis_indexing.md)
-  - Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
+    - Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
 
 - [`python.analysis.includeAliasFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md)
-  - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
+    - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
 
 - [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)
-    - Maximum number of user files to index in the workspace. 
+    - Maximum number of user files to index in the workspace.
 
 - [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)
-    - Used to override how many levels under installed packages to index on a per package basis. 
+    - Used to override how many levels under installed packages to index on a per package basis.
 
 - `python.analysis.showOnlyDirectDependenciesInAutoImport`
-  - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in `auto import` suggestions, if they exist. This only affects `auto import` for completions. The `add import` code action will continue to show all possible imports.
+    - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in `auto import` suggestions, if they exist. This only affects `auto import` for completions. The `add import` code action will continue to show all possible imports.
 
 ## Frequently Asked Questions
 
@@ -129,21 +124,26 @@ The behavior for top-level variables differs between user files and third-party 
 
 - **User files (your own workspace):**
   For variables defined at the top level in user files, Pylance only includes them in auto-import/add import suggestions if:
-  - The variable name is all uppercase (e.g., `MY_CONSTANT`), or
-  - The variable is explicitly listed in the module’s `__all__` attribute.
+    - The variable name is all uppercase (e.g., `MY_CONSTANT`), or
+    - The variable is explicitly listed in the module’s `__all__` attribute.
 
-  This is because user workspaces often contain many scripts with numerous temporary or local variables, and there is no reliable way for Pylance to know which variables are intended to be imported by other modules. Using `__all__` signals that a variable is meant to be exported and available for import elsewhere.
+    This is because user workspaces often contain many scripts with numerous temporary or local variables, and there is no reliable way for Pylance to know which variables are intended to be imported by other modules. Using `__all__` signals that a variable is meant to be exported and available for import elsewhere.
 
-  Additional settings can also affect this behavior:
-  - [`python.analysis.includeAliasesFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md): Controls whether alias symbols from user files are included in auto-import suggestions.
-  - [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md): Limits how many user files are indexed, which can affect which variables are available for import.
+    Additional settings can also affect this behavior:
+    - [`python.analysis.includeAliasesFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md): Controls whether alias symbols from user files are included in auto-import suggestions.
+    - [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md): Limits how many user files are indexed, which can affect which variables are available for import.
 
 If you want a variable from your own code to appear in auto-import suggestions, either use an all-uppercase name or add it to the module’s `__all__` list.
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — auto-import completions and performance
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — how `languageServerMode` affects auto-import defaults
+
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._

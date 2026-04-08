@@ -168,7 +168,7 @@ It is supported and it can be used in multi root workspace in vscode so one work
 No wildcards or globs are not supported. For two reasons:
 
 - Extra paths make every lookup of every import take longer. Wildcard imports would have a high impact on this lookup that are not easy for the user to understand why they're taking so long.
-- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another. 
+- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another.
 
 ### How does this differ from modifying `sys.path`?
 
@@ -178,15 +178,23 @@ No wildcards or globs are not supported. For two reasons:
 
 `extraPaths` supplements the selected interpreter's `sys.path`, ensuring static analysis recognizes additional directories.
 
-## Related Documentation
+## Related Settings
 
-For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
+- [`python.analysis.autoSearchPaths`](python_analysis_autoSearchPaths.md): Automatically adds common source directories like `src/` to the search path.
+- [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
+- [`python.analysis.stubPath`](python_analysis_stubPath.md): Directory for custom type stubs.
+
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — troubleshooting import resolution
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `extraPaths` in multi-package projects
+- [How to Work with Editable Installs](../howto/editable-installs.md) — `extraPaths` as a fallback for editable installs
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — precedence rules when `pyrightconfig.json` overrides `extraPaths`
 
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
-
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
