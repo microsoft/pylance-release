@@ -77,6 +77,15 @@ default. It will only use import hooks if you set `dev-mode-exact` to `true`.
 files by default. It will only use import hooks if you set `editable-backend` to
 `"editables"`.
 
+#### meson-python
+
+Packages installed via [meson-python](https://meson-python.readthedocs.io/en/latest/) do **not** support `compat_mode=strict` or `compat_mode=compat`.  
+As a result, Pylance cannot resolve modules from editable installs made with meson-python.  
+
+As a workaround, users can manually add the package path to `python.analysis.extraPaths` in Pylance to help resolve imports. However, this requires manual configuration and does not fully replicate proper editable install behavior, so type checking issues may still occur.
+
+This limitation is expected to persist.
+
 ### Migrating from the Microsoft Python Language Server to Pylance
 
 If you are moving from the Microsoft Python Language Server over to Pylance, a good place to start is by reading [our migration doc](MIGRATING_TO_PYLANCE.md) which outlines a couple notable changes between the language servers.
