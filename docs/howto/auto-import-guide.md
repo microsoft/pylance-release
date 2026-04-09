@@ -101,10 +101,26 @@ When `true`, if `mypackage/__init__.py` imports `helper` from `mypackage._intern
 
 | Property            | Meaning                                                            |
 | ------------------- | ------------------------------------------------------------------ |
-| `depth`             | How many subpackage levels to index (default: 2 for most packages) |
+| `depth`             | How many subpackage levels to index (default: 1 for most packages) |
 | `includeAllSymbols` | Include non-`__all__` symbols (default: false)                     |
 
 Increase `depth` for packages where auto-imports miss deeply nested symbols.
+
+#### How default depths vary by language server mode
+
+In `default` mode, most packages are indexed at depth **1** (top-level only). A few popular libraries (`sklearn`, `matplotlib`, `scipy`, `django`, `flask`, `fastapi`) default to depth **2**, and `cuda` defaults to depth **3** with `includeAllSymbols: true`.
+
+In `full` mode, **all** packages default to depth **4** with `includeAllSymbols: true`, providing much broader auto-import coverage at the cost of higher resource usage.
+
+In `light` mode, indexing is disabled by default. Enable [`python.analysis.indexing`](../settings/python_analysis_indexing.md) explicitly to use package indexing in light mode.
+
+#### Automatic depth boost for direct dependencies
+
+Packages declared in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even when the global default is 1. Explicit entries in `packageIndexDepths` take priority over the automatic boost. See the [`packageIndexDepths` setting page](../settings/python_analysis_packageIndexDepths.md#automatic-depth-boost-for-direct-dependencies) for details.
+
+#### Namespace packages
+
+[PEP 420](https://peps.python.org/pep-0420/) namespace packages (e.g., `azure`, `google`) lack an `__init__.py` at the top level. Pylance automatically looks up to 4 levels deep to find the first real subpackage, so `from azure.storage.blob import BlobClient` works even at the default depth of 1. See the [`packageIndexDepths` setting page](../settings/python_analysis_packageIndexDepths.md#namespace-package-handling) for details.
 
 ---
 
@@ -140,7 +156,15 @@ Without indexing, Pylance only knows about symbols from files it has already ope
 
 ### Fixes
 
-1. **Reduce `packageIndexDepths`** for noisy packages:
+1. **Show only direct dependencies** — enable [`showOnlyDirectDependenciesInAutoImport`](../settings/python_analysis_showOnlyDirectDependenciesInAutoImport.md) to limit auto-import completions to packages declared in `requirements.txt` or `pyproject.toml`:
+
+    ```json
+    {
+        "python.analysis.showOnlyDirectDependenciesInAutoImport": true
+    }
+    ```
+
+2. **Reduce `packageIndexDepths`** for noisy packages:
 
     ```json
     {
@@ -148,7 +172,7 @@ Without indexing, Pylance only knows about symbols from files it has already ope
     }
     ```
 
-2. **Disable auto-import completions** and rely on quick fixes instead:
+3. **Disable auto-import completions** and rely on quick fixes instead:
 
     ```json
     {
@@ -156,7 +180,7 @@ Without indexing, Pylance only knows about symbols from files it has already ope
     }
     ```
 
-3. **Exclude directories** you don't want indexed:
+4. **Exclude directories** you don't want indexed:
 
     ```json
     {
@@ -172,16 +196,16 @@ Without indexing, Pylance only knows about symbols from files it has already ope
 
 ### Common Causes and Fixes
 
-| Cause                                                                                  | Fix                                                                                                                         |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Indexing disabled                                                                      | Set [`indexing`](../settings/python_analysis_indexing.md) to `true`                                                         |
-| `autoImportCompletions` is `false`                                                     | Set [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) to `true`                               |
-| Package not installed in selected environment                                          | Install the package in the active interpreter's environment                                                                 |
-| Symbol is deeply nested                                                                | Increase `depth` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md)                               |
-| Symbol is not in `__all__`                                                             | Set `includeAllSymbols: true` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md) for that package |
-| Private symbol (underscore prefix)                                                     | Pylance hides private symbols by default. Import manually                                                                   |
-| [`languageServerMode`](../settings/python_analysis_languageServerMode.md) is `"light"` | Switch to `"default"` or `"full"` for better indexing                                                                       |
-| Symbol only available through a re-export                                              | Enable [`includeAliasesFromUserFiles`](../settings/python_analysis_includeAliasesFromUserFiles.md)                          |
+| Cause                                                                                  | Fix                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Indexing disabled                                                                      | Set [`indexing`](../settings/python_analysis_indexing.md) to `true`                                                                                                                                 |
+| `autoImportCompletions` is `false`                                                     | Set [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) to `true`                                                                                                       |
+| Package not installed in selected environment                                          | Install the package in the active interpreter's environment                                                                                                                                         |
+| Symbol is deeply nested                                                                | Increase `depth` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md). Direct dependencies declared in `requirements.txt`/`pyproject.toml` are automatically indexed deeper |
+| Symbol is not in `__all__`                                                             | Set `includeAllSymbols: true` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md) for that package                                                                         |
+| Private symbol (underscore prefix)                                                     | Pylance hides private symbols by default. Import manually                                                                                                                                           |
+| [`languageServerMode`](../settings/python_analysis_languageServerMode.md) is `"light"` | Switch to `"default"` or `"full"` for better indexing                                                                                                                                               |
+| Symbol only available through a re-export                                              | Enable [`includeAliasesFromUserFiles`](../settings/python_analysis_includeAliasesFromUserFiles.md)                                                                                                  |
 
 ---
 
