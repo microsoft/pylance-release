@@ -71,6 +71,20 @@ Example:
 }
 ```
 
+## Validate each entry before debugging imports
+
+For `extraPaths`, path validity means more than "the directory exists".
+
+- Each entry should point to an import root that belongs on `sys.path`.
+- Relative paths in VS Code settings resolve from the workspace root.
+- If you set `extraPaths` in `pyrightconfig.json`, those paths resolve from the config file location instead.
+
+An existing but wrong directory can still leave imports unresolved. A common mistake is pointing to the package directory itself when the import needs the package's parent directory.
+
+For example, if your code imports `package.utils`, `extraPaths` should usually include the directory that contains `package/`, not `package/` itself.
+
+For a broader checklist that also covers `stubPath`, `typeshedPaths`, `include`, `exclude`, and `ignore`, see [How to Troubleshoot Pylance Settings](../howto/settings-troubleshooting.md#validate-path-based-settings).
+
 ## Examples
 
 ### Example 1: Adding a Local Module Directory
@@ -149,6 +163,7 @@ Add `src` to `python.analysis.extraPaths`:
 ### Avoiding Common Issues
 
 - **Use Relative Paths**: Maintain portability across environments.
+- **Use the Correct Import Root**: Add the directory that should be on `sys.path`, not just a nested folder with a similar name.
 - **Document Configurations**: Ensure consistency across team members.
 
 ### Benefits

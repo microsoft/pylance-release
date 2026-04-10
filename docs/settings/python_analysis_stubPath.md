@@ -45,6 +45,18 @@ means Pylance looks in the workspace-root `typings` directory.
 
 This is important when you edit `.vscode/settings.json`: the path is not resolved relative to the `.vscode` folder itself.
 
+## Validate the configured path before debugging the stubs
+
+For `stubPath`, path validity means more than "the directory exists".
+
+- The directory must exist.
+- The directory must be the stub root, not one package subdirectory inside it.
+- The directory should contain package-named subdirectories that mirror the imports you want to satisfy.
+
+If the setting points at an existing but unrelated folder, Pylance treats that folder as the stub root and simply finds no matching custom stubs. That can make it look like Pylance is ignoring your stubs even though the setting is being applied.
+
+If `stubPath` is explicitly set to a missing directory, Pylance may also log a warning in **Output → Pylance** that the directory is not valid.
+
 ## Expected directory structure
 
 Each package should have its own subdirectory under the stub path, mirroring the package layout that Python imports.
@@ -149,10 +161,13 @@ In practice:
 
 Check the following:
 
+- the configured directory exists and is the stub root you intended
 - the path resolves from the workspace root
 - the package directory name matches the import name
 - the stub file names mirror the real module structure
 - the setting points at the stub root, not directly at one package subdirectory
+
+If you want a broader checklist for path-based settings, see [How to Troubleshoot Pylance Settings](../howto/settings-troubleshooting.md#validate-path-based-settings).
 
 ### My stubs work for one package but not another
 
