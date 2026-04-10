@@ -57,6 +57,16 @@ Example:
 
 That points Pylance at the workspace-root `vendor/typeshed` directory.
 
+## Validate the configured path before debugging typeshed behavior
+
+For `typeshedPaths`, path validity means more than "the directory exists".
+
+- Only the first configured entry is used.
+- That entry must point to the typeshed root, not directly to `stdlib` or `stubs`.
+- The tree should include `stdlib` and, when you rely on fallback third-party stubs, `stubs`.
+
+If the first path exists but points to the wrong folder or to an incomplete tree, Pylance can lose the typeshed information you expected and builtins or standard-library typing can start to look broken.
+
 ## Important behavior: only the first path is used
 
 Although the VS Code setting is an array, Pylance uses only the first configured entry.
@@ -177,11 +187,12 @@ Potentially, yes, but only if you have a complete enough typeshed-style tree for
 
 If your custom typeshed isn't being picked up:
 
-1. **Check the Output panel**: Open **Output → Pylance** for errors about missing or malformed typeshed directories.
-2. **Enable trace logging**: Add `"python.analysis.logLevel": "Trace"` to settings and look for typeshed resolution messages. See [Reading Pylance Logs](../howto/reading-pylance-logs.md).
-3. **Verify directory structure**: The path must point to a directory containing a `stdlib/` subdirectory with a `VERSIONS` file.
-4. **Restart**: Run **"Python: Restart Language Server"** after changing this setting.
-5. **Config file override**: If a `pyrightconfig.json` exists with `typeshedPath` set, the VS Code setting is ignored. See [Settings Troubleshooting](../howto/settings-troubleshooting.md).
+1. **Check the first configured path**: Only the first entry matters, and it must point to the typeshed root rather than directly to `stdlib/` or `stubs/`.
+2. **Verify directory structure**: The selected path must contain a `stdlib/` subdirectory with a `VERSIONS` file.
+3. **Check the Output panel**: Open **Output → Pylance** for errors about missing or malformed typeshed directories.
+4. **Enable trace logging**: Add `"python.analysis.logLevel": "Trace"` to settings and look for typeshed resolution messages. See [Reading Pylance Logs](../howto/reading-pylance-logs.md).
+5. **Restart**: Run **"Python: Restart Language Server"** after changing this setting.
+6. **Config file override**: If a `pyrightconfig.json` exists with `typeshedPath` set, the VS Code setting is ignored. See [Settings Troubleshooting](../howto/settings-troubleshooting.md#validate-path-based-settings).
 
 ---
 

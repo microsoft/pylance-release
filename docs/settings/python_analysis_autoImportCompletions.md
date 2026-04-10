@@ -82,8 +82,8 @@ Alternatively, you can edit your `settings.json` file directly:
 - [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)
     - Used to override how many levels under installed packages to index on a per package basis.
 
-- `python.analysis.showOnlyDirectDependenciesInAutoImport`
-    - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in `auto import` suggestions, if they exist. This only affects `auto import` for completions. The `add import` code action will continue to show all possible imports.
+- [`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)
+    - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in auto-import suggestions. See the linked setting page for details.
 
 ## Frequently Asked Questions
 
@@ -120,7 +120,7 @@ This prevents Pylance from indexing the specified package for auto-import comple
 The behavior for top-level variables differs between user files and third-party libraries:
 
 - **Third-party libraries:**
-  Whether a symbol is a variable or not generally does not affect indexing, since top-level variables are rare in packages. Instead, which symbols are available for auto-import is determined by other logic, such as the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting (which controls how deeply Pylance indexes packages), the [`python.analysis.languageServerMode`](python_analysis_languageServerMode.md), and the `python.analysis.showOnlyDirectDependenciesInAutoImport` option (see [README.md](../../README.md)). These settings affect which modules and symbols are indexed and suggested for auto-import.
+  Whether a symbol is a variable or not generally does not affect indexing, since top-level variables are rare in packages. Instead, which symbols are available for auto-import is determined by other logic, such as the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting (which controls how deeply Pylance indexes packages), the [`python.analysis.languageServerMode`](python_analysis_languageServerMode.md), and the [`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md) option. These settings affect which modules and symbols are indexed and suggested for auto-import.
 
 - **User files (your own workspace):**
   For variables defined at the top level in user files, Pylance only includes them in auto-import/add import suggestions if:

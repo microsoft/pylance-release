@@ -11,6 +11,7 @@ Pylance reads configuration from multiple sources with specific precedence rules
 - [languageServerMode Default Overrides](#languageservermode-default-overrides)
 - [VS Code Settings Scopes](#vs-code-settings-scopes)
 - [Variable Substitution](#variable-substitution)
+- [Validate Path-Based Settings](#validate-path-based-settings)
 - [Common Problematic Combinations](#common-problematic-combinations)
 - [Settings Not Taking Effect](#settings-not-taking-effect)
 - [Diagnostics Missing for Some Files](#diagnostics-missing-for-some-files)
@@ -116,6 +117,41 @@ VS Code settings support these variables:
 
 ---
 
+## Validate Path-Based Settings
+
+Many settings failures are path problems rather than analyzer problems. Before deeper troubleshooting, verify any setting that points to a file or directory resolves to the location you intended.
+
+A path-based setting can fail in three different ways:
+
+- the path does not exist
+- the relative path is resolved from a different base than you expected
+- the path exists but points to the wrong directory level or an unrelated folder
+
+Common examples:
+
+| Setting                                                                    | Must Point To                                                             | Common Failure Mode                                                                        |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [`stubPath`](../settings/python_analysis_stubPath.md)                      | Stub root containing package subdirectories                               | Existing but wrong folder means custom stubs are never discovered                          |
+| [`typeshedPaths`](../settings/python_analysis_typeshedPaths.md)            | First array entry must be a full typeshed root                            | Wrong folder or partial tree makes builtins or fallback stubs look broken                  |
+| [`extraPaths`](../settings/python_analysis_extraPaths.md)                  | Import root, not an arbitrary package subdirectory                        | Imports stay unresolved because the wrong root was added                                   |
+| [`include`](../settings/python_analysis_include.md) / `exclude` / `ignore` | Intended directory, file, or glob pattern for the files you want to match | Files are unexpectedly skipped or included because the pattern points somewhere unintended |
+
+### How to check a path-based setting
+
+1. Confirm which configuration source owns the setting.
+2. Resolve the path from the correct base.
+3. Confirm the resolved path exists on disk.
+4. Confirm the path points to the root expected by that setting, not just a similarly named folder.
+5. Check **Output → Pylance** for config warnings. Some cases are noisy, like an explicit `stubPath` pointing to a missing directory. Other cases are quieter, like a real but irrelevant folder.
+
+Base rules:
+
+- VS Code settings resolve relative paths from the workspace root.
+- `pyrightconfig.json` and `pyproject.toml` resolve relative paths from the config file location.
+- [`typeshedPaths`](../settings/python_analysis_typeshedPaths.md) uses only the first configured entry.
+
+---
+
 ## Common Problematic Combinations
 
 | Combination                                                                                                                               | What Happens                                                                                                            | Fix                                                                                                                                                |
@@ -143,6 +179,7 @@ VS Code settings support these variables:
 | [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) overrides VS Code settings | Edit the config file instead (see [table above](#pyrightconfigjson-overrides-vs-code-settings)) |
 | Setting is in wrong scope (user vs workspace)                                                          | Move to workspace or folder scope                                                               |
 | Multi-root: setting is in wrong folder                                                                 | Check which folder's settings apply                                                             |
+| Configured path points to the wrong location                                                           | Verify the resolved path exists and points at the correct root for that setting                 |
 | [`languageServerMode`](../settings/python_analysis_languageServerMode.md) override                     | Explicitly set the individual setting to override the mode default                              |
 | Pylance needs restart                                                                                  | Run **"Python: Restart Language Server"** from the Command Palette                              |
 
@@ -185,6 +222,7 @@ When settings aren't working as expected:
 - [ ] **Config file check**: Does a `pyrightconfig.json` or `pyproject.toml` with `[tool.pyright]` exist? (If so, many VS Code settings are ignored)
 - [ ] **Yellow squiggles**: Look for warning squiggles in your `settings.json` — they indicate overridden settings
 - [ ] **Setting scope**: Is the setting at the right level (user / workspace / folder)?
+- [ ] **Path validity**: For any setting that points to a file or folder, confirm the resolved path exists and points to the intended root, not just an existing but irrelevant directory
 - [ ] **Language server mode**: Is a mode active that changes defaults?
 - [ ] **Restart**: Run "Python: Restart Language Server" after any configuration change
 - [ ] **Pylance output**: Check **Output → Pylance** for errors or config warnings

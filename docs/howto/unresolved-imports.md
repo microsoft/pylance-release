@@ -40,7 +40,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
     python -c "import mypackage; print(mypackage.__file__)"
     ```
 
-3. **Check [`extraPaths`](../settings/python_analysis_extraPaths.md)**: Open Settings (JSON) and verify `python.analysis.extraPaths` includes the correct path.
+3. **Check [`extraPaths`](../settings/python_analysis_extraPaths.md)**: Open Settings (JSON) and verify `python.analysis.extraPaths` includes the correct import root, not just an existing but wrong directory level.
 
 4. **Check for editable install issues**: If using `pip install -e`:
 
@@ -60,21 +60,22 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 
     Then check the **Output** panel → **Pylance** for import resolution attempts. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) for a detailed walkthrough.
 
-6. **Check [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: If it exists, it may override VS Code settings. Verify [`include`](../settings/python_analysis_include.md), [`exclude`](../settings/python_analysis_exclude.md), and [`extraPaths`](../settings/python_analysis_extraPaths.md). See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) for details on config file precedence.
+6. **Check [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: If it exists, it may override VS Code settings. Verify [`include`](../settings/python_analysis_include.md), [`exclude`](../settings/python_analysis_exclude.md), and [`extraPaths`](../settings/python_analysis_extraPaths.md). See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings) for config precedence and path-validation checks.
 
 ### Common Causes and Fixes
 
-| Cause                                                                                          | Fix                                                                                                                            |
-| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Wrong interpreter selected                                                                     | Select the correct venv in VS Code status bar                                                                                  |
-| Package not installed in the venv                                                              | `pip install mypackage` in the correct venv                                                                                    |
-| [`extraPaths`](../settings/python_analysis_extraPaths.md) missing a directory                  | Add the package source dir to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                        |
-| Editable install uses import hooks                                                             | Reinstall with `--config-settings editable_mode=compat`. See [How to Use Editable Installs with Pylance](editable-installs.md) |
-| [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) overrides settings | Check and update the config file. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md)                      |
-| [`include`](../settings/python_analysis_include.md) setting excludes the file                  | Verify [`python.analysis.include`](../settings/python_analysis_include.md) covers your files                                   |
-| File is in [`exclude`](../settings/python_analysis_exclude.md) patterns                        | Remove from [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                                |
-| Namespace package (no `__init__.py`)                                                           | Pylance supports namespace packages, but verify structure                                                                      |
-| Missing `__init__.py` in a regular package                                                     | Add `__init__.py` to each package directory (even if empty) unless using namespace packages                                    |
+| Cause                                                                                          | Fix                                                                                                                                                            |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wrong interpreter selected                                                                     | Select the correct venv in VS Code status bar                                                                                                                  |
+| Package not installed in the venv                                                              | `pip install mypackage` in the correct venv                                                                                                                    |
+| [`extraPaths`](../settings/python_analysis_extraPaths.md) missing a directory                  | Add the package source dir to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                        |
+| Configured path exists but points to the wrong directory level                                 | Change the path so it points at the intended import root. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings) |
+| Editable install uses import hooks                                                             | Reinstall with `--config-settings editable_mode=compat`. See [How to Use Editable Installs with Pylance](editable-installs.md)                                 |
+| [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) overrides settings | Check and update the config file. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md)                                                      |
+| [`include`](../settings/python_analysis_include.md) setting excludes the file                  | Verify [`python.analysis.include`](../settings/python_analysis_include.md) covers your files                                                                   |
+| File is in [`exclude`](../settings/python_analysis_exclude.md) patterns                        | Remove from [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                                                                |
+| Namespace package (no `__init__.py`)                                                           | Pylance supports namespace packages, but verify structure                                                                                                      |
+| Missing `__init__.py` in a regular package                                                     | Add `__init__.py` to each package directory (even if empty) unless using namespace packages                                                                    |
 
 ---
 
@@ -262,7 +263,8 @@ When imports aren't resolving, run through this checklist:
 - [ ] **Interpreter path**: Does `python -c "import sys; print(sys.prefix)"` in the VS Code terminal point to the right venv?
 - [ ] **Package installed**: Is the package installed in that venv? (`pip show <package>`)
 - [ ] **Editable install**: If editable, is the `.pth` file path-based (not import-hook)? See [How to Use Editable Installs with Pylance](editable-installs.md)
-- [ ] **[`extraPaths`](../settings/python_analysis_extraPaths.md)**: Are paths configured to the right directory level?
+- [ ] **[`extraPaths`](../settings/python_analysis_extraPaths.md)**: Do paths exist and point to the import root rather than a nested package directory?
+- [ ] **Path-based settings**: If you use [`stubPath`](../settings/python_analysis_stubPath.md) or [`typeshedPaths`](../settings/python_analysis_typeshedPaths.md), do those resolved paths point to the intended root? See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings)
 - [ ] **[`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: Does a config file exist that might override settings?
 - [ ] **[`include`](../settings/python_analysis_include.md)/[`exclude`](../settings/python_analysis_exclude.md)**: Are the correct files included and not excluded?
 - [ ] **Pylance output**: Check Output panel → Pylance for any errors or warnings

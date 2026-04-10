@@ -60,16 +60,17 @@ Each page explains one `python.analysis.*` setting: what it does, accepted value
 
 ### Indexing and Completions
 
-| Setting                                                                                                    | Description                                                       |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [indexing](settings/python_analysis_indexing.md)                                                           | Enable background indexing for auto-imports and workspace symbols |
-| [packageIndexDepths](settings/python_analysis_packageIndexDepths.md)                                       | Control indexing depth for specific packages                      |
-| [persistAllIndices](settings/python_analysis_persistAllIndices.md)                                         | Cache all indices to disk                                         |
-| [regenerateStdLibIndices](settings/python_analysis_regenerateStdLibIndices.md)                             | Force re-index of standard library                                |
-| [userFileIndexingLimit](settings/python_analysis_userFileIndexingLimit.md)                                 | Maximum number of user files to index                             |
-| [includeAliasesFromUserFiles](settings/python_analysis_includeAliasesFromUserFiles.md)                     | Include re-exported aliases in completions                        |
-| [includeExtraPathSymbolsInSymbolSearch](settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md) | Include extraPaths symbols in workspace search                    |
-| [includeVenvInWorkspaceSymbols](settings/python_analysis_includeVenvInWorkspaceSymbols.md)                 | Include virtual environment symbols in workspace search           |
+| Setting                                                                                                      | Description                                                       |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| [indexing](settings/python_analysis_indexing.md)                                                             | Enable background indexing for auto-imports and workspace symbols |
+| [packageIndexDepths](settings/python_analysis_packageIndexDepths.md)                                         | Control indexing depth for specific packages                      |
+| [showOnlyDirectDependenciesInAutoImport](settings/python_analysis_showOnlyDirectDependenciesInAutoImport.md) | Limit auto-import completions to direct dependencies              |
+| [persistAllIndices](settings/python_analysis_persistAllIndices.md)                                           | Cache all indices to disk                                         |
+| [regenerateStdLibIndices](settings/python_analysis_regenerateStdLibIndices.md)                               | Force re-index of standard library                                |
+| [userFileIndexingLimit](settings/python_analysis_userFileIndexingLimit.md)                                   | Maximum number of user files to index                             |
+| [includeAliasesFromUserFiles](settings/python_analysis_includeAliasesFromUserFiles.md)                       | Include re-exported aliases in completions                        |
+| [includeExtraPathSymbolsInSymbolSearch](settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md)   | Include extraPaths symbols in workspace search                    |
+| [includeVenvInWorkspaceSymbols](settings/python_analysis_includeVenvInWorkspaceSymbols.md)                   | Include virtual environment symbols in workspace search           |
 
 ### Code Actions and Hints
 

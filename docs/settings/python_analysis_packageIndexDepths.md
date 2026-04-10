@@ -12,6 +12,18 @@ By default, Pylance indexes only the top-level modules of installed third-party 
 
 The `python.analysis.packageIndexDepths` setting allows you to override this default behavior by specifying the depth to which Pylance should index specific packages. Increasing the index depth enables Pylance to recognize deeper modules and symbols within a package, improving IntelliSense features like auto-import suggestions for those modules.
 
+### Automatic Depth Boost for Direct Dependencies
+
+Pylance reads `requirements.txt` and `pyproject.toml` in your workspace root to identify your project's direct dependencies. Packages found there are automatically indexed at depth **2**, even when the global default is 1. This covers the most common usage pattern — importing from a top-level subpackage like `from flask import Flask` or `from requests.exceptions import HTTPError` — without requiring any manual configuration.
+
+The automatic boost applies only when the package is **not** already listed in `packageIndexDepths`. If you set an explicit depth for a package, your setting takes priority.
+
+Distribution-name-to-module-name mapping is handled automatically (e.g., `scikit-learn` → `sklearn`).
+
+### Namespace Package Handling
+
+[PEP 420](https://peps.python.org/pep-0420/) namespace packages (e.g., `azure`, `google`) lack an `__init__.py` at the top level. Pylance automatically looks up to 4 levels deep to find the first real subpackage containing an `__init__.py`. This means imports like `from azure.storage.blob import BlobClient` work even at the default depth of 1, without requiring a per-package depth override.
+
 ### Why Adjust Indexing Depth?
 
 In some cases, you may notice that Pylance does not provide auto-import suggestions for certain submodules or symbols within a third-party package. This behavior occurs because those submodules are not included in the default index.
@@ -179,21 +191,31 @@ If you want to change the indexing depth for all packages, you can set the `name
 
 ## Default Values for Each Language Server Mode
 
-- Default value for `light` and `default` mode:
-    ```jsonc
-    [
-        { "name": "sklearn", "depth": 2 },
-        { "name": "matplotlib", "depth": 2 },
-        { "name": "scipy", "depth": 2 },
-        { "name": "django", "depth": 2 },
-        { "name": "flask", "depth": 2 },
-        { "name": "fastapi", "depth": 2 },
-    ]
-    ```
-    or in `full` mode:
-    ```jsonc
-    [{ "name": "", "depth": 4, "includeAllSymbols": true }]
-    ```
+In **`default`** and **`light`** modes, most packages are indexed at depth 1 (top-level only). A few popular libraries are indexed deeper:
+
+```jsonc
+[
+    { "name": "sklearn", "depth": 2 },
+    { "name": "matplotlib", "depth": 2 },
+    { "name": "scipy", "depth": 2 },
+    { "name": "django", "depth": 2 },
+    { "name": "flask", "depth": 2 },
+    { "name": "fastapi", "depth": 2 },
+    { "name": "cuda", "depth": 3, "includeAllSymbols": true },
+]
+```
+
+Note: In `light` mode, indexing is disabled by default. These depth values only apply when [`python.analysis.indexing`](python_analysis_indexing.md) is explicitly set to `true`.
+
+In addition, packages listed as direct dependencies in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even if they are not in the list above (see [Automatic Depth Boost for Direct Dependencies](#automatic-depth-boost-for-direct-dependencies)).
+
+In **`full`** mode, **all** packages default to depth 4 with `includeAllSymbols: true`:
+
+```jsonc
+[{ "name": "", "depth": 4, "includeAllSymbols": true }]
+```
+
+This provides broad auto-import coverage at the cost of higher resource usage.
 
 ## Frequently Asked Questions
 
@@ -204,6 +226,8 @@ If you want to change the indexing depth for all packages, you can set the `name
 ### Q: What happens to the default `packageIndexDepth` when I manually set the depth?
 
 **A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is overridden. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
+
+Note: The automatic depth boost for direct dependencies (from `requirements.txt`/`pyproject.toml`) still applies for packages that are **not** listed in your custom `packageIndexDepths`. If you explicitly list a package, your depth takes priority over the automatic boost.
 
 ### Q: Can I enable this setting for specific files or projects?
 
