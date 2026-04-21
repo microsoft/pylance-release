@@ -8,21 +8,25 @@ This is the complete index of Pylance documentation. Use it to find guides, sett
 
 Step-by-step guides for common Pylance workflows and troubleshooting.
 
-| Guide                                                         | Description                                                                        |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Auto-Import Guide](howto/auto-import-guide.md)               | Control auto-import suggestions: settings, indexing, and common issues             |
-| [CI Type Checking](howto/ci-type-checking.md)                 | Run Pyright in CI to enforce type checking                                         |
-| [Editable Installs](howto/editable-installs.md)               | Make `pip install -e` work with Pylance                                            |
-| [Generated Code](howto/generated-code.md)                     | Handle generated or dynamic code that Pylance cannot analyze statically            |
-| [Gradual Strict Adoption](howto/gradual-strict-adoption.md)   | Move from `off` to `strict` type checking incrementally                            |
-| [Monorepo Setup](howto/monorepo-setup.md)                     | Configure Pylance for monorepos, multi-root workspaces, and execution environments |
-| [Notebook Troubleshooting](howto/notebook-troubleshooting.md) | Fix common Pylance issues in Jupyter notebooks                                     |
-| [Performance Tuning](howto/performance-tuning.md)             | Reduce memory use and improve responsiveness                                       |
-| [Reading Pylance Logs](howto/reading-pylance-logs.md)         | Use trace logging to diagnose import resolution and settings                       |
-| [Remote Development](howto/remote-development.md)             | Use Pylance with SSH, WSL, containers, and Codespaces                              |
-| [Settings Troubleshooting](howto/settings-troubleshooting.md) | Diagnose settings precedence, config file overrides, and common conflicts          |
-| [Type Narrowing](howto/type-narrowing.md)                     | Use `isinstance`, `is None`, and type guards to fix type errors                    |
-| [Unresolved Imports](howto/unresolved-imports.md)             | Fix `reportMissingImports` and related import errors                               |
+| Guide                                                                               | Description                                                                                                  |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [Auto-Import Guide](howto/auto-import-guide.md)                                     | Control auto-import suggestions: settings, indexing, and common issues                                       |
+| [CI Type Checking](howto/ci-type-checking.md)                                       | Run Pyright in CI to enforce type checking                                                                   |
+| [Copilot + Pylance Workflow](howto/copilot-pylance-workflow.md)                     | Use Pylance MCP tools with Copilot to diagnose and fix Python issues                                         |
+| [Dependency Management](howto/dependency-management.md)                             | Reconcile `requirements.txt`, `pyproject.toml`, lockfiles, and PEP 723 with what Pylance sees                |
+| [Editable Installs](howto/editable-installs.md)                                     | Make `pip install -e` work with Pylance                                                                      |
+| [Generated Code](howto/generated-code.md)                                           | Handle generated or dynamic code that Pylance cannot analyze statically                                      |
+| [Gradual Strict Adoption](howto/gradual-strict-adoption.md)                         | Move from `off` to `strict` type checking incrementally                                                      |
+| [Monorepo Setup](howto/monorepo-setup.md)                                           | Configure Pylance for monorepos, multi-root workspaces, and execution environments                           |
+| [Notebook Troubleshooting](howto/notebook-troubleshooting.md)                       | Fix common Pylance issues in Jupyter notebooks                                                               |
+| [Performance Tuning](howto/performance-tuning.md)                                   | Reduce memory use and improve responsiveness                                                                 |
+| [Python Environments](howto/python-environments.md)                                 | Pick the right interpreter, switch venvs, and handle multiple environments (`venv`, `conda`, `uv`, `poetry`) |
+| [Reading Pylance Logs](howto/reading-pylance-logs.md)                               | Use trace logging to diagnose import resolution and settings                                                 |
+| [Remote Development](howto/remote-development.md)                                   | Use Pylance with SSH, WSL, containers, and Codespaces                                                        |
+| [Settings Troubleshooting](howto/settings-troubleshooting.md)                       | Diagnose settings precedence, config file overrides, and common conflicts                                    |
+| [Type Narrowing](howto/type-narrowing.md)                                           | Use `isinstance`, `is None`, and type guards to fix type errors                                              |
+| [Unresolved Imports](howto/unresolved-imports.md)                                   | Fix `reportMissingImports` and related import errors                                                         |
+| [Workspace vs Open-Files Diagnostics](howto/workspace-vs-open-files-diagnostics.md) | Get errors across the whole workspace instead of only open files                                             |
 
 ---
 
