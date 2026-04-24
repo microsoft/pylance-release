@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026.2.101 (24 April 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: [TSP][Pyrefly] Hover errors out [pylance-release#7965](https://github.com/microsoft/pylance-release/issues/7965)
+-   Bug fix: Incorrect hints for for cycles [pylance-release#7953](https://github.com/microsoft/pylance-release/issues/7953)
+-   Bug fix: [TSP] Double errors with pyrefly [pylance-release#7950](https://github.com/microsoft/pylance-release/issues/7950)
+-   Bug fix: Spurious unresolved imports in dependencies (not user code) in multi-root workspace [pylance-release#7497](https://github.com/microsoft/pylance-release/issues/7497)
+-   Bug fix: Pylance using the wrong interpreter in parallel folders of a multi-root workspace when in LIGHT mode [pylance-release#7495](https://github.com/microsoft/pylance-release/issues/7495)
+-   Enhancement: Add more logging and telemetry to find out why pylance crashed [pylance-release#6613](https://github.com/microsoft/pylance-release/issues/6613)
+-   Enhancement: Don't show errors in stdlib files [pylance-release#6453](https://github.com/microsoft/pylance-release/issues/6453)
+-   Enhancement: There are still some deficiencies in automatic completion [pylance-release#6036](https://github.com/microsoft/pylance-release/issues/6036)
+-   Bug fix: Explore Python IntelliSense in Copilot chat code blocks [pylance-release#6008](https://github.com/microsoft/pylance-release/issues/6008)
+
 ## 2026.2.100 (3 April 2026) PreRelease
 
 Notable changes:
