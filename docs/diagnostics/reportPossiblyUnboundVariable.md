@@ -4,12 +4,34 @@
 
 ## Representative Issues
 
--   [#5901](https://github.com/microsoft/pylance-release/issues/5901): Ensure that static type checkers are configured to flag potential unbound variables as errors in your code.
--   [#7822](https://github.com/microsoft/pyright/issues/7822): Always initialize variables that are assigned within a loop prior to the loop to avoid issues with static type checkers.
--   [#7879](https://github.com/microsoft/pyright/issues/7879): Ensure that the configuration setting used for detecting unbound variables in code aligns with the latest documentation and tool capabilities.
--   [#8748](https://github.com/microsoft/pyright/issues/8748): Ensure variables are initialized before they are accessed in loops to avoid potential unbound variable errors.
--   [#9299](https://github.com/microsoft/pyright/issues/9299): Ensure the `pyright` configuration uses "standard" type checking mode for comprehensive variable binding checks.
--   [#9638](https://github.com/microsoft/pyright/issues/9638): Ensure that the static analyzer reports variables as possibly unbound when they are deleted in enclosing scopes.
+- [#5901](https://github.com/microsoft/pylance-release/issues/5901): Ensure that static type checkers are configured to flag potential unbound variables as errors in your code.
+- [#7822](https://github.com/microsoft/pyright/issues/7822): Always initialize variables that are assigned within a loop prior to the loop to avoid issues with static type checkers.
+- [#7879](https://github.com/microsoft/pyright/issues/7879): Ensure that the configuration setting used for detecting unbound variables in code aligns with the latest documentation and tool capabilities.
+- [#8748](https://github.com/microsoft/pyright/issues/8748): Ensure variables are initialized before they are accessed in loops to avoid potential unbound variable errors.
+- [#9299](https://github.com/microsoft/pyright/issues/9299): Ensure the `pyright` configuration uses "standard" type checking mode for comprehensive variable binding checks.
+- [#9638](https://github.com/microsoft/pyright/issues/9638): Ensure that the static analyzer reports variables as possibly unbound when they are deleted in enclosing scopes.
+
+## Examples
+
+```python
+def find_value(items: list[int]) -> int:
+    for item in items:
+        if item > 10:
+            result = item
+    return result  # Warning: "result" is possibly unbound
+                   #   (loop may not execute if list is empty)
+```
+
+**Fix — initialize the variable before the loop:**
+
+```python
+def find_value(items: list[int]) -> int:
+    result = 0
+    for item in items:
+        if item > 10:
+            result = item
+    return result  # OK
+```
 
 ## Common Fixes & Workarounds
 
@@ -17,3 +39,8 @@
 2. Review all code paths to ensure variables are assigned before access.
 3. Use default values or `None` initialization when unsure if a variable will be set.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportPossiblyUnboundVariable) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

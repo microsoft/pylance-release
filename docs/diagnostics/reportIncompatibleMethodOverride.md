@@ -4,16 +4,48 @@
 
 ## Representative Issues
 
--   [#1651](https://github.com/microsoft/pylance-release/issues/1651): Always provide explicit return type annotations for properties when overriding methods.
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
--   [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
--   [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax for compatibility across Python versions.
--   [#2104](https://github.com/microsoft/pyright/issues/2104): Allow the use of NoReturn as a return type when assigning functions with matching signatures but differing return types.
--   [#2235](https://github.com/microsoft/pyright/issues/2235): Ensure that the return type of overridden methods matches or is compatible with the parent class's method.
--   [#2678](https://github.com/microsoft/pyright/issues/2678): Ensure that overridden properties are explicitly typed to match the abstract base class declaration.
--   [#3473](https://github.com/microsoft/pyright/issues/3473): Flag unused parameters in function signatures as errors.
+- [#1651](https://github.com/microsoft/pylance-release/issues/1651): Always provide explicit return type annotations for properties when overriding methods.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Ensure that default argument types in functions match the annotated parameter types.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
+- [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure that classes inheriting from abstract base classes implement all abstract methods.
+- [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer the `typing.Dict` syntax over the older `dict[t, t]` syntax for compatibility across Python versions.
+- [#2104](https://github.com/microsoft/pyright/issues/2104): Allow the use of NoReturn as a return type when assigning functions with matching signatures but differing return types.
+- [#2235](https://github.com/microsoft/pyright/issues/2235): Ensure that the return type of overridden methods matches or is compatible with the parent class's method.
+- [#2678](https://github.com/microsoft/pyright/issues/2678): Ensure that overridden properties are explicitly typed to match the abstract base class declaration.
+- [#3473](https://github.com/microsoft/pyright/issues/3473): Flag unused parameters in function signatures as errors.
+
+## Examples
+
+```python
+class Base:
+    def process(self, data: str) -> str:
+        return data.upper()
+
+class Child(Base):
+    def process(self, data: int) -> int:  # Error: Parameter type "int" is
+        return data * 2                   #   incompatible with type "str"
+```
+
+**Fix — match the base class signature:**
+
+```python
+class Child(Base):
+    def process(self, data: str) -> str:
+        return data.lower()
+```
+
+**Example — incompatible return type:**
+
+```python
+class Base:
+    def get_value(self) -> int:
+        return 0
+
+class Child(Base):
+    def get_value(self) -> str:  # Error: Return type "str" is incompatible
+        return "zero"            #   with return type "int" in override
+```
 
 ## Common Fixes & Workarounds
 
@@ -22,3 +54,8 @@
 3. Implement all abstract methods when inheriting from abstract base classes.
 4. Use the `typing.Dict` syntax for type annotations to ensure compatibility.
 5. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportIncompatibleMethodOverride) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

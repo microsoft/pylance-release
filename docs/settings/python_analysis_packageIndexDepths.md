@@ -12,6 +12,18 @@ By default, Pylance indexes only the top-level modules of installed third-party 
 
 The `python.analysis.packageIndexDepths` setting allows you to override this default behavior by specifying the depth to which Pylance should index specific packages. Increasing the index depth enables Pylance to recognize deeper modules and symbols within a package, improving IntelliSense features like auto-import suggestions for those modules.
 
+### Automatic Depth Boost for Direct Dependencies
+
+Pylance reads `requirements.txt` and `pyproject.toml` in your workspace root to identify your project's direct dependencies. Packages found there are automatically indexed at depth **2**, even when the global default is 1. This covers the most common usage pattern — importing from a top-level subpackage like `from flask import Flask` or `from requests.exceptions import HTTPError` — without requiring any manual configuration.
+
+The automatic boost applies only when the package is **not** already listed in `packageIndexDepths`. If you set an explicit depth for a package, your setting takes priority.
+
+Distribution-name-to-module-name mapping is handled automatically (e.g., `scikit-learn` → `sklearn`).
+
+### Namespace Package Handling
+
+[PEP 420](https://peps.python.org/pep-0420/) namespace packages (e.g., `azure`, `google`) lack an `__init__.py` at the top level. Pylance automatically looks up to 4 levels deep to find the first real subpackage containing an `__init__.py`. This means imports like `from azure.storage.blob import BlobClient` work even at the default depth of 1, without requiring a per-package depth override.
+
 ### Why Adjust Indexing Depth?
 
 In some cases, you may notice that Pylance does not provide auto-import suggestions for certain submodules or symbols within a third-party package. This behavior occurs because those submodules are not included in the default index.
@@ -47,49 +59,44 @@ Each configuration in the list should be an object with the following properties
 To adjust the `packageIndexDepths` setting in Visual Studio Code:
 
 1. **Open the Settings JSON**:
-
-   - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
+    - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
 
 2. **Add or Modify the Setting**:
-
-   - Include the `python.analysis.packageIndexDepths` setting in your `settings.json` file:
-     ```json
-     "python.analysis.packageIndexDepths": [
-       {
-         "name": "package_name",
-         "depth": depth_to_scan,
-         "includeAllSymbols": true_or_false
-       }
-     ],
-     ```
+    - Include the `python.analysis.packageIndexDepths` setting in your `settings.json` file:
+        ```json
+        "python.analysis.packageIndexDepths": [
+          {
+            "name": "package_name",
+            "depth": depth_to_scan,
+            "includeAllSymbols": true_or_false
+          }
+        ],
+        ```
 
 3. **Save and Reload**:
-
-   - Save the `settings.json` file.
-   - Reload Visual Studio Code for the changes to take effect.
+    - Save the `settings.json` file.
+    - Reload Visual Studio Code for the changes to take effect.
 
 **Note**: Adjusting the indexing depth may impact performance. It's recommended to specify only the packages you need and to set the minimum depth required.
 
 ### Understanding Index Depth
 
 - **Depth**: The number of modules in the module path that Pylance should index.
-  - **Depth 1**: Only the package's top-level modules are indexed (e.g., `django`).
-  - **Depth 2**: Includes modules one level deeper (e.g., `django.core`).
-  - **Depth 3**: Includes modules two levels deeper (e.g., `django.core.api`).&#x20;
+    - **Depth 1**: Only the package's top-level modules are indexed (e.g., `django`).
+    - **Depth 2**: Includes modules one level deeper (e.g., `django.core`).
+    - **Depth 3**: Includes modules two levels deeper (e.g., `django.core.api`).&#x20;
 
-    Note that the depth does not directly correspond to the directory structure. For example, `django.core` could be located in `django/core.py` or `django/core/__init__.py`.
+        Note that the depth does not directly correspond to the directory structure. For example, `django.core` could be located in `django/core.py` or `django/core/__init__.py`.
 
 ### `includeAllSymbols`
 
 - **`includeAllSymbols: false`** (default):
-
-  - Pylance includes only symbols that are specified in a module's `__all__` attribute.
-  - This helps reduce the number of irrelevant or private symbols in the index.
+    - Pylance includes only symbols that are specified in a module's `__all__` attribute.
+    - This helps reduce the number of irrelevant or private symbols in the index.
 
 - **`includeAllSymbols: true`**:
-
-  - Pylance includes all top-level symbols declared in the files, regardless of the `__all__` attribute.
-  - Use this option if necessary symbols are not included due to missing `__all__` declarations.
+    - Pylance includes all top-level symbols declared in the files, regardless of the `__all__` attribute.
+    - Use this option if necessary symbols are not included due to missing `__all__` declarations.
 
 ## Performance Considerations
 
@@ -174,27 +181,41 @@ If you want to change the indexing depth for all packages, you can set the `name
 ],
 ```
 
+- Pylance treats the entry with "name": "" as a catch-all default that applies only to packages without an exact match in the list.
+- For each package being indexed:
+    - If there’s a config object whose "name" exactly matches that package, Pylance uses that depth (and includeAllSymbols if specified).
+    - Otherwise, if there’s an entry with "name": "", Pylance falls back to its depth (and includeAllSymbols).
+- Entries are not merged or order-dependent—exact matches always override the empty-string default.
+
 - **Explanation**: This setting adjusts the default indexing depth for all packages to 3. Use this cautiously, as it may significantly impact performance.
 
 ## Default Values for Each Language Server Mode
 
-- Default value for `light` and `default` mode:
-  ```jsonc
-  [
-      { "name": "sklearn", "depth": 2 },
-      { "name": "matplotlib", "depth": 2 },
-      { "name": "scipy", "depth": 2 },
-      { "name": "django", "depth": 2 },
-      { "name": "flask", "depth": 2 },
-      { "name": "fastapi", "depth": 2 }
-  ]
-  ```
-  or in `full` mode:
-  ```jsonc
-  [
-      { "name": "", "depth": 4,  "includeAllSymbols": true }
-  ]
-  ```
+In **`default`** and **`light`** modes, most packages are indexed at depth 1 (top-level only). A few popular libraries are indexed deeper:
+
+```jsonc
+[
+    { "name": "sklearn", "depth": 2 },
+    { "name": "matplotlib", "depth": 2 },
+    { "name": "scipy", "depth": 2 },
+    { "name": "django", "depth": 2 },
+    { "name": "flask", "depth": 2 },
+    { "name": "fastapi", "depth": 2 },
+    { "name": "cuda", "depth": 3, "includeAllSymbols": true },
+]
+```
+
+Note: In `light` mode, indexing is disabled by default. These depth values only apply when [`python.analysis.indexing`](python_analysis_indexing.md) is explicitly set to `true`.
+
+In addition, packages listed as direct dependencies in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even if they are not in the list above (see [Automatic Depth Boost for Direct Dependencies](#automatic-depth-boost-for-direct-dependencies)).
+
+In **`full`** mode, **all** packages default to depth 4 with `includeAllSymbols: true`:
+
+```jsonc
+[{ "name": "", "depth": 4, "includeAllSymbols": true }]
+```
+
+This provides broad auto-import coverage at the cost of higher resource usage.
 
 ## Frequently Asked Questions
 
@@ -206,16 +227,22 @@ If you want to change the indexing depth for all packages, you can set the `name
 
 **A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is overridden. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
 
+Note: The automatic depth boost for direct dependencies (from `requirements.txt`/`pyproject.toml`) still applies for packages that are **not** listed in your custom `packageIndexDepths`. If you explicitly list a package, your depth takes priority over the automatic boost.
+
 ### Q: Can I enable this setting for specific files or projects?
 
 **A:** Currently, the `python.analysis.packageIndexDepths` setting applies globally or per-workspace in VS Code settings. You can adjust the setting in your workspace's `settings.json` to enable it for a specific project.
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — indexing depth and performance trade-offs
+
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."*
+_"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."_
 
 ---

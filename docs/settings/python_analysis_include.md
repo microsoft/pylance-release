@@ -17,10 +17,9 @@ The `python.analysis.include` setting in Pylance allows you to specify paths to 
 - **Customizing `include` Overrides Defaults**: If you customize `python.analysis.include`, Pylance's automatic inclusion of the entire workspace is overridden. You need to explicitly specify all directories and files you want to include in the analysis, including the workspace root if desired.
 
 - **Wildcard Support**: Paths specified in `python.analysis.include` can include wildcard characters:
-
-  - `**`: Matches any directory or multiple levels of directories.
-  - `*`: Matches any sequence of zero or more characters.
-  - `?`: Matches a single character.
+    - `**`: Matches any directory or multiple levels of directories.
+    - `*`: Matches any sequence of zero or more characters.
+    - `?`: Matches a single character.
 
 - **Interaction with `exclude`**: The `python.analysis.exclude` setting specifies paths to directories or files that Pylance should ignore, even if they are included in `include`. Paths specified in `exclude` take precedence over those in `include`. This allows you to fine-tune which parts of your included directories should be ignored.
 
@@ -31,36 +30,31 @@ You can modify the `python.analysis.include` setting in your VS Code settings, e
 ### Modifying the Setting
 
 1. **Open the Settings**:
-
-   - In Visual Studio Code, open the settings by selecting **Settings** from the gear icon in the lower-left corner.
+    - In Visual Studio Code, open the settings by selecting **Settings** from the gear icon in the lower-left corner.
 
 2. **Search for the Setting**:
-
-   - In the search bar at the top of the Settings pane, type `python.analysis.include`.
+    - In the search bar at the top of the Settings pane, type `python.analysis.include`.
 
 3. **Modify the Setting**:
-
-   - Add the paths to the directories or files you want Pylance to include. For example:
-     ```json
-     "python.analysis.include": ["src/**/*", "scripts/**/*"]
-     ```
+    - Add the paths to the directories or files you want Pylance to include. For example:
+        ```json
+        "python.analysis.include": ["src/**/*", "scripts/**/*"]
+        ```
 
 Alternatively, you can edit your `settings.json` file directly:
 
 1. **Open Settings (JSON)**:
-
-   - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
+    - Open the Command Palette and select **Preferences: Open Settings (JSON)**.
 
 2. **Add the Setting**:
-
-   - Add or modify the following line in your `settings.json` file:
-     ```json
-     "python.analysis.include": ["src/**/*", "scripts/**/*"]
-     ```
+    - Add or modify the following line in your `settings.json` file:
+        ```json
+        "python.analysis.include": ["src/**/*", "scripts/**/*"]
+        ```
 
 ### Using Wildcards
 
-- **`**` (Double Asterisk)**: Matches any directory or multiple levels of directories. For example,`src/**`includes all files and subdirectories under`src`.
+- **`**` (Double Asterisk)**: Matches any directory or multiple levels of directories. For example,`src/\*\*`includes all files and subdirectories under`src`.
 
 - **`*` (Asterisk)**: Matches any sequence of zero or more characters within a single directory level. For example, `src/*` includes all immediate subdirectories and files under `src`.
 
@@ -168,27 +162,22 @@ For example, consider the following multi-root workspace configuration:
 
 ```json
 {
-	"folders": [
-		{
-			"path": "first"
-		},
-		{
-			"path": "second"
-		},
-		{
-			"name": "third",
-			"path": "../extraRoot"
-		}
-	],
-	"settings": {
-		"python.analysis.include": [
-			"${workspaceFolder:first}/src/**",
-			"${workspaceFolder:second}/**"
-		],
-		"python.analysis.exclude": [
-			"${workspaceFolder:third}/testFiles/**"
-		]
-	}
+    "folders": [
+        {
+            "path": "first"
+        },
+        {
+            "path": "second"
+        },
+        {
+            "name": "third",
+            "path": "../extraRoot"
+        }
+    ],
+    "settings": {
+        "python.analysis.include": ["${workspaceFolder:first}/src/**", "${workspaceFolder:second}/**"],
+        "python.analysis.exclude": ["${workspaceFolder:third}/testFiles/**"]
+    }
 }
 ```
 
@@ -210,15 +199,18 @@ This approach allows you to provide `include`, `exclude`, or `ignore` configurat
 
 These methods offer flexibility for managing analysis settings per workspace root in a multi-root VS Code environment.
 
+## Related Settings
+
+- [`python.analysis.exclude`](python_analysis_exclude.md): Controls which files are excluded from analysis.
+- [`python.analysis.ignore`](python_analysis_ignore.md): Suppresses diagnostics for specific paths without excluding them.
+- [`python.analysis.extraPaths`](python_analysis_extraPaths.md): Adds directories to the import search path.
+
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — how `include` affects import resolution
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `include` in multi-package projects
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides `include`
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
-
----
-
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
-
----
-
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
-

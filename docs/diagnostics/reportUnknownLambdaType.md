@@ -4,8 +4,31 @@
 
 ## Representative Issues
 
--   [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
--   [#7039](https://github.com/microsoft/pyright/issues/7039): Ensure that the `owner` argument in the `__set_name__` method can be used to infer the type of the descriptor.
+- [#3347](https://github.com/microsoft/pyright/issues/3347): Use keyword-only arguments in lambda functions when assigning them to protocols with specific argument requirements.
+- [#7039](https://github.com/microsoft/pyright/issues/7039): Ensure that the `owner` argument in the `__set_name__` method can be used to infer the type of the descriptor.
+
+## Examples
+
+**Error:**
+
+```python
+transform = lambda x: x + 1  # Parameter 'x' has unknown type
+```
+
+**Fix — add type annotations to the lambda:**
+
+```python
+from collections.abc import Callable
+
+transform: Callable[[int], int] = lambda x: x + 1
+```
+
+Or use a named function with annotations:
+
+```python
+def transform(x: int) -> int:
+    return x + 1
+```
 
 ## Common Fixes & Workarounds
 
@@ -13,3 +36,8 @@
 2. Use protocols or type hints to clarify expected lambda signatures.
 3. Refactor code to use named functions with explicit types if needed.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnknownLambdaType) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

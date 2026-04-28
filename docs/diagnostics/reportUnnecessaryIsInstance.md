@@ -4,8 +4,35 @@
 
 ## Representative Issues
 
--   [#2080](https://github.com/microsoft/pyright/issues/2080): Warn or error on unreachable statements/expressions, providing clearer diagnostic messages.
--   [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, suppress the warning by adding an `else` clause.
+- [#2080](https://github.com/microsoft/pyright/issues/2080): Warn or error on unreachable statements/expressions, providing clearer diagnostic messages.
+- [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, suppress the warning by adding an `else` clause.
+
+## Examples
+
+**Error:**
+
+```python
+def greet(name: str) -> str:
+    if isinstance(name, str):  # Always True — name is already str
+        return f"Hello, {name}"
+    return "Hello"              # Unreachable
+```
+
+**Fix — remove the redundant check:**
+
+```python
+def greet(name: str) -> str:
+    return f"Hello, {name}"
+```
+
+If the function genuinely accepts multiple types, widen the parameter annotation:
+
+```python
+def greet(name: str | int) -> str:
+    if isinstance(name, str):
+        return f"Hello, {name}"
+    return f"Hello, #{name}"
+```
 
 ## Common Fixes & Workarounds
 
@@ -13,3 +40,8 @@
 2. Refactor code to avoid unreachable or redundant branches.
 3. Add an `else` clause when using exhaustive type checks with `Union` types.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnnecessaryIsInstance) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

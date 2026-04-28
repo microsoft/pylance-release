@@ -4,9 +4,41 @@
 
 ## Representative Issues
 
--   [#10014](https://github.com/microsoft/pyright/issues/10014): Avoid using default keyword arguments in overloads to prevent false positives for overlapping overloads.
--   [#7084](https://github.com/microsoft/pyright/issues/7084): Avoid using multiple TypeVars in function signatures without a clear reason to distinguish different overloads.
--   [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+- [#10014](https://github.com/microsoft/pyright/issues/10014): Avoid using default keyword arguments in overloads to prevent false positives for overlapping overloads.
+- [#7084](https://github.com/microsoft/pyright/issues/7084): Avoid using multiple TypeVars in function signatures without a clear reason to distinguish different overloads.
+- [#9603](https://github.com/microsoft/pyright/issues/9603): Ensure that `join` returns the appropriate type based on the elements in the list, avoiding mismatches between literal and non-literal strings.
+
+## Examples
+
+**Error:**
+
+```python
+from typing import overload
+
+@overload
+def process(x: int) -> str: ...
+@overload
+def process(x: int) -> int: ...  # Overlaps with first overload
+
+def process(x: int) -> str | int:
+    return str(x)
+```
+
+**Fix — make overloads non-overlapping:**
+
+```python
+from typing import overload
+
+@overload
+def process(x: int) -> str: ...
+@overload
+def process(x: str) -> int: ...  # Different param types
+
+def process(x: int | str) -> str | int:
+    if isinstance(x, int):
+        return str(x)
+    return int(x)
+```
 
 ## Common Fixes & Workarounds
 
@@ -14,3 +46,8 @@
 2. Avoid using default keyword arguments in overloads.
 3. Use clear and distinct TypeVars only when necessary.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportOverlappingOverload) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

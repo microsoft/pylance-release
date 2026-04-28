@@ -4,10 +4,32 @@
 
 ## Representative Issues
 
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
--   [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use correct line endings and do not contain unsupported control characters.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities by type checking mode.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv to improve performance.
+- [#4367](https://github.com/microsoft/pyright/issues/4367): Ensure that comments in TOML files use correct line endings and do not contain unsupported control characters.
+
+## Examples
+
+**Error:**
+
+```python
+def greet(name):  # type: (str) -> str
+    return "Hello, " + name
+
+x = []  # type: list[int]
+```
+
+**Fix — use inline type annotations (PEP 526 / PEP 3107):**
+
+```python
+def greet(name: str) -> str:
+    return "Hello, " + name
+
+x: list[int] = []
+```
+
+Type comments were needed for Python 2 compatibility but are deprecated in modern Python (3.6+).
 
 ## Common Fixes & Workarounds
 
@@ -15,3 +37,8 @@
 2. Refactor code to remove deprecated or unnecessary type comments.
 3. Exclude unnecessary folders from analysis to improve performance.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportTypeCommentUsage) for details on configuring or disabling this diagnostic.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

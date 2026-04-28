@@ -1,5 +1,9 @@
-# Right click on BaseWithAbstractMethod.method and select `Go To Implementations` or `Find All Implementations`,
-# Only Derived1.method is expected to show up.
+# SCENARIO: show only concrete implementations for an abstract method
+# TARGET: `method` in `BaseWithAbstractMethod.method` below
+# TRIGGER: Go To Implementations or Find All Implementations
+# EXPECT: the cursor is on `method` in the abstract base declaration below
+# VERIFY: the navigation or results surface shows only `Derived1.method`
+# RECOVER: none
 from abc import ABC, abstractmethod
 class BaseWithAbstractMethod(ABC):
     @abstractmethod
@@ -10,8 +14,12 @@ class Derived1(BaseWithAbstractMethod):
     def method(self):
         pass
 
-# Right click on BaseWithConcreteMethod.method and select `Go To Implementations` or `Find All Implementations`,
-# All methods are shown: BaseWithConcreteMethod.method, Intermediate.method, Derived2.method.
+# SCENARIO: include the full implementation chain for a concrete base method
+# TARGET: `method` in `BaseWithConcreteMethod.method` below
+# TRIGGER: Go To Implementations or Find All Implementations
+# EXPECT: the cursor is on `method` in the concrete base declaration below
+# VERIFY: the navigation or results surface shows `BaseWithConcreteMethod.method`, `Intermediate.method`, and `Derived2.method`
+# RECOVER: none
 class BaseWithConcreteMethod(ABC):
     def method(self):
         ...
@@ -25,8 +33,12 @@ class Derived2(Intermediate):
         pass
 
 
-# Right click on A.method and select `Go To Implementations` or `Find All Implementations`,
-# All methods are shown: A.method, B.method, C.method.
+# SCENARIO: include each override in a simple inheritance chain
+# TARGET: `method` in `A.method` below
+# TRIGGER: Go To Implementations or Find All Implementations
+# EXPECT: the cursor is on `method` in `class A`
+# VERIFY: the navigation or results surface shows `A.method`, `B.method`, and `C.method`
+# RECOVER: none
 class A:
     def method(self): pass
 
@@ -39,8 +51,12 @@ class C(B):
 x = B()
 x.method()
 
-# Right click on MyProtocol.protocolMethod and select `Go To Implementations` or `Find All Implementations`,
-# MyProtocol.protocolMethod and Implementation.protocolMethod are expected to show up.
+# SCENARIO: include protocol declarations and matching implementations
+# TARGET: `protocolMethod` in `MyProtocol.protocolMethod` below
+# TRIGGER: Go To Implementations or Find All Implementations
+# EXPECT: the cursor is on `protocolMethod` in the protocol declaration below
+# VERIFY: the navigation or results surface shows `MyProtocol.protocolMethod` and `Implementation.protocolMethod`
+# RECOVER: none
 from typing import Protocol
 class MyProtocol(Protocol):
     def protocolMethod(self):
@@ -51,8 +67,12 @@ class Implementation:
         pass
 
 
-# Right click on MyProtocol2.methodWithMismatchedSignature and select `Go To Implementations` or `Find All Implementations`,
-# Only MyProtocol2.methodWithMismatchedSignature is expected to show up.
+# SCENARIO: exclude protocol members with mismatched implementation signatures
+# TARGET: `methodWithMismatchedSignature` in `MyProtocol2.methodWithMismatchedSignature` below
+# TRIGGER: Go To Implementations or Find All Implementations
+# EXPECT: the cursor is on `methodWithMismatchedSignature` in the protocol declaration below
+# VERIFY: the navigation or results surface shows only `MyProtocol2.methodWithMismatchedSignature`
+# RECOVER: none
 from typing import Protocol
 class MyProtocol2(Protocol):
     def methodWithMismatchedSignature(self):

@@ -1,13 +1,12 @@
-# you can trigger go to type definition using `Go To Type Definition` command
-# use `command palette` to find the command and its short cut
-# one can also use right click menu to issue the command
-
 myVariable: int = 1
 
 
-# place cursor on `myVariable` and run go to type def
-# confirm it goes to the type of the expression (`int` decl in builtin), 
-# not the variable `myVariable` itself (myVariable: int = 1)
+# SCENARIO: go to type definition on a variable resolves to its builtin type
+# TARGET: `myVariable` in the print call below
+# TRIGGER: Go To Type Definition
+# EXPECT: the cursor is on the variable reference in `print(myVariable)`
+# VERIFY: navigation opens the builtin `int` declaration rather than the local `myVariable: int = 1` assignment
+# RECOVER: none
 print(myVariable)
 
 
@@ -16,6 +15,10 @@ class MyType:
 
 a = MyType()
 
-# place cursor on `name` and run go to type def
-# confirm it goes to the type of the member (`str` decl in builtin)
+# SCENARIO: go to type definition on a member resolves to the member type
+# TARGET: `name` in `a.name`
+# TRIGGER: Go To Type Definition
+# EXPECT: the cursor is on the member access in the final line below
+# VERIFY: navigation opens the builtin `str` declaration for the member type
+# RECOVER: none
 a.name

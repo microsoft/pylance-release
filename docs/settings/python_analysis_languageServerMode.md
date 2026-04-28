@@ -56,7 +56,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md)**: Controls the offering of auto-imports in completions. Enabled in `full` mode to provide a richer development experience.
 
-- **`python.analysis.showOnlyDirectDependenciesInAutoImport`**: In `full` mode, only direct dependencies declared in `requirements.txt` or `pyproject.toml` are shown in auto-import suggestions, improving the relevance of suggestions.
+- **[`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)**: In `full` mode, only direct dependencies declared in `requirements.txt` or `pyproject.toml` are shown in auto-import suggestions, improving the relevance of suggestions.
 
 - **[`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)**: Limits the number of user files indexed in the workspace. In `full` mode, there is no limit (`-1`), allowing comprehensive indexing of all files.
 
@@ -66,27 +66,26 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **`python.analysis.supportDocstringTemplate`**: Enables support for docstring generation in `full` mode, facilitating better code documentation.
 
-- **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. By default, only top-level modules are indexed.
+- **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. By default, only top-level modules are indexed (depth 1). A few popular libraries default to depth 2.
+    - **Default value** (for `default` and `light` modes):
+        ```jsonc
+        [
+            { "name": "sklearn", "depth": 2 },
+            { "name": "matplotlib", "depth": 2 },
+            { "name": "scipy", "depth": 2 },
+            { "name": "django", "depth": 2 },
+            { "name": "flask", "depth": 2 },
+            { "name": "fastapi", "depth": 2 },
+            { "name": "cuda", "depth": 3, "includeAllSymbols": true },
+        ]
+        ```
+        In addition, packages declared as direct dependencies in `requirements.txt` or `pyproject.toml` are automatically indexed at depth 2.
+    - **`full` mode** value:
+        ```jsonc
+        [{ "name": "", "depth": 4, "includeAllSymbols": true }]
+        ```
 
-  - **Default value**:
-    ```jsonc
-    [
-        { "name": "sklearn", "depth": 2 }, 
-        { "name": "matplotlib", "depth": 2 }, 
-        { "name": "scipy", "depth": 2 }, 
-        { "name": "django", "depth": 2 }, 
-        { "name": "flask", "depth": 2 }, 
-        { "name": "fastapi", "depth": 2 }
-    ]
-    ```
-    or in `full` mode
-    ```jsonc
-    [
-        { "name": "", "depth": 4, "includeAllSymbols": true }
-    ]
-    ```
-
-  In `full` mode, this ensures comprehensive indexing of submodules, improving features like auto-import and symbol searches for deeply nested packages. For more detail, please refer to the link above.
+    In `full` mode, this ensures comprehensive indexing of submodules, improving features like auto-import and symbol searches for deeply nested packages. For more detail, please refer to the link above.
 
 - **[`python.analysis.nodeExecutable`](python_analysis_nodeExecutable.md)**: Enables the automatic download of a node in `full` mode, allowing a bigger heap memory for Pylance.
 
@@ -104,27 +103,24 @@ Alternatively, you can edit your `settings.json` file directly:
 
 1. **Open Settings (JSON)**: Open the command palette and type `Preferences: Open Settings (JSON)`.
 2. **Add or Modify the Setting**:
-   ```json
-   "python.analysis.languageServerMode": "light"
-   ```
+    ```json
+    "python.analysis.languageServerMode": "light"
+    ```
 
 ## When and Why to Use Each Mode
 
 - **`light`**
-
-  - **Large Projects**: Improves performance by analyzing only open files, reducing resource usage.
-  - **Limited Resources**: Suitable for systems with low memory or CPU power.
-  - **Quick Edits**: Ideal if you don't need advanced features and just need a simple editor setup.
+    - **Large Projects**: Improves performance by analyzing only open files, reducing resource usage.
+    - **Limited Resources**: Suitable for systems with low memory or CPU power.
+    - **Quick Edits**: Ideal if you don't need advanced features and just need a simple editor setup.
 
 - **`default`**
-
-  - **Balanced Performance**: Offers a good balance of features and performance, suitable for most users.
-  - **General Development**: Ideal for regular Python development with IntelliSense and type checking features enabled by default.
+    - **Balanced Performance**: Offers a good balance of features and performance, suitable for most users.
+    - **General Development**: Ideal for regular Python development with IntelliSense and type checking features enabled by default.
 
 - **`full`**
-
-  - **Comprehensive Features**: Ideal for those who need access to the full range of IntelliSense and analysis features.
-  - **High Resource Availability**: Suitable for systems with sufficient memory and CPU power to handle more extensive analysis.
+    - **Comprehensive Features**: Ideal for those who need access to the full range of IntelliSense and analysis features.
+    - **High Resource Availability**: Suitable for systems with sufficient memory and CPU power to handle more extensive analysis.
 
 ## Frequently Asked Questions
 
@@ -148,10 +144,15 @@ Alternatively, you can edit your `settings.json` file directly:
 
 **A:** If you experience performance issues, such as high memory or CPU usage, slow editor responses, or lag in IntelliSense features, trying `light` mode may help. You can monitor system performance and adjust settings as needed.
 
+## See Also
+
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — choosing and configuring language server modes
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — how `languageServerMode` interacts with other settings
+
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._

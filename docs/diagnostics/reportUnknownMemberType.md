@@ -4,11 +4,39 @@
 
 ## Representative Issues
 
--   [#1449](https://github.com/microsoft/pylance-release/issues/1449): Ensure that the configuration file specified in a project is correctly referenced and applied by the development environment.
--   [#1455](https://github.com/microsoft/pylance-release/issues/1455): Exclude third-party package directories like **pypackages** from analysis and configure paths explicitly in pyproject.toml for accurate type checking.
--   [#1997](https://github.com/microsoft/pylance-release/issues/1997): Implement more specific analysis rules or allow for different severity levels to be configured for `reportUnknownMemberType`.
--   [#2071](https://github.com/microsoft/pylance-release/issues/2071): Ensure that type stubs are correctly imported using the `X as X` form.
--   [#3084](https://github.com/microsoft/pylance-release/issues/3084): Ensure that the library you are using includes a "py.typed" file to provide accurate type information for Pylance.
+- [#1449](https://github.com/microsoft/pylance-release/issues/1449): Ensure that the configuration file specified in a project is correctly referenced and applied by the development environment.
+- [#1455](https://github.com/microsoft/pylance-release/issues/1455): Exclude third-party package directories like **pypackages** from analysis and configure paths explicitly in pyproject.toml for accurate type checking.
+- [#1997](https://github.com/microsoft/pylance-release/issues/1997): Implement more specific analysis rules or allow for different severity levels to be configured for `reportUnknownMemberType`.
+- [#2071](https://github.com/microsoft/pylance-release/issues/2071): Ensure that type stubs are correctly imported using the `X as X` form.
+- [#3084](https://github.com/microsoft/pylance-release/issues/3084): Ensure that the library you are using includes a "py.typed" file to provide accurate type information for Pylance.
+
+## Examples
+
+**Error:**
+
+```python
+class Config:
+    def __init__(self):
+        self.timeout = get_default()  # get_default returns Any → member type unknown
+```
+
+**Fix — add a type annotation to the member:**
+
+```python
+class Config:
+    timeout: int
+
+    def __init__(self):
+        self.timeout = get_default()
+```
+
+Or annotate in `__init__`:
+
+```python
+class Config:
+    def __init__(self):
+        self.timeout: int = get_default()
+```
 
 ## Common Fixes & Workarounds
 
@@ -16,3 +44,8 @@
 2. Use or install type stubs for third-party libraries.
 3. Refactor code to clarify member types where needed.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnknownMemberType) for options to adjust or suppress this diagnostic if needed.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

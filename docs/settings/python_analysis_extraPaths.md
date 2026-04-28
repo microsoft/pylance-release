@@ -71,6 +71,20 @@ Example:
 }
 ```
 
+## Validate each entry before debugging imports
+
+For `extraPaths`, path validity means more than "the directory exists".
+
+- Each entry should point to an import root that belongs on `sys.path`.
+- Relative paths in VS Code settings resolve from the workspace root.
+- If you set `extraPaths` in `pyrightconfig.json`, those paths resolve from the config file location instead.
+
+An existing but wrong directory can still leave imports unresolved. A common mistake is pointing to the package directory itself when the import needs the package's parent directory.
+
+For example, if your code imports `package.utils`, `extraPaths` should usually include the directory that contains `package/`, not `package/` itself.
+
+For a broader checklist that also covers `stubPath`, `typeshedPaths`, `include`, `exclude`, and `ignore`, see [How to Troubleshoot Pylance Settings](../howto/settings-troubleshooting.md#validate-path-based-settings).
+
 ## Examples
 
 ### Example 1: Adding a Local Module Directory
@@ -149,6 +163,7 @@ Add `src` to `python.analysis.extraPaths`:
 ### Avoiding Common Issues
 
 - **Use Relative Paths**: Maintain portability across environments.
+- **Use the Correct Import Root**: Add the directory that should be on `sys.path`, not just a nested folder with a similar name.
 - **Document Configurations**: Ensure consistency across team members.
 
 ### Benefits
@@ -168,7 +183,7 @@ It is supported and it can be used in multi root workspace in vscode so one work
 No wildcards or globs are not supported. For two reasons:
 
 - Extra paths make every lookup of every import take longer. Wildcard imports would have a high impact on this lookup that are not easy for the user to understand why they're taking so long.
-- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another. 
+- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another.
 
 ### How does this differ from modifying `sys.path`?
 
@@ -178,15 +193,23 @@ No wildcards or globs are not supported. For two reasons:
 
 `extraPaths` supplements the selected interpreter's `sys.path`, ensuring static analysis recognizes additional directories.
 
-## Related Documentation
+## Related Settings
 
-For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
+- [`python.analysis.autoSearchPaths`](python_analysis_autoSearchPaths.md): Automatically adds common source directories like `src/` to the search path.
+- [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
+- [`python.analysis.stubPath`](python_analysis_stubPath.md): Directory for custom type stubs.
+
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — troubleshooting import resolution
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `extraPaths` in multi-package projects
+- [How to Work with Editable Installs](../howto/editable-installs.md) — `extraPaths` as a fallback for editable installs
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — precedence rules when `pyrightconfig.json` overrides `extraPaths`
 
 ---
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation.*
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation._
 
 ---
 
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
-
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._

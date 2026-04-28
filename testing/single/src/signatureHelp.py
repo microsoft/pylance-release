@@ -1,12 +1,15 @@
-# you can trigger signature help using `Trigger Parameter Hints` 
-# use `command palette` to find the command and its short cut
-# but that said, it will be automatically triggered when trigger char such as `(`
-# is typed
-
-# place cursor between `()` and issue the command
-# confirm the tooltip and overload and active parameter (bold)
+# SCENARIO: trigger signature help for `print()`
+# TARGET: the cursor position between `(` and `)` in `print()` below
+# TRIGGER: Trigger Parameter Hints
+# EXPECT: the cursor is between the empty parentheses in `print()`
+# VERIFY: signature help opens for `print` and shows the tooltip, overload information, and an active parameter highlight
+# RECOVER: none
 print()
 
-# place cursor after `sep=` and issue the command
-# confirm active parameter (bold) points to right one
+# SCENARIO: trigger signature help after a named argument
+# TARGET: the cursor position immediately after `sep=` in the call below
+# TRIGGER: Trigger Parameter Hints
+# EXPECT: the cursor is after `sep=` in `print("hello", sep=)`
+# VERIFY: signature help opens for `print` and the active parameter highlight is on `sep`
+# RECOVER: none
 print("hello", sep=)

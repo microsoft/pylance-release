@@ -16,6 +16,8 @@ In Python, third-party libraries can provide type information to type checkers l
 
 However, not all libraries provide type stubs or inline type annotations. In such cases, Pylance can attempt to infer type information by parsing the library's source code. This is where the `python.analysis.useLibraryCodeForTypes` setting comes into play.
 
+If you want to provide better type information instead of falling back to library-source inference, see [`python.analysis.stubPath`](python_analysis_stubPath.md) for package-specific custom stubs and [`python.analysis.typeshedPaths`](python_analysis_typeshedPaths.md) for a custom typeshed tree.
+
 ### Purpose of the Setting
 
 - **`true`**: Pylance will parse the library's source code to infer type information when type stubs are not available.
@@ -42,23 +44,23 @@ By default, Pylance sets `python.analysis.useLibraryCodeForTypes` to `true`.
 To adjust the `python.analysis.useLibraryCodeForTypes` setting in Visual Studio Code:
 
 1. **Open the Settings**:
-   - Click on the gear icon in the lower-left corner and select **Settings**.
+    - Click on the gear icon in the lower-left corner and select **Settings**.
 2. **Search for the Setting**:
-   - In the search bar at the top, type `useLibraryCodeForTypes`.
+    - In the search bar at the top, type `useLibraryCodeForTypes`.
 3. **Modify the Setting**:
-   - Find the **Python › Analysis: Use Library Code For Types** setting.
-   - Uncheck the box to set it to `false` (disable parsing of library code), or check it to set it to `true`.
+    - Find the **Python › Analysis: Use Library Code For Types** setting.
+    - Uncheck the box to set it to `false` (disable parsing of library code), or check it to set it to `true`.
 
 Alternatively, you can edit your `settings.json` file directly:
 
 1. **Open Command Palette**:
-   - Click on the gear icon in the lower-left corner and select **Command Palette**.
+    - Click on the gear icon in the lower-left corner and select **Command Palette**.
 2. **Open Settings (JSON)**:
-   - Type `Preferences: Open Settings (JSON)` and select it.
+    - Type `Preferences: Open Settings (JSON)` and select it.
 3. **Add or Modify the Setting**:
-   ```json
-   "python.analysis.useLibraryCodeForTypes": false
-   ```
+    ```json
+    "python.analysis.useLibraryCodeForTypes": false
+    ```
 
 ## When and Why to Disable `useLibraryCodeForTypes`
 
@@ -77,6 +79,8 @@ Parsing and analyzing the source code of large libraries can consume significant
 - **Working with Unannotated Libraries**: If you are using a library that doesn't offer type stubs and Pylance is generating many false positives or irrelevant type checking errors from that library.
 - **Encountering Performance Issues**: If you notice that Pylance is consuming high CPU usage or is slow to respond, especially when working with large libraries or codebases.
 - **Focusing on Your Code**: You prefer Pylance to focus on type checking your own code and not the code from third-party libraries.
+
+Before disabling this setting globally, consider whether adding custom stubs through [`python.analysis.stubPath`](python_analysis_stubPath.md) would solve the problem more precisely.
 
 ### Example Scenario
 
@@ -138,13 +142,30 @@ Pylance no longer reports type errors related to `unknownlib`, and your code rem
 
 ### Q: Can I disable type checking for specific libraries only?
 
-**A:** The `python.analysis.useLibraryCodeForTypes` setting is global and cannot be used to disable type checking for specific libraries. To manage type checking for particular libraries, you can create stub files for the library or use `# type: ignore` comments in your code.
+**A:** The `python.analysis.useLibraryCodeForTypes` setting is global and cannot be used to disable type checking for specific libraries. To manage type checking for particular libraries, you can create stub files for the library through [`python.analysis.stubPath`](python_analysis_stubPath.md), point Pylance at a custom typeshed tree through [`python.analysis.typeshedPaths`](python_analysis_typeshedPaths.md) when the problem is typeshed-based, or use `# type: ignore` comments in your code.
+
+## Related Diagnostics
+
+When `useLibraryCodeForTypes` is `false`, untyped libraries return `Unknown` types, which can trigger strict-mode rules:
+
+- [`reportUnknownVariableType`](../diagnostics/reportUnknownVariableType.md) — variable is `Unknown`
+- [`reportUnknownArgumentType`](../diagnostics/reportUnknownArgumentType.md) — argument is `Unknown`
+- [`reportUnknownMemberType`](../diagnostics/reportUnknownMemberType.md) — attribute returns `Unknown`
+- [`reportUnknownParameterType`](../diagnostics/reportUnknownParameterType.md) — parameter is `Unknown`
+- [`reportMissingTypeStubs`](../diagnostics/reportMissingTypeStubs.md) — no type stubs found for a library
+
+If these rules are noisy for specific libraries, consider adding stubs via [`stubPath`](python_analysis_stubPath.md) or installing type stubs (`pip install types-<package>`).
+
+## See Also
+
+- [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — when library code analysis affects import resolution
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — performance impact of analyzing library source
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — what happens when `pyrightconfig.json` overrides this setting
 
 ---
 
-*For more detailed information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
+_For more detailed information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
 
 ---
 
-*"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."*
-
+_"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."_

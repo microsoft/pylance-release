@@ -4,23 +4,46 @@
 
 ## Representative Issues
 
--   [#2202](https://github.com/microsoft/pylance-release/issues/2202): Ensure all necessary modules are installed in the Python environment specified for the project.
--   [#2411](https://github.com/microsoft/pylance-release/issues/2411): Ensure the correct Python environment is selected and check for any configuration issues that might be preventing the error message from appearing.
--   [#242](https://github.com/microsoft/pylance-release/issues/242): Always include type stubs ('.pyi' files) for compiled Python modules to facilitate correct intellisense functionality in tools like Pylance.
--   [#295](https://github.com/microsoft/pylance-release/issues/295): Ensure that Pylance is correctly configured to minimize unnecessary diagnostics and errors, especially those related to missing type stubs.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
--   [#4976](https://github.com/microsoft/pylance-release/issues/4976): Ensure that static analysis tools are configured correctly to recognize all necessary modules, or use runtime checks if dynamic imports are involved.
--   [#5073](https://github.com/microsoft/pylance-release/issues/5073): Use conditional imports in conjunction with type checking directives to manage module availability and avoid unbound variable errors.
--   [#509](https://github.com/microsoft/pylance-release/issues/509): Ensure that Pylance respects the user's configuration for disabling linting, allowing users to rely solely on external tools like flake8.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
--   [#1585](https://github.com/microsoft/pyright/issues/1585): Ensure that all necessary Python libraries and modules are installed in the GitHub Actions environment to avoid import errors when running static analysis tools like pyright.
--   [#3314](https://github.com/microsoft/pyright/issues/3314): When defining dictionaries with mixed key and value types, specify the exact types to enhance type inference and reduce ambiguity.
--   [#4286](https://github.com/microsoft/pyright/issues/4286): Ensure that Protocol classes are consistently imported from the `typing_extensions` module to avoid runtime issues with static type checkers.
--   [#5577](https://github.com/microsoft/pyright/issues/5577): Ensure the correct Python environment is configured and that all required libraries are properly installed to avoid import errors.
--   [#7060](https://github.com/microsoft/pyright/issues/7060): Ensure that the Python library in question is correctly installed and recognized by the development environment, possibly requiring installation of additional dependencies or configuration for type hints.
--   [#7832](https://github.com/microsoft/pyright/issues/7832): Ensure that type hints are explicitly defined for functions and methods in libraries to avoid runtime errors during type checking.
--   [#8558](https://github.com/microsoft/pyright/issues/8558): Ensure that callable objects are correctly handled and compatible with the expected types in static type checking contexts.
--   [#8902](https://github.com/microsoft/pyright/issues/8902): Ensure that static analysis tools are configured to handle inline script metadata correctly when using `pipx run` for scripts that depend on non-standard libraries.
+- [#2202](https://github.com/microsoft/pylance-release/issues/2202): Ensure all necessary modules are installed in the Python environment specified for the project.
+- [#2411](https://github.com/microsoft/pylance-release/issues/2411): Ensure the correct Python environment is selected and check for any configuration issues that might be preventing the error message from appearing.
+- [#242](https://github.com/microsoft/pylance-release/issues/242): Always include type stubs ('.pyi' files) for compiled Python modules to facilitate correct intellisense functionality in tools like Pylance.
+- [#295](https://github.com/microsoft/pylance-release/issues/295): Ensure that Pylance is correctly configured to minimize unnecessary diagnostics and errors, especially those related to missing type stubs.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in the use of type stubs between Pyright's CLI and Pylance settings, especially with `useLibraryCodeForTypes`.
+- [#4976](https://github.com/microsoft/pylance-release/issues/4976): Ensure that static analysis tools are configured correctly to recognize all necessary modules, or use runtime checks if dynamic imports are involved.
+- [#5073](https://github.com/microsoft/pylance-release/issues/5073): Use conditional imports in conjunction with type checking directives to manage module availability and avoid unbound variable errors.
+- [#509](https://github.com/microsoft/pylance-release/issues/509): Ensure that Pylance respects the user's configuration for disabling linting, allowing users to rely solely on external tools like flake8.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Provide a configuration setting to allow users to customize diagnostic rule severities based on the type checking mode, improving the granularity of error reporting.
+- [#1585](https://github.com/microsoft/pyright/issues/1585): Ensure that all necessary Python libraries and modules are installed in the GitHub Actions environment to avoid import errors when running static analysis tools like pyright.
+- [#3314](https://github.com/microsoft/pyright/issues/3314): When defining dictionaries with mixed key and value types, specify the exact types to enhance type inference and reduce ambiguity.
+- [#4286](https://github.com/microsoft/pyright/issues/4286): Ensure that Protocol classes are consistently imported from the `typing_extensions` module to avoid runtime issues with static type checkers.
+- [#5577](https://github.com/microsoft/pyright/issues/5577): Ensure the correct Python environment is configured and that all required libraries are properly installed to avoid import errors.
+- [#7060](https://github.com/microsoft/pyright/issues/7060): Ensure that the Python library in question is correctly installed and recognized by the development environment, possibly requiring installation of additional dependencies or configuration for type hints.
+- [#7832](https://github.com/microsoft/pyright/issues/7832): Ensure that type hints are explicitly defined for functions and methods in libraries to avoid runtime errors during type checking.
+- [#8558](https://github.com/microsoft/pyright/issues/8558): Ensure that callable objects are correctly handled and compatible with the expected types in static type checking contexts.
+- [#8902](https://github.com/microsoft/pyright/issues/8902): Ensure that static analysis tools are configured to handle inline script metadata correctly when using `pipx run` for scripts that depend on non-standard libraries.
+
+## Examples
+
+**Error:**
+
+```python
+import cv2  # Module source cannot be found (compiled C extension)
+```
+
+**Fix — install type stubs or configure Pylance:**
+
+```bash
+# Install type stubs for the library
+pip install opencv-stubs
+```
+
+Or add the module’s install location to `extraPaths` in your Pylance/Pyright config:
+
+```json
+{
+    "python.analysis.extraPaths": ["./path/to/compiled/modules"]
+}
+```
 
 ## Common Fixes & Workarounds
 
@@ -32,3 +55,10 @@
 6. Use runtime checks or fallback logic for dynamic imports.
 
 For more details on configuring this diagnostic, see the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportMissingModuleSource).
+
+## See Also
+
+- [Fixing unresolved imports](../howto/unresolved-imports.md) — comprehensive guide for resolving import issues
+- [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) — add extra search paths for imports
+- [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) — use library source when type stubs are missing
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic

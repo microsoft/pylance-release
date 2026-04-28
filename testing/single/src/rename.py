@@ -1,21 +1,32 @@
-# you can trigger rename using `Rename Symbol` command 
-# use `command palette` to find the command and its short cut
-# or the command can be issued using right-click menu
+# Use `Rename Symbol` to trigger these scenarios.
+# The command may be invoked from the command palette, its keyboard shortcut, or the right-click menu.
 
 from zipfile import Path
 from lib.userModule import Derived, MyType
 
-# put cursor on `MyType` and rename it to `MyType2`
-# make sure undo work as well.
+# SCENARIO: rename an imported type reference
+# TARGET: `MyType` in `m = MyType()` below
+# TRIGGER: Rename Symbol and rename `MyType` to `MyType2`
+# EXPECT: rename is available on the `MyType` reference
+# VERIFY: after execution, this line becomes `m = MyType2()`
+# RECOVER: undo until this line returns to `m = MyType()`
 m = MyType()
 
-# put cursor on `method` and rename it to `method2`
-# make sure undo work as well.
+# SCENARIO: rename a method call on a local instance
+# TARGET: `method` in `m.method(v=Path("path"))` below
+# TRIGGER: Rename Symbol and rename `method` to `method2`
+# EXPECT: rename is available on the `method` call
+# VERIFY: after execution, this line becomes `m.method2(v=Path("path"))`
+# RECOVER: undo until this line returns to `m.method(v=Path("path"))`
 m.method(v=Path("path"))
 
 class RenameConstructor:
-    # put cursor on `__init__` and rename
-    # make sure it doesn't rename anything else but itself
+    # SCENARIO: rename a constructor method without renaming unrelated symbols
+    # TARGET: `__init__` in the definition below
+    # TRIGGER: Rename Symbol and rename `__init__` to a distinct replacement name
+    # EXPECT: rename is available on the `__init__` definition
+    # VERIFY: only the method name in this definition changes, and unrelated symbols such as `RenameConstructor` and `c = RenameConstructor()` remain unchanged
+    # RECOVER: undo until the method name returns to `__init__`
     def __init__(self) -> None:
         pass
 
@@ -23,6 +34,10 @@ c = RenameConstructor()
 
 d = Derived()
 
-# put cursor on `method` and rename it to `method2`
-# and confirm it renamed all overriden methods
+# SCENARIO: rename an overridden method across the inheritance chain
+# TARGET: `method` in `d.method()` below
+# TRIGGER: Rename Symbol and rename `method` to `method2`
+# EXPECT: rename is available on the overridden `method` call
+# VERIFY: after execution, this line becomes `d.method2()`, and all overridden method declarations and references in the inheritance chain are renamed consistently
+# RECOVER: undo until this line returns to `d.method()` and the overridden method names are restored
 d.method()

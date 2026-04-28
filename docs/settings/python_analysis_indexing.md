@@ -1,5 +1,3 @@
-
-
 # Understanding `python.analysis.indexing` in Pylance
 
 [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a powerful language server for Python in Visual Studio Code, offering advanced features like IntelliSense, type checking, auto-imports, and more. One of the key settings that influence Pylance's behavior is `python.analysis.indexing`.
@@ -45,9 +43,9 @@ Alternatively, edit your `settings.json` file directly:
 
 - Open **Command Palette**, type `Preferences: Open Settings (JSON)`, and select it.
 - Add or update the following line in your `settings.json` file:
-  ```json
-  "python.analysis.indexing": true
-  ```
+    ```json
+    "python.analysis.indexing": true
+    ```
 
 ## When to Enable or Disable Indexing
 
@@ -106,13 +104,17 @@ Using these settings together, you can tailor indexing to meet your specific dev
 
 **A:** If you notice high CPU usage, memory consumption, or sluggishness in the editor, indexing might be a contributing factor. Consider [filing an issue](https://github.com/microsoft/pylance-release/issues/new?template=bug-report.md) and providing the information described here: [Collecting data for an investigation](https://github.com/microsoft/pylance-release/wiki/Collecting-data-for-an-investigation.).
 
----
+## See Also
 
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation.*
-
----
-
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+- [How to Tune Pylance Performance](../howto/performance-tuning.md) — indexing and performance trade-offs
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — indexing in large workspaces
 
 ---
 
+_For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._
+
+---
+
+_This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+---

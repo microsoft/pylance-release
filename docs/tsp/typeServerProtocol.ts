@@ -64,7 +64,8 @@ export namespace TypeServerProtocol {
     export enum TypeServerVersion {
         v0_1_0 = '0.1.0', // Initial protocol version
         v0_2_0 = '0.2.0', // Added new request types and fields
-        current = '0.3.0', // The current version of the type server protocol.
+        v0_3_0 = '0.3.0', // Switch to more complex types
+        current = '0.4.0', // Switch to Type union and using stubs
     }
     // Flags that describe the characteristics of a type.
     // These flags can be combined using bitwise operations.
@@ -80,13 +81,6 @@ export namespace TypeServerProtocol {
         Unpacked = 1 << 7, // Indicates if the type is unpacked (used with TypeVarTuple).
         Optional = 1 << 8, // Indicates if the type is optional (used with Tuple type arguments).
         Unbound = 1 << 9, // Indicates if the type is unbound (used with *args in tuple type arguments).
-    }
-    // Flags that describe the characteristics of a type variable.
-    // These flags can be combined using bitwise operations.
-    export const enum TypeVarFlags {
-        None = 0,
-        IsParamSpec = 1 << 0, // Indicates if the type variable is a ParamSpec (as defined in PEP 612).
-        IsTypeVarTuple = 1 << 1, // Indicates if the type variable is a TypeVarTuple (as defined in PEP 646).
     }
 
     /**
@@ -222,496 +216,6 @@ export namespace TypeServerProtocol {
         snapshot: number;
     }
 
-    // Flags that describe the characteristics of a symbol in a type handle.
-    export const enum TypeHandleSymbolFlags {
-        None = 0,
-
-        // Indicates that the symbol is not visible from other files.
-        // Used for module-level symbols.
-        ExternallyHidden = 1 << 1,
-
-        // Indicates that the symbol is a class member of a class.
-        ClassMember = 1 << 2,
-
-        // Indicates that the symbol is an instance member of a class.
-        InstanceMember = 1 << 3,
-
-        // Indicates that the symbol is specified in the __slots__
-        // declaration of a class. Such symbols act like instance members
-        // in some respects but are actually implemented as class members
-        // using descriptor objects.
-        SlotsMember = 1 << 4,
-
-        // Indicates that the symbol is considered "private" to the
-        // class or module and should not be accessed outside or overridden.
-        PrivateMember = 1 << 5,
-
-        // Indicates that the symbol is a ClassVar, so it cannot be
-        // set when accessed through a class instance.
-        ClassVar = 1 << 7,
-
-        // Indicates that the symbol is in __all__.
-        InDunderAll = 1 << 8,
-
-        // Indicates that the symbol is a private import in a py.typed module.
-        PrivatePyTypedImport = 1 << 9,
-
-        // Indicates that the symbol is an InitVar as specified in PEP 557.
-        InitVar = 1 << 10,
-
-        // Indicates that the symbol is a field in a NamedTuple class, which
-        // is modeled as an instance member but in some respects acts as a
-        // class member.
-        NamedTupleMember = 1 << 11,
-
-        // Indicates that the symbol is marked Final and is assigned a value
-        // in the class body. The typing spec indicates that these should be
-        // considered ClassVars unless they are found in a dataclass.
-        FinalVarInClassBody = 1 << 13,
-    }
-
-    /**
-     * Represents a symbol (variable, function, class, etc.) and its type information.
-     * Used in symbol tables to track class/module members.
-     *
-     * Contains:
-     * - Flags describing the symbol's characteristics (visibility, mutability, etc.)
-     * - Declarations where the symbol is defined
-     * - Synthesized type information for implicit symbols
-     * - Aliases for typing imports (e.g., List as an alias for list)
-     *
-     * Used for:
-     * - Class member lookup (methods, properties, fields)
-     * - Module member resolution
-     * - Tracking symbol visibility and access control
-     * - Handling typing module aliases
-     *
-     * Examples:
-     * - In `class Foo: x: int`, 'x' is a TypeHandleSymbol with InstanceMember flag
-     * - In `class Bar: _private: str`, '_private' has PrivateMember flag
-     * - In `from typing import List`, 'List' has typingSymbolAlias='list'
-     */
-    export interface TypeHandleSymbol {
-        // Bitfield of TypeHandleSymbolFlags describing symbol characteristics.
-        // Example: ClassMember | PrivateMember for a private class variable.
-        flags: TypeHandleSymbolFlags;
-
-        // Array of declarations where this symbol is defined (can have multiple for overloads).
-        // Example: A function with multiple @overload decorators has multiple declarations.
-        declarations?: TypeHandleDeclaration[];
-
-        // Type information for synthesized symbols that don't have source declarations.
-        // Contains the type and optional AST node for context.
-        // Example: __class__ attribute has synthesized type info.
-        synthesizedTypeInfo?: {
-            type: TypeHandle;
-            node?: Node;
-        };
-
-        // Name of the actual typing module symbol this aliases.
-        // Example: 'List' from typing aliases to 'list', 'Dict' aliases to 'dict'.
-        typingSymbolAlias?: string;
-    }
-
-    export const enum ClassTypeFlags {
-        None = 0,
-
-        // Class is defined in the "builtins" or "typing" file.
-        BuiltIn = 1 << 0,
-
-        // Class requires special-case handling because it
-        // exhibits non-standard behavior or is not defined
-        // formally as a class. Examples include 'Optional'
-        // and 'Union'.
-        SpecialBuiltIn = 1 << 1,
-
-        // Introduced in PEP 589, TypedDict classes provide a way
-        // to specify type hints for dictionaries with different
-        // value types and a limited set of static keys.
-        TypedDictClass = 1 << 2,
-
-        // Used in conjunction with TypedDictClass, indicates that
-        // the TypedDict class is marked "closed".
-        TypedDictMarkedClosed = 1 << 3,
-
-        // Used in conjunction with TypedDictClass, indicates that
-        // the TypedDict class is marked "closed" or one or more of
-        // its superclasses is marked "closed".
-        TypedDictEffectivelyClosed = 1 << 4,
-
-        // Used in conjunction with TypedDictClass, indicates that
-        // the dictionary values can be omitted.
-        CanOmitDictValues = 1 << 5,
-
-        // The class derives from a class that has the ABCMeta
-        // metaclass. Such classes are allowed to contain
-        // @abstractmethod decorators.
-        SupportsAbstractMethods = 1 << 6,
-
-        // Derives from property class and has the semantics of
-        // a property (with optional setter, deleter).
-        PropertyClass = 1 << 7,
-
-        // The class is decorated with a "@final" decorator
-        // indicating that it cannot be subclassed.
-        Final = 1 << 8,
-
-        // The class derives directly from "Protocol".
-        ProtocolClass = 1 << 9,
-
-        // A class whose constructor (__init__ method) does not have
-        // annotated types and is treated as though each parameter
-        // is a generic type for purposes of type inference.
-        PseudoGenericClass = 1 << 10,
-
-        // A protocol class that is "runtime checkable" can be used
-        // in an isinstance call.
-        RuntimeCheckable = 1 << 11,
-
-        // The type is defined in the typing_extensions.pyi file.
-        TypingExtensionClass = 1 << 12,
-
-        // The class or one of its ancestors defines a __class_getitem__
-        // method that is used for subscripting. This is not set if the
-        // class is generic, and therefore supports standard subscripting
-        // semantics.
-        HasCustomClassGetItem = 1 << 14,
-
-        // The tuple class requires special-case handling for its type arguments.
-        TupleClass = 1 << 15,
-
-        // The class has a metaclass of EnumMeta or derives from
-        // a class that has this metaclass.
-        EnumClass = 1 << 16,
-
-        // Properties that are defined using the @classmethod decorator.
-        ClassProperty = 1 << 17,
-
-        // Class is declared within a type stub file.
-        DefinedInStub = 1 << 18,
-
-        // Decorated with @type_check_only.
-        TypeCheckOnly = 1 << 20,
-
-        // Created with the NewType call.
-        NewTypeClass = 1 << 21,
-
-        // Class is allowed to be used as an implicit type alias even
-        // though it is not defined using a `class` statement.
-        ValidTypeAliasClass = 1 << 22,
-
-        // A special form is not compatible with type[T] and cannot
-        // be directly instantiated.
-        SpecialFormClass = 1 << 23,
-
-        // This class is rejected when used as the second argument to
-        // an isinstance or issubclass call.
-        IllegalIsinstanceClass = 1 << 24,
-    }
-
-    /**
-     * Represents a single field in a TypedDict.
-     * Contains the type and metadata for one key-value pair in a TypedDict definition.
-     *
-     * Fields:
-     * - valueType: The type of the value for this key
-     * - isRequired: Whether this key must be present (vs. optional using NotRequired[])
-     * - isReadOnly: Whether this key cannot be modified (using ReadOnly[])
-     * - isProvided: Whether this key has been provided in a partial TypedDict construction
-     *
-     * Examples:
-     * ```python
-     * class Movie(TypedDict):
-     *     name: str              # isRequired=true, isReadOnly=false
-     *     year: int              # isRequired=true, isReadOnly=false
-     *     rating: NotRequired[float]  # isRequired=false
-     *     id: ReadOnly[int]      # isRequired=true, isReadOnly=true
-     * ```
-     */
-    export interface TypedDictEntry {
-        // The type of values for this TypedDict key.
-        // Example: For `name: str`, valueType is the str type.
-        valueType: TypeHandle;
-
-        // True if this key must be present in the dictionary.
-        // False for NotRequired[] fields.
-        // Example: `year: NotRequired[int]` has isRequired=false.
-        isRequired: boolean;
-
-        // True if this key cannot be modified after creation.
-        // Set by ReadOnly[] annotation.
-        // Example: `id: ReadOnly[int]` has isReadOnly=true.
-        isReadOnly: boolean;
-
-        // True if this key has been provided during partial TypedDict construction.
-        // Used for tracking incremental TypedDict building.
-        isProvided: boolean;
-    }
-
-    /**
-     * Represents all fields in a TypedDict class.
-     * Contains both explicitly declared fields and optional extra items.
-     *
-     * Fields:
-     * - knownItems: Dictionary mapping field names to their TypedDictEntry definitions
-     * - extraItems: Optional type for additional keys (when using extra_items parameter)
-     *
-     * Examples:
-     * ```python
-     * # Standard TypedDict
-     * class Movie(TypedDict):
-     *     name: str
-     *     year: int
-     * # knownItems = {"name": TypedDictEntry(...), "year": TypedDictEntry(...)}
-     * # extraItems = undefined
-     *
-     * # TypedDict with extra_items (closed TypedDict)
-     * class Config(TypedDict, extra_items=str):
-     *     host: str
-     *     port: int
-     * # knownItems = {"host": ..., "port": ...}
-     * # extraItems = TypedDictEntry for str type
-     * ```
-     */
-    export interface TypedDictEntries {
-        // Map of explicitly declared field names to their TypedDictEntry definitions.
-        // Contains all keys defined in the TypedDict class body.
-        // Example: {"name": TypedDictEntry(...), "year": TypedDictEntry(...)}
-        knownItems: Record<string, TypedDictEntry>;
-
-        // Optional type for additional keys not in knownItems.
-        // Set when using the extra_items parameter in closed TypedDicts.
-        // Example: `class Config(TypedDict, extra_items=str)` allows any str-valued extra keys.
-        extraItems?: TypedDictEntry | undefined;
-    }
-
-    /**
-     * Represents a single type argument in a tuple type.
-     * Used for tuple[...] generic type arguments, handling both fixed and variadic elements.
-     *
-     * Fields:
-     * - type: The type of this tuple element
-     * - isUnbounded: True for *args-style variadic elements (zero or more of this type)
-     * - isOptional: True if this element can be omitted (has a default)
-     *
-     * Examples:
-     * ```python
-     * # Fixed tuple
-     * x: tuple[int, str, bool]
-     * # Three TupleTypeArg: [int, str, bool], all with isUnbounded=false
-     *
-     * # Unbounded tuple
-     * y: tuple[int, ...]
-     * # One TupleTypeArg: int with isUnbounded=true
-     *
-     * # Callable with optional params
-     * def foo(a: int, b: str = "") -> None: ...
-     * # Captured as tuple[int, str] where str has isOptional=true
-     * ```
-     */
-    export interface TupleTypeArg {
-        // The type of this tuple element.
-        // Example: In `tuple[int, str, bool]`, each position has a different type.
-        type: TypeHandle;
-
-        // Does the type argument represent a single value or
-        // an "unbounded" (zero or more) arguments?
-        // True for `tuple[int, ...]` (variadic), false for `tuple[int, str]` (fixed).
-        isUnbounded: boolean;
-
-        // For tuples captured from a callable, this indicates
-        // the corresponding positional parameter has a default
-        // argument and can therefore be omitted.
-        // Example: For `def foo(a: int, b: str = "")`, b's type has isOptional=true.
-        isOptional?: boolean;
-    }
-
-    /**
-     * Represents information about a property method (getter, setter, or deleter).
-     * Used to track the implementation of @property decorated methods.
-     *
-     * Fields:
-     * - methodType: The type of the decorated function (fget, fset, or fdel)
-     * - classType: The class that declared this method
-     *
-     * Examples:
-     * ```python
-     * class Person:
-     *     @property
-     *     def name(self) -> str:  # fgetInfo contains this method's type
-     *         return self._name
-     *
-     *     @name.setter
-     *     def name(self, value: str) -> None:  # fsetInfo contains this method's type
-     *         self._name = value
-     *
-     *     @name.deleter
-     *     def name(self) -> None:  # fdelInfo contains this method's type
-     *         del self._name
-     * ```
-     */
-    export interface PropertyMethodInfo {
-        // The type of the decorated function (fget, fset, or fdel).
-        // Contains the function signature including parameters and return type.
-        // Example: For `@property def name(self) -> str`, this is the function type.
-        methodType: TypeHandle;
-
-        // The class that declared this property method.
-        // Used to track which class in the inheritance hierarchy defined the method.
-        // Example: If a property is inherited, classType points to the declaring class.
-        classType?: TypeHandle;
-    }
-
-    /**
-     * Categorizes function parameters by their type in the function signature.
-     * Determines how the parameter accepts arguments at call time.
-     *
-     * Used for:
-     * - Regular named parameters
-     * - Variadic positional parameters (*args)
-     * - Variadic keyword parameters (**kwargs)
-     *
-     * Examples:
-     * ```python
-     * def example(
-     *     x: int,           # Simple - regular parameter
-     *     y: str,           # Simple - regular parameter
-     *     *args: float,     # ArgsList - variadic positional
-     *     **kwargs: bool    # KwargsDict - variadic keyword
-     * ) -> None:
-     *     pass
-     * ```
-     */
-    export const enum ParamCategory {
-        Simple, // Regular parameter: def foo(x: int)
-        ArgsList, // Variadic positional: def foo(*args: int)
-        KwargsDict, // Variadic keyword: def foo(**kwargs: str)
-    }
-
-    export enum FunctionParamFlags {
-        None = 0,
-
-        // Is the name of the parameter synthesize internally?
-        NameSynthesized = 1 << 0,
-
-        // Does the parameter have an explicitly-declared type?
-        TypeDeclared = 1 << 1,
-    }
-
-    export const enum FunctionTypeFlags {
-        None = 0,
-
-        // Function is a __new__ method; first parameter is "cls"
-        ConstructorMethod = 1 << 0,
-
-        // Function is decorated with @classmethod; first parameter is "cls";
-        // can be bound to associated class
-        ClassMethod = 1 << 1,
-
-        // Function is decorated with @staticmethod; cannot be bound to class
-        StaticMethod = 1 << 2,
-
-        // Function is decorated with @abstractmethod
-        AbstractMethod = 1 << 3,
-
-        // Function contains "yield" or "yield from" statements
-        Generator = 1 << 4,
-
-        // Method has no declaration in user code, it's synthesized; used
-        // for implied methods such as those used in namedtuple, dataclass, etc.
-        SynthesizedMethod = 1 << 6,
-
-        // Decorated with @type_check_only.
-        TypeCheckOnly = 1 << 7,
-
-        // Function is decorated with @overload
-        Overloaded = 1 << 8,
-
-        // Function is declared with async keyword
-        Async = 1 << 9,
-
-        // Function is declared within a type stub fille
-        StubDefinition = 1 << 11,
-
-        // Function is declared within a module that claims to be fully typed
-        // (i.e. a "py.typed" file is present).
-        PyTypedDefinition = 1 << 12,
-
-        // Function is decorated with @final
-        Final = 1 << 13,
-
-        // Function has one or more parameters that are missing type annotations
-        UnannotatedParams = 1 << 14,
-
-        // The *args and **kwargs parameters do not need to be present for this
-        // function to be compatible. This is used for Callable[..., x] and
-        // ... type arguments to ParamSpec and Concatenate.
-        GradualCallableForm = 1 << 15,
-
-        // This function represents the value bound to a ParamSpec, so its return
-        // type is not meaningful.
-        ParamSpecValue = 1 << 16,
-
-        // Decorated with @override as defined in PEP 698.
-        Overridden = 1 << 18,
-
-        // Decorated with @no_type_check.
-        NoTypeCheck = 1 << 19,
-
-        // Function defined in one of the core stdlib modules.
-        BuiltIn = 1 << 20,
-    }
-
-    /**
-     * Represents a single parameter in a function signature.
-     * Contains all information about a parameter including its type, default value, and category.
-     *
-     * Fields:
-     * - category: Whether it's a simple param, *args, or **kwargs
-     * - flags: Metadata flags (e.g., whether name is synthesized, type is declared)
-     * - name: Parameter name (or undefined for positional-only)
-     * - type: Type annotation for the parameter
-     * - defaultType: Type of the default value (if present)
-     * - defaultExpr: AST node for the default value expression
-     *
-     * Examples:
-     * ```python
-     * def example(
-     *     x: int,              # Simple, name="x", type=int, no default
-     *     y: str = "hello",    # Simple, name="y", type=str, defaultType=str
-     *     *args: int,          # ArgsList, name="args", type=int
-     *     **kwargs: str        # KwargsDict, name="kwargs", type=str
-     * ) -> None:
-     *     pass
-     * ```
-     */
-    export interface FunctionParam {
-        // Category of parameter: Simple (regular), ArgsList (*args), or KwargsDict (**kwargs).
-        // Example: In `def foo(x, *args, **kwargs)`, x is Simple, args is ArgsList, kwargs is KwargsDict.
-        category: ParamCategory;
-
-        // Bitfield of FunctionParamFlags (e.g., NameSynthesized, TypeDeclared).
-        // Example: TypeDeclared is set for `x: int` but not for `x`.
-        flags: FunctionParamFlags;
-
-        // Name of the parameter, or undefined for positional-only parameters.
-        // Example: "self" for instance methods, "cls" for class methods.
-        name: string | undefined;
-
-        // Type annotation for this parameter.
-        // Example: For `x: int`, type is the int type.
-        type: TypeHandle;
-
-        // Type of the default value, if the parameter has one.
-        // Example: For `y: str = "hello"`, defaultType is str (inferred from "hello").
-        defaultType: TypeHandle | undefined;
-
-        // AST node pointing to the default value expression.
-        // Used for analysis and error reporting on default values.
-        // Example: Points to the "hello" literal in `y: str = "hello"`.
-        defaultExpr: Node | undefined;
-    }
-
     /**
      * Represents specialized (concrete) types for a generic function's parameters and return type.
      * Used when generic type parameters are substituted with actual types.
@@ -739,19 +243,19 @@ export namespace TypeServerProtocol {
         // Specialized types for each of the parameters in the "parameters" array.
         // Array matches the parameters array, with type variables replaced by concrete types.
         // Example: For `def foo[T](x: T)` specialized to `T=int`, parameterTypes=[int].
-        parameterTypes: TypeHandle[];
+        parameterTypes: Type[];
 
         // Specialized types of default arguments for each parameter in
         // the "parameters" array. If an entry is undefined or the entire array
         // is missing, there is no specialized type, and the original "defaultType"
         // should be used.
         // Example: For a generic default value that depends on T, this contains the specialized version.
-        parameterDefaultTypes: (TypeHandle | undefined)[] | undefined;
+        parameterDefaultTypes: (Type | undefined)[] | undefined;
 
         // Specialized type of the declared return type. Undefined if there is
         // no declared return type.
         // Example: For `def foo[T](x: T) -> T` specialized to `T=int`, returnType=int.
-        returnType: TypeHandle | undefined;
+        returnType: Type | undefined;
     }
 
     /**
@@ -790,7 +294,7 @@ export namespace TypeServerProtocol {
 
         // Type of the enum member's value.
         // Example: int type if the enum values are integers.
-        itemType: TypeHandle;
+        itemType: Type;
     }
 
     /**
@@ -869,42 +373,44 @@ export namespace TypeServerProtocol {
     export type LiteralValue = number | bigint | boolean | string | EnumLiteral | SentinelLiteral;
 
     /**
-     * Discriminator for the TypeHandle union type.
-     * Identifies which variant of TypeHandle is being used.
+     * Discriminator for the Union type.
+     * Identifies which variant of Type is being used.
      *
-     * Used for type narrowing when processing TypeHandle objects:
+     * Used for type narrowing when processing Type objects:
      * ```typescript
-     * if (handle.kind === TypeHandleKind.Function) {
-     *     // TypeScript knows this is FunctionTypeHandle
+     * if (handle.kind === TypeKind.Function) {
+     *     // TypeScript knows this is FunctionType
      *     const returnType = handle.returnType;
      * }
      * ```
      *
      * Categories:
      * - BuiltIn: Special types (unknown, any, never, etc.)
-     * - Regular: Types from source declarations (base for Function/Class)
+     * - Declared: Base type for source declarations (rarely used directly)
+     * - Function: Function or method types from def statements
+     * - Class: Class types from class statements
      * - Union: Multiple types combined (T1 | T2 | ...)
      * - Module: Python module types
      * - TypeVar: Generic type parameters (T, P, Ts)
-     * - SynthesizedOverloaded: Functions with @overload decorators
-     * - SynthesizedFunction: Built-in or generated functions
-     * - SynthesizedClass: Built-in or generated classes
+     * - Overloaded: Functions with @overload decorators
+     * - Synthesized: Generated stub content for type server created types
      * - TypeReference: Reference to another type by ID
      */
-    export const enum TypeHandleKind {
+    export const enum TypeKind {
         BuiltIn, // unknown, any, never, etc.
-        Regular, // Base for source-declared types
+        Declared, // Base for source-declared types (rarely used directly)
+        Function, // Functions and methods from def statements
+        Class, // Classes from class statements
         Union, // int | str | None
         Module, // import os -> os is ModuleType
         TypeVar, // T, P, Ts in generics
-        SynthesizedOverloaded, // Functions with multiple @overload signatures
-        SynthesizedFunction, // Built-in functions or synthesized methods
-        SynthesizedClass, // Built-in classes or synthesized types
+        Overloaded, // Functions with multiple @overload signatures
+        Synthesized, // Types that are synthesized by the type checker
         TypeReference, // Reference by ID for deduplication
     }
 
     /**
-     * Discriminator for the TypeHandleDeclaration union type.
+     * Discriminator for the Declaration union type.
      * Distinguishes between declarations that exist in source code versus those created by the type checker.
      *
      * Used to determine whether a declaration:
@@ -917,30 +423,30 @@ export namespace TypeServerProtocol {
      * - Regular: `class MyClass:` - has source code node
      * - Synthesized: Built-in `len` function - no user source code
      */
-    export const enum TypeHandleDeclarationKind {
+    export const enum DeclarationKind {
         Regular, // Declaration exists in source code with AST node
         Synthesized, // Declaration created by type checker (no source node)
     }
 
     /**
      * Base interface for all declaration types.
-     * Provides the discriminator field for the TypeHandleDeclaration union.
+     * Provides the discriminator field for the Declaration union.
      *
      * This is a generic interface that is extended by:
-     * - TypeHandleRegularDeclaration (kind = Regular)
-     * - TypeHandleSynthesizedDeclaration (kind = Synthesized)
+     * - RegularDeclaration (kind = Regular)
+     * - SynthesizedDeclaration (kind = Synthesized)
      *
      * The type parameter T ensures that the kind field matches the implementing interface.
      *
      * Used for type-safe discrimination:
      * ```typescript
-     * if (declaration.kind === TypeHandleDeclarationKind.Regular) {
-     *     // TypeScript knows this is TypeHandleRegularDeclaration
+     * if (declaration.kind === DeclarationKind.Regular) {
+     *     // TypeScript knows this is RegularDeclaration
      *     const node = declaration.node;
      * }
      * ```
      */
-    export interface TypeHandleDeclarationBase<T extends TypeHandleDeclarationKind> {
+    export interface DeclarationBase<T extends DeclarationKind> {
         // Discriminator field that determines which declaration variant this is.
         // Regular: Has source code and AST node
         // Synthesized: Created by type checker, no source node
@@ -967,7 +473,7 @@ export namespace TypeServerProtocol {
      * T = TypeVar('T')  # TypeParam declaration
      * ```
      */
-    export interface TypeHandleRegularDeclaration extends TypeHandleDeclarationBase<TypeHandleDeclarationKind.Regular> {
+    export interface RegularDeclaration extends DeclarationBase<DeclarationKind.Regular> {
         // Category of the declaration (Variable, Function, Class, etc.).
         // Determines how the declaration should be interpreted.
         // Example: DeclarationCategory.Function for `def foo():`.
@@ -1003,8 +509,7 @@ export namespace TypeServerProtocol {
      * # Point.__init__ is synthesized
      * ```
      */
-    export interface TypeHandleSynthesizedDeclaration
-        extends TypeHandleDeclarationBase<TypeHandleDeclarationKind.Synthesized> {
+    export interface SynthesizedDeclaration extends DeclarationBase<DeclarationKind.Synthesized> {
         // URI of the file where this symbol is conceptually declared.
         // For built-ins, this might be a special URI; for decorator-generated code,
         // it's the file containing the decorator.
@@ -1017,8 +522,8 @@ export namespace TypeServerProtocol {
      * A declaration describes where and how a symbol (variable, function, class, etc.) is defined.
      *
      * Contains either:
-     * - TypeHandleRegularDeclaration: For declarations in source code with AST nodes
-     * - TypeHandleSynthesizedDeclaration: For declarations created by the type checker
+     * - RegularDeclaration: For declarations in source code with AST nodes
+     * - SynthesizedDeclaration: For declarations created by the type checker
      *
      * Used for:
      * - Tracking where symbols are defined
@@ -1029,7 +534,7 @@ export namespace TypeServerProtocol {
      * Examples:
      * ```python
      * # Regular declaration
-     * def my_function(x: int) -> str:  # TypeHandleRegularDeclaration
+     * def my_function(x: int) -> str:  # RegularDeclaration
      *     return str(x)
      *
      * # Synthesized declaration
@@ -1037,13 +542,13 @@ export namespace TypeServerProtocol {
      * class Point:
      *     x: int
      *     y: int
-     * # Point.__init__ has TypeHandleSynthesizedDeclaration (generated by @dataclass)
+     * # Point.__init__ has SynthesizedDeclaration (generated by @dataclass)
      *
      * # Built-in function
-     * len([1, 2, 3])  # len has TypeHandleSynthesizedDeclaration
+     * len([1, 2, 3])  # len has SynthesizedDeclaration
      * ```
      */
-    export type TypeHandleDeclaration = TypeHandleRegularDeclaration | TypeHandleSynthesizedDeclaration;
+    export type Declaration = RegularDeclaration | SynthesizedDeclaration;
 
     /**
      * Describes the variance of a type parameter in a generic type.
@@ -1117,7 +622,7 @@ export namespace TypeServerProtocol {
      * UserId: TypeAlias = int
      * ```
      */
-    export interface TypeHandleTypeAliasInfo {
+    export interface TypeAliasInfo {
         // Short name of the type alias.
         // Example: "IntList" for `type IntList = list[int]`.
         readonly name: string;
@@ -1145,11 +650,11 @@ export namespace TypeServerProtocol {
 
         // Generic type parameters declared by this alias.
         // Example: [T] for `type Pair[T] = tuple[T, T]`.
-        readonly typeParams?: TypeHandle[];
+        readonly typeParams?: Type[];
 
         // Concrete type arguments when this alias is specialized.
         // Example: [int] when `Pair[int]` is used (specializing Pair[T]).
-        readonly typeArgs?: TypeHandle[];
+        readonly typeArgs?: Type[];
 
         // Computed variance for each type parameter.
         // Inferred based on how type parameters are used in the alias definition.
@@ -1158,38 +663,37 @@ export namespace TypeServerProtocol {
     }
 
     /**
-     * Base interface for all TypeHandle variants.
+     * Base interface for all Type variants.
      * Provides common fields shared by all type representations in the protocol.
      *
-     * This is the foundation interface extended by all TypeHandle types:
-     * - BuiltInTypeHandle
-     * - RegularTypeHandle (and its subclasses FunctionTypeHandle, ClassTypeHandle)
-     * - UnionTypeHandle
-     * - ModuleTypeHandle
-     * - TypeVarTypeHandle
-     * - SynthesizedOverloadedTypeHandle
-     * - SynthesizedFunctionTypeHandle
-     * - SynthesizedClassTypeHandle
-     * - TypeReferenceTypeHandle
+     * This is the foundation interface extended by all Type types:
+     * - BuiltInType
+     * - RegularType (and its subclasses FunctionType, ClassType)
+     * - UnionType
+     * - ModuleType
+     * - TypeVarType
+     * - OverloadedType
+     * - SynthesizedType
+     * - TypeReference
      *
      * The type parameter T constrains the `kind` field to match the implementing type.
      *
      * Common fields:
      * - id: Unique identifier for cycle detection and caching
-     * - kind: Discriminator for the TypeHandle union
+     * - kind: Discriminator for the Type union
      * - flags: Characteristics of the type (Instantiable, Instance, Callable, etc.)
      * - typeAliasInfo: Optional alias information if type comes from a type alias
      *
      * Used throughout the protocol to represent Python types in a serializable format.
      */
-    export interface TypeHandleBase<T extends TypeHandleKind> {
+    export interface TypeBase<T extends TypeKind> {
         // Unique identifier for this type instance. Used to detect cycles and cache type lookups.
         // Example: During recursive type resolution, the id is checked to avoid infinite loops.
         readonly id: number;
 
-        // Discriminator field that determines which TypeHandle variant this is.
-        // Used for type narrowing when processing TypeHandle unions.
-        // Example: `if (typeHandle.kind === TypeHandleKind.BuiltIn) { ... }`
+        // Discriminator field that determines which Type variant this is.
+        // Used for type narrowing when processing Type unions.
+        // Example: `if (type.kind === TypeKind.BuiltIn) { ... }`
         readonly kind: T;
 
         // Bitfield of TypeFlags that describe characteristics of the type.
@@ -1201,7 +705,7 @@ export namespace TypeServerProtocol {
         // Information about type aliases. Present when this type was created from a type alias.
         // Contains the alias name, module, file location, type parameters, and type arguments.
         // Example: `type MyList = list[int]` - typeAliasInfo contains name="MyList", typeArgs=[int]
-        readonly typeAliasInfo?: TypeHandleTypeAliasInfo;
+        readonly typeAliasInfo?: TypeAliasInfo;
     }
 
     /**
@@ -1222,10 +726,10 @@ export namespace TypeServerProtocol {
      * - `ellipsis`: The `...` in `def foo(...): ...` or `Tuple[int, ...]`
      * - `never`: `def raise_error() -> Never:` or function with only raise statements
      */
-    export interface BuiltInTypeHandle extends TypeHandleBase<TypeHandleKind.BuiltIn> {
+    export interface BuiltInType extends TypeBase<TypeKind.BuiltIn> {
         // Optional declaration information for built-in types (usually undefined for true built-ins).
         // Example: Some built-ins like __class__ have synthesized declarations.
-        readonly declaration?: TypeHandleDeclaration;
+        readonly declaration?: Declaration;
 
         // The name of the built-in type. Limited to specific known built-in types.
         // 'unknown': Type cannot be determined
@@ -1239,39 +743,49 @@ export namespace TypeServerProtocol {
         // For 'unknown' types, this may contain a possible type based on context.
         // Used when type inference has partial information but can't fully determine the type.
         // Example: In `if isinstance(x, int): ...` the possibleType of unknown x might be int
-        readonly possibleType?: TypeHandle;
+        readonly possibleType?: Type;
     }
 
     /**
      * Base type for symbols that have a declaration in source code.
-     * This is the common parent for FunctionTypeHandle and ClassTypeHandle when the type
+     * This is the common parent for FunctionType and ClassType when the type
      * comes from an actual declaration node in the parse tree.
      *
+     * The type parameter T allows subtypes to specify their own TypeKind
+     * (e.g., Function or Class) while sharing the common declaration field.
+     *
      * Used for:
-     * - Functions and methods with actual `def` statements
-     * - Classes with actual `class` statements
-     * - Variables with declarations in source
+     * - Functions and methods with actual `def` statements (TypeKind.Function)
+     * - Classes with actual `class` statements (TypeKind.Class)
+     * - Variables with declarations in source (TypeKind.Declared)
      *
      * Not used for:
-     * - Synthesized types (use SynthesizedFunctionTypeHandle or SynthesizedClassTypeHandle)
-     * - Built-in types (use BuiltInTypeHandle)
+     * - Synthesized types (use SynthesizedType)
+     * - Built-in types (use BuiltInType)
      *
      * Example:
      * ```python
-     * def my_function(x: int) -> str:  # Regular function declaration
+     * def my_function(x: int) -> str:  # FunctionType with TypeKind.Function
      *     return str(x)
+     * class MyClass:  # ClassType with TypeKind.Class
+     *     pass
      * ```
      */
-    export interface RegularTypeHandle extends TypeHandleBase<TypeHandleKind.Regular> {
+    export interface DeclaredType<T extends TypeKind = TypeKind.Declared> extends TypeBase<T> {
         // Declaration node information (source location, category, name).
         // Points to where this type was declared in the source code.
         // Example: For a function, this contains the node pointing to the 'def' keyword and function name.
-        readonly declaration: TypeHandleDeclaration;
+        readonly declaration: Declaration;
     }
 
     /**
      * Represents a function or method that has a declaration in the source code.
      * Used for functions parsed from actual `def` statements.
+     *
+     * Uses TypeKind.Function for discrimination from ClassType and other types.
+     *
+     * Binding behavior:
+     * - boundToType: Contains the class/instance the method is bound to.
      *
      * Used for:
      * - User-defined functions with `def` statements
@@ -1279,8 +793,8 @@ export namespace TypeServerProtocol {
      * - Lambda functions (though simple ones)
      *
      * Not used for:
-     * - Built-in functions like `len`, `print` (use SynthesizedFunctionTypeHandle)
-     * - Synthesized methods from decorators like @dataclass (use SynthesizedFunctionTypeHandle)
+     * - Built-in functions like `len`, `print` (use SynthesizedType)
+     * - Synthesized methods from decorators like @dataclass (use SynthesizedType)
      *
      * Example:
      * ```python
@@ -1292,28 +806,26 @@ export namespace TypeServerProtocol {
      *         pass
      * ```
      */
-    export interface FunctionTypeHandle extends RegularTypeHandle {
+    export interface FunctionType extends DeclaredType<TypeKind.Function> {
         // The return type annotation of the function.
         // Example: In `def foo() -> int:`, returnType is the int type.
-        readonly returnType?: TypeHandle;
+        readonly returnType?: Type;
 
         // Specialized versions of parameter types and return type when the function has type parameters.
         // Contains concrete types substituted for generic type variables.
         // Example: When calling `list[int].append(1)`, the self parameter is specialized to list[int].
         readonly specializedTypes?: SpecializedFunctionTypes;
 
-        // Type of the first parameter that was removed when binding a method to an instance.
-        // Example: When accessing `obj.method`, the `self` parameter is stripped and stored here.
-        readonly strippedFirstParamType?: TypeHandle;
-
         // The class or object instance that this method is bound to.
         // Example: In `obj.method`, boundToType is the type of `obj`.
-        readonly boundToType?: TypeHandle;
+        readonly boundToType?: Type;
     }
 
     /**
      * Represents a class or class instance that has a declaration in the source code.
      * Used for classes parsed from actual `class` statements.
+     *
+     * Uses TypeKind.Class for discrimination from FunctionType and other types.
      *
      * Used for:
      * - User-defined classes with `class` statements
@@ -1322,8 +834,8 @@ export namespace TypeServerProtocol {
      * - Literal instances (e.g., the number `42` is an instance of `int`)
      *
      * Not used for:
-     * - Built-in classes like `int`, `str`, `list` (use SynthesizedClassTypeHandle)
-     * - Classes synthesized by decorators (use SynthesizedClassTypeHandle)
+     * - Built-in classes like `int`, `str`, `list` (use SynthesizedType)
+     * - Classes synthesized by decorators (use SynthesizedType)
      *
      * Example:
      * ```python
@@ -1334,13 +846,13 @@ export namespace TypeServerProtocol {
      * class Container[T]:
      *     value: T
      *
-     * # point has ClassTypeHandle (instance of Point)
+     * # point has ClassType (instance of Point)
      * point = Point()
-     * # container has ClassTypeHandle with typeArgs=[int]
+     * # container has ClassType with typeArgs=[int]
      * container: Container[int] = Container()
      * ```
      */
-    export interface ClassTypeHandle extends RegularTypeHandle {
+    export interface ClassType extends DeclaredType<TypeKind.Class> {
         // The literal value if this class represents a literal (e.g., int literal 42, str literal "hello").
         // Can be a primitive value, enum member, or sentinel object.
         // Example: For the literal `42`, literalValue = 42.
@@ -1348,12 +860,7 @@ export namespace TypeServerProtocol {
 
         // Type arguments when this class is a specialized generic type.
         // Example: For `list[int]`, typeArgs = [int].
-        readonly typeArgs?: TypeHandle[];
-
-        // True if this is a partial TypedDict (not all required keys are present).
-        // Used during TypedDict construction and type checking.
-        // Example: When constructing a TypedDict incrementally, intermediate states are partial.
-        readonly isTypedDictPartial?: boolean;
+        readonly typeArgs?: Type[];
     }
 
     /**
@@ -1384,10 +891,10 @@ export namespace TypeServerProtocol {
      * # x has type int | str
      * ```
      */
-    export interface UnionTypeHandle extends TypeHandleBase<TypeHandleKind.Union> {
+    export interface UnionType extends TypeBase<TypeKind.Union> {
         // Array of types that make up this union.
         // Example: For `int | str | None`, subTypes = [int, str, None].
-        readonly subTypes: TypeHandle[];
+        readonly subTypes: Type[];
     }
 
     /**
@@ -1408,12 +915,12 @@ export namespace TypeServerProtocol {
      * import os.path as path
      * from typing import Protocol
      *
-     * # `os` has ModuleTypeHandle with loaderFields containing {"path": ..., "getcwd": ..., etc.}
-     * # `path` has ModuleTypeHandle for the os.path module
+     * # `os` has ModuleType with loaderFields containing {"path": ..., "getcwd": ..., etc.}
+     * # `path` has ModuleType for the os.path module
      * # In type stubs, Protocol is a module symbol that gets loaded
      * ```
      */
-    export interface ModuleTypeHandle extends TypeHandleBase<TypeHandleKind.Module> {
+    export interface ModuleType extends TypeBase<TypeKind.Module> {
         // Fully qualified name of the module.
         // Example: "os.path" for the os.path module.
         readonly moduleName: string;
@@ -1421,11 +928,6 @@ export namespace TypeServerProtocol {
         // URI of the module's source file.
         // Example: "file:///path/to/module.py" or "<builtin>" for built-in modules.
         readonly uri: string;
-
-        // Symbol table containing module-level symbols (functions, classes, variables).
-        // Maps symbol names to their types as they would be accessed via module.name.
-        // Example: For `import os`, loaderFields contains {"path": type of os.path, "getcwd": type of os.getcwd, ...}
-        readonly loaderFields: Record<string, TypeHandle>;
     }
 
     /**
@@ -1461,49 +963,7 @@ export namespace TypeServerProtocol {
      *     ...
      * ```
      */
-    export interface TypeVarTypeHandle extends TypeHandleBase<TypeHandleKind.TypeVar> {
-        // Name of the type variable.
-        // Example: "T" in `def foo[T](x: T) -> T:`
-        readonly name: string;
-
-        // Flags indicating if this is a ParamSpec or TypeVarTuple.
-        // ParamSpec (PEP 612): Represents parameter specifications for generic callables.
-        // TypeVarTuple (PEP 646): Represents variable-length tuple of types.
-        // Example: `P = ParamSpec('P')` has IsParamSpec flag set.
-        readonly typeVarFlags: TypeVarFlags;
-
-        // Upper bound constraint on the type variable.
-        // Example: `T = TypeVar('T', bound=int)` restricts T to int and its subtypes.
-        readonly boundType?: TypeHandle;
-
-        // List of allowed types (constraints) for this type variable.
-        // Example: `T = TypeVar('T', int, str)` constrains T to be either int or str.
-        readonly constraintTypes?: TypeHandle[];
-
-        // Unique identifier scoping this TypeVar to a specific function or class.
-        // Necessary to differentiate TypeVars with the same name in different scopes.
-        // Example: Two functions `def f[T]()` and `def g[T]()` have different scopeIds.
-        readonly scopeId?: string;
-
-        // Human-readable name of the scope (usually function or class name).
-        // Used for display purposes in error messages and type representations.
-        // Example: "MyClass" or "my_function"
-        readonly scopeName?: string;
-
-        // True if this TypeVar was created by the type checker (not in source code).
-        // Example: Self parameter types are often synthesized.
-        readonly isSynthesized?: boolean;
-
-        // Variance declared for this type parameter (Auto, Invariant, Covariant, Contravariant).
-        // Determines how subtyping works with this type parameter.
-        // Example: `class Box[T_co]` declares T_co as covariant.
-        readonly declaredVariance: Variance;
-
-        // Computed variance (may differ from declared if Auto).
-        // The type checker infers variance based on usage.
-        // Example: If a TypeVar is used only in return positions, it's covariant.
-        readonly computedVariance?: Variance;
-    }
+    export type TypeVarType = DeclaredType<TypeKind.TypeVar>;
 
     /**
      * Represents an overloaded function with multiple signatures.
@@ -1530,321 +990,183 @@ export namespace TypeServerProtocol {
      *         return str(value)
      *     return len(value)
      *
-     * # The type of `process` is SynthesizedOverloadedTypeHandle with:
+     * # The type of `process` is OverloadedType with:
      * # - overloads = [signature for (int)->str, signature for (str)->int]
      * # - implementation = signature for (int|str)->(int|str)
      * ```
      */
-    export interface SynthesizedOverloadedTypeHandle extends TypeHandleBase<TypeHandleKind.SynthesizedOverloaded> {
+    export interface OverloadedType extends TypeBase<TypeKind.Overloaded> {
         // List of overload signatures for this overloaded function.
         // Each overload represents a different way the function can be called.
         // Example: For a function with @overload decorators, each overload is in this array.
-        overloads: TypeHandle[];
+        overloads: Type[];
 
         // The implementation signature (if present).
         // This is the actual function body, as opposed to the @overload declarations.
         // Example: The non-decorated function definition after all @overload decorators.
-        implementation?: TypeHandle;
+        implementation?: Type;
     }
 
     /**
-     * Represents a function type that was synthesized (created by the type checker)
-     * rather than parsed from a source declaration.
+     * Metadata about a synthesized type that provides additional context.
+     * This information is used by the client to enhance IntelliSense and type checking.
+     */
+    export interface SynthesizedTypeMetadata {
+        /**
+         * Module where the synthesized type is defined.
+         * Used to provide context about the origin of the synthesized type.
+         *
+         * Examples:
+         * - For a synthesized `__init__` method from a @dataclass, this is the module containing the dataclass.
+         * - For a NewType declaration, this is the module where the NewType is defined.
+         */
+        module: ModuleType;
+
+        /**
+         * Character offset into the stubContent where the primary/target definition starts.
+         * When the stub contains multiple definitions (e.g., base classes and the main class,
+         * or a class with multiple methods), this points to the specific definition that
+         * represents the synthesized type.
+         *
+         * The offset is a zero-based character index from the start of stubContent.
+         *
+         * Examples:
+         * - For a function stub, points to the 'def' keyword
+         * - For a class stub, points to the 'class' keyword of the target class
+         * - For a method in a class, points to the 'def' keyword of that method
+         * - For a NewType assignment, points to the start of the assignment
+         *
+         * Example:
+         * ```python
+         * # stubContent:
+         * from typing import NewType
+         * UserId = NewType('UserId', int)
+         * # ^offset points here (start of 'UserId')
+         * ```
+         */
+        primaryDefinitionOffset: number;
+    }
+
+    /**
+     * Represents synthesized/generated types.
      *
-     * Used for:
-     * - Built-in functions (len, print, range, etc.)
-     * - Methods synthesized by decorators (@dataclass, @property, etc.)
-     * - Magic methods created implicitly (e.g., NamedTuple methods)
-     * - Bound methods (when a function is accessed as an attribute)
-     * - Specialized generic functions (when type parameters are substituted)
+     * When the type server generates its own types that do not directly correspond
+     * to source code declarations, it uses this handle.
      *
-     * This is more flexible than FunctionTypeHandle because it doesn't require
-     * a source declaration and can represent functions created dynamically.
+     * The stub content should be a complete, valid Python stub (.pyi) that includes:
+     * 1. All necessary imports (typing module, collections.abc, etc.)
+     * 2. TypeVar and ParamSpec declarations used in the type
+     * 3. Type aliases or class definitions
+     * 4. Function signatures with full parameter and return type annotations
+     *
+     * This approach is particularly useful for:
+     * - Synthesized methods from decorators like @dataclass.__init__
+     * - NewType declarations
+     * - Generic type specializations
      *
      * Examples:
-     * ```python
-     * # Built-in function (synthesized)
-     * result = len([1, 2, 3])  # len is a SynthesizedFunctionTypeHandle
      *
-     * # Dataclass synthesized __init__
+     * # Example 1: Synthesized dataclass __init__
+     * from dataclasses import dataclass
      * @dataclass
      * class Point:
      *     x: int
      *     y: int
-     * # Point.__init__ is synthesized by @dataclass decorator
+     * # Stub content for Point.__init__:
+     * """
+     * def __init__(self, x: int, y: int) -> None:
+     *     '''Initialize Point'''
+     * """
+     * # metadata: { primaryDefinitionOffset: 0 }
      *
-     * # Bound method
-     * my_list = [1, 2, 3]
-     * append_func = my_list.append  # bound method, synthesized from list.append
+     * # Example 2: Generic function with TypeVar
+     * from typing import TypeVar
+     * T = TypeVar('T')
+     * def identity(x: T) -> T:
+     *     return x
+     * # Stub content:
+     * """
+     * from typing import TypeVar
+     * T = TypeVar('T')
+     * def identity(x: T) -> T: ...
+     * """
+     * # metadata: { primaryDefinitionOffset: 45 } (offset points to 'def')
      *
-     * # Specialized generic
-     * def identity[T](x: T) -> T: return x
-     * int_identity = identity[int]  # specialized version
+     * # Example 3: ParamSpec function
+     * from typing import ParamSpec, Callable
+     * P = ParamSpec('P')
+     * def wrapper(func: Callable[P, int]) -> Callable[P, str]:
+     *     ...
+     * # Stub content:
+     * """
+     * from typing import ParamSpec, Callable
+     * P = ParamSpec('P')
+     * def wrapper(func: Callable[P, int]) -> Callable[P, str]: ...
+     * """
+     * # metadata: { primaryDefinitionOffset: 67 }
+     *
+     * # Example 4: NewType
+     * from typing import NewType
+     * UserId = NewType('UserId', int)
+     * # Stub content:
+     * """
+     * from typing import NewType
+     * UserId = NewType('UserId', int)
+     * """
+     * # metadata: { primaryDefinitionOffset: 25 } (offset points to 'UserId')
+     *
+     * # Example 5: Complex generic specialization with ParamSpec
+     * class Wrapper[P, R]:
+     *     func: Callable[P, R]
+     * def example(x: int, y: str) -> bool: ...
+     * w: Wrapper[(x: int, y: str), bool] = Wrapper()
+     * # Stub content for Wrapper[(x: int, y: str), bool]:
+     * """
+     * from typing import ParamSpec, TypeVar, Generic, Callable
+     * P = ParamSpec('P')
+     * R = TypeVar('R')
+     * class Wrapper(Generic[P, R]):
+     *     func: Callable[P, R]
+     * """
+     * # metadata: { primaryDefinitionOffset: 87 } (offset points to 'class Wrapper')
      * ```
+     *
+     * Important: The stub content is used to reconstruct the type on the client side by:
+     * 1. Parsing the stub as a Python type stub file
+     * 2. Evaluating the type expressions within the stub
+     * 3. Extracting the resulting type for use in type checking and IntelliSense
      */
-    export interface SynthesizedFunctionTypeHandle extends TypeHandleBase<TypeHandleKind.SynthesizedFunction> {
-        // Short name of the function (not fully qualified).
-        // Example: "append" for the list.append method.
-        readonly name: string;
+    export interface SynthesizedType extends TypeBase<TypeKind.Synthesized> {
+        /**
+         * Python stub file content (.pyi format) generated for this type.
+         *
+         * Must include:
+         * - Import statements for all typing constructs used (TypeVar, ParamSpec, Callable, etc.)
+         * - TypeVar/ParamSpec declarations that appear in the type signature
+         * - The complete type definition (function, class, or type alias)
+         * - Proper Python stub syntax with ellipsis (...) for function bodies
+         *
+         * The stub should be minimal but complete - include only what's necessary to
+         * reconstruct the type. Avoid including unrelated definitions.
+         *
+         * Example for a generic function:
+         * ```
+         * from typing import TypeVar
+         * T = TypeVar('T')
+         * def identity(x: T) -> T: ...
+         * ```
+         *
+         * Example for a dataclass synthesized method:
+         * ```
+         * def __init__(self, x: int, y: int, z: str = "") -> None: ...
+         * ```
+         */
+        readonly stubContent: string;
 
-        // Fully qualified name including module and class (if method).
-        // Example: "builtins.list.append" for list.append.
-        readonly fullName: string;
-
-        // Name of the module containing this function.
-        // Example: "builtins" for built-in functions, "mymodule" for user code.
-        readonly moduleName: string;
-
-        // Bitfield of FunctionTypeFlags describing function characteristics.
-        // Flags include: ConstructorMethod, ClassMethod, StaticMethod, AbstractMethod,
-        // Generator, Async, Overloaded, Final, etc.
-        // Example: Check if async: `(functionFlags & FunctionTypeFlags.Async) !== 0`
-        readonly functionFlags: FunctionTypeFlags;
-
-        // Type parameters (generic type variables) declared by this function.
-        // Example: For `def foo[T](x: T) -> T:`, typeParams = [T].
-        readonly typeParams: TypeHandle[];
-
-        // List of function parameters (positional, keyword, *args, **kwargs).
-        // Each FunctionParam contains name, type, default value, and category.
-        // Example: For `def foo(x: int, y: str = "")`, parameters = [{name: "x", type: int, ...}, {name: "y", type: str, defaultType: str, ...}]
-        readonly parameters: FunctionParam[];
-
-        // Declared return type annotation (if present).
-        // Example: In `def foo() -> int:`, declaredReturnType = int.
-        readonly declaredReturnType?: TypeHandle;
-
-        // Inferred return type based on function body analysis.
-        // Used when no return type annotation is present.
-        // Example: For `def foo(): return 42`, inferredReturnType = int.
-        readonly inferredReturnType?: TypeHandle;
-
-        // Documentation string (docstring) for the function.
-        // Example: The string in `"""This function does X"""`
-        readonly docString?: string;
-
-        // Deprecation warning message if function is marked deprecated.
-        // Example: From `@deprecated("Use new_func instead")` decorator.
-        readonly deprecatedMessage?: string;
-
-        // The class containing this method (if this is a method).
-        // Example: For `list.append`, methodClass = list type.
-        readonly methodClass?: TypeHandle;
-
-        // Specialized versions of parameter types and return type (for generic functions).
-        // Contains concrete types substituted for type parameters.
-        // Example: When calling `list[int].append(1)`, specializedTypes contains int for the value parameter.
-        readonly specializedTypes?: SpecializedFunctionTypes;
-
-        // Type of the first parameter that was removed when binding to instance/class.
-        // Example: When accessing `obj.method`, the `self` parameter type is stored here.
-        readonly strippedFirstParamType?: TypeHandle;
-
-        // The class or instance this function is bound to.
-        // Example: In `obj.method`, boundToType = type of obj.
-        readonly boundToType?: TypeHandle;
-
-        // Reference to the overloaded function type if this is an overload signature.
-        // Points back to the SynthesizedOverloadedTypeHandle containing this overload.
-        // Example: Links an @overload signature to its parent overloaded function.
-        readonly overloaded?: TypeHandle;
-
-        // Nesting depth for type[type[...]] constructs.
-        // Used to track nested instantiable class references.
-        // Example: type[type[int]] has depth 2. Default is 0 if undefined.
-        readonly instantiableDepth?: number;
-    }
-
-    /**
-     * Represents a class type that was synthesized (created by the type checker)
-     * rather than parsed from a source declaration.
-     *
-     * Used for:
-     * - Built-in classes (int, str, list, dict, etc.)
-     * - Classes from type stubs that define the Python standard library
-     * - TypedDict classes created with class syntax
-     * - NamedTuple classes
-     * - Classes created by decorators or metaclasses
-     * - Special type constructs (Protocol, Generic, etc.)
-     * - Specialized generic class instances (list[int], dict[str, int])
-     *
-     * This is the most common class type handle and contains extensive metadata
-     * about the class structure, including MRO, fields, type parameters, etc.
-     *
-     * Examples:
-     * ```python
-     * # Built-in class (synthesized)
-     * x: list[int] = []  # list is SynthesizedClassTypeHandle
-     *
-     * # TypedDict (synthesized from class syntax)
-     * class Movie(TypedDict):
-     *     name: str
-     *     year: int
-     * # Movie is SynthesizedClassTypeHandle with typedDictEntries
-     *
-     * # NamedTuple (synthesized)
-     * Point = NamedTuple('Point', [('x', int), ('y', int)])
-     * # Point is SynthesizedClassTypeHandle with namedTupleEntries
-     *
-     * # Protocol (synthesized)
-     * class Drawable(Protocol):
-     *     def draw(self) -> None: ...
-     * # Drawable is SynthesizedClassTypeHandle with ProtocolClass flag
-     *
-     * # Standard library class from stub
-     * import os
-     * stat_result = os.stat('.')  # os.stat_result is synthesized from stub
-     * ```
-     */
-    export interface SynthesizedClassTypeHandle extends TypeHandleBase<TypeHandleKind.SynthesizedClass> {
-        // Short name of the class (not fully qualified).
-        // Example: "list" for the list class.
-        readonly name: string;
-
-        // Fully qualified name including module path.
-        // Example: "builtins.list" for the built-in list class.
-        readonly fullName: string;
-
-        // Name of the module containing this class.
-        // Example: "builtins" for built-in classes, "mymodule" for user code.
-        readonly moduleName: string;
-
-        // URI of the file where this class is defined.
-        // Example: "file:///path/to/module.py" or "<builtin>" for built-in classes.
-        readonly fileUri: string;
-
-        // Bitfield of ClassTypeFlags describing class characteristics.
-        // Flags include: BuiltIn, TypedDictClass, ProtocolClass, Final, EnumClass,
-        // PropertyClass, RuntimeCheckable, etc.
-        // Example: Check if TypedDict: `(classFlags & ClassTypeFlags.TypedDictClass) !== 0`
-        readonly classFlags: ClassTypeFlags;
-
-        // Unique identifier for the class definition source.
-        // Used to distinguish between different class definitions with the same name.
-        // Example: Two classes named "Point" in different modules have different typeSourceIds.
-        readonly typeSourceId: number;
-
-        // Explicitly declared metaclass (if specified with metaclass=...).
-        // Example: `class MyClass(metaclass=ABCMeta):` has ABCMeta as declaredMetaclass.
-        readonly declaredMetaclass?: TypeHandle;
-
-        // Effective metaclass after inheritance and defaults.
-        // Determined by walking the MRO and applying metaclass conflict resolution.
-        // Example: Usually `type` for normal classes, `ABCMeta` for abstract classes.
-        readonly effectiveMetaclass?: TypeHandle;
-
-        // Documentation string (docstring) for the class.
-        // Example: The string in `"""This class represents X"""`
-        readonly docString?: string;
-
-        // Direct base classes in the order they were declared.
-        // Example: For `class C(A, B):`, baseClasses = [A, B].
-        readonly baseClasses: TypeHandle[];
-
-        // Method Resolution Order - linearized list of ancestor classes.
-        // Used for attribute lookup and method resolution.
-        // Example: For `class C(A, B):`, mro might be [C, A, B, object].
-        readonly mro: TypeHandle[];
-
-        // Symbol table mapping field/method names to their symbols.
-        // Contains class members, class variables, methods, nested classes, etc.
-        // Example: For `class Foo: x: int`, fields = {"x": TypeHandleSymbol for x}.
-        readonly fields: Record<string, TypeHandleSymbol>;
-
-        // Type parameters (generic type variables) declared by this class.
-        // Example: For `class Box[T]:`, typeParams = [T].
-        readonly typeParams: TypeHandle[];
-
-        // Type arguments when this class is a specialized generic.
-        // Example: For `list[int]`, typeArgs = [int].
-        readonly typeArgs?: TypeHandle[];
-
-        // Deprecation warning for the class itself (when used as a type).
-        // Example: From `@deprecated("Use NewClass instead")` on the class.
-        readonly deprecatedMessage?: string;
-
-        // Deprecation warning when creating instances of the class.
-        // Example: Warns when calling the constructor.
-        readonly deprecatedInstanceMessage?: string;
-
-        // Set of field names that are NamedTuple entries.
-        // Used for classes created with typing.NamedTuple.
-        // Example: For `Point = NamedTuple('Point', [('x', int), ('y', int)])`, contains {"x", "y"}.
-        readonly namedTupleEntries?: Set<string>;
-
-        // TypedDict field definitions with value types and required/readonly flags.
-        // Contains both known keys and optional extra_items type.
-        // Example: For `class Movie(TypedDict): name: str; year: int`, contains entries for name and year.
-        readonly typedDictEntries?: TypedDictEntries;
-
-        // Expression node for the extra_items type in a closed TypedDict.
-        // Used for TypedDicts with extra_items parameter.
-        // Example: In `class MyDict(TypedDict, extra_items=str):`, points to the `str` expression.
-        readonly typedDictExtraItemsExpr?: Node;
-
-        // True if this represents an empty container literal ([], {}, set()).
-        // Used for type narrowing of empty collections.
-        // Example: `x = []` creates a list with isEmptyContainer=true.
-        readonly isEmptyContainer?: boolean;
-
-        // True if this type represents an unpacked value (*args, **kwargs in type context).
-        // Used with PEP 646 TypeVarTuple unpacking.
-        // Example: In `*tuple[int, str]`, the tuple type has isUnpacked=true.
-        readonly isUnpacked?: boolean;
-
-        // True if type arguments were explicitly provided (vs inferred).
-        // Affects type checking strictness.
-        // Example: `list[int]` has explicit args, `list()` does not.
-        readonly isTypeArgExplicit?: boolean;
-
-        // True if type should include promoted types from type narrowing.
-        // Used for tracking type guards and narrowing in conditionals.
-        // Example: After `if isinstance(x, int):`, x's type includes promotions.
-        readonly includePromotions?: boolean;
-
-        // Literal value if this class instance represents a literal.
-        // Can be a primitive value, enum member, or sentinel object.
-        // Example: For the literal `42`, literalValue = 42.
-        readonly literalValue?: LiteralValue;
-
-        // Alternative name for special built-in types that have aliases.
-        // Example: `List` (from typing) is an alias for `list`.
-        readonly aliasName?: string;
-
-        // True if this is a partial TypedDict (not all required keys are present).
-        // Used during TypedDict construction and merging.
-        // Example: When building a TypedDict incrementally.
-        readonly isTypedDictPartial?: boolean;
-
-        // True if this is a descriptor with asymmetric get/set types.
-        // Used for properties where getter and setter have different types.
-        // Example: A property that returns int but accepts int | str.
-        readonly isAsymmetricDescriptor?: boolean;
-
-        // True if this class uses __get__/__set__ for attribute access with different types.
-        // Similar to isAsymmetricDescriptor but for classes implementing descriptor protocol.
-        // Example: A descriptor class with different __get__ and __set__ signatures.
-        readonly isAsymmetricAttributeAccessor?: boolean;
-
-        // Information about the property's getter method (fget).
-        // Contains the method type and the class declaring it.
-        // Example: For `@property def x(self) -> int:`, contains info about the getter.
-        readonly fgetInfo?: PropertyMethodInfo;
-
-        // Information about the property's setter method (fset).
-        // Contains the method type and the class declaring it.
-        // Example: For `@x.setter def x(self, value: int):`, contains info about the setter.
-        readonly fsetInfo?: PropertyMethodInfo;
-
-        // Information about the property's deleter method (fdel).
-        // Contains the method type and the class declaring it.
-        // Example: For `@x.deleter def x(self):`, contains info about the deleter.
-        readonly fdelInfo?: PropertyMethodInfo;
-
-        // Type of functools.partial when this represents a partial function application.
-        // Used for tracking partial function types.
-        // Example: `partial(func, arg1)` has the partial call type stored here.
-        readonly partialCallType?: TypeHandle;
+        /**
+         * Additional metadata about the synthesized type.
+         */
+        readonly metadata: SynthesizedTypeMetadata;
     }
 
     /**
@@ -1868,7 +1190,7 @@ export namespace TypeServerProtocol {
      *     next: Node | None  # 'Node' references back to itself
      *
      * # When serializing the type of 'next', the second occurrence of Node
-     * # uses TypeReferenceTypeHandle pointing to the first Node's ID
+     * # uses TypeReferenceType pointing to the first Node's ID
      *
      * # Repeated complex type
      * def process_lists(
@@ -1879,26 +1201,25 @@ export namespace TypeServerProtocol {
      *     pass
      * ```
      */
-    export interface TypeReferenceTypeHandle extends TypeHandleBase<TypeHandleKind.TypeReference> {
-        // Identifier that references another TypeHandle by its id.
+    export interface TypeReferenceType extends TypeBase<TypeKind.TypeReference> {
+        // Identifier that references another Type by its id.
         // Used to avoid duplicating large type structures and handle forward references.
         // Example: When a type appears multiple times, later occurrences use TypeReference
         // pointing to the first occurrence's id.
         readonly typeReferenceId: number;
     }
 
-    export type TypeHandle =
-        | BuiltInTypeHandle
-        | RegularTypeHandle
-        | FunctionTypeHandle
-        | ClassTypeHandle
-        | UnionTypeHandle
-        | ModuleTypeHandle
-        | TypeVarTypeHandle
-        | SynthesizedOverloadedTypeHandle
-        | SynthesizedFunctionTypeHandle
-        | SynthesizedClassTypeHandle
-        | TypeReferenceTypeHandle;
+    export type Type =
+        | BuiltInType
+        | DeclaredType
+        | FunctionType
+        | ClassType
+        | UnionType
+        | ModuleType
+        | TypeVarType
+        | OverloadedType
+        | SynthesizedType
+        | TypeReferenceType;
 
     // Requests and notifications for the type server protocol.
 
@@ -1908,12 +1229,12 @@ export namespace TypeServerProtocol {
     // def foo(a: int | str):
     //     if instanceof(a, int):
     //        b = a + 1  # Computed type of 'b' is 'int'
-    export namespace GetComputedTypeHandleRequest {
-        export const method = 'typeServer/getComputedTypeHandle' as const;
+    export namespace GetComputedTypeRequest {
+        export const method = 'typeServer/getComputedType' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<
-            { arg: TypeHandleDeclaration | Node; snapshot: number },
-            TypeHandle | undefined,
+            { arg: Declaration | Node; snapshot: number },
+            Type | undefined,
             never,
             void,
             void
@@ -1925,12 +1246,12 @@ export namespace TypeServerProtocol {
     // Example:
     // def foo(a: int | str): # Declared type of parameter 'a' is 'int | str'
     //     pass
-    export namespace GetDeclaredTypeHandleRequest {
-        export const method = 'typeServer/getDeclaredTypeHandle' as const;
+    export namespace GetDeclaredTypeRequest {
+        export const method = 'typeServer/getDeclaredType' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<
-            { arg: TypeHandleDeclaration | Node; snapshot: number },
-            TypeHandle | undefined,
+            { arg: Declaration | Node; snapshot: number },
+            Type | undefined,
             never,
             void,
             void
@@ -1943,12 +1264,12 @@ export namespace TypeServerProtocol {
     // def foo(a: int | str):
     //     pass
     // foo(4)  # Expected type of argument 'a' is 'int | str'
-    export namespace GetExpectedTypeHandleRequest {
-        export const method = 'typeServer/getExpectedTypeHandle' as const;
+    export namespace GetExpectedTypeRequest {
+        export const method = 'typeServer/getExpectedType' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<
-            { arg: TypeHandleDeclaration | Node; snapshot: number },
-            TypeHandle | undefined,
+            { arg: Declaration | Node; snapshot: number },
+            Type | undefined,
             never,
             void,
             void

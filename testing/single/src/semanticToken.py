@@ -1,9 +1,14 @@
-# you can trigger semantic token using `Developer: Force Retokenize` command
-# use `command palette` to find the command and its short cut
+# Use `Developer: Force Retokenize` from the command palette when you need to
+# refresh semantic token coloring before checking the scenario below.
 
 from typing import Generic, TypeVar
 
-# confirm identifier, keyword, operators and etc are all colored as expected.
+# SCENARIO: semantic token coloring survives a forced retokenize
+# TARGET: the `TypeVar`, `Box`, arithmetic, comparison, decorator, and string literal tokens in this file
+# TRIGGER: run `Developer: Force Retokenize` with this file focused
+# EXPECT: semantic token coloring remains active after the retokenize completes
+# VERIFY: visual-only check that `class`, `def`, `if`, and `else` stay tokenized as keywords; `Box`, `value`, and `_value` stay tokenized as identifiers; `+` and `==` stay tokenized as operators; `@property` stays tokenized as a decorator; and `"Yay"` plus `"hmmm"` stay tokenized as string literals
+# RECOVER: none
 T = TypeVar("T", int, float)
 
 class Box(Generic[T]):

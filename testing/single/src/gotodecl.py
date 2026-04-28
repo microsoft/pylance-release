@@ -1,18 +1,26 @@
-# you can trigger go to declaration using `Go To Declaration` command
-# use `command palette` to find the command and its short cut
-# one can also use right click menu to issue the command
 from typing import Mapping
 
    
-
-# place cursor on `==` and issue go to decl command
-# it should go to pyi file.
+# SCENARIO: go to declaration for an operator lands in a stub file
+# TARGET: the `==` operator in the comparison below
+# TRIGGER: Go To Declaration
+# EXPECT: the cursor is on the comparison operator in `a = 1 == 1`
+# VERIFY: navigation opens a declaration in a `.pyi` file
+# RECOVER: none
 a = 1 == 1
 
-# place cursor on "os" and issue go to decl command
-# it should go to pyi file.
+# SCENARIO: go to declaration for a string literal lands in a stub file
+# TARGET: the `os` text inside the string literal below
+# TRIGGER: Go To Declaration
+# EXPECT: the cursor is on the string literal token in `b = "os"`
+# VERIFY: navigation opens a declaration in a `.pyi` file
+# RECOVER: none
 b = "os"
 
-# place cursor on "Mapping" and issue go to decl command
-# it should go to pyi file instead of py file.
+# SCENARIO: go to declaration for an imported typing symbol prefers the stub declaration
+# TARGET: `Mapping` in the annotation below
+# TRIGGER: Go To Declaration
+# EXPECT: the cursor is on the imported `Mapping` reference in `c: Mapping`
+# VERIFY: navigation opens the `Mapping` declaration in a `.pyi` file rather than a `.py` file
+# RECOVER: none
 c: Mapping

@@ -4,18 +4,54 @@
 
 ## Representative Issues
 
--   [#3003](https://github.com/microsoft/pylance-release/issues/3003): Ensure Pylint plugins are installed and configured for correct diagnostics.
--   [#3102](https://github.com/microsoft/pylance-release/issues/3102): Default argument types in functions should match annotated parameter types.
--   [#3853](https://github.com/microsoft/pylance-release/issues/3853): Configure `packageIndexDepths` and ensure the correct Python environment for auto-imports.
--   [#3855](https://github.com/microsoft/pylance-release/issues/3855): Enable Python indexing in VSCode for auto-imports.
--   [#4012](https://github.com/microsoft/pylance-release/issues/4012): Override diagnostic severity for import cycles globally in pyright.
--   [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in type stubs between Pyright CLI and Pylance settings.
--   [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in config files to prevent analysis of unwanted folders.
--   [#5200](https://github.com/microsoft/pylance-release/issues/5200): Customize diagnostic rule severities by type checking mode.
--   [#531](https://github.com/microsoft/pylance-release/issues/531): Use `# pyright: reportImportCycles=none` to suppress cyclical import warnings for a file/module.
--   [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure abstract base classes implement all abstract methods.
--   [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv for performance.
--   [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer `typing.Dict` over `dict[t, t]` for compatibility.
+- [#3003](https://github.com/microsoft/pylance-release/issues/3003): Ensure Pylint plugins are installed and configured for correct diagnostics.
+- [#3102](https://github.com/microsoft/pylance-release/issues/3102): Default argument types in functions should match annotated parameter types.
+- [#3853](https://github.com/microsoft/pylance-release/issues/3853): Configure `packageIndexDepths` and ensure the correct Python environment for auto-imports.
+- [#3855](https://github.com/microsoft/pylance-release/issues/3855): Enable Python indexing in VSCode for auto-imports.
+- [#4012](https://github.com/microsoft/pylance-release/issues/4012): Override diagnostic severity for import cycles globally in pyright.
+- [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in type stubs between Pyright CLI and Pylance settings.
+- [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in config files to prevent analysis of unwanted folders.
+- [#5200](https://github.com/microsoft/pylance-release/issues/5200): Customize diagnostic rule severities by type checking mode.
+- [#531](https://github.com/microsoft/pylance-release/issues/531): Use `# pyright: reportImportCycles=none` to suppress cyclical import warnings for a file/module.
+- [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure abstract base classes implement all abstract methods.
+- [#6300](https://github.com/microsoft/pylance-release/issues/6300): Exclude unnecessary folders like .venv for performance.
+- [#715](https://github.com/microsoft/pylance-release/issues/715): Prefer `typing.Dict` over `dict[t, t]` for compatibility.
+
+## Examples
+
+```python
+# module_a.py
+from module_b import helper  # Warning: Import cycle detected
+
+def func_a():
+    return helper()
+
+# module_b.py
+from module_a import func_a  # Circular dependency!
+
+def helper():
+    return func_a()
+```
+
+**Fix — move shared code into a third module or use lazy imports:**
+
+```python
+# module_a.py
+from module_shared import helper
+
+# module_b.py
+from module_shared import func_a
+```
+
+**Fix — use `TYPE_CHECKING` for type-only imports:**
+
+```python
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from module_b import MyClass  # Only used for type hints
+```
 
 ## Common Fixes & Workarounds
 
@@ -24,3 +60,8 @@
 3. Suppress specific import cycle warnings with `# pyright: reportImportCycles=none` in affected files.
 4. Ensure your Python environment and type stubs are consistent and properly configured.
 5. See the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportImportCycles) for details on configuring this rule.
+
+## See Also
+
+- [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+- [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default

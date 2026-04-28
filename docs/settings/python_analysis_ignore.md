@@ -15,9 +15,9 @@ The `python.analysis.ignore` setting in Pylance allows you to specify paths to f
 - **Diagnostic Suppression**: Pylance will not display any errors or warnings for the files or directories specified in `python.analysis.ignore`.
 - **Files Still Processed If Opened**: If you open a file that's in the ignore list, Pylance will still provide IntelliSense features like code completion and hover information, but it will not show errors or warnings.
 - **Wildcard Support**: Paths can include wildcard characters:
-  - `**`: Matches any directory or multiple levels of directories.
-  - `*`: Matches any sequence of zero or more characters.
-  - `?`: Matches a single character.
+    - `**`: Matches any directory or multiple levels of directories.
+    - `*`: Matches any sequence of zero or more characters.
+    - `?`: Matches a single character.
 
 ### Use Cases
 
@@ -34,35 +34,31 @@ You can configure `python.analysis.ignore` in your Visual Studio Code settings.
 To add `python.analysis.ignore` to your VS Code settings:
 
 1. **Open Settings (JSON)**:
-
-   - Click on the gear icon in the lower-left corner and select **Command Palette**.
-   - Type `Preferences: Open Settings (JSON)` and select it.
+    - Click on the gear icon in the lower-left corner and select **Command Palette**.
+    - Type `Preferences: Open Settings (JSON)` and select it.
 
 2. **Add the Setting**:
+    - In your `settings.json`, add the `python.analysis.ignore` setting with the paths you want to ignore.
 
-   - In your `settings.json`, add the `python.analysis.ignore` setting with the paths you want to ignore.
-
-   ```json
-   {
-       "python.analysis.ignore": ["**/legacy_code/**", "**/generated/**", "**/third_party/**"]
-   }
-   ```
+    ```json
+    {
+        "python.analysis.ignore": ["**/legacy_code/**", "**/generated/**", "**/third_party/**"]
+    }
+    ```
 
 ## Difference Between `ignore` and `exclude`
 
 While both `python.analysis.ignore` and [`python.analysis.exclude`](python_analysis_exclude.md) deal with controlling Pylance's behavior on certain files, they serve different purposes:
 
 - **`python.analysis.ignore`**:
-
-  - Suppresses diagnostics (errors and warnings) for the specified files or directories.
-  - The files are still processed if they are imported by other files, but no diagnostics are reported.
-  - If you open an ignored file, Pylance provides IntelliSense features but does not report errors or warnings.
+    - Suppresses diagnostics (errors and warnings) for the specified files or directories.
+    - The files are still processed if they are imported by other files, but no diagnostics are reported.
+    - If you open an ignored file, Pylance provides IntelliSense features but does not report errors or warnings.
 
 - **`python.analysis.exclude`**:
-
-  - Excludes the specified paths from the workspace.
-  - Pylance does not process these files for features like code navigation, auto-imports, or symbol searches.
-  - If an excluded file is imported by a non-excluded file, Pylance still reports diagnostics for the non-excluded file, potentially generating import errors.
+    - Excludes the specified paths from the workspace.
+    - Pylance does not process these files for features like code navigation, auto-imports, or symbol searches.
+    - If an excluded file is imported by a non-excluded file, Pylance still reports diagnostics for the non-excluded file, potentially generating import errors.
 
 The `ignore` setting is useful when you want Pylance to recognize the files (e.g., for code completion when imported), but you don't want to see diagnostics for them.
 
@@ -96,21 +92,23 @@ This way, Pylance won't show errors or warnings for the generated code but will 
 
 ### Q: Can I use `python.analysis.ignore` to suppress specific types of diagnostics?
 
-**A:** No, `python.analysis.ignore` suppresses all diagnostics for the specified files or directories. If you want to suppress specific types of diagnostics, you can use `python.analysis.diagnosticSeverityOverrides` to adjust the severity or disable specific diagnostic rules.
+**A:** No, `python.analysis.ignore` suppresses all diagnostics for the specified files or directories. If you want to suppress specific types of diagnostics, use [`python.analysis.diagnosticSeverityOverrides`](python_analysis_diagnosticSeverityOverrides.md) to adjust the severity or disable specific diagnostic rules.
 
 ### Q: Should I use `python.analysis.ignore` or `python.analysis.exclude` in most cases?
 
 **A:** Most of the time, users would want to use `python.analysis.exclude` rather than `python.analysis.ignore`. The `exclude` setting removes files from processing, ensuring no errors or warnings appear from those files. `ignore` should only be used in situations where files are included in the workspace but you want to suppress diagnostics specifically without excluding them entirely, such as for complex file structures.
 
+## Related Settings
+
+- [`python.analysis.exclude`](python_analysis_exclude.md): Excludes files from analysis entirely.
+- [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
+
+## See Also
+
+- [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `ignore` vs `exclude` for generated or vendored code
+- [How to Handle Generated Code](../howto/generated-code.md) — suppressing diagnostics for code generation output
+- [How to Troubleshoot Settings](../howto/settings-troubleshooting.md) — include/exclude/ignore interaction
+
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
-
----
-
-*For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference#_python-languag-server-settings)** documentation.*
-
----
-
-*This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
-
