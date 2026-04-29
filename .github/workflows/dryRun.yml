@@ -4,37 +4,58 @@ on:
   issues:
     types: [opened]
 
-permissions: write-all
+permissions:
+  issues: write
 
 jobs:
   label_and_comment:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Call Azure Function
         id: call_azure_function
         env:
-          PAYLOAD: >-
-            {
-              "authToken": "${{ secrets.GITHUB_TOKEN }}",
-              "repoId": "pylance",
-              "issueData": {
-                "id": ${{ github.event.issue.number }},
-                "user": ${{ toJson(github.event.issue.user.login) }},
-                "title": ${{ toJson(github.event.issue.title) }},
-                "body":  ${{ toJson(github.event.issue.body)  }},
-                "labels": ${{ toJson(github.event.issue.labels) }}
-              },
-              "mode": "DirectUpdate"
-            }
-
+          # Untrusted, attacker-controlled values are passed via env vars (not
+          # ${{ }} template interpolation) so they cannot break out of the
+          # workflow string and inject script/JSON. See:
+          # https://docs.github.com/en/actions/reference/security/secure-use#understanding-the-risk-of-script-injections
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_USER: ${{ github.event.issue.user.login }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_LABELS: ${{ toJson(github.event.issue.labels) }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AZURE_FUNCTION_LINK: ${{ secrets.AZURE_FUNCTION_LINK }}
         run: |
-          # Make the HTTP request
-          response=$(curl -s \
-              --header "Content-Type: application/json" \
-              --request POST \
-              --data "$PAYLOAD" \
-              ${{ secrets.AZURE_FUNCTION_LINK }})
+          set -euo pipefail
+
+          # Build the JSON payload safely with jq so that no value (title, body,
+          # user, labels) can inject characters into the surrounding JSON.
+          PAYLOAD=$(jq -n \
+            --arg     authToken "$GH_TOKEN" \
+            --arg     repoId    "pylance" \
+            --argjson id        "$ISSUE_NUMBER" \
+            --arg     user      "$ISSUE_USER" \
+            --arg     title     "$ISSUE_TITLE" \
+            --arg     body      "$ISSUE_BODY" \
+            --argjson labels    "$ISSUE_LABELS" \
+            --arg     mode      "DirectUpdate" \
+            '{
+              authToken: $authToken,
+              repoId: $repoId,
+              issueData: {
+                id: $id,
+                user: $user,
+                title: $title,
+                body: $body,
+                labels: $labels
+              },
+              mode: $mode
+            }')
+
+          curl -sS --fail --max-time 30 \
+            --header "Content-Type: application/json" \
+            --request POST \
+            --data "$PAYLOAD" \
+            "$AZURE_FUNCTION_LINK"
