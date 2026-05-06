@@ -54,10 +54,10 @@ export namespace TypeServerProtocol {
      * Version of the type server protocol.
      * Used for protocol negotiation between client and server to ensure compatibility.
      *
-     * The version follows semantic versioning (semver):
+     * The version follows semantic versioning (semver), with the usual 0.x caveat:
      * - Major version changes indicate breaking changes to the protocol
-     * - Minor version changes add new features while maintaining backward compatibility
-     * - Patch version changes fix bugs without changing the protocol
+     * - While the protocol is 0.x, minor version changes may indicate breaking changes
+     * - Patch version changes remain backward compatible
      *
      * Clients should check the server's supported version before making requests.
      */
@@ -65,8 +65,49 @@ export namespace TypeServerProtocol {
         v0_1_0 = '0.1.0', // Initial protocol version
         v0_2_0 = '0.2.0', // Added new request types and fields
         v0_3_0 = '0.3.0', // Switch to more complex types
-        current = '0.4.0', // Switch to Type union and using stubs
+        v0_4_0 = '0.4.0', // Switch to Type union and using stubs
+        current = '0.4.1', // Add multi-connection negotiation and control requests
     }
+
+    /**
+     * Built-in transport kinds supported by the multi-connection protocol.
+     *
+     * The main connection uses stdio. Extra dynamically-opened connections are
+     * negotiated separately and are currently limited to local IPC.
+     */
+    export enum ConnectionTransportKind {
+        Ipc = 'ipc',
+    }
+
+    /**
+     * Capability shape exchanged via the LSP initialize request/response under
+     * `capabilities.experimental.typeServerMultiConnection`.
+     */
+    export interface TypeServerMultiConnectionCapability {
+        supportedTransports: ConnectionTransportKind[];
+    }
+
+    /**
+     * Main-connection-only control request used to open or close extra read-only
+     * TSP channels after LSP initialization has completed.
+     */
+    export interface ConnectionRequestParams {
+        type: 'open' | 'close';
+        kind: ConnectionTransportKind;
+        /**
+         * Transport-specific endpoint arguments. For `ipc`, provide either one
+         * full-duplex endpoint or two one-way endpoints. When two endpoints are
+         * provided, the first is the server input stream and the second is the
+         * server output stream.
+         */
+        args?: string[];
+    }
+
+    export interface ConnectionRequestResult {
+        success: boolean;
+        message?: string;
+    }
+
     // Flags that describe the characteristics of a type.
     // These flags can be combined using bitwise operations.
     export const enum TypeFlags {
@@ -1324,6 +1365,22 @@ export namespace TypeServerProtocol {
         export const method = 'typeServer/resolveImport' as const;
         export const messageDirection = MessageDirection.clientToServer;
         export const type = new ProtocolRequestType<ResolveImportParams, string | undefined, never, void, void>(method);
+    }
+
+    /**
+     * Main-connection-only request used to open or close an extra TSP transport.
+     * Extra transports must remain read-only and must not be used for LSP traffic.
+     */
+    export namespace ConnectionRequest {
+        export const method = 'typeServer/connection' as const;
+        export const messageDirection = MessageDirection.clientToServer;
+        export const type = new ProtocolRequestType<
+            ConnectionRequestParams,
+            ConnectionRequestResult,
+            never,
+            void,
+            void
+        >(method);
     }
 
     /**

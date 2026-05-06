@@ -24,6 +24,20 @@
             "documentation": "Request to get the version of the protocol the type server supports. Returns a string representation of the protocol version (should be semver format)."
         },
         {
+            "method": "typeServer/connection",
+            "typeName": "ConnectionRequest",
+            "messageDirection": "clientToServer",
+            "params": {
+                "kind": "reference",
+                "name": "ConnectionRequestParams"
+            },
+            "result": {
+                "kind": "reference",
+                "name": "ConnectionRequestResult"
+            },
+            "documentation": "Main-connection-only request used to open or close an extra TSP transport. Extra transports must remain read-only and must not be used for LSP traffic."
+        },
+        {
             "method": "typeServer/getDiagnostics",
             "typeName": "GetDiagnosticsRequest",
             "result": {
@@ -525,7 +539,7 @@
                 "kind": "base",
                 "name": "string"
             },
-            "value": "0.2.0",
+            "value": "0.4.1",
             "documentation": "The version of the Type Server Protocol"
         },
         {
@@ -1736,9 +1750,85 @@
                 }
             ],
             "documentation": "Parameters for diagnostics changed notification."
+        },
+        {
+            "name": "ConnectionRequestParams",
+            "properties": [
+                {
+                    "name": "type",
+                    "type": {
+                        "kind": "or",
+                        "items": [
+                            {
+                                "kind": "stringLiteral",
+                                "value": "open"
+                            },
+                            {
+                                "kind": "stringLiteral",
+                                "value": "close"
+                            }
+                        ]
+                    },
+                    "documentation": "Connection operation kind. Valid values are `open` and `close`."
+                },
+                {
+                    "name": "kind",
+                    "type": {
+                        "kind": "reference",
+                        "name": "ConnectionTransportKind"
+                    }
+                },
+                {
+                    "name": "args",
+                    "type": {
+                        "kind": "array",
+                        "element": {
+                            "kind": "base",
+                            "name": "string"
+                        }
+                    },
+                    "optional": true,
+                    "documentation": "Transport-specific endpoint arguments. For `ipc`, provide either one full-duplex endpoint or two one-way endpoints. When two endpoints are provided, the first is the server input stream and the second is the server output stream."
+                }
+            ],
+            "documentation": "Main-connection-only control request used to open or close extra read-only TSP channels after LSP initialization has completed."
+        },
+        {
+            "name": "ConnectionRequestResult",
+            "properties": [
+                {
+                    "name": "success",
+                    "type": {
+                        "kind": "base",
+                        "name": "boolean"
+                    }
+                },
+                {
+                    "name": "message",
+                    "type": {
+                        "kind": "base",
+                        "name": "string"
+                    },
+                    "optional": true
+                }
+            ]
         }
     ],
     "enumerations": [
+        {
+            "name": "ConnectionTransportKind",
+            "type": {
+                "kind": "base",
+                "name": "string"
+            },
+            "values": [
+                {
+                    "name": "Ipc",
+                    "value": "ipc"
+                }
+            ],
+            "documentation": "Built-in transport kinds supported by the multi-connection protocol. The main connection uses stdio. Extra dynamically-opened connections are negotiated separately and are currently limited to local IPC."
+        },
         {
             "name": "FetchPropertiesFlags",
             "type": {

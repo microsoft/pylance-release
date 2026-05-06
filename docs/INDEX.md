@@ -202,6 +202,6 @@ All rules can be configured via [`diagnosticSeverityOverrides`](settings/python_
 
 ## Type Server Protocol (TSP)
 
-| Document         | Description                        |
-| ---------------- | ---------------------------------- |
-| [TSP docs](tsp/) | Type Server Protocol documentation |
+| Document                                            | Description                                                   |
+| --------------------------------------------------- | ------------------------------------------------------------- |
+| [Type Server Protocol](tsp/type-server-protocol.md) | Protocol overview and compatibility contract for type servers |
