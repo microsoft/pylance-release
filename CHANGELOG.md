@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026.2.102 (11 May 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: `python.analysis.pyrightVersion` does not resolve `${workspaceFolder}` or relative paths [pylance-release#7996](https://github.com/microsoft/pylance-release/issues/7996)
+-   Bug fix: "python.analysis.typeEvaluation.disableBytesTypePromotions" shows the wrong default value in the UI [pylance-release#7994](https://github.com/microsoft/pylance-release/issues/7994)
+-   Bug fix: self. completions (from #5773) should not override local parameter completions / add setting to disable [pylance-release#7895](https://github.com/microsoft/pylance-release/issues/7895)
+-   Bug fix: Docstrings of overloaded functions are not preserved in the hover provider through a decorator function in some cases [pylance-release#7600](https://github.com/microsoft/pylance-release/issues/7600)
+-   Bug fix: Inlay hints for functions that return `itemgetter` and `attrgetter` objects are invalid [pylance-release#7249](https://github.com/microsoft/pylance-release/issues/7249)
+-   Bug fix: No docstring shown for `dict.update` [pylance-release#5831](https://github.com/microsoft/pylance-release/issues/5831)
+
 ## 2026.2.101 (24 April 2026) PreRelease
 
 Notable changes:
