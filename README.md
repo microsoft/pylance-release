@@ -34,6 +34,7 @@ Pylance provides some awesome features for Python 3, including:
 * Native multi-root workspace support
 * Jupyter Notebooks compatibility
 * Semantic highlighting
+* Copilot chat skills for fact-grounded Python help, Pylance docs, and refactoring workflows
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
@@ -54,7 +55,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `full`: Designed for users seeking the most extensive feature set. This mode enables most of Pylance's features, offering the richest IntelliSense experience. Ideal for those who want access to the full range of available functionality.
     - Individual settings can be configured to override the defaults set by `languageServerMode`.
     - Default settings based on mode are:
-      
+
         | Mode                           | light      | default    | full       |
         | :----------------------------- | :--------- | :--------- | :--------- |
         | python.analysis.exclude                   | ["**"]      | []         | []         |
@@ -70,7 +71,7 @@ Pylance provides users with the ability to customize their Python language suppo
         | python.analysis.includeAliasesFromUserFiles | false     | false      | true       |
         | python.analysis.functionReturnTypes       | false       | false      | true       |
         | python.analysis.pytestParameters          | false       | false      | true       |
-        | python.analysis.supportRestructuredText   | false       | true      | true       |
+        | python.analysis.supportRestructuredText   | false       | true       | true       |
         | python.analysis.supportDocstringTemplate  | false       | false      | true       |
         | python.analysis.nodeExecutable            | ""          | ""         | "auto"     |
 

@@ -72,8 +72,9 @@ export namespace TypeServerProtocol {
     /**
      * Built-in transport kinds supported by the multi-connection protocol.
      *
-     * The main connection uses stdio. Extra dynamically-opened connections are
-     * negotiated separately and are currently limited to local IPC.
+     * The main connection may use any transport the server supports, but extra
+     * dynamically-opened connections are negotiated separately and are currently
+     * limited to local IPC.
      */
     export enum ConnectionTransportKind {
         Ipc = 'ipc',
@@ -94,12 +95,6 @@ export namespace TypeServerProtocol {
     export interface ConnectionRequestParams {
         type: 'open' | 'close';
         kind: ConnectionTransportKind;
-        /**
-         * Transport-specific endpoint arguments. For `ipc`, provide either one
-         * full-duplex endpoint or two one-way endpoints. When two endpoints are
-         * provided, the first is the server input stream and the second is the
-         * server output stream.
-         */
         args?: string[];
     }
 
