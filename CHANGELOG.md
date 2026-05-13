@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.2.103 (13 May 2026) PreRelease
+
+Notable changes:
+  - minor refactor
+
 ## 2026.2.102 (11 May 2026) PreRelease
 
 Notable changes:
