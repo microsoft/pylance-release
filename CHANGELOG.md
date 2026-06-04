@@ -1,9 +1,49 @@
 # Changelog
 
+## 2026.2.104 (2 June 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Support Sphinx target resolution in ReST cross-references [pylance-release#8054](https://github.com/microsoft/pylance-release/issues/8054)
+-   Bug fix: Incorrect preview of imported constant values [pylance-release#8036](https://github.com/microsoft/pylance-release/issues/8036)
+-   Bug fix: [TSP] typeHierarchy support [pylance-release#8028](https://github.com/microsoft/pylance-release/issues/8028)
+-   Bug fix: [TSP] Type server hangs, resulting in frozen hover/go to def/... [pylance-release#8021](https://github.com/microsoft/pylance-release/issues/8021)
+-   Bug fix: [TSP] Parameter hints don't work with TSP [pylance-release#8020](https://github.com/microsoft/pylance-release/issues/8020)
+-   Bug fix: [TSP] Opening an interactive window hangs Pyrefly/TSP integration [pylance-release#8018](https://github.com/microsoft/pylance-release/issues/8018)
+-   Bug fix: [TSP] Using pyrefly as a diagnostics source hangs [pylance-release#8011](https://github.com/microsoft/pylance-release/issues/8011)
+-   Bug fix: Erroneous tooltip hyperlinking behaviour for restructured text when using py:meth directive to reference dunder in same class [pylance-release#8005](https://github.com/microsoft/pylance-release/issues/8005)
+-   Bug fix: Incorrect Text for Pylance MCP Tools Descriptor [pylance-release#7988](https://github.com/microsoft/pylance-release/issues/7988)
+-   Bug fix: No supported option to completely disable current and future 'python.analysis.aiCodeActions' settings [pylance-release#7963](https://github.com/microsoft/pylance-release/issues/7963)
+-   Bug fix: Pylance don't autoupdate its settings on `pyproject.toml` settings update [pylance-release#7928](https://github.com/microsoft/pylance-release/issues/7928)
+-   Bug fix: Support lazy imports [pylance-release#7891](https://github.com/microsoft/pylance-release/issues/7891)
+-   Bug fix: LSP autocomplete inside of match arms gives invalid values. [pylance-release#7237](https://github.com/microsoft/pylance-release/issues/7237)
+-   Bug fix: Enable supportRestructuredText leads to visible non-breaking space in docstrings [pylance-release#7084](https://github.com/microsoft/pylance-release/issues/7084)
+-   Bug fix: Add Go to definition for operators and **call** calls [pylance-release#7081](https://github.com/microsoft/pylance-release/issues/7081)
+-   Enhancement: Hover oddities [pylance-release#7061](https://github.com/microsoft/pylance-release/issues/7061)
+-   Bug fix: Type hierarchy only finds direct subtypes when methods have `@override` decorator [pylance-release#6885](https://github.com/microsoft/pylance-release/issues/6885)
+-   Bug fix: Inlay hints show ParamSpec as Callable [pylance-release#6748](https://github.com/microsoft/pylance-release/issues/6748)
+-   Bug fix: TypedDict PEP-584 update operator has no auto-completion [pylance-release#6625](https://github.com/microsoft/pylance-release/issues/6625)
+-   Enhancement: Duplicate common keys are shown when using union of `TypedDict` [pylance-release#6020](https://github.com/microsoft/pylance-release/issues/6020)
+-   Bug fix: Intellisense is popping up parameters when it is definitely NOT needed [pylance-release#5965](https://github.com/microsoft/pylance-release/issues/5965)
+-   Enhancement: Default package index depth for django should be higher [pylance-release#5953](https://github.com/microsoft/pylance-release/issues/5953)
+-   Bug fix: Copying and pasting code from function body messes up with indentation [pylance-release#5885](https://github.com/microsoft/pylance-release/issues/5885)
+-   Enhancement: Code action to insert assert to narrow type [pylance-release#5624](https://github.com/microsoft/pylance-release/issues/5624)
+-   Bug fix: Documentation on dataclass constructor argument typed as optional with default value does not show the full type [pylance-release#5607](https://github.com/microsoft/pylance-release/issues/5607)
+-   Enhancement: Parentheses and the atom they contain are both colored [pylance-release#5584](https://github.com/microsoft/pylance-release/issues/5584)
+-   Bug fix: Derived method completions use incorrect return type annotations when differing by `async` modifier. [pylance-release#5542](https://github.com/microsoft/pylance-release/issues/5542)
+-   Bug fix: Unimported pytest fixtures are recognized by hover [pylance-release#4900](https://github.com/microsoft/pylance-release/issues/4900)
+-   Bug fix: Pressing tab to autocomplete a named kwarg results in two `==` if replacing existing kwarg [pylance-release#4808](https://github.com/microsoft/pylance-release/issues/4808)
+-   Bug fix: Refactoring detection is sensitive to comments [pylance-release#4586](https://github.com/microsoft/pylance-release/issues/4586)
+-   Bug fix: Correct type hints for meta-function that takes a function as an argument (ParamSpec) [pylance-release#4391](https://github.com/microsoft/pylance-release/issues/4391)
+-   Bug fix: New line leaves a trailing whitespace [pylance-release#4354](https://github.com/microsoft/pylance-release/issues/4354)
+-   Bug fix: The autocomplete popup should not appear on typing a left square bracket if no specific suggestions are available [pylance-release#3573](https://github.com/microsoft/pylance-release/issues/3573)
+-   Bug fix: Dedent nested `else` blocks correctly [pylance-release#4820](https://github.com/microsoft/pylance-release/issues/4820)
+
 ## 2026.2.103 (13 May 2026) PreRelease
 
 Notable changes:
-  - minor refactor
+
+-   Enhancement: minor refactor
 
 ## 2026.2.102 (11 May 2026) PreRelease
 
