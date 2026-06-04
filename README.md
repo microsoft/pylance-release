@@ -248,7 +248,7 @@ Pylance provides users with the ability to customize their Python language suppo
             { "name": "sklearn", "depth": 2 }, 
             { "name": "matplotlib", "depth": 2 }, 
             { "name": "scipy", "depth": 2 }, 
-            { "name": "django", "depth": 2 }, 
+            { "name": "django", "depth": 4 }, 
             { "name": "flask", "depth": 2 }, 
             { "name": "fastapi", "depth": 2 },
             { "name": "cuda", "depth": 3, "includeAllSymbols": true }
