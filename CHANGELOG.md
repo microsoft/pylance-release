@@ -1,5 +1,45 @@
 # Changelog
 
+## 2026.2.105 (17 June 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: [TSP] Hovering over submodules doesn't seem to work. [pylance-release#8076](https://github.com/microsoft/pylance-release/issues/8076)
+-   Bug fix: [TSP] Go to type definition doesn't work [pylance-release#8075](https://github.com/microsoft/pylance-release/issues/8075)
+-   Bug fix: [TSP] Pandas imports don't work [pylance-release#8074](https://github.com/microsoft/pylance-release/issues/8074)
+-   Bug fix: [TSP] Completions don't work for dynamic typed dicts [pylance-release#8073](https://github.com/microsoft/pylance-release/issues/8073)
+-   Bug fix: Parameter highlight is offset for python methods defined as `def method(self, /, ...)` [pylance-release#8069](https://github.com/microsoft/pylance-release/issues/8069)
+-   Bug fix: [TSP] Types and functions imported from other modules show up as unknown when using Pyrefly [pylance-release#8062](https://github.com/microsoft/pylance-release/issues/8062)
+-   Bug fix: 'Go to Definition' should be special-cased for `typing` aliases for `collections.abc` ABCs [pylance-release#8035](https://github.com/microsoft/pylance-release/issues/8035)
+-   Bug fix: [TSP] interactive window support [pylance-release#8027](https://github.com/microsoft/pylance-release/issues/8027)
+-   Bug fix: [TSP] symlinked definitions across multiple files [pylance-release#8026](https://github.com/microsoft/pylance-release/issues/8026)
+-   Bug fix: [TSP] Goto def doesn't work on special methods [pylance-release#8016](https://github.com/microsoft/pylance-release/issues/8016)
+-   Bug fix: [TSP] Version incompatibilities causes Pylance to not run [pylance-release#8014](https://github.com/microsoft/pylance-release/issues/8014)
+-   Bug fix: [TSP] Switch to Pyrefly dialog should provide "Learn more" button (and maybe open Settings dialog instead of making the change directly) [pylance-release#8012](https://github.com/microsoft/pylance-release/issues/8012)
+-   Bug fix: variable type inlay hints seem to be truncated to 32 characters, regardless of the editor inline hint length setting [pylance-release#7972](https://github.com/microsoft/pylance-release/issues/7972)
+-   Bug fix: File watching is acting weird in dev container [pylance-release#7635](https://github.com/microsoft/pylance-release/issues/7635)
+-   Bug fix: Is decorator Syntax highlighting meant to be applied inconsistently depending on variable type? [pylance-release#7502](https://github.com/microsoft/pylance-release/issues/7502)
+-   Bug fix: Errors for standard library and external package files persist after the files are closed [pylance-release#7440](https://github.com/microsoft/pylance-release/issues/7440)
+-   Enhancement: Type hints of member variables of a class which explicitly implements protocols [pylance-release#7390](https://github.com/microsoft/pylance-release/issues/7390)
+-   Bug fix: Semantic highlighting doesn't refresh when impacted by edit performed outside VS Code [pylance-release#7295](https://github.com/microsoft/pylance-release/issues/7295)
+-   Bug fix: Changing kernel in a notebook doesn't refresh semantic tokens [pylance-release#7184](https://github.com/microsoft/pylance-release/issues/7184)
+-   Enhancement: Move symbol to doesn't work if the sub directory has a hyphen in it. [pylance-release#7042](https://github.com/microsoft/pylance-release/issues/7042)
+-   Bug fix: Jupyter Notebook syntax highlighting breaks for multiroot workspace when root is added [pylance-release#6755](https://github.com/microsoft/pylance-release/issues/6755)
+-   Bug fix: IntelliSense not working for documents with custom URI schemes [pylance-release#6612](https://github.com/microsoft/pylance-release/issues/6612)
+-   Bug fix: Quick fix "Add import" not working when file or path (directory) is excluded in pyrightconfig.json [pylance-release#6535](https://github.com/microsoft/pylance-release/issues/6535)
+-   Bug fix: Support inlay hint navigation on parameter [pylance-release#6501](https://github.com/microsoft/pylance-release/issues/6501)
+-   Bug fix: Pylance inheritance and hints [pylance-release#6464](https://github.com/microsoft/pylance-release/issues/6464)
+-   Bug fix: pytest fixtures dimmed as unused import despite being used [pylance-release#6458](https://github.com/microsoft/pylance-release/issues/6458)
+-   Bug fix: detected unhandled Python exception in '...extensions/ms-python.vscode-pylance-2024.3.2/dist/bundled/files/get_pytest_options.py' [pylance-release#6295](https://github.com/microsoft/pylance-release/issues/6295)
+-   Bug fix: Pyright emits meaningless `reportMissingModuleSource` warnings for submodules of native extension [pylance-release#6269](https://github.com/microsoft/pylance-release/issues/6269)
+-   Bug fix: Move to symbol fails to move import reference if there's a "from foo import bar" in the destination file [pylance-release#5973](https://github.com/microsoft/pylance-release/issues/5973)
+-   Bug fix: pylance loses link to a object if it was returned by fixture [pylance-release#5718](https://github.com/microsoft/pylance-release/issues/5718)
+-   Bug fix: Moving a .pyi file shoudn't move it's .py twin when under the typings folder [pylance-release#5562](https://github.com/microsoft/pylance-release/issues/5562)
+-   Bug fix: Generated relative local imports are mixed with absolute local imports [pylance-release#5550](https://github.com/microsoft/pylance-release/issues/5550)
+-   Bug fix: Support `missing module import` diagnostic in `change spelling` [pylance-release#5530](https://github.com/microsoft/pylance-release/issues/5530)
+-   Bug fix: Can't go to definition on `shutil.rmtree` [pylance-release#5472](https://github.com/microsoft/pylance-release/issues/5472)
+-   Enhancement: Completion items are sent back with a lot of duplicates [pylance-release#4919](https://github.com/microsoft/pylance-release/issues/4919)
+
 ## 2026.2.104 (2 June 2026) PreRelease
 
 Notable changes:
