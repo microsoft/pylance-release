@@ -40,7 +40,7 @@ See the [changelog](CHANGELOG.md) for the latest release.
 
 Settings and Customization
 ===============
-Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the `settings.json` file in your workspace, or edited through the Settings Editor UI. 
+Pylance provides users with the ability to customize their Python language support via a host of settings which can either be placed in the `settings.json` file in your workspace, or edited through the Settings Editor UI.
 
 - [`python.analysis.languageServerMode`](docs/settings/python_analysis_languageServerMode.md)
     - Offers predefined configurations to help users optimize Pylance's performance based on their development needs. It controls how many IntelliSense features Pylance provides, allowing you to choose between full language service functionality or a lightweight experience optimized for performance.
