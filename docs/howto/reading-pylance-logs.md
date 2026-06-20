@@ -128,6 +128,10 @@ Search the Output panel (Ctrl+F) for the module name. The log lines include the 
 - [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) — settings precedence and config file interactions
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — cross-package import resolution in monorepos
 
+## Related Settings
+
+- [`python.analysis.logLevel`](../settings/python_analysis_logLevel.md) — set the verbosity of the Pylance Output panel log
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

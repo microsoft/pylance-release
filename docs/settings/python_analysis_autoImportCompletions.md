@@ -85,6 +85,9 @@ Alternatively, you can edit your `settings.json` file directly:
 - [`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)
     - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in auto-import suggestions. See the linked setting page for details.
 
+- [`python.analysis.completeFunctionParens`](python_analysis_completeFunctionParens.md)
+    - Add parentheses automatically when you accept a function or method completion, including auto-imported functions.
+
 ## Frequently Asked Questions
 
 ### Q: Why aren't auto-import completions working for some packages?

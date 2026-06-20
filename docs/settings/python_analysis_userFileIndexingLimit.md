@@ -96,6 +96,8 @@ You can adjust the `python.analysis.userFileIndexingLimit` setting in Visual Stu
     ]
     ```
 
+- **[`python.analysis.userFileIndexFollowSymlinkedFolders`](python_analysis_userFileIndexFollowSymlinkedFolders.md)**: Disable to stop user-file indexing from following symlinked folders that point into very large directory trees.
+
 ### Q: How do I know what value to set for `python.analysis.userFileIndexingLimit`?
 
 **A:** It depends on your project's size and your machine's capabilities. Start with the default value and adjust as needed. Monitor Pylance's performance and resource usage to find an optimal setting.
