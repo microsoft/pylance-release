@@ -80,6 +80,24 @@ Disable AI-assisted actions entirely:
 - **Enable specific actions** that fit your workflow — for example, keep `implementAbstractClasses` on if you frequently subclass abstract base classes.
 - **Disable** (set to `{}`) if you do not use GitHub Copilot, or prefer Pylance to offer only its non-AI code actions.
 
+## Frequently Asked Questions
+
+### Why don't the AI code actions appear?
+
+They require the **GitHub Copilot Chat** extension to be installed and enabled. Also confirm the specific action is enabled and that you invoke the Quick Fix (lightbulb) in the matching context (for example, `implementAbstractClasses` only appears on a class with unimplemented inherited abstract methods).
+
+### Which actions are enabled by default?
+
+`implementAbstractClasses`, `generateSymbol`, and `convertFormatString` are on by default. `generateDocstring` and `convertLambdaToNamedFunction` are off by default.
+
+### I set one action and the others stopped working. Why?
+
+The value you provide **replaces** the default object rather than merging with it. Include every action you want enabled in your `settings.json` entry.
+
+### How do I turn off all AI-assisted actions?
+
+Set the value to an empty object: `"python.analysis.aiCodeActions": {}`.
+
 ## Related Settings
 
 - [`python.analysis.generateWithTypeAnnotation`](python_analysis_generateWithTypeAnnotation.md) — controls whether generated code includes type annotations.

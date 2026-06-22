@@ -16,16 +16,18 @@ This exists because many Python frameworks identify modules and objects with str
 
 ## Example
 
-Consider a module name referenced inside a string, such as a dynamic import:
+Frameworks such as Django reference modules and objects by name inside strings. For example, in a URL configuration:
 
 ```python
-import importlib
+from django.urls import include, path
 
-mod = importlib.import_module("my_package.utils")
-#                              ^ invoke Go to Definition (F12) here
+urlpatterns = [
+    path("blog/", include("blog.urls")),
+    #                      ^ invoke Go to Definition (F12) here
+]
 ```
 
-With the setting **enabled** (the default), invoking **Go to Definition** on the `"my_package.utils"` string navigates to that module (for example `my_package/utils.py`).
+With the setting **enabled** (the default), invoking **Go to Definition** on the `"blog.urls"` string navigates to that module (for example `blog/urls.py`). It also resolves a string that names a member of a module — for example **Go to Definition** on `"myapp.Reporter"` in a Django `ForeignKey` jumps to the `Reporter` class. The same works for dynamic imports such as `importlib.import_module("my_package.utils")`.
 
 With the setting **disabled**, **Go to Definition** does nothing on the string, because the text is treated as a plain literal rather than a module reference.
 
@@ -49,6 +51,20 @@ With the setting **disabled**, **Go to Definition** does nothing on the string, 
 
 - **Keep enabled** (the default) if you work with frameworks that reference modules by name in strings and want to navigate to them quickly.
 - **Disable** if you find that strings are being interpreted as module references when you do not intend them to be.
+
+## Frequently Asked Questions
+
+### Why does Go to Definition do nothing on my string?
+
+The string must resolve to a module that Pylance can find in your environment, or to a member of such a module (for example `"package.module"` or `"package.module.ClassName"`). Arbitrary text that does not name an importable module is treated as a plain literal.
+
+### Does it work on any string?
+
+No. It only applies to string literals that look like module names (and members of those modules). It does not turn every string into a navigable link.
+
+### Is it enabled by default?
+
+Yes. The default is `true`.
 
 ## Related Settings
 

@@ -21,17 +21,18 @@ This setting exists for developers who find the visual styling distracting, or w
 
 ## Example
 
-Consider code with an unreachable statement and a deprecated symbol:
+A common reason to disable tagged hints is a defensive runtime check that static analysis considers unreachable. Given a parameter annotated as `int`, Pylance narrows `value` to `int` and treats the validation branch as dead code:
 
 ```python
-def f(x):
-    return x
-    print("done")   # unreachable
+def process(value: int) -> None:
+    if not isinstance(value, int):
+        raise TypeError("value must be an int")   # grayed out as unreachable
+    ...
 ```
 
-With the setting **disabled** (the default), Pylance grays out the unreachable `print("done")` line, and renders deprecated symbols with strike-through styling.
+With the setting **disabled** (the default), Pylance grays out the `raise` line, and renders deprecated symbols with strike-through styling.
 
-With the setting **enabled**, Pylance stops emitting these tagged hints, so the unreachable line is no longer dimmed and deprecated symbols are no longer struck through. The text appears with normal styling.
+With the setting **enabled**, Pylance stops emitting these tagged hints, so the defensive `raise` keeps normal styling and deprecated symbols are no longer struck through.
 
 ## How to Change `python.analysis.disableTaggedHints`
 
@@ -51,8 +52,22 @@ With the setting **enabled**, Pylance stops emitting these tagged hints, so the 
 
 ## When to Use It
 
-- **Enable** if you do not want unreachable code grayed out or deprecated symbols struck through.
+- **Enable** if you write defensive runtime checks (for example `isinstance` validation) that static analysis flags as unreachable and you do not want them grayed out, or if you find the strike-through styling on deprecated symbols distracting.
 - **Keep disabled** (the default) if you find the visual cues helpful for spotting dead code and deprecated APIs.
+
+## Frequently Asked Questions
+
+### Does disabling tagged hints hide my errors and warnings?
+
+No. It only suppresses the grayed-out (unreachable) and strike-through (deprecated) visual hints. Regular diagnostics such as type errors and warnings still appear.
+
+### Why is my code grayed out even though it runs at runtime?
+
+Static analysis narrows types and can conclude a branch is unreachable (for example a runtime `isinstance` check on an already-typed value). Enable this setting to stop the hint, or adjust your type annotations.
+
+### Can I disable tagged hints for a single line or file?
+
+No. The setting is resource-scoped (workspace or folder); there is no per-line toggle.
 
 ## Related Settings
 

@@ -48,6 +48,20 @@ With the setting **disabled**, the hover shows the raw text, including the `:par
 - **Keep enabled** (the default) if you want reStructuredText docstrings rendered as formatted documentation in hovers and completions.
 - **Disable** if you prefer to see raw docstring text, or if rendering produces unexpected results for the libraries you use.
 
+## Frequently Asked Questions
+
+### Why isn't my docstring rendered as formatted text?
+
+This is a preview feature, so not every reStructuredText construct is supported, and the docstring must actually use reST markup. Docstrings written in other styles are not converted.
+
+### Is it enabled by default?
+
+Yes. The default is `true`.
+
+### Does it affect non-reStructuredText docstrings?
+
+The feature targets reStructuredText markup. Docstrings that do not use reST are shown as-is.
+
 ## Related Settings
 
 - [`python.analysis.autoTranslateDocstrings`](python_analysis_autoTranslateDocstrings.md) — translates hover docstrings using GitHub Copilot.

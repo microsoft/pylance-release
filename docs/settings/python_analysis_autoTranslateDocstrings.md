@@ -56,6 +56,20 @@ Set `github.copilot.chat.localeOverride` to the language you want docstrings tra
 
 - The **GitHub Copilot Chat** extension must be installed and enabled.
 
+## Frequently Asked Questions
+
+### I enabled it but docstrings are not translated. Why?
+
+Translation requires the **GitHub Copilot Chat** extension, and the target language is taken from `github.copilot.chat.localeOverride`. If that setting is unset, or already matches the docstring's language, you will not see a change.
+
+### Why are hover tooltips slower now?
+
+When the setting is enabled, Pylance calls GitHub Copilot to translate the docstring before showing the hover, which adds noticeable latency.
+
+### Does it modify my source code?
+
+No. Only the text shown in the hover tooltip is translated; the docstring in your source is unchanged.
+
 ## Related Settings
 
 - [`python.analysis.aiCodeActions`](python_analysis_aiCodeActions.md) — other AI-assisted features that use GitHub Copilot.

@@ -49,6 +49,20 @@ print(|)
 - **Enable** if you want function completions to be immediately callable and prefer to fill in arguments right away.
 - **Keep disabled** if you often reference functions without calling them (for example passing a function as a callback), where extra parentheses would get in the way.
 
+## Frequently Asked Questions
+
+### Why weren't parentheses added in some completions?
+
+Pylance deliberately skips parentheses in contexts where a call is not appropriate — inside `import` statements, type annotations, class names, and decorators.
+
+### Does it work with auto-imported functions?
+
+Yes. The setting applies to function and method completions in the completion list, including functions that are auto-imported when you accept the suggestion.
+
+### How do I reference a function without calling it?
+
+Keep the setting disabled, or delete the inserted parentheses after accepting the completion.
+
 ## Related Settings
 
 - [`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md) — offers completions for symbols that are not yet imported.
