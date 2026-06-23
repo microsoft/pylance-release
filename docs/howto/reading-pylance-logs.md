@@ -42,7 +42,8 @@ Pylance tries these locations in order, stopping at the first match:
 | 3        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries    | `Looking in extraPath '...'`                               |
 | 4        | Typeshed stdlib stubs                                                | `Looking for typeshed stdlib path`                         |
 | 5        | Python interpreter search paths (`site-packages`)                    | `Looking in python search path '...'`                      |
-| 6        | Typeshed third-party stubs                                           | `Looking for typeshed third-party path`                    |
+| 6        | Bundled third-party stubs                                            | `Looking in bundled stubs path '...'`                      |
+| 7        | Typeshed third-party stubs                                           | `Looking for typeshed third-party path`                    |
 
 ---
 
@@ -55,6 +56,7 @@ Pylance tries these locations in order, stopping at the first match:
 | `Resolved import with file '...'`                | Pylance found the module. The path tells you _where_ it resolved to.               |
 | `Did not find file '...' or '...'`               | Exhausted options in that search location, trying the next.                        |
 | `Partially resolved import with directory '...'` | Found a directory but no `__init__.py` or module file.                             |
+| `Looking in bundled stubs path '...'`            | Pylance is checking bundled third-party stubs after installed packages.            |
 | `No python interpreter search path`              | Pylance has no site-packages path. Check that the correct interpreter is selected. |
 
 ### What to Look For
@@ -124,6 +126,7 @@ Search the Output panel (Ctrl+F) for the module name. The log lines include the 
 
 ## Related Guides
 
+- [How to Override Bundled Third-Party Stubs in Pylance](bundled-stubs.md) — use workspace-local stubs when bundled third-party stubs do not match your package version
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) — common import errors and their fixes
 - [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) — settings precedence and config file interactions
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — cross-package import resolution in monorepos
