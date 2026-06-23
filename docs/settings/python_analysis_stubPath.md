@@ -1,6 +1,6 @@
 # Understanding `python.analysis.stubPath` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and import resolution features that depend on accurate type information.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and import resolution features that depend on accurate type information.
 
 The `python.analysis.stubPath` setting tells Pylance where to look for custom package stub files that you maintain in your workspace.
 

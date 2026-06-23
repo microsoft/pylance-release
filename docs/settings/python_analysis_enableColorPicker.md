@@ -1,6 +1,6 @@
 # Understanding `python.analysis.enableColorPicker` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.enableColorPicker` setting controls whether Pylance shows an inline color picker for hexadecimal color strings in your Python code.
 

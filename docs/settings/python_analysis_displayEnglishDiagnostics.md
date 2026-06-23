@@ -1,6 +1,6 @@
 # Understanding `python.analysis.displayEnglishDiagnostics` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.displayEnglishDiagnostics` setting forces Pylance to display diagnostic messages in English, regardless of VS Code's configured display language.
 

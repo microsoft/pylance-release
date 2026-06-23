@@ -1,6 +1,6 @@
 # Understanding `python.analysis.autoFormatStrings` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.autoFormatStrings` setting controls whether Pylance automatically converts a regular string into a formatted string (f-string) when you start typing a placeholder inside it.
 

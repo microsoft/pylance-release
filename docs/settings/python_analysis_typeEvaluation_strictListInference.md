@@ -1,6 +1,6 @@
 # Understanding `python.analysis.typeEvaluation.strictListInference` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics to enhance your Python development experience.
 
 The `python.analysis.typeEvaluation.strictListInference` setting controls how Pylance infers the element type of list literals when no explicit type annotation is provided.
 

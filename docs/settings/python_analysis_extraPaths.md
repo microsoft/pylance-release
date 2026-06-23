@@ -1,6 +1,6 @@
 # Understanding `python.analysis.extraPaths` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It enhances your Python development experience with advanced features like type checking, auto-completions, and code navigation.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It enhances your Python development experience with advanced features like type checking, auto-completions, and code navigation.
 
 One common challenge developers encounter is unresolved import warnings or missing IntelliSense for custom modules stored in non-standard locations. The `python.analysis.extraPaths` setting in Pylance addresses this by allowing you to specify additional directories for Pylance to include when resolving imports. This ensures your custom modules are recognized and eliminates related warnings.
 

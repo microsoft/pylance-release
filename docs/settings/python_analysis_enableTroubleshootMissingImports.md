@@ -1,6 +1,6 @@
 # Understanding `python.analysis.enableTroubleshootMissingImports` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.enableTroubleshootMissingImports` setting adds a Quick Fix that helps you diagnose why an import cannot be resolved.
 

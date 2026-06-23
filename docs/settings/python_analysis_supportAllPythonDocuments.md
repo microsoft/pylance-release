@@ -1,6 +1,6 @@
 # Understanding `python.analysis.supportAllPythonDocuments` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.supportAllPythonDocuments` setting extends Pylance's IntelliSense to Python content that appears outside of regular `.py` files.
 

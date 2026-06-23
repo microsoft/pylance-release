@@ -1,6 +1,6 @@
 # Understanding `python.analysis.nodeArguments` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.nodeArguments` setting lets you pass extra command-line arguments to the Node.js process that runs Pylance. This is useful for tuning memory limits or enabling Node.js diagnostics.
 

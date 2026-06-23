@@ -1,12 +1,14 @@
 # Understanding `python.analysis.autoIndent` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.autoIndent` setting controls whether Pylance automatically adjusts indentation based on Python language semantics as you type.
 
 ## What is `python.analysis.autoIndent`?
 
 When enabled, Pylance adjusts the indentation of new lines according to the structure of your code — for example, indenting the body after a colon (`:`) following an `if`, `for`, or `def`, and dedenting after a `return`, `pass`, or `break`. This keeps your code aligned with Python's indentation-based blocks without manual tabbing.
+
+Pylance's automatic indentation follows the conventions used by [autopep8](https://pypi.org/project/autopep8/), the PEP 8 auto-formatter. This matters most when continuing constructs such as multi-line function arguments or collection literals, where the continuation indentation matches autopep8's style rather than a simple fixed indent.
 
 This is enabled by default because correct indentation is essential in Python, where indentation defines code blocks. The setting exists so you can turn the behavior off if you prefer to manage indentation yourself or use a different editing workflow.
 

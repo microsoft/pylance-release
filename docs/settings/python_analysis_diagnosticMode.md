@@ -1,6 +1,6 @@
 # Understanding `python.analysis.diagnosticMode` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics that help you spot problems while you work.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics that help you spot problems while you work.
 
 The `python.analysis.diagnosticMode` setting controls how broadly Pylance analyzes your workspace when producing diagnostics.
 

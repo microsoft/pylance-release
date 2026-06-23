@@ -1,6 +1,6 @@
 # Understanding `python.analysis.includeAliasesFromUserFiles` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It enhances Python development by providing IntelliSense features such as code completion, type checking, auto imports.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It enhances Python development by providing IntelliSense features such as code completion, type checking, auto imports.
 
 One of Pylance's powerful features is its ability to provide auto-import suggestions to improve coding efficiency. However, in some cases, developers may use aliases in their code, and by default, Pylance does not include alias symbols from user files in its auto-import suggestions or add import features. The `python.analysis.includeAliasesFromUserFiles` setting allows you to control this behavior.
 

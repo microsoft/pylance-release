@@ -1,6 +1,6 @@
 # Understanding `python.analysis.enableEditableInstalls` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.enableEditableInstalls` setting controls whether Pylance resolves packages that were installed in editable mode according to [PEP 660](https://peps.python.org/pep-0660/).
 

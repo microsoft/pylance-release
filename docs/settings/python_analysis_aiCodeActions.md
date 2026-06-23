@@ -1,6 +1,6 @@
 # Understanding `python.analysis.aiCodeActions` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.aiCodeActions` setting enables or disables Pylance's AI-assisted Quick Fixes and code actions, which use GitHub Copilot to help you write and modify code.
 
@@ -75,6 +75,14 @@ Disable AI-assisted actions entirely:
 }
 ```
 
+You can also turn off **all** of VS Code's AI features at once with the built-in `chat.disableAIFeatures` setting, which disables these Pylance AI-assisted actions along with the rest of Copilot:
+
+```json
+{
+    "chat.disableAIFeatures": true
+}
+```
+
 ## When to Use It
 
 - **Enable specific actions** that fit your workflow — for example, keep `implementAbstractClasses` on if you frequently subclass abstract base classes.
@@ -96,7 +104,7 @@ The value you provide **replaces** the default object rather than merging with i
 
 ### How do I turn off all AI-assisted actions?
 
-Set the value to an empty object: `"python.analysis.aiCodeActions": {}`.
+Set the value to an empty object: `"python.analysis.aiCodeActions": {}`. To disable every VS Code AI feature (not just Pylance's), set `"chat.disableAIFeatures": true` instead.
 
 ## Related Settings
 

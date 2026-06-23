@@ -1,6 +1,6 @@
 # Understanding `python.analysis.disableTaggedHints` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.disableTaggedHints` setting controls whether Pylance shows hint diagnostics that render as grayed-out or strike-through text in the editor.
 

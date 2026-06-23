@@ -1,6 +1,6 @@
 # Understanding `python.analysis.exclude` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a performant and feature-rich language support extension for Python in Visual Studio Code, leveraging the Pyright static type checker. It offers advanced type checking, code navigation, auto-import suggestions, and other IntelliSense features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a performant and feature-rich language server extension for Python in Visual Studio Code, leveraging the Pyright static type checker. It offers advanced type checking, code navigation, auto-import suggestions, and other IntelliSense features to enhance your Python development experience.
 
 Managing large codebases or repositories with numerous files can sometimes lead to performance issues or unwanted analysis of certain files or directories. Pylance allows you to customize which files and directories should be included or excluded from the workspace through the `python.analysis.exclude` setting.
 

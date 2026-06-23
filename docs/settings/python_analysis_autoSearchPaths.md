@@ -1,6 +1,6 @@
 # Understanding `python.analysis.autoSearchPaths` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 Managing import paths in Python projects can sometimes be challenging, especially in larger projects with complex directory structures. Pylance offers the `python.analysis.autoSearchPaths` setting to help streamline this process by automatically adding certain directories to the import search path.
 

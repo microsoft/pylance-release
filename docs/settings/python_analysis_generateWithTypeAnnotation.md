@@ -1,6 +1,6 @@
 # Understanding `python.analysis.generateWithTypeAnnotation` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.generateWithTypeAnnotation` setting controls whether Pylance includes type annotations when it generates code.
 

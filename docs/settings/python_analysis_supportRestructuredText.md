@@ -1,6 +1,6 @@
 # Understanding `python.analysis.supportRestructuredText` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.supportRestructuredText` setting controls whether Pylance renders reStructuredText (reST) formatting in docstrings.
 

@@ -1,6 +1,6 @@
 # Understanding `python.analysis.regenerateStdLibIndices` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 To deliver fast and accurate code completions, Pylance pre-builds an index of the standard library (stdlib) for quick reference. However, discrepancies can occur if the prebuilt indices do not match the specific Python version or platform you are using.
 

@@ -1,6 +1,6 @@
 # Understanding `python.analysis.gotoDefinitionInStringLiteral` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.gotoDefinitionInStringLiteral` setting controls whether **Go to Definition** works on string literals that look like module names.
 

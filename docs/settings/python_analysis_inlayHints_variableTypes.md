@@ -1,6 +1,6 @@
 # Understanding `python.analysis.inlayHints.variableTypes` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and inlay hints that help you understand your code at a glance.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and inlay hints that help you understand your code at a glance.
 
 The `python.analysis.inlayHints.variableTypes` setting controls whether Pylance displays inferred types for variables that do not already have an explicit type annotation.
 

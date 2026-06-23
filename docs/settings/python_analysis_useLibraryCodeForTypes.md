@@ -1,6 +1,6 @@
 # Understanding `python.analysis.useLibraryCodeForTypes` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 One important Pylance setting is `python.analysis.useLibraryCodeForTypes`, which affects how Pylance handles type information from third-party libraries that do not provide type stubs (such as `.pyi` files) or inline type annotations.
 

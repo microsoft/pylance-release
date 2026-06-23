@@ -1,6 +1,6 @@
 # Understanding `python.analysis.excludeLibraryDiagnostics` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
 The `python.analysis.excludeLibraryDiagnostics` setting suppresses diagnostics (errors, warnings, and hints) for library files while continuing to report them for the code you write.
 
