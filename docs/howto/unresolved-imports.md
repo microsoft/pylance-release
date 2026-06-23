@@ -11,6 +11,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 - [Stub File Not Found (`reportMissingTypeStubs`)](#stub-file-not-found-reportmissingtypestubs)
 - [Circular Import Detected (`reportImportCycles`)](#circular-import-detected-reportimportcycles)
 - [Works at Runtime but Pylance Shows Errors](#works-at-runtime-but-pylance-shows-errors)
+- [Bundled Third-Party Stubs](#bundled-third-party-stubs)
 - [How Pylance Resolves Imports](#how-pylance-resolves-imports)
 - [Diagnostic Checklist](#diagnostic-checklist)
 - [FAQ](#faq)
@@ -233,24 +234,36 @@ Flask's app factory pattern uses `from app.extensions import db` which works at 
 
 ---
 
+## Bundled Third-Party Stubs
+
+Pylance includes bundled stubs for some popular third-party packages. These bundled stubs are used only after Pylance checks custom stubs, workspace paths, typeshed standard-library stubs, and installed packages from the selected interpreter.
+
+If a bundled third-party stub does not match the package version you use, add a workspace-local override through [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md). The default stub directory is `typings`, and Pylance checks it before bundled stubs.
+
+For a package-specific patch, prefer a PEP 561 partial stub package under `typings`, such as `typings/package-stubs/py.typed` containing `partial`. See [How to Override Bundled Third-Party Stubs in Pylance](bundled-stubs.md) for examples.
+
+---
+
 ## How Pylance Resolves Imports
 
 Pylance searches for modules in a specific order, stopping at the first match:
 
-| Priority | Search Location                                                                                                                     | Notes                                |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| 1        | [`stubPath`](../settings/python_analysis_stubPath.md) (custom stubs)                                                                | Default: `./typings`                 |
-| 2        | Bundled type stubs (Pylance ships with stubs for popular packages)                                                                  | e.g., `django-stubs`, `pandas-stubs` |
-| 3        | Source files in the project root (or execution environment root)                                                                    | Your workspace files                 |
-| 4        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries                                                                   | Searched in order listed             |
-| 5        | `src/` directory (if [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) is `true` and `src/` has no `__init__.py`) | Automatic convenience path           |
-| 6        | Typeshed stdlib stubs                                                                                                               | Standard library type info           |
-| 7        | Python interpreter search paths (`site-packages`)                                                                                   | Third-party installed packages       |
-| 8        | Typeshed third-party stubs                                                                                                          | Community-maintained stubs           |
+| Priority | Search Location                                                                                                                     | Notes                                                  |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 1        | [`stubPath`](../settings/python_analysis_stubPath.md) (custom stubs)                                                                | Default: `./typings`                                   |
+| 2        | Source files in the project root (or execution environment root)                                                                    | Your workspace files                                   |
+| 3        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries                                                                   | Searched in order listed                               |
+| 4        | `src/` directory (if [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) is `true` and `src/` has no `__init__.py`) | Automatic convenience path                             |
+| 5        | Typeshed stdlib stubs                                                                                                               | Standard library type info                             |
+| 6        | Python interpreter search paths (`site-packages`)                                                                                   | Installed packages from the selected interpreter       |
+| 7        | Bundled third-party stubs (Pylance ships with stubs for some popular packages)                                                      | Used when no earlier typed package or custom stub wins |
+| 8        | Typeshed third-party stubs                                                                                                          | Community-maintained fallback stubs                    |
 
 **Key implications**:
 
 - [`extraPaths`](../settings/python_analysis_extraPaths.md) entries have **higher priority** than installed packages in `site-packages`. This means workspace source code takes precedence over the same package installed from PyPI.
+- [`stubPath`](../settings/python_analysis_stubPath.md) has **higher priority** than bundled third-party stubs. Use it for workspace-local package-stub overrides.
+- Installed packages that include type information, such as a `py.typed` marker or installed stub package, take priority over bundled third-party stubs.
 - If [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` exists, VS Code's [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) setting is **ignored** — use `"extraPaths"` in the config file instead. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 
 ---
@@ -347,7 +360,7 @@ Enable trace logging and check the **Output → Pylance** panel:
 }
 ```
 
-The log shows each search location Pylance tries (stubPath → project root → extraPaths → typeshed → site-packages) and whether it resolved or failed. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) for a detailed walkthrough.
+The log shows each search location Pylance tries, including `stubPath`, the project root, `extraPaths`, typeshed, `site-packages`, bundled third-party stubs, and third-party fallback stubs. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) for a detailed walkthrough.
 
 ### Q: Auto-import suggests the wrong package path. How do I fix it?
 
@@ -424,6 +437,7 @@ def process(obj: HeavyClass) -> None:  # Pylance resolves this
 
 ## Related Guides
 
+- [How to Override Bundled Third-Party Stubs in Pylance](bundled-stubs.md) — override bundled package stubs with workspace-local custom stubs
 - [How to Use Editable Installs with Pylance](editable-installs.md) — build backend compatibility and `.pth` file troubleshooting
 - [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) — trace logging, search order, and log interpretation
 - [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) — config file precedence and setting interactions

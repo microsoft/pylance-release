@@ -11,6 +11,7 @@ Step-by-step guides for common Pylance workflows and troubleshooting.
 | Guide                                                                               | Description                                                                                                  |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | [Auto-Import Guide](howto/auto-import-guide.md)                                     | Control auto-import suggestions: settings, indexing, and common issues                                       |
+| [Bundled Third-Party Stubs](howto/bundled-stubs.md)                                  | Override bundled package stubs with workspace-local custom stubs                                             |
 | [CI Type Checking](howto/ci-type-checking.md)                                       | Run Pyright in CI to enforce type checking                                                                   |
 | [Copilot + Pylance Workflow](howto/copilot-pylance-workflow.md)                     | Use Pylance MCP tools with Copilot to diagnose and fix Python issues                                         |
 | [Dependency Management](howto/dependency-management.md)                             | Reconcile `requirements.txt`, `pyproject.toml`, lockfiles, and PEP 723 with what Pylance sees                |

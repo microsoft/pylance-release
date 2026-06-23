@@ -18,6 +18,8 @@ The default value is `typings`.
 
 This default does not generate any stubs for you. It simply means Pylance looks for custom stubs in a workspace folder named `typings` if you create one.
 
+`stubPath` is the highest-priority package-stub location in Pylance's import resolution. It does not replace typeshed or other fallback stub sources; it lets you provide package-specific stubs that Pylance checks before workspace source, installed packages, bundled third-party stubs, and typeshed fallback stubs.
+
 ## When to use `stubPath`
 
 Use `python.analysis.stubPath` when you want to add or override type information for specific packages in your project.
@@ -28,6 +30,7 @@ Common cases include:
 - supplementing a third-party package that is missing some annotations
 - providing stubs for compiled extensions
 - correcting package-specific typing without replacing the full typeshed tree
+- overriding a bundled third-party stub that does not match the package version used by your workspace
 
 If you need to override the full typeshed source for standard-library or typeshed fallback stubs, use [`python.analysis.typeshedPaths`](python_analysis_typeshedPaths.md) instead.
 
@@ -136,6 +139,28 @@ With that structure, Pylance can merge the partial stub package with the install
 
 Use a partial stub package when you want to fill gaps. Use a regular full stub package when you want the stub package to define the package entirely.
 
+## Overriding bundled third-party stubs
+
+Pylance includes bundled stubs for some popular third-party packages. These bundled stubs are checked after the selected interpreter's installed packages and after `stubPath`.
+
+If a bundled stub is incomplete or stale for your package version, add a package-specific override under `stubPath`. For a small correction, prefer a partial stub package such as:
+
+```text
+typings/
+└── package-stubs/
+	├── __init__.pyi
+	├── py.typed
+	└── module.pyi
+```
+
+`typings/package-stubs/py.typed`:
+
+```text
+partial
+```
+
+For step-by-step examples, see [How to Override Bundled Third-Party Stubs in Pylance](../howto/bundled-stubs.md).
+
 ## How `stubPath` relates to `useLibraryCodeForTypes`
 
 If a library has weak or missing type information, a focused fix is often to add custom stubs through `python.analysis.stubPath` rather than disabling [`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md) for every library.
@@ -197,6 +222,8 @@ No. `python.analysis.stubPath` accepts a single directory path.
 
 No. It is for custom package stubs. It does not replace the full typeshed tree.
 
+It can override a bundled third-party stub for a specific package, because `stubPath` is checked before bundled third-party stubs. If you need to replace standard-library or typeshed fallback stubs, use [`python.analysis.typeshedPaths`](python_analysis_typeshedPaths.md) instead.
+
 ### Can I use an absolute path?
 
 Yes. You can use either an absolute path or a workspace-relative path.
@@ -216,6 +243,7 @@ Custom stubs provided through `stubPath` can resolve or suppress:
 
 ## See Also
 
+- [How to Override Bundled Third-Party Stubs in Pylance](../howto/bundled-stubs.md) — using `stubPath` for bundled-stub overrides
 - [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — using custom stubs to resolve import errors
 - [How to Handle Generated Code](../howto/generated-code.md) — providing stubs for generated modules
 - [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — stub paths in multi-package projects
