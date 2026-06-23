@@ -1,6 +1,6 @@
 # Understanding `python.analysis.ignore` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 In large projects or specific development environments, you might encounter situations where certain files or directories generate unwanted diagnostics (errors and warnings) from Pylance. This can occur with third-party libraries, generated files, or code that intentionally deviates from standard practices. To manage this, Pylance provides the `python.analysis.ignore` setting, allowing you to suppress diagnostics for specified paths.
 

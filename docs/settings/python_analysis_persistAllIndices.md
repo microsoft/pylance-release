@@ -1,6 +1,6 @@
 # Understanding `python.analysis.persistAllIndices` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It offers advanced features like type checking, IntelliSense, auto-imports, and code navigation to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It offers advanced features like type checking, IntelliSense, auto-imports, and code navigation to enhance your Python development experience.
 
 One of the ways Pylance provides these features is through **indexing** your project's files and installed libraries. Indexing allows Pylance to analyze the codebase and offer features like auto-import suggestions and workspace symbol search more efficiently.
 

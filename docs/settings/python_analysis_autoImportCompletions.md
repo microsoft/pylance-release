@@ -1,6 +1,6 @@
 # Understanding `python.analysis.autoImportCompletions` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, code completion, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, code completion, code navigation, and other language features to enhance your Python development experience.
 
 One of Pylance's powerful features is **auto-import completions**, which can significantly improve coding efficiency by automatically suggesting import statements as you type. However, this feature can affect the performance of the editor or might introduce too many suggestions, especially in large projects.
 
@@ -84,6 +84,9 @@ Alternatively, you can edit your `settings.json` file directly:
 
 - [`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)
     - Show only direct dependencies declared in `requirements.txt` or `pyproject.toml` in auto-import suggestions. See the linked setting page for details.
+
+- [`python.analysis.completeFunctionParens`](python_analysis_completeFunctionParens.md)
+    - Add parentheses automatically when you accept a function or method completion, including auto-imported functions.
 
 ## Frequently Asked Questions
 

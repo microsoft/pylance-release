@@ -248,6 +248,10 @@ If your build backend only produces import-hook `.pth` files (e.g., Hatchling, M
 - [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) — trace logging and search order
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — monorepo-specific editable install patterns
 
+## Related Settings
+
+- [`python.analysis.enableEditableInstalls`](../settings/python_analysis_enableEditableInstalls.md) — resolve PEP 660 import-hook editable installs on Python 3.13+
+
 ---
 
 _For more information on Pylance settings and customization, refer to the **[Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference)** documentation._

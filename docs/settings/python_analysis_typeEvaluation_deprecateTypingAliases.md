@@ -1,6 +1,6 @@
 # Understanding `python.analysis.typeEvaluation.deprecateTypingAliases` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and diagnostics to enhance your Python development experience.
 
 The `python.analysis.typeEvaluation.deprecateTypingAliases` setting controls whether Pylance flags deprecated typing aliases from the `typing` module, such as `typing.List`, `typing.Dict`, and `typing.Tuple`.
 

@@ -1,6 +1,6 @@
 # Understanding `python.analysis.userFileIndexingLimit` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 To provide features like auto-import suggestions and workspace symbol searches, Pylance indexes your project's Python files. In large workspaces, this indexing process can consume significant resources and impact performance.
 
@@ -95,6 +95,8 @@ You can adjust the `python.analysis.userFileIndexingLimit` setting in Visual Stu
         "*.gen.py"
     ]
     ```
+
+- **[`python.analysis.userFileIndexFollowSymlinkedFolders`](python_analysis_userFileIndexFollowSymlinkedFolders.md)**: Disable to stop user-file indexing from following symlinked folders that point into very large directory trees.
 
 ### Q: How do I know what value to set for `python.analysis.userFileIndexingLimit`?
 

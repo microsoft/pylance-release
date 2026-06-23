@@ -1,6 +1,6 @@
 # Understanding `python.analysis.diagnosticSeverityOverrides` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides rich language features and a large set of configurable diagnostics.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides rich language features and a large set of configurable diagnostics.
 
 The `python.analysis.diagnosticSeverityOverrides` setting lets you change the severity of individual diagnostic rules without changing your whole type-checking mode.
 

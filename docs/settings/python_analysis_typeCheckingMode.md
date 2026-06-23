@@ -1,6 +1,6 @@
 # Understanding `python.analysis.typeCheckingMode` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides diagnostics, completions, navigation, and type analysis that can range from lightweight to highly strict.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides diagnostics, completions, navigation, and type analysis that can range from lightweight to highly strict.
 
 The `python.analysis.typeCheckingMode` setting controls the baseline strictness of Pylance's type-checking rules.
 

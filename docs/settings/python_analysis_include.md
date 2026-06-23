@@ -1,6 +1,6 @@
 # Understanding `python.analysis.include` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, IntelliSense, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, IntelliSense, code navigation, and other language features to enhance your Python development experience.
 
 One of Pylance's capabilities is to analyze your project's codebase to provide accurate IntelliSense and code navigation features. However, in large projects or when you want to focus Pylance's features on specific directories, you may need to customize which files and directories Pylance includes in its workspace.
 

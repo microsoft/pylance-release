@@ -1,6 +1,6 @@
 # Understanding `python.analysis.fixAll` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, refactorings, and code actions that help keep Python codebases consistent.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, refactorings, and code actions that help keep Python codebases consistent.
 
 One of those code actions is Pylance Fix All. The `python.analysis.fixAll` setting controls which Pylance fixes are included when you run that action.
 

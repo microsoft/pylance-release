@@ -45,14 +45,15 @@ Each page explains one `python.analysis.*` setting: what it does, accepted value
 
 ### Import and Path Settings
 
-| Setting                                                                    | Description                                              |
-| -------------------------------------------------------------------------- | -------------------------------------------------------- |
-| [autoImportCompletions](settings/python_analysis_autoImportCompletions.md) | Enable or disable auto-import suggestions in completions |
-| [autoSearchPaths](settings/python_analysis_autoSearchPaths.md)             | Auto-detect `src/` directories                           |
-| [extraPaths](settings/python_analysis_extraPaths.md)                       | Additional directories for import resolution             |
-| [importFormat](settings/python_analysis_importFormat.md)                   | Prefer absolute or relative imports in auto-imports      |
-| [stubPath](settings/python_analysis_stubPath.md)                           | Directory for custom `.pyi` stub files                   |
-| [typeshedPaths](settings/python_analysis_typeshedPaths.md)                 | Custom typeshed location                                 |
+| Setting                                                                      | Description                                              |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [autoImportCompletions](settings/python_analysis_autoImportCompletions.md)   | Enable or disable auto-import suggestions in completions |
+| [autoSearchPaths](settings/python_analysis_autoSearchPaths.md)               | Auto-detect `src/` directories                           |
+| [extraPaths](settings/python_analysis_extraPaths.md)                         | Additional directories for import resolution             |
+| [importFormat](settings/python_analysis_importFormat.md)                     | Prefer absolute or relative imports in auto-imports      |
+| [stubPath](settings/python_analysis_stubPath.md)                             | Directory for custom `.pyi` stub files                   |
+| [typeshedPaths](settings/python_analysis_typeshedPaths.md)                   | Custom typeshed location                                 |
+| [enableEditableInstalls](settings/python_analysis_enableEditableInstalls.md) | Resolve PEP 660 editable installs on Python 3.13+        |
 
 ### File Scope Settings
 
@@ -75,17 +76,47 @@ Each page explains one `python.analysis.*` setting: what it does, accepted value
 | [includeAliasesFromUserFiles](settings/python_analysis_includeAliasesFromUserFiles.md)                       | Include re-exported aliases in completions                        |
 | [includeExtraPathSymbolsInSymbolSearch](settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md)   | Include extraPaths symbols in workspace search                    |
 | [includeVenvInWorkspaceSymbols](settings/python_analysis_includeVenvInWorkspaceSymbols.md)                   | Include virtual environment symbols in workspace search           |
+| [completeFunctionParens](settings/python_analysis_completeFunctionParens.md)                                 | Add parentheses to function completions                           |
+| [gotoDefinitionInStringLiteral](settings/python_analysis_gotoDefinitionInStringLiteral.md)                   | Go to Definition on module-like string literals                   |
+| [userFileIndexFollowSymlinkedFolders](settings/python_analysis_userFileIndexFollowSymlinkedFolders.md)       | Follow symlinked folders when indexing user files                 |
 
 ### Code Actions and Hints
 
-| Setting                                                                                      | Description                             |
-| -------------------------------------------------------------------------------------------- | --------------------------------------- |
-| [fixAll](settings/python_analysis_fixAll.md)                                                 | Code actions applied on save or fix-all |
-| [inlayHints.callArgumentNames](settings/python_analysis_inlayHints_callArgumentNames.md)     | Show parameter names at call sites      |
-| [inlayHints.functionReturnTypes](settings/python_analysis_inlayHints_functionReturnTypes.md) | Show inferred return types              |
-| [inlayHints.pytestParameters](settings/python_analysis_inlayHints_pytestParameters.md)       | Show pytest fixture parameter types     |
-| [inlayHints.variableTypes](settings/python_analysis_inlayHints_variableTypes.md)             | Show inferred variable types            |
-| [enablePytestSupport](settings/python_analysis_enablePytestSupport.md)                       | Enable pytest-aware analysis            |
+| Setting                                                                                          | Description                                  |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| [fixAll](settings/python_analysis_fixAll.md)                                                     | Code actions applied on save or fix-all      |
+| [inlayHints.callArgumentNames](settings/python_analysis_inlayHints_callArgumentNames.md)         | Show parameter names at call sites           |
+| [inlayHints.functionReturnTypes](settings/python_analysis_inlayHints_functionReturnTypes.md)     | Show inferred return types                   |
+| [inlayHints.pytestParameters](settings/python_analysis_inlayHints_pytestParameters.md)           | Show pytest fixture parameter types          |
+| [inlayHints.variableTypes](settings/python_analysis_inlayHints_variableTypes.md)                 | Show inferred variable types                 |
+| [enablePytestSupport](settings/python_analysis_enablePytestSupport.md)                           | Enable pytest-aware analysis                 |
+| [enableColorPicker](settings/python_analysis_enableColorPicker.md)                               | Show a color picker for hex color strings    |
+| [enableTroubleshootMissingImports](settings/python_analysis_enableTroubleshootMissingImports.md) | Quick Fix to troubleshoot unresolved imports |
+
+### Editor and Typing
+
+| Setting                                                            | Description                                                   |
+| ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [autoIndent](settings/python_analysis_autoIndent.md)               | Adjust indentation automatically based on Python semantics    |
+| [autoSplitStrings](settings/python_analysis_autoSplitStrings.md)   | Add quotes and continuation characters when splitting strings |
+| [autoFormatStrings](settings/python_analysis_autoFormatStrings.md) | Add an `f` prefix when inserting a placeholder in a string    |
+
+### AI Features
+
+| Setting                                                                              | Description                                                   |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [aiCodeActions](settings/python_analysis_aiCodeActions.md)                           | Enable AI-assisted Quick Fixes (requires GitHub Copilot Chat) |
+| [generateWithTypeAnnotation](settings/python_analysis_generateWithTypeAnnotation.md) | Include type annotations in generated code                    |
+| [autoTranslateDocstrings](settings/python_analysis_autoTranslateDocstrings.md)       | Translate hover docstrings via GitHub Copilot                 |
+| [supportRestructuredText](settings/python_analysis_supportRestructuredText.md)       | Render reStructuredText formatting in docstrings              |
+
+### Diagnostics Display
+
+| Setting                                                                            | Description                                                      |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [excludeLibraryDiagnostics](settings/python_analysis_excludeLibraryDiagnostics.md) | Suppress diagnostics for library files, keep them for user files |
+| [disableTaggedHints](settings/python_analysis_disableTaggedHints.md)               | Turn off grayed-out / strike-through hint diagnostics            |
+| [displayEnglishDiagnostics](settings/python_analysis_displayEnglishDiagnostics.md) | Always show diagnostics in English                               |
 
 ### Type Evaluation Settings
 
@@ -104,12 +135,15 @@ Each page explains one `python.analysis.*` setting: what it does, accepted value
 
 ### Advanced Settings
 
-| Setting                                                                        | Description                                            |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------ |
-| [useLibraryCodeForTypes](settings/python_analysis_useLibraryCodeForTypes.md)   | Infer types from library source when stubs are missing |
-| [useNearestConfiguration](settings/python_analysis_useNearestConfiguration.md) | Use nearest `pyrightconfig.json` for each file         |
-| [nodeArguments](settings/python_analysis_nodeArguments.md)                     | Extra Node.js arguments for the language server        |
-| [nodeExecutable](settings/python_analysis_nodeExecutable.md)                   | Custom Node.js executable path                         |
+| Setting                                                                            | Description                                            |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [useLibraryCodeForTypes](settings/python_analysis_useLibraryCodeForTypes.md)       | Infer types from library source when stubs are missing |
+| [useNearestConfiguration](settings/python_analysis_useNearestConfiguration.md)     | Use nearest `pyrightconfig.json` for each file         |
+| [nodeArguments](settings/python_analysis_nodeArguments.md)                         | Extra Node.js arguments for the language server        |
+| [nodeExecutable](settings/python_analysis_nodeExecutable.md)                       | Custom Node.js executable path                         |
+| [logLevel](settings/python_analysis_logLevel.md)                                   | Verbosity of the Pylance Output panel log              |
+| [pyrightVersion](settings/python_analysis_pyrightVersion.md)                       | Pin the Pyright version used for diagnostics           |
+| [supportAllPythonDocuments](settings/python_analysis_supportAllPythonDocuments.md) | Extend IntelliSense to non-file Python documents       |
 
 ---
 

@@ -1,6 +1,6 @@
 # Understanding `python.analysis.typeshedPaths` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It uses typeshed data for standard-library typing and for some fallback stub resolution.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It uses typeshed data for standard-library typing and for some fallback stub resolution.
 
 The `python.analysis.typeshedPaths` setting lets you point Pylance at a custom typeshed tree instead of relying only on the bundled copy.
 

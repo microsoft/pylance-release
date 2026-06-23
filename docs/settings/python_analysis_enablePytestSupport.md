@@ -1,6 +1,6 @@
 # Understanding `python.analysis.enablePytestSupport` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
 [pytest](https://pytest.org/) is a popular testing framework for Python, known for its simple syntax and powerful features like fixtures. Pylance offers enhanced support for pytest, providing IntelliSense features specifically designed to improve your testing workflow.
 

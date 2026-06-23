@@ -1,6 +1,6 @@
 # Understanding `python.analysis.packageIndexDepths` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It offers advanced IntelliSense features, including type checking, auto-completions, and code navigation, enhancing your Python development experience.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It offers advanced IntelliSense features, including type checking, auto-completions, and code navigation, enhancing your Python development experience.
 
 One of Pylance's configuration settings is `python.analysis.packageIndexDepths`, which allows you to control how Pylance indexes third-party packages for features such as auto-imports and code completion.
 

@@ -1,6 +1,6 @@
 # Understanding `python.analysis.importFormat` in Pylance
 
-[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language support extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and code actions that help keep imports consistent across a codebase.
+[Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker. It provides type checking, completions, navigation, and code actions that help keep imports consistent across a codebase.
 
 The `python.analysis.importFormat` setting controls how Pylance formats new import statements.
 
