@@ -1,5 +1,36 @@
 # Changelog
 
+## 2026.2.106 (25 June 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: [TSP] Pyrefly is being spammed in pytorch [pylance-release#8078](https://github.com/microsoft/pylance-release/issues/8078)
+-   Bug fix: Pylance using the wrong interpreter [pylance-release#7443](https://github.com/microsoft/pylance-release/issues/7443)
+-   Bug fix: Have an option to show all the properties of a object first rather defaulting to alphebetical order. [pylance-release#7376](https://github.com/microsoft/pylance-release/issues/7376)
+-   Bug fix: Inserting inlay return types resolves type aliases [pylance-release#7164](https://github.com/microsoft/pylance-release/issues/7164)
+-   Bug fix: Keys in inline typed dictionaries are shown as variables [pylance-release#7145](https://github.com/microsoft/pylance-release/issues/7145)
+-   Bug fix: Pylance does not set current working directory to workspace root when discovering sys.path [pylance-release#7109](https://github.com/microsoft/pylance-release/issues/7109)
+-   Enhancement: Wrong signature hint with unpacked parameterized typed dict as variadic keyword parameter [pylance-release#7047](https://github.com/microsoft/pylance-release/issues/7047)
+-   Bug fix: Feature Requests: Support for cross-reference syntax in `mkdocstring` [pylance-release#6611](https://github.com/microsoft/pylance-release/issues/6611)
+-   Bug fix: typing mode status bar item doesn't get updated as `pyrightconfig/pyproject` file get updated. [pylance-release#6500](https://github.com/microsoft/pylance-release/issues/6500)
+-   Bug fix: Code prompt docstring displays incorrectly [pylance-release#6419](https://github.com/microsoft/pylance-release/issues/6419)
+-   Bug fix: Missing docstring for descriptor alias [pylance-release#6392](https://github.com/microsoft/pylance-release/issues/6392)
+-   Bug fix: Python version from pyrightconfig.json is not shown to the user [pylance-release#6345](https://github.com/microsoft/pylance-release/issues/6345)
+-   Enhancement: Pyc files should make the reportMissingModuleSource error not show up [pylance-release#6226](https://github.com/microsoft/pylance-release/issues/6226)
+-   Bug fix: Pylance + VS Code - Inline Quick Suggestions swapping with each keypress [pylance-release#6203](https://github.com/microsoft/pylance-release/issues/6203)
+-   Bug fix: Go to def doesnt go to user-defined class [pylance-release#6086](https://github.com/microsoft/pylance-release/issues/6086)
+-   Bug fix: `reportShadowedImports` doesn't report diagnostics for files that are overriding a `stdlib` module [pylance-release#5979](https://github.com/microsoft/pylance-release/issues/5979)
+-   Bug fix: "Add...to extraPaths" doesn't work in multiroot workspace [pylance-release#5946](https://github.com/microsoft/pylance-release/issues/5946)
+-   Enhancement: Surface reportAttributeAccessIssue even when type checking mode set to off [pylance-release#5758](https://github.com/microsoft/pylance-release/issues/5758)
+-   Bug fix: Code action named "Extract method" even when not in a class context [pylance-release#5662](https://github.com/microsoft/pylance-release/issues/5662)
+-   Enhancement: Semantic Highlighting for Constants [pylance-release#5611](https://github.com/microsoft/pylance-release/issues/5611)
+-   Enhancement: `python.analysis.inlayHints.callArgumentNames`: Option to exclude argument names when the variable name matches [pylance-release#5392](https://github.com/microsoft/pylance-release/issues/5392)
+-   Enhancement: Rename key in TypedDict using "rename symbol" refactor should update all instances of that TypedDict [pylance-release#5386](https://github.com/microsoft/pylance-release/issues/5386)
+-   Bug fix: When renaming var in parens, rename prompt shows `(var_name)` instead of `var_name` [pylance-release#5372](https://github.com/microsoft/pylance-release/issues/5372)
+-   Bug fix: Providing **builtins**.pyi causes lots of "Could not resolve source for '**builtins**'" trace log output [pylance-release#5365](https://github.com/microsoft/pylance-release/issues/5365)
+-   Enhancement: Show function return value documentation on hover over the `->` annotation [pylance-release#5312](https://github.com/microsoft/pylance-release/issues/5312)
+-   Bug fix: Pylance inlay hints do not honor python version [pylance-release#5255](https://github.com/microsoft/pylance-release/issues/5255)
+
 ## 2026.2.105 (17 June 2026) PreRelease
 
 Notable changes:

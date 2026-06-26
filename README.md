@@ -123,6 +123,30 @@ Pylance provides users with the ability to customize their Python language suppo
           }
           ```
 
+- `python.analysis.addFoldersForPythonProjects`
+    - When enabled, Pylance will add a virtual workspace folder for each project declared via `python-envs.pythonProjects`. This ensures that each sub-project uses its own interpreter for type checking.
+    - Default value: `false`
+    - Available values:
+        - `true`
+        - `false` (default)
+    - Note:
+        - Each sub-project may also need its own `extraPaths` configuration so that cross-project imports resolve correctly. To have Pylance configure these automatically, enable `python.analysis.addExtraPathsForPythonProjects`.
+
+- `python.analysis.addExtraPathsForPythonProjects`
+    - **Experimental.** When enabled, Pylance automatically adds the source root of every project declared via `python-envs.pythonProjects` to `extraPaths`, so cross-project imports between sub-projects of a monorepo resolve without configuring `extraPaths` manually.
+    - The source root is detected per project: a `src` directory if present, otherwise the project's parent directory when the project folder is itself a package (contains `__init__.py`), otherwise the project folder.
+    - Editable/local cross-package references declared in each project's `pyproject.toml` are followed transitively, so a registered project that imports sibling packages as editable installs picks up their source roots too. This is what makes monorepos such as dagster resolve without registering every package individually. The following dependency-manager formats are recognized:
+        - **uv** — `[tool.uv.sources]` entries with a local `path`.
+        - **Poetry** — `path`/`develop` entries in `[tool.poetry.dependencies]`, `[tool.poetry.dev-dependencies]`, and `[tool.poetry.group.<group>.dependencies]`.
+        - **PDM / Rye / PEP 508 / PEP 735** — `file:` direct references (including `${PROJECT_ROOT}` and `{root:uri}` root tokens, and `-e`/`--editable` entries) in `[project].dependencies`, `[project.optional-dependencies]`, `[dependency-groups]`, `[tool.pdm.dev-dependencies]`, and `[tool.rye.dev-dependencies]`.
+    - Named, VCS, and remote-URL requirements are ignored, and references that point at built archives (wheels/sdists) are skipped.
+    - Any `extraPaths` you configure are preserved; the detected source roots are appended.
+    - Default value: `false`
+    - Available values:
+        - `true`
+        - `false` (default)
+
+
 - [`python.analysis.ignore`](docs/settings/python_analysis_ignore.md)
     - Paths of directories or files whose diagnostic output (errors and warnings) should be suppressed even if they are an included file or within the transitive closure of an included file. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
