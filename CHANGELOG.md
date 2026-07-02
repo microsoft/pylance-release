@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.2.107 (1 July 2026) PreRelease
+
+Notable changes:
+
+-   Enhancement: Prioritize completions for class types from union types in `match`/`case` [pylance-release#5141](https://github.com/microsoft/pylance-release/issues/5141)
+-   Bug fix: Refactoring is not possible if marked block starts with a comment [pylance-release#5125](https://github.com/microsoft/pylance-release/issues/5125)
+-   Bug fix: "Extract method" produces syntax error with multiline except clause [pylance-release#2146](https://github.com/microsoft/pylance-release/issues/2146)
+
 ## 2026.2.106 (25 June 2026) PreRelease
 
 Notable changes:
