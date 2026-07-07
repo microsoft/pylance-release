@@ -2,7 +2,7 @@
 
 Pylance ships bundled type stubs for some popular third-party packages. These stubs improve IntelliSense and type checking when a package does not include its own type information.
 
-Bundled stubs are a fallback. If the bundled stub for a package is incomplete or does not match the version of the package you use, you can override it with workspace-local stubs through [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md).
+Bundled stubs are a fallback. If the bundled stub for a package is incomplete or does not match the version of the package you use, you can override it in two ways: install the package's own type stubs (for example a PEP 561 `-stubs` package) into your environment, or add workspace-local stubs through [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md).
 
 ---
 
@@ -17,7 +17,7 @@ Pylance looks for imports in several places and stops at the first usable match.
 5. bundled third-party stubs
 6. typeshed third-party fallback stubs
 
-This means custom stubs in `stubPath` have higher priority than bundled stubs. Installed packages that provide type information through a `py.typed` marker also take priority over bundled stubs.
+This means custom stubs in `stubPath` have higher priority than bundled stubs. Installed stub packages also take priority over bundled stubs, including PEP 561 `-stubs` packages (with or without a `py.typed` marker) and partial stub packages. Bundled stubs apply only when the installed package ships no stub (`.pyi`) files of its own.
 
 For the complete import-resolution order, see [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md#how-pylance-resolves-imports). To inspect the order in your workspace, enable trace logging and see [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
 
