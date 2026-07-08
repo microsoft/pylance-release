@@ -113,6 +113,7 @@ A VS Code [multi-root workspace](https://code.visualstudio.com/docs/editor/multi
 - Paths are searched **after** the workspace root, **before** third-party packages
 - Relative paths resolve from the workspace root (or config file location for [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration))
 - Each path is searched in the order listed
+- Entries may contain glob patterns (e.g. `packages/*/src`), which expand to matching directories in a deterministic order — useful for large generated trees. See [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md)
 
 ### Editable Installs
 
@@ -342,19 +343,19 @@ Each package gets its own analysis scope without needing a `.code-workspace` fil
 
 When you write `import mypackage`, Pylance searches in this order (see also [Pyright import resolution](https://microsoft.github.io/pyright/#/import-resolution)):
 
-| Priority | Source                              | Configured By                                                                                                             |
-| -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 1        | Custom stub path                    | [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md) or `stubPath` in config                             |
-| 2        | Execution environment root          | Workspace root or `executionEnvironments[].root`                                                                          |
-| 3        | Extra paths (in order)              | [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) or `executionEnvironments[].extraPaths`         |
-| 4        | Auto-detected `src/` directory      | [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (only when no execution environments) |
-| 5        | Installed stub packages (`*-stubs`) | Python environment (`site-packages`)                                                                                      |
-| 6        | Inline stubs (`.pyi` in packages)   | Python environment                                                                                                        |
-| 7        | `py.typed` packages                 | Python environment                                                                                                        |
-| 8        | Library code (`.py` files)          | Enabled by [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)              |
-| 9        | Typeshed stdlib stubs               | Bundled or [`typeshedPath`](../settings/python_analysis_typeshedPaths.md)                                                 |
-| 10       | Typeshed third-party stubs          | Bundled or [`typeshedPath`](../settings/python_analysis_typeshedPaths.md)                                                 |
-| 11       | Fallback (same dir + parent dirs)   | Automatic                                                                                                                 |
+| Priority | Source                              | Configured By                                                                                                                                                                       |
+| -------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1        | Custom stub path                    | [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md) or `stubPath` in config                                                                                       |
+| 2        | Execution environment root          | Workspace root or `executionEnvironments[].root`                                                                                                                                    |
+| 3        | Extra paths (in order)              | [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) or `executionEnvironments[].extraPaths` (entries may use [glob patterns](extra-paths-glob-resolution.md)) |
+| 4        | Auto-detected `src/` directory      | [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (only when no execution environments)                                                           |
+| 5        | Installed stub packages (`*-stubs`) | Python environment (`site-packages`)                                                                                                                                                |
+| 6        | Inline stubs (`.pyi` in packages)   | Python environment                                                                                                                                                                  |
+| 7        | `py.typed` packages                 | Python environment                                                                                                                                                                  |
+| 8        | Library code (`.py` files)          | Enabled by [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)                                                                        |
+| 9        | Typeshed stdlib stubs               | Bundled or [`typeshedPath`](../settings/python_analysis_typeshedPaths.md)                                                                                                           |
+| 10       | Typeshed third-party stubs          | Bundled or [`typeshedPath`](../settings/python_analysis_typeshedPaths.md)                                                                                                           |
+| 11       | Fallback (same dir + parent dirs)   | Automatic                                                                                                                                                                           |
 
 For **relative imports** (`from . import something`), resolution is always relative to the importing file's location.
 
@@ -407,7 +408,7 @@ monorepo/
 - All packages share one Python interpreter
 - Cross-package imports may suggest imports that don't work at runtime
 - No per-package Python version or diagnostic rule overrides
-- Must manually maintain the [`extraPaths`](../settings/python_analysis_extraPaths.md) list
+- Must manually maintain the [`extraPaths`](../settings/python_analysis_extraPaths.md) list — though a [glob pattern](extra-paths-glob-resolution.md) (e.g. `packages/*/src`) can cover many package source roots with a single entry
 
 **Best for**: Small monorepos where all packages share one Python version and the same set of dependencies.
 
@@ -1421,6 +1422,7 @@ See [How to Run Pyright Type Checking in CI/CD](ci-type-checking.md) for complet
 
 ## Related Guides
 
+- [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) — cover many package source roots with a single wildcard entry
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) — all import diagnostics, runtime vs. static gaps, and resolution steps
 - [How to Tune Pylance Performance](performance-tuning.md) — language server mode, indexing, heap limits, and presets
 - [How to Use Editable Installs with Pylance](editable-installs.md) — build backend compatibility, `.pth` file types, and verification

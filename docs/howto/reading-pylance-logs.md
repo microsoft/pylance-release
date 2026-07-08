@@ -47,6 +47,10 @@ Pylance tries these locations in order, stopping at the first match:
 
 ---
 
+> **Glob extra paths**: If an `extraPaths` entry uses a [glob pattern](extra-paths-glob-resolution.md), each directory it expanded to appears as its own fully resolved `Looking in extraPath '...'` line, in the deterministic order Pylance computed. Reading these lines is the easiest way to confirm exactly which directories a glob matched (a glob that matched nothing simply produces no lines).
+
+---
+
 ## Reading the Log Output
 
 ### Key Log Patterns
@@ -127,6 +131,7 @@ Search the Output panel (Ctrl+F) for the module name. The log lines include the 
 ## Related Guides
 
 - [How to Override Bundled Third-Party Stubs in Pylance](bundled-stubs.md) — use workspace-local stubs when bundled third-party stubs do not match your package version
+- [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) — confirm which directories a glob `extraPaths` entry expanded to
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) — common import errors and their fixes
 - [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) — settings precedence and config file interactions
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — cross-package import resolution in monorepos

@@ -16,6 +16,7 @@ Step-by-step guides for common Pylance workflows and troubleshooting.
 | [Copilot + Pylance Workflow](howto/copilot-pylance-workflow.md)                     | Use Pylance MCP tools with Copilot to diagnose and fix Python issues                                         |
 | [Dependency Management](howto/dependency-management.md)                             | Reconcile `requirements.txt`, `pyproject.toml`, lockfiles, and PEP 723 with what Pylance sees                |
 | [Editable Installs](howto/editable-installs.md)                                     | Make `pip install -e` work with Pylance                                                                      |
+| [Extra Paths Glob Resolution](howto/extra-paths-glob-resolution.md)                 | Use glob patterns in `extraPaths`, with deterministic ordering and performance notes                        |
 | [Generated Code](howto/generated-code.md)                                           | Handle generated or dynamic code that Pylance cannot analyze statically                                      |
 | [Gradual Strict Adoption](howto/gradual-strict-adoption.md)                         | Move from `off` to `strict` type checking incrementally                                                      |
 | [Monorepo Setup](howto/monorepo-setup.md)                                           | Configure Pylance for monorepos, multi-root workspaces, and execution environments                           |

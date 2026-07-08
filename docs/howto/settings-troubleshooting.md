@@ -295,6 +295,7 @@ Similarly, `pythonPlatform` (default: auto-detected from OS) can be set to `"Lin
 ## Related Guides
 
 - [How to Tune Pylance Performance](performance-tuning.md) — language server mode, indexing, and heap settings
+- [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) — wildcard `extraPaths` entries with deterministic ordering
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) — import resolution order and diagnostic fixes
 - [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) — trace logging for diagnosing setting effects
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — multi-root and execution environment setup

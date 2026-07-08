@@ -71,7 +71,23 @@ Example:
 }
 ```
 
-## Validate each entry before debugging imports
+### Glob Patterns
+
+Entries may contain glob wildcards, which are expanded to the matching directories:
+
+- `*` — any characters within a single path segment (`packages/*/src`)
+- `**` — any number of path segments (`external/**/site-packages`)
+- `?` — a single character
+
+Matches are added in a deterministic, sorted order, so the expanded list is identical on every machine. Only directories are matched; a glob never adds a file. For the full behavior, precedence rules, worked examples, and performance guidance, see [How to Use Glob Patterns in Extra Paths with Pylance](../howto/extra-paths-glob-resolution.md).
+
+Example:
+
+```json
+{
+    "python.analysis.extraPaths": ["./packages/*/src", "external/rules_python~~pip~pip_310_*/site-packages"]
+}
+```
 
 For `extraPaths`, path validity means more than "the directory exists".
 
@@ -180,10 +196,12 @@ It is supported and it can be used in multi root workspace in vscode so one work
 
 ### Can I use wildcards or globs like `./src/**/foo/*`?
 
-No wildcards or globs are not supported. For two reasons:
+Yes. Glob patterns (`*`, `**`, `?`) in `extraPaths` are expanded to the matching directories. This was historically unsupported for two reasons — lookup cost and non-deterministic order — and both are now addressed:
 
-- Extra paths make every lookup of every import take longer. Wildcard imports would have a high impact on this lookup that are not easy for the user to understand why they're taking so long.
-- Wildcards make the lookup order non-deterministic. Lookup needs to be deterministic for finding a python file otherwise what works on one machine may not match another.
+- **Deterministic order**: matched directories are sorted with a case-sensitive, platform-independent comparison, and precedence is fixed (an explicit entry beats a glob-discovered duplicate; an earlier glob beats a later one). The expanded list is identical on every machine.
+- **Performance**: expansion happens once when configuration loads, not on every import. The lookup cost still grows with how many directories a glob matches, so keep globs specific.
+
+For the full behavior, worked examples, and performance guidance, see [How to Use Glob Patterns in Extra Paths with Pylance](../howto/extra-paths-glob-resolution.md).
 
 ### How does this differ from modifying `sys.path`?
 
@@ -201,6 +219,7 @@ No wildcards or globs are not supported. For two reasons:
 
 ## See Also
 
+- [How to Use Glob Patterns in Extra Paths with Pylance](../howto/extra-paths-glob-resolution.md) — wildcard syntax, deterministic ordering, and performance
 - [How to Fix Unresolved Import Errors](../howto/unresolved-imports.md) — troubleshooting import resolution
 - [How to Set Up a Python Monorepo](../howto/monorepo-setup.md) — using `extraPaths` in multi-package projects
 - [How to Work with Editable Installs](../howto/editable-installs.md) — `extraPaths` as a fallback for editable installs
