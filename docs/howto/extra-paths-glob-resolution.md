@@ -278,6 +278,7 @@ If you use [Pylance's MCP tools with Copilot](copilot-pylance-workflow.md), the 
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Glob matches no directory              | Contributes nothing; not an error. Check the Trace log to confirm what expanded.                                                                  |
 | Glob matches a file                    | Ignored — only directories become search roots.                                                                                                   |
+| Empty or whitespace-only entry         | Ignored (an empty entry would otherwise resolve to the project root and silently pollute the search path).                                        |
 | Duplicate via a literal entry          | The literal wins and keeps its own position; the glob-discovered copy is dropped.                                                                 |
 | Duplicate across two globs             | The earlier glob wins; the later glob drops the overlap.                                                                                          |
 | Two entries differ only in letter case | Treated as **distinct** roots (case-sensitive), because case affects the resolved module name. Both survive even on case-insensitive filesystems. |
