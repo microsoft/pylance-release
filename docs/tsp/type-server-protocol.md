@@ -1,8 +1,8 @@
 # Type Server Protocol
 
-The Type Server Protocol (TSP) is a JSON-RPC protocol for asking a type server for Python analysis data. A type server maintains the type-analysis state for a workspace and answers requests for snapshots, import resolution, diagnostics, type information, symbols, overloads, and related metadata.
+The Type Server Protocol (TSP) is a JSON-RPC protocol for asking a type server for Python analysis data. A type server maintains the type-analysis state for a workspace and answers requests for the protocol version, snapshots, Python search paths, import resolution, and type queries (computed, declared, and expected types).
 
-The protocol uses Language Server Protocol (LSP) data shapes where they are useful, such as `URI`, `Position`, `Range`, and `Diagnostic`. TSP methods use the `typeServer/` prefix.
+The protocol uses Language Server Protocol (LSP) data shapes and conventions where they are useful, such as `Position` and `Range`, and it represents URIs as strings the same way LSP does. TSP methods use the `typeServer/` prefix.
 
 The protocol artifacts in this folder are the authoritative definitions:
 
@@ -38,7 +38,7 @@ A typical session follows this order:
 1. The client and server initialize any shared workspace state, commonly through the LSP `initialize` and `initialized` messages.
 1. The client calls `typeServer/getSupportedProtocolVersion` and verifies that the returned semver string is compatible with the protocol version it expects.
 1. The client calls `typeServer/getSnapshot` to obtain the first snapshot identifier.
-1. The client sends type, import, symbol, diagnostic, or metadata requests that include the current snapshot when required by the request shape.
+1. The client sends type-query, import-resolution, or search-path requests that include the current snapshot when required by the request shape.
 1. The server sends `typeServer/snapshotChanged` when prior type results are no longer valid.
 
 ## Multi-Connection Mode
@@ -139,7 +139,7 @@ The main connection owns all state-changing traffic. The following must remain m
 
 - LSP initialization and lifecycle messages.
 - Workspace, configuration, file-watcher, and document synchronization notifications.
-- Server-to-client snapshot and diagnostics notifications.
+- Server-to-client snapshot notifications.
 - The `typeServer/connection` control request.
 
 Extra connections are TSP-only and read-only. They may be used for requests that do not mutate server state and whose results are valid for the snapshot supplied by the client.
@@ -185,13 +185,28 @@ If a type server stores source locations in another encoding, it must convert lo
 
 ## Nodes, Declarations, And Handles
 
-Many requests identify source constructs by node, declaration, type handle, or symbol handle. A node is a URI plus a source range. A declaration describes where and how a symbol is defined. Handles identify protocol objects that the type server can resolve within the current snapshot.
+The type-query requests (`typeServer/getComputedType`, `typeServer/getDeclaredType`, `typeServer/getExpectedType`) identify a source construct with an `arg` that is either a node or a declaration. A node is a URI plus a source range. A declaration describes where and how a symbol is defined and is either a regular declaration, which is backed by a source AST node, or a synthesized declaration, which is created by the type checker and has no source node.
 
 `InvalidHandle` is `-1` and represents an invalid or unavailable handle. Clients and servers should treat it as a sentinel value, not as a valid object identifier.
 
 ## Type Results
 
 Type results are JSON-serializable tagged objects. Each type includes a discriminator that tells the client how to interpret the rest of the object. The protocol supports built-in types, declared types, functions, classes, unions, modules, type variables, overload sets, synthesized types, and type references.
+
+Every type object carries a numeric `kind` discriminator, a numeric `id`, and a bitfield of `flags`:
+
+| `kind` | Type            | Description                                                          |
+| ------ | --------------- | ------------------------------------------------------------------- |
+| `0`    | `BuiltIn`       | `unknown`, `any`, `unbound`, `ellipsis`, `never`, and similar       |
+| `1`    | `Declared`      | Base for source-declared types (rarely used directly)               |
+| `2`    | `Function`      | Functions and methods from `def` statements                         |
+| `3`    | `Class`         | Classes and their instances                                         |
+| `4`    | `Union`         | Union types (`int \| str \| None`)                                  |
+| `5`    | `Module`        | Module objects (`import os` produces a `Module` type for `os`)      |
+| `6`    | `TypeVar`       | Type variables (`T`, `P`, `Ts`)                                     |
+| `7`    | `Overloaded`    | Functions with multiple `@overload` signatures                      |
+| `8`    | `Synthesized`   | Types synthesized by the type checker                               |
+| `9`    | `TypeReference` | Reference to another type by `id`, used for deduplication and cycles |
 
 Type objects are snapshot-bound, and type IDs are response-local:
 
@@ -202,20 +217,29 @@ Type objects are snapshot-bound, and type IDs are response-local:
 
 ## Protocol Surface
 
-The exact parameters and result shapes are defined in the protocol artifacts. At a high level, TSP includes these categories of messages:
+The current protocol is intentionally small. The exact parameters and result shapes are defined in the protocol artifacts; the table below lists every TSP message with its direction and payload shape.
 
-| Category                     | Messages                                                                                                                                                                       |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Compatibility and state      | `typeServer/getSupportedProtocolVersion`, `typeServer/getSnapshot`, `typeServer/snapshotChanged`                                                                               |
-| Connection control           | `typeServer/connection`                                                                                                                                                        |
-| Diagnostics                  | `typeServer/getDiagnostics`, `typeServer/getDiagnosticsVersion`, `typeServer/diagnosticsChanged`                                                                               |
-| Import and search paths      | `typeServer/getPythonSearchPaths`, `typeServer/resolveImport`, `typeServer/resolveImportDeclaration`                                                                           |
-| Type queries                 | `typeServer/getType`, `typeServer/getComputedType`, `typeServer/getDeclaredType`, `typeServer/getExpectedType`, `typeServer/getBuiltinType`, `typeServer/getTypeOfDeclaration` |
-| Type structure               | `typeServer/getTypeArgs`, `typeServer/getTypeAliasInfo`, `typeServer/combineTypes`, `typeServer/createInstanceType`, `typeServer/fetchTypeProperties`                          |
-| Symbols and callable details | `typeServer/getSymbolsForType`, `typeServer/getSymbolsForNode`, `typeServer/getOverloads`, `typeServer/getMatchingOverloads`, `typeServer/getMetaclass`                        |
-| Display metadata             | `typeServer/getRepr`, `typeServer/getDocString`                                                                                                                                |
+| Message                                  | Direction       | Params                                       | Result                  |
+| ---------------------------------------- | --------------- | -------------------------------------------- | ----------------------- |
+| `typeServer/getSupportedProtocolVersion` | client → server | none                                         | `string` (semver)       |
+| `typeServer/getSnapshot`                 | client → server | none                                         | `number`                |
+| `typeServer/snapshotChanged`             | server → client | `{ old: number, new: number }`               | notification            |
+| `typeServer/connection`                  | client → server | `{ type: "open" \| "close", kind, args? }`   | `{ success, message? }` |
+| `typeServer/getPythonSearchPaths`        | client → server | `{ fromUri, snapshot }`                       | `string[] \| undefined` |
+| `typeServer/resolveImport`               | client → server | `{ sourceUri, moduleDescriptor, snapshot }`   | `string \| undefined`   |
+| `typeServer/getComputedType`             | client → server | `{ arg: Declaration \| Node, snapshot }`      | `Type \| undefined`     |
+| `typeServer/getDeclaredType`             | client → server | `{ arg: Declaration \| Node, snapshot }`      | `Type \| undefined`     |
+| `typeServer/getExpectedType`             | client → server | `{ arg: Declaration \| Node, snapshot }`      | `Type \| undefined`     |
 
-A type server should implement the messages required by the client it integrates with and return `null` or `undefined` only where the protocol's result type allows it.
+A type server should implement the messages required by the client it integrates with and return `undefined` only where the protocol's result type allows it.
+
+### Type Queries
+
+The three type-query requests differ by which type they report for the same node or declaration:
+
+- `typeServer/getComputedType` returns the type inferred from code flow. After narrowing `a` to `int`, the computed type of `b` in `b = a + 1` is `int`.
+- `typeServer/getDeclaredType` returns the type explicitly written in the source. For `def foo(a: int | str)`, the declared type of `a` is `int | str`.
+- `typeServer/getExpectedType` returns the type the surrounding context expects. For the call `foo(4)`, the expected type of the argument is `int | str`.
 
 ## Error Handling
 
@@ -240,6 +264,6 @@ A compatible type server should verify these behaviors:
 1. Requests with stale snapshots fail with a retryable cancellation error.
 1. Position and range conversions use LSP zero-based UTF-16 conventions.
 1. Import-resolution requests return document URIs or no result according to the protocol result type.
-1. Type, symbol, overload, diagnostic, and display requests return well-formed objects for the snapshot supplied by the client.
+1. Type queries (computed, declared, and expected) return well-formed `Type` objects, or `undefined`, for the snapshot supplied by the client.
 1. Multi-connection support is advertised only when the server can serve the negotiated extra transport.
 1. Extra connections accept every TSP request allowed for the negotiated TSP version and reject LSP traffic, state-changing notifications, `typeServer/connection`, and TSP requests not allowed for that version.
