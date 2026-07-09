@@ -6,6 +6,8 @@ This document specifies, in a language-server-agnostic way, exactly **which** do
 
 The same order governs hover, signature help, and any documentation surfaced with completions, so a symbol reads consistently wherever its docstring appears.
 
+Hover and completions resolve to a single docstring. Signature help is the exception: it enumerates **every** overload as its own signature entry, each paired with its own docstring. There, the borrowing steps in the rules below (falling back from an undocumented candidate to the implementation, a sibling overload, or a class docstring) apply only to the **active** signature — the entry selected by the call's arguments (see [Matched overload](#terminology)). Every other enumerated overload shows only its own docstring, or nothing. This keeps a documented overload from lending its text — or its parameter documentation — to an unrelated sibling entry, while still letting an undocumented matched overload fall back exactly as a single hover would.
+
 ---
 
 ## Table of Contents
@@ -86,6 +88,8 @@ The module-level docstring (the leading string literal). Rule F applies if a `.p
 1. Matched overload (call hover only)
 2. Implementation docstring
 3. Other overloads, in declaration order
+
+When signature help enumerates these overloads (one entry per overload), the fallback to the implementation or another overload applies only to the **active** (matched) entry: an undocumented matched overload still falls back to the implementation and then the other overloads, but a non-matched overload entry shows only its own docstring, or nothing. This prevents one overload's docstring from being attributed to a different overload's signature.
 
 ### Classes (symbol hover on the class name, no call)
 
