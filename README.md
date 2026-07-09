@@ -34,6 +34,7 @@ Pylance provides some awesome features for Python 3, including:
 * Native multi-root workspace support
 * Jupyter Notebooks compatibility
 * Semantic highlighting
+* Toggle Block Comment command for Python (`Pylance: Toggle Block Comment`)
 * Copilot chat skills for fact-grounded Python help, Pylance docs, and refactoring workflows
 
 See the [changelog](CHANGELOG.md) for the latest release.
@@ -123,14 +124,15 @@ Pylance provides users with the ability to customize their Python language suppo
           }
           ```
 
-- `python.analysis.addFoldersForPythonProjects`
-    - When enabled, Pylance will add a virtual workspace folder for each project declared via `python-envs.pythonProjects`. This ensures that each sub-project uses its own interpreter for type checking.
+- `python.analysis.usePerProjectEnvironments`
+    - When enabled, Pylance will use a separate Python environment (interpreter) for each project declared via `python-envs.pythonProjects`. This ensures that each sub-project in a single-root workspace is type checked against its own interpreter.
     - Default value: `false`
     - Available values:
         - `true`
         - `false` (default)
     - Note:
         - Each sub-project may also need its own `extraPaths` configuration so that cross-project imports resolve correctly. To have Pylance configure these automatically, enable `python.analysis.addExtraPathsForPythonProjects`.
+        - This setting replaces the deprecated `python.analysis.addFoldersForPythonProjects`, which continues to work for backwards compatibility.
 
 - `python.analysis.addExtraPathsForPythonProjects`
     - **Experimental.** When enabled, Pylance automatically adds the source root of every project declared via `python-envs.pythonProjects` to `extraPaths`, so cross-project imports between sub-projects of a monorepo resolve without configuring `extraPaths` manually.
@@ -557,6 +559,12 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.enableTroubleshootMissingImports`
     - Enable/disable the Quick Fix for troubleshooting missing imports. This Quick Fix requires the Python Environments extension to be installed and enabled.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
+- `python.analysis.gotoOverrideCodeLens` (**Experimental**)
+    - Enable/disable a CodeLens on methods that override a base-class member. Clicking it peeks the overridden declaration.
     - Accepted values:
         - `true`
         - `false` (default)
