@@ -61,7 +61,7 @@ Because `extraPaths` is order-sensitive (the first matching root wins during imp
 
 Two rules govern the result:
 
-1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The sort is case-sensitive and platform-independent, so Windows, macOS, and Linux produce identical order.
+1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The comparison is case-sensitive and **ordinal** (it compares Unicode code points and normalizes to NFC), so it never depends on your locale, language, or operating system — Windows, macOS, and Linux produce an identical order.
 2. **Precedence on duplicates.** When the same directory would appear more than once, the winner is chosen by this priority:
     - **An explicit (literal) entry always wins** and keeps _its own_ position — even if a glob earlier in the list also matched that directory.
     - **Among globs, the earlier glob wins.**
@@ -236,6 +236,7 @@ Because Pylance is the language server you interact with, glob expansion surface
 - **Restart after configuration changes.** Expansion runs when configuration loads. After editing `extraPaths` (or adding/removing directories a glob covers), run **Python: Restart Language Server** to force re-expansion.
 - **The config-vs-settings rule still applies.** If a `pyrightconfig.json` / `pyproject.toml` exists, its `extraPaths` takes precedence and the VS Code [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) setting is ignored (Pylance shows the usual _"python.analysis.extraPaths cannot be set when a pyrightconfig.json or pyproject.toml is being used"_ warning). Put your globs where your other `extraPaths` live.
 - **Variables expand first.** `${workspaceFolder}` and the other supported path variables are substituted before the glob is matched, so `"${workspaceFolder:shared}/packages/*/src"` works as expected.
+- **Very broad globs are flagged.** If expanding a single glob has to walk an unusually large directory tree (more than ~10,000 directories), Pylance writes a one-time warning to **Output → Pylance** suggesting you narrow the pattern. Expansion still completes; treat the warning as a prompt to scope the glob.
 
 ---
 
@@ -257,6 +258,8 @@ Every directory a glob expands to becomes a real import search root **and** a fi
 - **Combine with performance presets.** For very large repositories, pair glob extra paths with the guidance in [How to Tune Pylance Performance](performance-tuning.md) and the monorepo presets in [Monorepo Setup — Performance Tuning](monorepo-setup.md#performance-tuning-for-monorepos) (`languageServerMode`, `diagnosticMode`, indexing controls).
 
 > For complete performance guidance (language server mode, indexing, heap limits, presets), see [How to Tune Pylance Performance](performance-tuning.md). This section covers the extra-paths-specific cost.
+
+> **Pylance warns when a glob walks a very large tree.** If expanding a single glob scans more than ~10,000 directories, a one-time warning appears in **Output → Pylance**. It does not stop expansion, but it is a strong signal to narrow the pattern (anchor it to a fixed prefix and avoid a bare `**` at a large root) or to move it into an execution environment.
 
 ---
 
