@@ -61,11 +61,24 @@ Because `extraPaths` is order-sensitive (the first matching root wins during imp
 
 Two rules govern the result:
 
-1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The comparison is case-sensitive and **ordinal** (it compares Unicode code points and normalizes to NFC), so it never depends on your locale, language, or operating system — Windows, macOS, and Linux produce an identical order.
+1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The comparison is **ordinal**: paths are compared one Unicode code point at a time (after normalizing to NFC), never with a language-aware collation. Two consequences are worth calling out:
+    - **"Case-sensitive" means no case-folding.** Uppercase `A`–`Z` (U+0041–U+005A) all sort before lowercase `a`–`z` (U+0061–U+007A), so `Auth` comes before `api`. Names that differ only in case are kept as separate directories, because case can change the module name they map to.
+    - **No linguistic ordering is applied.** Because it compares raw code points, there is no locale, dictionary, phonetic, "reading", or "stroke" ordering. For non-ASCII names (accented Latin, CJK, emoji, …) the order follows Unicode code-point value — fully deterministic, but not "alphabetical" in any human-language sense. The only guarantee is that the order is identical on every machine, language, and OS.
 2. **Precedence on duplicates.** When the same directory would appear more than once, the winner is chosen by this priority:
     - **An explicit (literal) entry always wins** and keeps _its own_ position — even if a glob earlier in the list also matched that directory.
     - **Among globs, the earlier glob wins.**
     - A duplicate contributed by the loser is dropped. Two identical literal entries keep the first occurrence.
+
+For example, a glob `packages/*` over a tree containing `Core`, `api`, `auth`, and `Zeta` expands in this order:
+
+```text
+packages/Core
+packages/Zeta
+packages/api
+packages/auth
+```
+
+`Core` and `Zeta` come first because `C` (U+0043) and `Z` (U+005A) are below `a` (U+0061) — an uppercase initial always sorts ahead of a lowercase one. This is the whole of the "case-sensitive" rule: it is code-point order, not a locale's alphabetization.
 
 ### Worked examples
 
