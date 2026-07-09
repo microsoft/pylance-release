@@ -10,6 +10,7 @@ Pylance runs as a language server inside VS Code and can consume significant CPU
 - [Diagnostic Mode](#diagnostic-mode)
 - [Indexing Controls](#indexing-controls)
 - [Exclude Patterns](#exclude-patterns)
+- [Extra Path Cost](#extra-path-cost)
 - [Node.js Heap Limit](#nodejs-heap-limit)
 - [Per-Folder Memory in Multi-Root Workspaces](#per-folder-memory-in-multi-root-workspaces)
 - [Performance Presets](#performance-presets)
@@ -103,6 +104,21 @@ In multi-root workspaces, you can also **exclude entire workspace folders** you'
 > **Note**: Virtual environments (`.venv`, `venv`, etc.) are auto-excluded by default. You don't need to add them to `exclude` manually.
 
 > **Note**: If [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` exists, the VS Code `exclude` setting is **ignored** — set `exclude` in the config file instead. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
+
+---
+
+## Extra Path Cost
+
+Every directory in [`extraPaths`](../settings/python_analysis_extraPaths.md) becomes an import **search root** and a **file-watch root**. Each unresolved import is probed against every extra path in order, and each root is watched for changes, so a large `extraPaths` list adds both lookup time and memory.
+
+This matters most when an entry uses a [glob pattern](extra-paths-glob-resolution.md): a broad glob can expand to hundreds of directories. Keep the cost down by:
+
+- **Scoping globs narrowly**: anchor to a fixed prefix (`external/rules_python~~pip~pip_310_*/site-packages`) instead of a greedy `**/site-packages`.
+- **Using execution environments**: put per-subtree paths in [`executionEnvironments`](monorepo-setup.md#execution-environments) so each file only carries the roots relevant to its subtree.
+- **Limiting symbol-search scope**: [`includeExtraPathSymbolsInSymbolSearch`](../settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md) makes workspace symbol search scan expanded extra-path directories too; leave it off unless you need it.
+- **Reducing watching**: if a generated dependency tree doesn't change during a session, exclude it from file watching (e.g. `files.watcherExclude`) — imports still resolve, you just stop watching those roots.
+
+Glob expansion itself happens once when configuration loads, not per import. See [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) for the full behavior and more mitigations.
 
 ---
 
@@ -245,6 +261,7 @@ Look for these signs in the **Output → Pylance** panel or VS Code notification
 
 ## Related Guides
 
+- [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) — deterministic wildcard expansion and its cost
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) — import resolution and common missing-import fixes
 - [How to Troubleshoot Pylance Settings](settings-troubleshooting.md) — config file precedence and setting interactions
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md) — multi-root workspaces and execution environments

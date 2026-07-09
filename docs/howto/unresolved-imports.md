@@ -437,6 +437,7 @@ def process(obj: HeavyClass) -> None:  # Pylance resolves this
 
 ## Related Guides
 
+- [How to Use Glob Patterns in Extra Paths with Pylance](extra-paths-glob-resolution.md) — wildcard `extraPaths` entries with deterministic ordering
 - [How to Override Bundled Third-Party Stubs in Pylance](bundled-stubs.md) — override bundled package stubs with workspace-local custom stubs
 - [How to Use Editable Installs with Pylance](editable-installs.md) — build backend compatibility and `.pth` file troubleshooting
 - [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) — trace logging, search order, and log interpretation
