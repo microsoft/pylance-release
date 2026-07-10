@@ -1,5 +1,41 @@
 # Changelog
 
+## 2026.2.108 (8 July 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: No error squiggle under "str" [pylance-release#8104](https://github.com/microsoft/pylance-release/issues/8104)
+-   Bug fix: [TSP] Pyrefly: completions on an Enum class omit the declared members and Enum API (click ParameterSource) [pylance-release#8100](https://github.com/microsoft/pylance-release/issues/8100)
+-   Bug fix: [TSP] Pyrefly: hover on annotated @property drops Optional (| None) from the return type (flask Request) [pylance-release#8097](https://github.com/microsoft/pylance-release/issues/8097)
+-   Bug fix: [TSP] Pyrefly: hover on url_for shows wrong parameter types (bool for str, \*\*kwargs as Module("typing")) (flask) [pylance-release#8094](https://github.com/microsoft/pylance-release/issues/8094)
+-   Bug fix: [TSP] Pyrefly: member completions on self omit 84 inherited members (flask Flask) [pylance-release#8093](https://github.com/microsoft/pylance-release/issues/8093)
+-   Bug fix: `python.analysis.addFoldersForPythonProjects` should be renamed to instead reflect the intent of the customer [pylance-release#8085](https://github.com/microsoft/pylance-release/issues/8085)
+-   Bug fix: Suggestions no longer support creating a docstring [pylance-release#8072](https://github.com/microsoft/pylance-release/issues/8072)
+-   Bug fix: Provide type information for values for a TypedDict in autocomplete [pylance-release#7901](https://github.com/microsoft/pylance-release/issues/7901)
+-   Bug fix: Triple quotes not getting auto closed for format strings [pylance-release#7897](https://github.com/microsoft/pylance-release/issues/7897)
+-   Bug fix: How best to handle class hierarchies [pylance-release#7303](https://github.com/microsoft/pylance-release/issues/7303)
+-   Enhancement: Renaming function/class parameters should recognize calls done through functools partial [pylance-release#7149](https://github.com/microsoft/pylance-release/issues/7149)
+-   Enhancement: [feature request] Add Quick-Fix for misspelled APIs, e.g., `Module 're' has no 'findAll' member; maybe 'findall'? Pylint E1101:no-member` [pylance-release#6960](https://github.com/microsoft/pylance-release/issues/6960)
+-   Enhancement: Show message box to configure exclude [pylance-release#6739](https://github.com/microsoft/pylance-release/issues/6739)
+-   Bug fix: Renaming class property doesn't update structural pattern matching uses of the renamed property [pylance-release#6731](https://github.com/microsoft/pylance-release/issues/6731)
+-   Bug fix: Inherit docstring from super class when missing in subclass [pylance-release#6287](https://github.com/microsoft/pylance-release/issues/6287)
+-   Bug fix: Wrong argument provided during auto completion if inside a collection [pylance-release#6066](https://github.com/microsoft/pylance-release/issues/6066)
+-   Bug fix: a subclass member variable is not recognized as the same variable in superclass unless it has an explicit type hint [pylance-release#5890](https://github.com/microsoft/pylance-release/issues/5890)
+-   Bug fix: parse error on magic statement on ipython mode. [pylance-release#5808](https://github.com/microsoft/pylance-release/issues/5808)
+-   Bug fix: No type or autocomplete present in test function despite pytest fixture having type hint on mouseover [pylance-release#5702](https://github.com/microsoft/pylance-release/issues/5702)
+-   Bug fix: "Extract method" refactor produces incorrect code [pylance-release#5561](https://github.com/microsoft/pylance-release/issues/5561)
+-   Bug fix: "Add import" code action can add import after imported symbol usage [pylance-release#5425](https://github.com/microsoft/pylance-release/issues/5425)
+-   Enhancement: Indentation format is enforcing auto pep 8 even when the previous line is at a different indent [pylance-release#5415](https://github.com/microsoft/pylance-release/issues/5415)
+-   Enhancement: Autocomplete for Literal with formatted string type hint [pylance-release#5333](https://github.com/microsoft/pylance-release/issues/5333)
+-   Enhancement: allow inserting inlay hints with Any inside a callable [pylance-release#5253](https://github.com/microsoft/pylance-release/issues/5253)
+-   Enhancement: Edge case in `Auto Format Strings` setting feature [pylance-release#5185](https://github.com/microsoft/pylance-release/issues/5185)
+-   Bug fix: block comments not adapt with python. [pylance-release#5091](https://github.com/microsoft/pylance-release/issues/5091)
+-   Bug fix: Installed stubs don't take precedence over bundled stubs [pylance-release#5031](https://github.com/microsoft/pylance-release/issues/5031)
+-   Enhancement: Add Semantic modifiers for keyword arguments in function or class call. [pylance-release#4944](https://github.com/microsoft/pylance-release/issues/4944)
+-   Bug fix: Code folding on `with` blocks breaks on multi-line `with` statement. [pylance-release#4036](https://github.com/microsoft/pylance-release/issues/4036)
+-   Bug fix: Routes for flask functions are marked as unaccessed [pylance-release#3970](https://github.com/microsoft/pylance-release/issues/3970)
+-   Enhancement: Functions in os module only show type stubs information (both on hover and when doing "go to definition") [pylance-release#2486](https://github.com/microsoft/pylance-release/issues/2486)
+
 ## 2026.2.107 (1 July 2026) PreRelease
 
 Notable changes:
