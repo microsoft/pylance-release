@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.2.109 (14 July 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: [TSP] Failing to find node for file after opening [pylance-release#8123](https://github.com/microsoft/pylance-release/issues/8123)
+
 ## 2026.2.108 (8 July 2026) PreRelease
 
 Notable changes:
