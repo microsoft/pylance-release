@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026.3.1 (21 July 2026) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2026.2.109](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20262109-14-july-2026-prerelease) prerelease build.
+-   Bug fix: [TSP] out of date example pyrefly version
+    [pylance-release#8133](https://github.com/microsoft/pylance-release/issues/8133)
+-   Bug fix: pylance pre-release 2026.2.109 incorrectly handles typing for pandas.Categorical
+    [pylance-release#8129](https://github.com/microsoft/pylance-release/issues/8129)
+
+## 2026.2.109 (14 July 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: [TSP] Failing to find node for file after opening [pylance-release#8123](https://github.com/microsoft/pylance-release/issues/8123)
+
 ## 2026.2.108 (8 July 2026) PreRelease
 
 Notable changes:
