@@ -1,8 +1,8 @@
 # Most Requested Features and Bugs in Pylance
 
-This document provides a comprehensive overview of the most requested features and bugs in the Pylance extension, based on community feedback from GitHub Discussions and Issues, sorted by number of reactions (👍).
+This document provides a comprehensive overview of the most requested features and bugs in the Pylance extension, based on community feedback from GitHub Discussions and Issues. Items were selected from highly reacted issues; reaction counts below refer to total GitHub reactions.
 
-**Last Updated:** January 19, 2026  
+**Last Updated:** July 27, 2026  
 **Maintenance:** This document is maintained by the community and should be updated quarterly or when significant changes occur in top-requested items.
 
 ## Top Features and Enhancements
@@ -12,7 +12,7 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Enhanced support for Python docstrings, including recognition of existing docstrings with defined parameters/types and auto-generation of docstrings with type inference from function signatures.
 
-### 2. Show Class Hierarchy / Method Override Indicators (367 reactions) - ⏳ OPEN
+### 2. Show Class Hierarchy / Method Override Indicators (368 reactions) - ⏳ OPEN
 **Issue:** [#4972](https://github.com/microsoft/pylance-release/issues/4972)  
 **Status:** Open (assigned)  
 **Description:** Display visual indicators (similar to PyCharm) showing which methods in a class override parent class methods, with ability to jump to the overriding parent method through icons.
@@ -27,12 +27,12 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Ability to disable or configure auto-imports behavior to avoid unwanted automatic import suggestions.
 
-### 5. Support for PyScript & Brython (47 reactions) - ⏳ OPEN
+### 5. Support for PyScript & Brython (48 reactions) - ⏳ OPEN
 **Issue:** [#6760](https://github.com/microsoft/pylance-release/issues/6760)  
 **Status:** Open (assigned)  
 **Description:** Enable Python language support in HTML files for PyScript and Brython projects, including code highlighting and autocompletion for Python code directly in HTML files.
 
-### 6. Add Support for Context-Based Code Actions (39 reactions) - ⏳ OPEN
+### 6. Add Support for Context-Based Code Actions (40 reactions) - ⏳ OPEN
 **Issue:** [#5368](https://github.com/microsoft/pylance-release/issues/5368)  
 **Status:** Open (assigned)  
 **Description:** Provide refactoring code actions depending on context:
@@ -40,7 +40,7 @@ This document provides a comprehensive overview of the most requested features a
 - Create class from undefined class reference
 - Create method from undefined function call
 
-### 7. Improved Django Support (30 reactions) - ⏳ OPEN
+### 7. Improved Django Support (34 reactions) - ⏳ OPEN
 **Issue:** [#3701](https://github.com/microsoft/pylance-release/issues/3701)  
 **Status:** Open (assigned)  
 **Description:** Enhanced Django support including:
@@ -55,9 +55,9 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Option to hide variables/attributes starting with underscore(s) from autocomplete suggestions outside their scope.
 
-### 9. Moving Folders/Files Does Not Update Imports (33 reactions) - ⏳ OPEN
+### 9. Moving Folders/Files Does Not Update Imports (39 reactions) - ✅ COMPLETED
 **Issue:** [#7051](https://github.com/microsoft/pylance-release/issues/7051)  
-**Status:** Open (assigned)  
+**Status:** Closed (fixed in next version)  
 **Description:** When moving folders or multiple files, Python imports are not automatically refactored. Works only when moving a single file.
 
 ### 10. Different Docstring Format Support (29 reactions) - ✅ COMPLETED
@@ -219,10 +219,10 @@ This document provides a comprehensive overview of the most requested features a
 ## Summary Statistics
 
 - **Total Issues Analyzed:** 43
-- **Closed/Completed:** 38 (88%)
-- **Still Open:** 5 (12%)
-- **Average Reactions (Top 20):** 52 reactions
-- **Peak Reactions:** 367 reactions (#4972 - Class Hierarchy)
+- **Closed/Completed:** 39 (91%)
+- **Still Open:** 4 (9%)
+- **Average Reactions (Top 20):** 86 reactions
+- **Peak Reactions:** 368 reactions (#4972 - Class Hierarchy)
 
 ## Key Themes
 
@@ -242,10 +242,9 @@ This document provides a comprehensive overview of the most requested features a
 
 ### High Priority Open Items:
 1. **Class Hierarchy/Method Override Indicators** (#4972) - Highly requested IDE feature parity with PyCharm
-2. **Moving Folders/Multiple Files Import Refactoring** (#7051) - Critical refactoring gap
-3. **Django Support** (#3701) - Important for Django developer ecosystem
-4. **Context-Based Code Actions** (#5368) - Productivity enhancement
-5. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem
+2. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem
+3. **Context-Based Code Actions** (#5368) - Productivity enhancement
+4. **Django Support** (#3701) - Important for Django developer ecosystem
 
 ### Community Engagement:
 - The community is very active with detailed bug reports and feature requests
@@ -259,4 +258,4 @@ This document provides a comprehensive overview of the most requested features a
 - Many highly-requested features have already been implemented
 - The development team has been very responsive to community feedback
 - Several library-specific issues require upstream stub packages
-- Import resolution and refactoring remain active areas of development
+- Import resolution and advanced language framework support remain active areas of development
