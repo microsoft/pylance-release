@@ -65,6 +65,50 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Support for Google-style docstrings and other popular docstring formats (not just reStructuredText).
 
+## Top Open Discussion Requests
+
+These items come from [GitHub Discussions](https://github.com/microsoft/pylance-release/discussions) sorted by top upvotes.
+
+### 1. Support for PEP 723 (86 upvotes) - ⏳ OPEN
+**Discussion:** [#6522](https://github.com/microsoft/pylance-release/discussions/6522)  
+**Status:** Open  
+**Description:** Add better support for inline script metadata, including TOML syntax highlighting/formatting and dependency or environment handling for PEP 723 scripts.
+
+### 2. Rename Symbols in Docstrings (40 upvotes) - ⏳ OPEN
+**Discussion:** [#2938](https://github.com/microsoft/pylance-release/discussions/2938)  
+**Status:** Open  
+**Description:** Extend "Rename Symbol" so Python docstring references are updated during refactoring.
+
+### 3. Apply Class Docstrings to Fields (39 upvotes) - ⏳ OPEN
+**Discussion:** [#4759](https://github.com/microsoft/pylance-release/discussions/4759)  
+**Status:** Open  
+**Description:** Surface field documentation from class docstring attribute sections, similar to PyCharm's hover behavior.
+
+### 4. Reference-Style Markdown Links in Docstrings (30 upvotes) - ⏳ OPEN
+**Discussion:** [#4402](https://github.com/microsoft/pylance-release/discussions/4402)  
+**Status:** Open  
+**Description:** Improve hover rendering for mkdocstrings/Sphinx-style reference links, ideally by resolving links or at least displaying link text cleanly.
+
+### 5. Multi-root Rename and References (27 upvotes) - ⏳ OPEN
+**Discussion:** [#2585](https://github.com/microsoft/pylance-release/discussions/2585)  
+**Status:** Open  
+**Description:** Make "Rename Symbol" and "Go to References" work across related roots in multi-root workspaces.
+
+### 6. Method Reference CodeLens (26 upvotes) - ⏳ OPEN
+**Discussion:** [#4740](https://github.com/microsoft/pylance-release/discussions/4740)  
+**Status:** Open  
+**Description:** Show method reference CodeLens entries for Python, similar to TypeScript, JavaScript, and C#.
+
+### 7. Sort Imports Across Entire Notebooks (25 upvotes) - ⏳ OPEN
+**Discussion:** [#2633](https://github.com/microsoft/pylance-release/discussions/2633)  
+**Status:** Open  
+**Description:** Add a command to sort imports independently in every cell of a notebook.
+
+### 8. Pytest Fixture Parameter Completions (24 upvotes) - ⏳ OPEN
+**Discussion:** [#4388](https://github.com/microsoft/pylance-release/discussions/4388)  
+**Status:** Open  
+**Description:** Infer fixture-provided parameter types so completions work inside pytest test functions.
+
 ## Top Bugs and Issues
 
 ### 1. Compatibility Issues Between Versions (48 reactions) - ✅ COMPLETED
@@ -227,10 +271,10 @@ This document provides a comprehensive overview of the most requested features a
 ## Key Themes
 
 ### Most Requested Features (By Category):
-1. **Refactoring & Code Actions** - Move files/folders, rename with auto-update, context-based code generation
-2. **Enhanced Language Support** - PyScript/Brython, Django, better library stubs
-3. **Developer Experience** - Class hierarchy visualization, docstring management, auto-imports control
-4. **Type Checking Improvements** - Better handling of dynamic types, partial function support
+1. **Refactoring & Code Actions** - Move files/folders, rename with auto-update, context-based code generation, docstring-aware rename
+2. **Enhanced Language Support** - PyScript/Brython, Django, PEP 723, better library stubs
+3. **Developer Experience** - Class hierarchy visualization, docstring management, auto-imports control, CodeLens references
+4. **Type Checking Improvements** - Better handling of dynamic types, partial function support, pytest fixture inference
 
 ### Most Common Bugs (By Category):
 1. **Import Resolution** - Local imports, virtual environments, editable installs
@@ -242,9 +286,11 @@ This document provides a comprehensive overview of the most requested features a
 
 ### High Priority Open Items:
 1. **Class Hierarchy/Method Override Indicators** (#4972) - Highly requested IDE feature parity with PyCharm
-2. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem
-3. **Context-Based Code Actions** (#5368) - Productivity enhancement
-4. **Django Support** (#3701) - Important for Django developer ecosystem
+2. **PEP 723 Support** (Discussion #6522) - Highest-upvoted open discussion request
+3. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem
+4. **Rename Symbols in Docstrings** (Discussion #2938) - Refactoring quality-of-life improvement
+5. **Context-Based Code Actions** (#5368) - Productivity enhancement
+6. **Django Support** (#3701) - Important for Django developer ecosystem
 
 ### Community Engagement:
 - The community is very active with detailed bug reports and feature requests
@@ -254,7 +300,7 @@ This document provides a comprehensive overview of the most requested features a
 
 ## Notes
 
-- This report is based on GitHub Issues sorted by reaction count (👍)
+- This report is based on GitHub Issues sorted by reaction count (👍) and GitHub Discussions sorted by upvotes
 - Many highly-requested features have already been implemented
 - The development team has been very responsive to community feedback
 - Several library-specific issues require upstream stub packages
