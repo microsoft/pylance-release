@@ -262,10 +262,14 @@ These items come from [GitHub Discussions](https://github.com/microsoft/pylance-
 
 ## Summary Statistics
 
-- **Total Issues Analyzed:** 43
-- **Closed/Completed:** 39 (91%)
-- **Still Open:** 4 (9%)
-- **Average Reactions (Top 20):** 86 reactions
+This report covers **37 GitHub Issues** and **8 GitHub Discussions** (45 items total). Discussions are not closed when implemented, so open/closed percentages are calculated from issues only.
+
+- **GitHub Issues Analyzed:** 37
+- **GitHub Discussions Analyzed:** 8 (all open; discussions are not closed when implemented)
+- **Issues Closed/Completed:** 33 (89% of issues)
+- **Issues Still Open:** 4 (11% of issues)
+- **Discussions Open:** 8 (100% of discussions)
+- **Average Reactions (Top 20 Issues):** 86 reactions
 - **Peak Reactions:** 368 reactions (#4972 - Class Hierarchy)
 
 ## Key Themes
