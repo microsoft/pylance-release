@@ -887,13 +887,15 @@ This completely prevents Pylance from creating an analyzer for that folder, savi
 
 ### Exclude Patterns
 
-> **Warning**: Setting [`python.analysis.exclude`](../settings/python_analysis_exclude.md) **overrides** (not appends to) the defaults. If you customize it, include the defaults explicitly:
+> **Note**: Setting [`python.analysis.exclude`](../settings/python_analysis_exclude.md) is **additive** — your entries are added on top of the default exclusions (`**/node_modules`, `**/__pycache__`, dotfiles, and auto-detected virtual environments) rather than replacing them. You only need to list the extra paths you want excluded:
 >
 > ```json
 > {
->     "python.analysis.exclude": ["**/node_modules", "**/__pycache__", "**/.*", "packages/legacy/**", "data/**"]
+>     "python.analysis.exclude": ["packages/legacy/**", "data/**"]
 > }
 > ```
+>
+> To turn the built-in default exclusions off entirely (for example, to analyze a directory that was incorrectly auto-detected as a virtual environment), set [`python.analysis.useDefaultExcludes`](../settings/python_analysis_useDefaultExcludes.md) to `false`.
 
 ### Monorepo Performance Presets
 

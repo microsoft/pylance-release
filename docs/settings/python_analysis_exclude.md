@@ -12,18 +12,38 @@ The `python.analysis.exclude` setting in Pylance specifies paths to directories 
 
 ### Default Behavior
 
-By default, Pylance automatically excludes certain directories from workspace to optimize performance. These default exclusions are:
+By default, Pylance excludes certain directories from the workspace to optimize performance. These default exclusions are:
 
 - `**/node_modules`
 - `**/__pycache__`
-- `.*` directories
-- Virtual environment directories (e.g., those containing `bin/activate`, `Scripts/activate`, or `pyvenv.cfg`)
+- `**/__editable__.*`
+- Hidden directories (dotfiles), i.e. any directory whose name begins with a `.` (for example `.git`, `.venv`, `.tox`)
+- Auto-detected virtual environment directories (e.g., those containing `bin/activate`, `Scripts/activate`, or `pyvenv.cfg`)
 
-This means that unless you specify your own exclusions, Pylance will ignore these directories.
+These built-in exclusions are controlled by [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md), which is enabled by default. They are applied *in addition to* any paths you set in `python.analysis.exclude` (see [Customizing Exclusions](#customizing-exclusions) below).
 
 ### Customizing Exclusions
 
-When you specify the `python.analysis.exclude` setting in your `settings.json`, Pylance will **override** the default exclusions. This means that if you customize this setting, you need to explicitly include the default exclusions if you still want them to be ignored including virtual environments.
+The `python.analysis.exclude` setting is **additive**: any paths you specify are added *on top of* the default exclusions rather than replacing them. Specifying your own excludes never disables the built-in ones, so you do **not** need to repeat the defaults (such as `**/node_modules` or your virtual environment) to keep them excluded.
+
+> **Note**: This is a change from older versions of Pylance, where specifying any custom exclude path silently dropped the built-in default exclusions and virtual-environment auto-detection. Custom excludes are now always additive, similar to VS Code's `files.exclude` and `search.exclude`. You can turn the built-in defaults off entirely with [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md).
+
+### Precedence Over `include`
+
+The default exclusions take precedence over [`python.analysis.include`](python_analysis_include.md). This means a directory that Pylance auto-detects as a virtual environment (or that matches another default exclusion) stays excluded **even if you explicitly list it in `include`**. Adding a path to `include` does not override the built-in excludes.
+
+### Turning Off the Built-in Defaults
+
+If you need Pylance to analyze a directory that a default exclusion is skipping — for example, a directory that was incorrectly auto-detected as a virtual environment — set [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md) to `false`. This disables **all** of the built-in default exclusions (including virtual-environment auto-detection), so only the paths you list in `python.analysis.exclude` are excluded:
+
+```json
+{
+    "python.analysis.useDefaultExcludes": false,
+    "python.analysis.exclude": ["**/node_modules", "**/build"]
+}
+```
+
+Because this turns off every built-in exclude, you'll typically want to re-add the ones you still care about (such as `**/node_modules`) to `python.analysis.exclude` yourself. Disabling the defaults can slow analysis significantly in workspaces that contain large dependency or environment directories.
 
 ## How to Use `python.analysis.exclude`
 
@@ -44,9 +64,11 @@ Example:
 
 ```json
 {
-    "python.analysis.exclude": ["**/node_modules", "**/__pycache__", ".git", "**/build", "env/**"]
+    "python.analysis.exclude": ["**/build", "env/**"]
 }
 ```
+
+Because the default exclusions are always applied, you only need to list the *additional* paths you want to exclude — the defaults (`**/node_modules`, `**/__pycache__`, dotfiles, virtual environments, etc.) remain excluded automatically.
 
 ### Specifying Paths
 
@@ -59,7 +81,7 @@ Example:
 
 ### Caveats
 
-- **Overriding Defaults**: Remember that setting `python.analysis.exclude` overrides the default exclusions. If you want to keep the defaults, you need to include them explicitly.
+- **Defaults Are Additive**: Paths you set in `python.analysis.exclude` are added on top of the default exclusions — they do not replace them. You don't need to re-list the defaults to keep them excluded.
 - **Excluded Files May Still Be Processed**: If an excluded file is imported by a file that is included in the workspace, Pylance may still process the excluded file to provide IntelliSense and type checking for the importing file.
 - **Opened Files**: Even if a file is in the excluded paths, if you open it in the editor, Pylance will provide analysis for that file.
 
@@ -81,13 +103,15 @@ The `python.analysis.ignore` setting specifies paths whose diagnostic output (er
 
 ### Excluding Specific Directories
 
-To exclude directories like `build`, `env`, and keep the default exclusions, your settings might look like:
+To exclude directories like `build` and `env`, your settings might look like:
 
 ```json
 {
-    "python.analysis.exclude": ["**/node_modules", "**/__pycache__", ".git", "**/build", "env/**"]
+    "python.analysis.exclude": ["**/build", "env/**"]
 }
 ```
+
+The default exclusions (`**/node_modules`, `**/__pycache__`, dotfiles, virtual environments, etc.) remain in effect automatically, so you don't need to list them here.
 
 ### Excluding All Files Except Opened Ones
 
@@ -142,13 +166,15 @@ If your workspace includes generated code or external libraries that you do not 
 
 ### Virtual Environments Inside the Workspace
 
-If your virtual environment is located within your workspace (e.g., `./venv`), and you customize `python.analysis.exclude`, you need to exclude your virtual environment directory explicitly:
+Virtual environments are auto-detected and excluded by default, so a venv located inside your workspace (e.g., `./venv`) is excluded automatically — even when you specify other custom excludes. You do **not** need to list it explicitly:
 
 ```json
 {
-    "python.analysis.exclude": ["**/node_modules", "**/__pycache__", ".git", "venv/**"]
+    "python.analysis.exclude": ["**/build"]
 }
 ```
+
+In the rare case that Pylance misdetects a regular directory as a virtual environment, note that adding it to `python.analysis.include` will **not** rescue it — the default exclusions take precedence over `include`. Instead, set [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md) to `false` to turn off the built-in excludes (including virtual-environment auto-detection).
 
 ## Frequently Asked Questions
 
@@ -162,7 +188,11 @@ Yes, excluding unnecessary files and directories can improve Pylance's performan
 
 ### What happens if I specify `python.analysis.exclude` and don't include the default exclusions?
 
-If you specify `python.analysis.exclude` without including the default exclusions, Pylance will stop automatically excluding the default directories (`**/node_modules`, `**/__pycache__`, `.git`, and virtual environments). You need to include them explicitly if you still want them excluded.
+Nothing changes for the defaults — they're always applied. Custom excludes are **additive**: the paths you specify are added on top of the default exclusions (`**/node_modules`, `**/__pycache__`, `**/__editable__.*`, dotfiles, and virtual environments), which stay excluded automatically. You don't need to re-list them. To turn the defaults off entirely, use [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md).
+
+### Pylance excluded a directory that isn't a virtual environment. How do I get it analyzed again?
+
+Virtual-environment detection is a heuristic, so Pylance can occasionally treat a regular directory as a virtual environment and exclude it. Because the default exclusions take precedence over `include`, adding the directory to [`python.analysis.include`](python_analysis_include.md) will **not** rescue it. Instead, set [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md) to `false`, which disables all built-in excludes (including virtual-environment auto-detection) so only your explicit `python.analysis.exclude` paths apply.
 
 ### How can I exclude all files and only analyze open files?
 
@@ -191,6 +221,7 @@ The pattern `**/src/**` does not match `src/` because there is no folder precedi
 
 ## Related Settings
 
+- [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md): Turns the built-in default exclusions on or off.
 - [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
 - [`python.analysis.ignore`](python_analysis_ignore.md): Suppresses diagnostics without excluding files.
 - [`python.analysis.diagnosticMode`](python_analysis_diagnosticMode.md): Controls whether diagnostics run on all files or only open files.
