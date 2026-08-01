@@ -1,2 +1,0 @@
-# SUPPORT FILE: shadowing stdlib mailbox module used by other scenario files.
-# This file does not define its own folder-mode checklist contract and should be treated as support state rather than a standalone runnable entry file.
