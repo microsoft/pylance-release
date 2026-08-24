@@ -8,10 +8,6 @@ Pylance is the default language support for [Python in Visual Studio Code](https
 
 The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
 
-Community Feedback
-------------------
-Interested in what features and improvements the community is requesting? Check out our [Most Requested Features and Bugs](MOST_REQUESTED_FEATURES_AND_BUGS.md) document to see what's being prioritized based on community feedback.
-
 Quick Start
 ============
 1. Install the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) from the marketplace. Pylance will be installed as an optional extension.
@@ -39,7 +35,8 @@ Pylance provides some awesome features for Python 3, including:
 * Jupyter Notebooks compatibility
 * Semantic highlighting
 * Toggle Block Comment command for Python (`Pylance: Toggle Block Comment`)
-* Copilot chat skills for fact-grounded Python help, Pylance docs, and refactoring workflows
+* Install Matching Type Stubs command that finds and installs type stub packages for your installed dependencies (`Pylance: Install Matching Type Stubs`)
+* Copilot Chat skills for fact-grounded Python help, type inference, stub authoring, Pylance docs, refactoring, profiling, and adding or dropping Python version support
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
@@ -111,6 +108,11 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Excluding unnecessary files or directories can significantly improve performance by reducing the scope of analysis. For example, setting `python.analysis.exclude` to `["**"]` will exclude all files except those currently open, minimizing resource consumption.
 
+- `python.analysis.useDefaultExcludes`
+    - When enabled (the default), Pylance adds a set of built-in default excludes in addition to any paths listed in `python.analysis.exclude`: `**/node_modules`, `**/__pycache__`, `**/__editable__.*`, hidden directories (dotfiles), and auto-detected virtual environment directories. These defaults take precedence over `python.analysis.include`, so a directory auto-detected as a virtual environment stays excluded even if it is explicitly included.
+    - Set this to `false` to disable all of these built-in excludes — including virtual environment auto-detection — so that only the paths listed in `python.analysis.exclude` are excluded. Disabling this can slow analysis significantly if your workspace contains large dependency or environment directories.
+    - Default value: `true`
+
 - `python.analysis.useNearestConfiguration` (**Experimental**)
     - When enabled, Pylance will search for and use `pyrightconfig.json` or `pyproject.toml` files in subdirectories, creating virtual workspaces for each configuration. This allows different type-checking settings for different parts of your codebase.
     - Default value: `false`
@@ -174,6 +176,14 @@ Pylance provides users with the ability to customize their Python language suppo
 - [`python.analysis.extraPaths`](docs/settings/python_analysis_extraPaths.md)
     - Used to specify extra search paths for import resolution. This replaces the old `python.autoComplete.extraPaths` setting.
     - Default value: empty array
+
+- `python.analysis.ignoredPackages`
+    - List of installed packages to exclude from type analysis. Specify the importable package name (e.g. `"PIL"` rather than `"Pillow"`). Files in ignored packages return empty content during analysis while the directory structure is preserved for import resolution.
+    - Default value: empty array
+
+- `python.analysis.disableBundledStubs`
+    - Disable Pylance's bundled type stubs so the installed package is analyzed directly. Set to `true` to disable all bundled stubs, or provide a list of package names to disable only those.
+    - Default value: `false`
 
 - `python.analysis.includeExtraPathSymbolsInSymbolSearch`
     - Include symbols from `python.analysis.extraPaths` in Workspace Symbol search.
@@ -370,6 +380,12 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Disabling `python.analysis.completeFunctionParens` can slightly improve performance by reducing the overhead during code completion, though the impact is minimal.
 
+- `python.analysis.renameInDocstrings`
+    - When renaming a symbol, also update whole-word occurrences of its name inside docstrings. Matching is name-based and not scope-aware, so unrelated whole-word occurrences of the same name (including ordinary English prose) may also be rewritten. The occurrences are added to the rename edit and can be reviewed with the Refactor Preview.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 - `python.analysis.inlayHints.variableTypes`
     - Enable/disable inlay hints for variable types.
     - Accepted values:
@@ -471,6 +487,14 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true` (default)
         - `false` 
 
+- `python.analysis.formatOnTypeStyle` (**Experimental**)
+    - Selects the code style Pylance uses when it auto-indents your code as you type (format-on-type). This applies when `editor.formatOnType` is enabled for Python.
+    - Default value: `pep8`
+    - Accepted values:
+        - `pep8` (default): Use PEP 8-style continuation indentation when auto-indenting wrapped brackets (an extra level of indentation on a function definition's parameter list).
+        - `black`: Use [Black](https://black.readthedocs.io/)-compatible continuation indentation when auto-indenting wrapped brackets (a single level of indentation on a function definition's parameter list).
+    - Note: This setting only affects the indentation Pylance applies while typing; it does not run a full formatter over your document.
+
 - `python.analysis.autoTranslateDocstrings`
     - Automatically translate Python docstrings in hover tooltips to the user's preferred language using GitHub Copilot.
     - When enabled, docstrings will be translated to the language specified by the GitHub Copilot locale setting (`github.copilot.chat.localeOverride`). If set to `auto`, Pylance will use the VS Code display language. Translations preserve Python code blocks, keywords, and markdown formatting.
@@ -549,17 +573,19 @@ Pylance provides users with the ability to customize their Python language suppo
         - path to a pyright-langserver.js file. For example, the Pyright installed by the PyPI Pyright module. In that case the path would be something like `~/.cache/pyright-python/1.1.397/node_modules/pyright/dist/pyright-langserver.js`
 
 - `python.analysis.pyreflyVersion`
-    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 0.60.0.
+    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 1.1.1.
     - Accepted values:
         - empty (default) — automatically find or download the latest version
-        - version string, e.g. `0.60.0` — download and use that specific version
+        - version string, e.g. `1.1.1` — download and use that specific version
         - path to a local pyrefly executable
 
 - `python.analysis.enableColorPicker`
-    - Enable/disable color picker in the editor for '#RRGGBB' and '#RRGGBBAA' strings.
+    - Enable/disable color picker in the editor for '#RRGGBB' strings. For all eight-digit hex strings in a workspace, choose the alpha placement explicitly.
     - Accepted values:
-        - `true` (default)
+        - `true` (default) — enables the color picker; eight-digit hex strings use the default `RRGGBBAA` ordering
         - `false`
+        - `RRGGBBAA` — same eight-digit behavior as `true`
+        - `AARRGGBB`
 
 - `python.analysis.enableTroubleshootMissingImports`
     - Enable/disable the Quick Fix for troubleshooting missing imports. This Quick Fix requires the Python Environments extension to be installed and enabled.
@@ -569,6 +595,18 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.gotoOverrideCodeLens` (**Experimental**)
     - Enable/disable a CodeLens on methods that override a base-class member. Clicking it peeks the overridden declaration.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
+- `python.analysis.supportHtmlEmbeddedPython` (**Experimental**)
+    - Enable/disable language support (IntelliSense, diagnostics) for Python embedded in HTML files, such as PyScript `<py-script>`/`<script type="py">` blocks.
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
+- `python.analysis.enablePyreflyShadowExperiment` (**Experimental**)
+    - Force-enable a hidden Pyrefly-typed Pylance language server alongside the primary server and log its telemetry events. When disabled, enrollment remains controlled by the experiment service. For internal performance and reliability testing only. Requires reloading the window.
     - Accepted values:
         - `true`
         - `false` (default)
