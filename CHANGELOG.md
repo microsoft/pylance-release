@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026.3.101 (27 August 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Slow performance with large python file. Pylance>=2026.2.104 [pylance-release#8175](https://github.com/microsoft/pylance-release/issues/8175)
+-   Bug fix: Auto-import completions disappear inside pytest test functions when `enablePytestSupport` is enabled [pylance-release#8170](https://github.com/microsoft/pylance-release/issues/8170)
+-   Bug fix: reportCallIssue false positive when chaining dynamic `type()` calls [pylance-release#8166](https://github.com/microsoft/pylance-release/issues/8166)
+-   Bug fix: [TSP] Goto implementation doesn't work for Pyrefly [pylance-release#8127](https://github.com/microsoft/pylance-release/issues/8127)
+-   Bug fix: [TSP] When using Pyrefly as a diagnostics source, there are no import code actions [pylance-release#8121](https://github.com/microsoft/pylance-release/issues/8121)
+
 ## 2026.3.100 (19 August 2026) PreRelease
 
 Notable changes:
