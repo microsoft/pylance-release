@@ -36,7 +36,7 @@ Pylance provides some awesome features for Python 3, including:
 * Semantic highlighting
 * Toggle Block Comment command for Python (`Pylance: Toggle Block Comment`)
 * Install Matching Type Stubs command that finds and installs type stub packages for your installed dependencies (`Pylance: Install Matching Type Stubs`)
-* Copilot Chat skills for fact-grounded Python help, type inference, stub authoring, Pylance docs, refactoring, profiling, and adding or dropping Python version support
+* Copilot Chat skills for fact-grounded Python help, type inference, inline type annotations, stub authoring, Pylance docs, refactoring, profiling, and adding or dropping Python version support
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
