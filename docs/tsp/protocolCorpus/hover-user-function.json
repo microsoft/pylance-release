@@ -1,0 +1,2086 @@
+{
+  "execution": {
+    "client": "pylance-language-server",
+    "enableAsyncProgram": true,
+    "enableExternalTypeServer": true,
+    "programMode": "typeServer",
+    "typeServer": "pyright"
+  },
+  "messages": {
+    "lsp": [
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "kind": "notification",
+        "method": "textDocument/didOpen",
+        "params": {
+          "textDocument": {
+            "languageId": "python",
+            "text": "from typing import TypedDict\n\n\ndef foo(a: int) -> str:\n    \"\"\"doc comment\"\"\"\n    return \"hello\"\n\n\n# SCENARIO: hover over a user-defined function call target\n# TARGET: `foo` in the call expression below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the function symbol\n# VERIFY: the hover includes the function signature with `a: int` and `-> str`, and it includes `doc comment`\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\nfoo(10)\n\n\nclass MyDict(TypedDict):\n    name: str\n\n\n# SCENARIO: hover over a TypedDict field used as a keyword argument\n# TARGET: `name` in `MyDict(name=\"hello\")` below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the TypedDict field\n# VERIFY: the hover identifies the `name` field and shows that its value type is `str`\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\na = MyDict(name=\"hello\")\n\n# SCENARIO: hover over a TypedDict field used as a string key\n# TARGET: the `\"name\"` key in the dict literal below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the TypedDict field mapping\n# VERIFY: the hover identifies the `name` field and shows that its value type is `str`\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\nb: MyDict = {\"name\": \"hello\"}\n\n# SCENARIO: hover over the `os` token inside a string literal\n# TARGET: `os` inside the string literal on the assignment below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the `os` token\n# VERIFY: the hover identifies the `os` module and shows module documentation text\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\nc = \"os\"\n\n# SCENARIO: hover over the `typing` token inside a qualified string literal\n# TARGET: `typing` inside the string literal `\"typing.TypedDict\"` below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the `typing` token\n# VERIFY: the hover identifies the `typing` module and shows module documentation text\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\n# SCENARIO: hover over the `TypedDict` token inside a qualified string literal\n# TARGET: `TypedDict` inside the string literal `\"typing.TypedDict\"` below\n# TRIGGER: Hover\n# EXPECT: a hover widget may or may not open for this token depending on product behavior\n# VERIFY: record whether `TypedDict` resolves to a class hover or reproduces the known limitation tracked by microsoft/pylance-release#5171\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\nd = \"typing.TypedDict\"\n\n\nclass MyNumber:\n    def __init__(self, v: int):\n        self._value = v\n\n    def __add__(self, v: \"MyNumber\") -> \"MyNumber\":\n        return MyNumber(self._value + v._value)\n\n\n# SCENARIO: hover over an overloaded operator\n# TARGET: `+` in the expression below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the operator implementation\n# VERIFY: the hover references `__add__` and shows that the operation returns `MyNumber`\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\ne = MyNumber(0) + MyNumber(1)\n\n# SCENARIO: hover over a built-in type annotation\n# TARGET: `int` in the annotation below\n# TRIGGER: Hover\n# EXPECT: a hover widget opens for the built-in type\n# VERIFY: the hover shows the built-in `int` type header and includes documentation text beneath it\n# RECOVER: move the caret away or dismiss the hover widget before the next scenario\ni: int\n",
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py",
+            "version": 1
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 0
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "id": 1,
+        "kind": "request",
+        "method": "textDocument/hover",
+        "params": {
+          "position": {
+            "character": 0,
+            "line": 14
+          },
+          "textDocument": {
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 1
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "pylance-to-client",
+        "id": 1,
+        "kind": "response",
+        "protocol": "lsp",
+        "result": {
+          "contents": {
+            "kind": "markdown",
+            "value": "```python\n(function) def foo(a: int) -> str\n```\n---\ndoc comment"
+          },
+          "range": {
+            "end": {
+              "character": 3,
+              "line": 14
+            },
+            "start": {
+              "character": 0,
+              "line": 14
+            }
+          }
+        },
+        "sequence": 2
+      }
+    ],
+    "lspOrdering": "captured",
+    "tsp": [
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_ContainerT_contra",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 18,
+                  "line": 665
+                },
+                "start": {
+                  "character": 0,
+                  "line": 665
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_KT",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 26
+                },
+                "start": {
+                  "character": 0,
+                  "line": 26
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/_typeshed/__init__.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_KT",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 414
+                },
+                "start": {
+                  "character": 0,
+                  "line": 414
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_KT",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 77
+                },
+                "start": {
+                  "character": 0,
+                  "line": 77
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_T_co",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 5,
+                  "line": 416
+                },
+                "start": {
+                  "character": 0,
+                  "line": 416
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_T_co",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 5,
+                  "line": 74
+                },
+                "start": {
+                  "character": 0,
+                  "line": 74
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_T",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 2,
+                  "line": 408
+                },
+                "start": {
+                  "character": 0,
+                  "line": 408
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_TC",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 207
+                },
+                "start": {
+                  "character": 0,
+                  "line": 207
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_TC",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 419
+                },
+                "start": {
+                  "character": 0,
+                  "line": 419
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_VT_co",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 6,
+                  "line": 30
+                },
+                "start": {
+                  "character": 0,
+                  "line": 30
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/_typeshed/__init__.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_VT_co",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 6,
+                  "line": 418
+                },
+                "start": {
+                  "character": 0,
+                  "line": 418
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_VT",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 415
+                },
+                "start": {
+                  "character": 0,
+                  "line": 415
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 1,
+            "kind": 0,
+            "name": "_VT",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 3,
+                  "line": 78
+                },
+                "start": {
+                  "character": 0,
+                  "line": 78
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "Any",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 14,
+                  "line": 151
+                },
+                "start": {
+                  "character": 0,
+                  "line": 151
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "ModuleType",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 48,
+                  "line": 346
+                },
+                "start": {
+                  "character": 0,
+                  "line": 321
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "NoneType",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 45,
+                  "line": 713
+                },
+                "start": {
+                  "character": 0,
+                  "line": 711
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "category": 6,
+            "kind": 0,
+            "name": "TypeVar",
+            "node": {
+              "range": {
+                "end": {
+                  "character": 62,
+                  "line": 229
+                },
+                "start": {
+                  "character": 0,
+                  "line": 158
+                }
+              },
+              "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+            }
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1054
+              },
+              "start": {
+                "character": 11,
+                "line": 1054
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1137
+              },
+              "start": {
+                "character": 1,
+                "line": 1137
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1280
+              },
+              "start": {
+                "character": 1,
+                "line": 1280
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 180
+              },
+              "start": {
+                "character": 1,
+                "line": 180
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 251
+              },
+              "start": {
+                "character": 1,
+                "line": 251
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 3
+              },
+              "start": {
+                "character": 11,
+                "line": 3
+              }
+            },
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 321
+              },
+              "start": {
+                "character": 1,
+                "line": 321
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 485
+              },
+              "start": {
+                "character": 1,
+                "line": 485
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 99
+              },
+              "start": {
+                "character": 1,
+                "line": 99
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 15,
+                "line": 156
+              },
+              "start": {
+                "character": 13,
+                "line": 156
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 13
+              },
+              "start": {
+                "character": 14,
+                "line": 13
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/abc.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 542
+              },
+              "start": {
+                "character": 1,
+                "line": 542
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 553
+              },
+              "start": {
+                "character": 1,
+                "line": 553
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 596
+              },
+              "start": {
+                "character": 1,
+                "line": 596
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 667
+              },
+              "start": {
+                "character": 1,
+                "line": 667
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 18,
+                "line": 673
+              },
+              "start": {
+                "character": 1,
+                "line": 673
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 22,
+                "line": 156
+              },
+              "start": {
+                "character": 20,
+                "line": 156
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 22,
+                "line": 3
+              },
+              "start": {
+                "character": 19,
+                "line": 3
+              }
+            },
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 23,
+                "line": 486
+              },
+              "start": {
+                "character": 10,
+                "line": 486
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 26,
+                "line": 228
+              },
+              "start": {
+                "character": 23,
+                "line": 228
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 27,
+                "line": 1138
+              },
+              "start": {
+                "character": 12,
+                "line": 1138
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 29,
+                "line": 806
+              },
+              "start": {
+                "character": 14,
+                "line": 806
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 3,
+                "line": 14
+              },
+              "start": {
+                "character": 0,
+                "line": 14
+              }
+            },
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 30,
+                "line": 480
+              },
+              "start": {
+                "character": 27,
+                "line": 480
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 30,
+                "line": 543
+              },
+              "start": {
+                "character": 15,
+                "line": 543
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 31,
+                "line": 597
+              },
+              "start": {
+                "character": 16,
+                "line": 597
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 32,
+                "line": 554
+              },
+              "start": {
+                "character": 17,
+                "line": 554
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 32,
+                "line": 674
+              },
+              "start": {
+                "character": 17,
+                "line": 674
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 32,
+                "line": 680
+              },
+              "start": {
+                "character": 15,
+                "line": 680
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 34,
+                "line": 228
+              },
+              "start": {
+                "character": 31,
+                "line": 228
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 35,
+                "line": 1281
+              },
+              "start": {
+                "character": 11,
+                "line": 1281
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 38,
+                "line": 480
+              },
+              "start": {
+                "character": 35,
+                "line": 480
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 38,
+                "line": 826
+              },
+              "start": {
+                "character": 21,
+                "line": 826
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 44,
+                "line": 20
+              },
+              "start": {
+                "character": 24,
+                "line": 20
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/_typeshed/_type_checker_internals.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 44,
+                "line": 668
+              },
+              "start": {
+                "character": 16,
+                "line": 668
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 48,
+                "line": 674
+              },
+              "start": {
+                "character": 34,
+                "line": 674
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 49,
+                "line": 554
+              },
+              "start": {
+                "character": 34,
+                "line": 554
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 50,
+                "line": 167
+              },
+              "start": {
+                "character": 29,
+                "line": 167
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/_typeshed/__init__.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 51,
+                "line": 680
+              },
+              "start": {
+                "character": 34,
+                "line": 680
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 51,
+                "line": 806
+              },
+              "start": {
+                "character": 31,
+                "line": 806
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 1053
+              },
+              "start": {
+                "character": 1,
+                "line": 1053
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 158
+              },
+              "start": {
+                "character": 1,
+                "line": 158
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 462
+              },
+              "start": {
+                "character": 1,
+                "line": 462
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 711
+              },
+              "start": {
+                "character": 1,
+                "line": 711
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 721
+              },
+              "start": {
+                "character": 1,
+                "line": 721
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 76
+              },
+              "start": {
+                "character": 1,
+                "line": 76
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 63,
+                "line": 20
+              },
+              "start": {
+                "character": 56,
+                "line": 20
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/_typeshed/_type_checker_internals.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 65,
+                "line": 674
+              },
+              "start": {
+                "character": 50,
+                "line": 674
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "_typeshed"
+            ]
+          },
+          "sourceUri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "_typeshed",
+              "_type_checker_internals"
+            ]
+          },
+          "sourceUri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "types"
+            ]
+          },
+          "sourceUri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing"
+            ]
+          },
+          "sourceUri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/hover.py"
+        },
+        "protocol": "tsp"
+      }
+    ],
+    "tspComparison": "unordered-multiset",
+    "tspOrdering": "canonical-for-serialization",
+    "tspScope": "pylance-initiated",
+    "tspWindow": "feature-request"
+  },
+  "result": {
+    "kind": "Hover"
+  },
+  "scenario": {
+    "category": "hover",
+    "id": "hover-user-function",
+    "requestMethod": "textDocument/hover",
+    "source": {
+      "file": "testing/single/src/hover.py",
+      "repository": "microsoft/pylance-release",
+      "revision": "187bb72d7e557afedd013056813b8f8ab29a9d56"
+    },
+    "target": {
+      "context": "foo(10)",
+      "position": {
+        "character": 0,
+        "line": 14
+      },
+      "text": "foo"
+    },
+    "title": "Hover over a user-defined function call target"
+  },
+  "schemaVersion": 1
+}

@@ -649,6 +649,7 @@ Semantic colors can be customized in settings.json by associating the Pylance se
     - documentation
     - overridden
     - callable
+    - library
 
 The [scope inspector](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#scope-inspector) tool allows you to explore what semantic tokens are present in a source file and what theme rules they match to. 
 
@@ -663,6 +664,7 @@ Example of customizing semantic colors in settings.json:
                 "magicFunction:python": "#ee0000",
                 "function.declaration:python": "#990000",
                 "*.decorator:python": "#0000dd",
+                "*.library:python": "#008000",
                 "*.typeHint:python": "#5500aa",
                 "*.typeHintComment:python": "#aaaaaa"
             }
