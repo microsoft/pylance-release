@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026.3.102 (4 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: `enableEditableInstalls` breaks relative imports in editable package [pylance-release#8184](https://github.com/microsoft/pylance-release/issues/8184)
+-   Bug fix: `"editor.pasteAs.preferences": ["text.pylance.reindent"]` incorrent inline indent [pylance-release#8161](https://github.com/microsoft/pylance-release/issues/8161)
+-   Bug fix: Add semantic token modifier to imported modules [pylance-release#6886](https://github.com/microsoft/pylance-release/issues/6886)
+-   Enhancement: Pylance causes heavy CPU usage by setting file watchers on entire PYTHONPATH [pylance-release#6213](https://github.com/microsoft/pylance-release/issues/6213)
+-   Bug fix: Pylance doesn't honor VSCode display language [pylance-release#5880](https://github.com/microsoft/pylance-release/issues/5880)
+-   Bug fix: Symlinking a directory does not cause a reresolve of imports [pylance-release#5807](https://github.com/microsoft/pylance-release/issues/5807)
+-   Enhancement: `__init__` params not displayed when hovering over type name [pylance-release#5737](https://github.com/microsoft/pylance-release/issues/5737)
+-   Enhancement: Moving generic symbol doesn't move/import associated TypeVars [pylance-release#5552](https://github.com/microsoft/pylance-release/issues/5552)
+-   Enhancement: show indication in vscode statusbar when there are pending reload request [pylance-release#5438](https://github.com/microsoft/pylance-release/issues/5438)
+-   Enhancement: 'Move to file' refactoring should allow me to specify a new file name [pylance-release#5219](https://github.com/microsoft/pylance-release/issues/5219)
+-   Enhancement: Add an informational notification when "go to definition" falls back to "go to declaration" behaviour [pylance-release#5007](https://github.com/microsoft/pylance-release/issues/5007)
+-   Enhancement: Add a warning when writing a Python file inside virtual environments [pylance-release#4975](https://github.com/microsoft/pylance-release/issues/4975)
+-   Bug fix: Support for PyScript & Brython. [pylance-release#6760](https://github.com/microsoft/pylance-release/issues/6760)
+
 ## 2026.3.101 (27 August 2026) PreRelease
 
 Notable changes:

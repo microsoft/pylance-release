@@ -1,0 +1,118 @@
+{
+  "execution": {
+    "client": "pylance-language-server",
+    "enableAsyncProgram": true,
+    "enableExternalTypeServer": true,
+    "programMode": "typeServer",
+    "typeServer": "pyright"
+  },
+  "messages": {
+    "lsp": [
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "kind": "notification",
+        "method": "textDocument/didOpen",
+        "params": {
+          "textDocument": {
+            "languageId": "python",
+            "text": "from typing import Mapping\n\n\nclass ClassWithMagicMethod:\n    def __lt__(self, v: int) -> bool:\n        return True\n    def __len__(self) -> int:\n        return 1\n    \n\n# SCENARIO: go to definition for an operator resolves to the implementing magic method\n# TARGET: the `<` operator in the comparison below\n# TRIGGER: Go To Definition\n# EXPECT: the cursor is on the comparison operator in `a = ClassWithMagicMethod() < 1`\n# VERIFY: navigation opens the `ClassWithMagicMethod.__lt__` definition in this file\n# RECOVER: none\na = ClassWithMagicMethod() < 1\n\n# SCENARIO: go to definition on a string literal target\n# TARGET: the `os` text inside the string literal below\n# TRIGGER: Go To Definition\n# EXPECT: the cursor is on the string literal token in `b = \"os\"`\n# VERIFY: skip-ready because the legacy checklist names the target token but does not ground the expected destination or surface\n# RECOVER: none\nb = \"os\"\n\n# SCENARIO: go to definition for an imported typing symbol\n# TARGET: `Mapping` in the annotation below\n# TRIGGER: Go To Definition\n# EXPECT: the cursor is on the imported `Mapping` reference in `c: Mapping`\n# VERIFY: navigation leaves the annotation site and opens the definition for `Mapping`\n# RECOVER: none\nc: Mapping\n\n# SCENARIO: go to definition for `len` shows both builtin and magic-method targets\n# TARGET: `len` in the call below\n# TRIGGER: Go To Definition\n# EXPECT: the cursor is on the builtin call name in `print(len(ClassWithMagicMethod()))`\n# VERIFY: the navigation surface shows both `len` and `ClassWithMagicMethod.__len__` as definition targets\n# RECOVER: none\nprint(len(ClassWithMagicMethod()))\n",
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/gotodef.py",
+            "version": 1
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 0
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "id": 1,
+        "kind": "request",
+        "method": "textDocument/definition",
+        "params": {
+          "position": {
+            "character": 4,
+            "line": 16
+          },
+          "textDocument": {
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/gotodef.py"
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 1
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "pylance-to-client",
+        "id": 1,
+        "kind": "response",
+        "protocol": "lsp",
+        "result": [
+          {
+            "range": {
+              "end": {
+                "character": 26,
+                "line": 3
+              },
+              "start": {
+                "character": 6,
+                "line": 3
+              }
+            },
+            "uri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/gotodef.py"
+          }
+        ],
+        "sequence": 2
+      }
+    ],
+    "lspOrdering": "captured",
+    "tsp": [
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing"
+            ]
+          },
+          "sourceUri": "<pylanceInternalRoot>/.generated/pylance-release/testing/single/src/gotodef.py"
+        },
+        "protocol": "tsp"
+      }
+    ],
+    "tspComparison": "unordered-multiset",
+    "tspOrdering": "canonical-for-serialization",
+    "tspScope": "pylance-initiated",
+    "tspWindow": "feature-request"
+  },
+  "result": {
+    "itemCount": 1,
+    "kind": "locations"
+  },
+  "scenario": {
+    "category": "definition",
+    "id": "definition-user-class",
+    "requestMethod": "textDocument/definition",
+    "source": {
+      "file": "testing/single/src/gotodef.py",
+      "repository": "microsoft/pylance-release",
+      "revision": "187bb72d7e557afedd013056813b8f8ab29a9d56"
+    },
+    "target": {
+      "context": "a = ClassWithMagicMethod() < 1",
+      "position": {
+        "character": 4,
+        "line": 16
+      },
+      "text": "ClassWithMagicMethod"
+    },
+    "title": "Go to definition for a user-defined class"
+  },
+  "schemaVersion": 1
+}
