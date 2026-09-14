@@ -605,6 +605,12 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
+- `python.analysis.cellMagicLanguages` (**Experimental**)
+    - Maps IPython cell magic names, without the leading `%%`, to VS Code language identifiers. In mapped Python notebook cells, Pylance forwards completions, hover, and go to definition for the cell body to the extension that provides the configured language.
+    - Diagnostics are projected when the configured language provider publishes them for hidden virtual documents. Pull-only diagnostic providers, including VS Code's built-in JSON support, do not supply diagnostics for mapped cells.
+    - Default value: `{}`
+    - Example: `{"sql": "sql", "kql": "kusto", "cypher": "cypher"}`
+
 - `python.analysis.enablePyreflyShadowExperiment` (**Experimental**)
     - Force-enable a hidden Pyrefly-typed Pylance language server alongside the primary server and log its telemetry events. When disabled, enrollment remains controlled by the experiment service. For internal performance and reliability testing only. Requires reloading the window.
     - Accepted values:
