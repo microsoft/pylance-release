@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026.3.103 (10 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance requests a recursive file watch on `file:///.` when no workspace is open — on macOS this triggers the "would like to access data from other apps" TCC prompt on every launch [pylance-release#8197](https://github.com/microsoft/pylance-release/issues/8197)
+-   Bug fix: numpy (as np) code completion breaks when put before wildcard import [pylance-release#8193](https://github.com/microsoft/pylance-release/issues/8193)
+-   Bug fix: Experimental Django support misses reverse ForeignKey with an app-label string target [pylance-release#8191](https://github.com/microsoft/pylance-release/issues/8191)
+-   Bug fix: `editor.occurrencesHighlight` incorrectly highlights identifier occurrences in Python [pylance-release#8179](https://github.com/microsoft/pylance-release/issues/8179)
+-   Bug fix: Performance with AWS CDK [pylance-release#6986](https://github.com/microsoft/pylance-release/issues/6986)
+-   Enhancement: No docstrings when using pylance in vscode.dev [pylance-release#5429](https://github.com/microsoft/pylance-release/issues/5429)
+-   Enhancement: Support language features for other languages when using cell magics [pylance-release#4969](https://github.com/microsoft/pylance-release/issues/4969)
+-   Enhancement: Provide improved support for pandas [pylance-release#3798](https://github.com/microsoft/pylance-release/issues/3798)
+-   Bug fix: Support for PyScript & Brython. [pylance-release#6760](https://github.com/microsoft/pylance-release/issues/6760)
+
 ## 2026.3.102 (4 September 2026) PreRelease
 
 Notable changes:
