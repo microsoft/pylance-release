@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.3.104 (14 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix Django support, Windows docstring parsing, operator navigation, and overload resolution regressions [pylance-release#8208](https://github.com/microsoft/pylance-release/issues/8208)
+
 ## 2026.3.103 (10 September 2026) PreRelease
 
 Notable changes:
