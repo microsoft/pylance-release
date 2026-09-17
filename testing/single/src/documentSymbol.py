@@ -13,8 +13,9 @@
 # RECOVER: none
 
 # SCENARIO: go to symbol in editor exposes the editor symbol list
+# HOST: all
 # TARGET: the current file containing `A`, `createA`, and `aInstance`
-# TRIGGER: Go to Symbol in Editor
+# TRIGGER: open the current-file symbol picker (VS Code: Go to Symbol in Editor; Visual Studio: Code Search / Go To All with Symbol and Current Document filters)
 # EXPECT: the current editor is this file
 # VERIFY: the editor-symbol picker opens and lists symbols from this file, including `A`, `createA`, and `aInstance`
 # RECOVER: none
