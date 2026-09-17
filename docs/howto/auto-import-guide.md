@@ -7,6 +7,7 @@ Pylance can automatically suggest and add import statements when you use a symbo
 ## Table of Contents
 
 - [How Auto-Imports Work](#how-auto-imports-work)
+- [Suggestion ordering and history](#suggestion-ordering-and-history)
 - [Enable or Disable Auto-Import Completions](#enable-or-disable-auto-import-completions)
 - [Control Import Style](#control-import-style)
 - [Control Which Symbols Appear](#control-which-symbols-appear)
@@ -30,6 +31,35 @@ When you type a symbol name, Pylance searches:
 Matches appear in the completion list with an import icon. Accepting one inserts the import statement at the top of the file.
 
 Auto-imports also work through **quick fixes**: if you write code with an unresolved name, Pylance offers an "Add import" code action (light bulb).
+
+---
+
+## Suggestion ordering and history
+
+Auto-import completions, "Add import" quick fixes, and the import search picker use the same ranking policy for available import alternatives, in this order:
+
+1. **Recent choices**, with the most recently accepted symbol and source first.
+2. **The same symbol from the same source** already imported in open project files.
+3. **Other symbols from that exact source** already imported in open project files.
+4. **Symbols defined in your project**.
+5. **Symbols from `typing`**.
+6. **Standard library symbols**.
+7. **Third-party library symbols**.
+8. **Library symbols re-exported by your project**.
+
+Open-file preferences use a bounded scan of top-level imports in open project files, not workspace-wide usage or frequency analysis. Matches use original symbol names, not local aliases. Within a priority, ties are broken by symbol name, then module path depth (fewer dots first), then source text alphabetically.
+
+Without recent choices or open-file preferences, `typing.Literal` ranks before third-party `schema.Literal`, and `pathlib.Path` ranks before third-party `Path` alternatives. A same-name symbol defined in your project ranks above those library candidates. Explicitly choosing `schema.Literal` can move it ahead of `typing.Literal` next time, even ahead of open-file preferences. Check the source before accepting: identically named symbols can have different purposes.
+
+The interfaces can still show different lists because their filtering and presentation differ. Your environment, indexing, and [which symbols are included](#control-which-symbols-appear) determine the available candidates; ranking does not add missing candidates. Import suggestions keep their category placement within completions, and quick fixes show at most three import candidates after ranking.
+
+**History tracks recency, not frequency.** It keeps up to 100 distinct symbol-and-source choices, shared across these import interfaces within a workspace folder. Choosing the same pair again moves it to the front; the oldest distinct choices are evicted when the limit is reached. Local aliases do not create separate history entries. Accepting a completion records a choice; highlighting or previewing it does not. Quick fixes and picker selections record a choice after the import edit succeeds.
+
+History is saved in VS Code workspace storage, with separate histories for each folder in a multi-root workspace. Opening the same folder in a different VS Code workspace gives it separate history. Files not associated with a workspace folder have session-only history.
+
+Accepted choices affect ordering immediately; workspace history is saved asynchronously. After restarting the language server or VS Code, workspace history is restored from the last successful save. Missing or invalid saved history starts empty. Storage failures are logged; a failed save preserves live history in memory, and the next accepted import retries saving.
+
+Suggestion ordering helps you choose **which symbol and source to import**. It is separate from [organizing imports](#organize-imports-on-save), which rearranges import statements already in your file.
 
 ---
 
