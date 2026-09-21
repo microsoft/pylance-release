@@ -32,7 +32,24 @@ If neither file exists, the setting has no effect — all packages are shown as 
 | `light`   | `false`       |
 | `full`    | `true`        |
 
-In `full` mode, this setting is enabled by default to improve the relevance of auto-import suggestions alongside the broader indexing depth.
+In `full` mode, this setting is enabled by default to improve the relevance of auto-import suggestions alongside the broader indexing depth. Explicitly setting it to `false` overrides this default.
+
+## Editable Installs
+
+Path-based `.pth` editable installs, including Poetry's default `.pth` file pointing to the project, can be treated as third-party packages by this filter, even when their source files are inside your workspace. If a package is not recognized as a direct dependency, its symbols can be omitted from auto-import completion suggestions.
+
+This is completion filtering, not an import-resolution failure: Pylance can still resolve imports through the `.pth` path. The **"Add import" code action** is not filtered by this setting.
+
+To keep `full` mode while disabling the direct-dependency filter, use this in `settings.json`:
+
+```json
+{
+    "python.analysis.languageServerMode": "full",
+    "python.analysis.showOnlyDirectDependenciesInAutoImport": false
+}
+```
+
+Disabling this filter does not guarantee that every symbol will appear. Suggestions still depend on settings such as [`autoImportCompletions`](python_analysis_autoImportCompletions.md), [`indexing`](python_analysis_indexing.md), and [`packageIndexDepths`](python_analysis_packageIndexDepths.md).
 
 ## Example
 
@@ -60,6 +77,7 @@ Auto-import completions will suggest symbols from `flask`, `requests`, the stand
 ## When to Disable
 
 - Your project intentionally imports from transitive dependencies (e.g., `werkzeug` utilities in a Flask project).
+- You want auto-import completions from editable packages that are not recognized as direct dependencies.
 - You don't maintain a `requirements.txt` or `pyproject.toml` and want all installed packages available.
 
 ## Related Settings

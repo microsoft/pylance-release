@@ -56,7 +56,7 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.autoImportCompletions`](python_analysis_autoImportCompletions.md)**: Controls the offering of auto-imports in completions. Enabled in `full` mode to provide a richer development experience.
 
-- **[`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)**: In `full` mode, only direct dependencies declared in `requirements.txt` or `pyproject.toml` are shown in auto-import suggestions, improving the relevance of suggestions.
+- **[`python.analysis.showOnlyDirectDependenciesInAutoImport`](python_analysis_showOnlyDirectDependenciesInAutoImport.md)**: Enabled by default in `full` mode to limit third-party auto-import completions to recognized direct dependencies. This can also filter out editable packages installed through path-based `.pth` files, even when their source is in the workspace. Explicitly set it to `false` to disable this filter while keeping `full` mode; see [Editable Installs](python_analysis_showOnlyDirectDependenciesInAutoImport.md#editable-installs) for an example. Import resolution and the "Add import" code action are not affected by this filter.
 
 - **[`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)**: Limits the number of user files indexed in the workspace. In `full` mode, there is no limit (`-1`), allowing comprehensive indexing of all files.
 
