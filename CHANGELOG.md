@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026.3.105 (18 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: No completion results for a defined function in the subsequent notebook cells [pylance-release#8220](https://github.com/microsoft/pylance-release/issues/8220)
+-   Bug fix: Go to declaration fails on "==" [pylance-release#8218](https://github.com/microsoft/pylance-release/issues/8218)
+-   Bug fix: Creating a type stub fails [pylance-release#8217](https://github.com/microsoft/pylance-release/issues/8217)
+-   Bug fix: Move symbol commands fail: Node must have file info [pylance-release#8209](https://github.com/microsoft/pylance-release/issues/8209)
+
 ## 2026.3.104 (14 September 2026) PreRelease
 
 Notable changes:
