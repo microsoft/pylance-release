@@ -23,6 +23,8 @@ The `python.analysis.include` setting in Pylance allows you to specify paths to 
 
 - **Interaction with `exclude`**: The `python.analysis.exclude` setting specifies paths to directories or files that Pylance should ignore, even if they are included in `include`. Paths specified in `exclude` take precedence over those in `include`. This allows you to fine-tune which parts of your included directories should be ignored.
 
+- **Default Exclusions Take Precedence Over `include`**: Pylance's built-in default exclusions — `**/node_modules`, `**/__pycache__`, `**/__editable__.*`, hidden directories (dotfiles), and auto-detected virtual environment directories — also take precedence over `include`. This means a directory that Pylance auto-detects as a virtual environment stays excluded even if you name it explicitly in `include`. To force analysis of such a directory, turn the built-in defaults off with [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md) rather than adding it to `include`.
+
 ## How to Use `python.analysis.include`
 
 You can modify the `python.analysis.include` setting in your VS Code settings, either globally (User settings) or for your workspace.
@@ -154,6 +156,10 @@ Your project may contain directories with generated code, build artifacts, or ex
 - You haven't overridden the default include paths without including the workspace root (if needed).
 - There are no conflicting settings in [`python.analysis.exclude`](python_analysis_exclude.md) that might be excluding the files you want to include.
 
+### Q: Pylance auto-excluded a directory as a virtual environment. Can I use `include` to analyze it anyway?
+
+**A:** No. Pylance always auto-excludes directories it detects as virtual environments, and the built-in default exclusions take precedence over `include`, so naming the directory in `python.analysis.include` will not bring it back. To force analysis of a directory that a default exclusion is skipping, set [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md) to `false`. This disables all built-in excludes — including virtual-environment auto-detection — so only the paths listed in [`python.analysis.exclude`](python_analysis_exclude.md) are excluded.
+
 ### Q: Can users use `${workspaceFolder:rootName}` in `include/exclude/ignore`, and when would they use it?
 
 **A:** Yes, `${workspaceFolder:rootName}` can be used. In a multi-root workspace, if you want to specify `include`, `exclude`, or `ignore` settings for each workspace root individually, you can prefix those settings with `${workspaceFolder:rootName}` to indicate which root the setting applies to.
@@ -202,6 +208,7 @@ These methods offer flexibility for managing analysis settings per workspace roo
 ## Related Settings
 
 - [`python.analysis.exclude`](python_analysis_exclude.md): Controls which files are excluded from analysis.
+- [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md): Turns the built-in default exclusions on or off.
 - [`python.analysis.ignore`](python_analysis_ignore.md): Suppresses diagnostics for specific paths without excluding them.
 - [`python.analysis.extraPaths`](python_analysis_extraPaths.md): Adds directories to the import search path.
 

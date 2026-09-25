@@ -1,5 +1,125 @@
 # Changelog
 
+## 2026.4.1 (23 September 2026) Release
+
+Notable changes:
+
+-   Release version that includes changes through the [2026.3.105](https://github.com/microsoft/pylance-release/blob/main/CHANGELOG.md#20263105-18-september-2026-prerelease) prerelease build.
+
+## 2026.3.105 (18 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: No completion results for a defined function in the subsequent notebook cells [pylance-release#8220](https://github.com/microsoft/pylance-release/issues/8220)
+-   Bug fix: Go to declaration fails on "==" [pylance-release#8218](https://github.com/microsoft/pylance-release/issues/8218)
+-   Bug fix: Creating a type stub fails [pylance-release#8217](https://github.com/microsoft/pylance-release/issues/8217)
+-   Bug fix: Move symbol commands fail: Node must have file info [pylance-release#8209](https://github.com/microsoft/pylance-release/issues/8209)
+
+## 2026.3.104 (14 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Fix Django support, Windows docstring parsing, operator navigation, and overload resolution regressions [pylance-release#8208](https://github.com/microsoft/pylance-release/issues/8208)
+
+## 2026.3.103 (10 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Pylance requests a recursive file watch on `file:///.` when no workspace is open — on macOS this triggers the "would like to access data from other apps" TCC prompt on every launch [pylance-release#8197](https://github.com/microsoft/pylance-release/issues/8197)
+-   Bug fix: numpy (as np) code completion breaks when put before wildcard import [pylance-release#8193](https://github.com/microsoft/pylance-release/issues/8193)
+-   Bug fix: Experimental Django support misses reverse ForeignKey with an app-label string target [pylance-release#8191](https://github.com/microsoft/pylance-release/issues/8191)
+-   Bug fix: `editor.occurrencesHighlight` incorrectly highlights identifier occurrences in Python [pylance-release#8179](https://github.com/microsoft/pylance-release/issues/8179)
+-   Bug fix: Performance with AWS CDK [pylance-release#6986](https://github.com/microsoft/pylance-release/issues/6986)
+-   Enhancement: No docstrings when using pylance in vscode.dev [pylance-release#5429](https://github.com/microsoft/pylance-release/issues/5429)
+-   Enhancement: Support language features for other languages when using cell magics [pylance-release#4969](https://github.com/microsoft/pylance-release/issues/4969)
+-   Enhancement: Provide improved support for pandas [pylance-release#3798](https://github.com/microsoft/pylance-release/issues/3798)
+-   Bug fix: Support for PyScript & Brython. [pylance-release#6760](https://github.com/microsoft/pylance-release/issues/6760)
+
+## 2026.3.102 (4 September 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: `enableEditableInstalls` breaks relative imports in editable package [pylance-release#8184](https://github.com/microsoft/pylance-release/issues/8184)
+-   Bug fix: `"editor.pasteAs.preferences": ["text.pylance.reindent"]` incorrent inline indent [pylance-release#8161](https://github.com/microsoft/pylance-release/issues/8161)
+-   Bug fix: Add semantic token modifier to imported modules [pylance-release#6886](https://github.com/microsoft/pylance-release/issues/6886)
+-   Enhancement: Pylance causes heavy CPU usage by setting file watchers on entire PYTHONPATH [pylance-release#6213](https://github.com/microsoft/pylance-release/issues/6213)
+-   Bug fix: Pylance doesn't honor VSCode display language [pylance-release#5880](https://github.com/microsoft/pylance-release/issues/5880)
+-   Bug fix: Symlinking a directory does not cause a reresolve of imports [pylance-release#5807](https://github.com/microsoft/pylance-release/issues/5807)
+-   Enhancement: `__init__` params not displayed when hovering over type name [pylance-release#5737](https://github.com/microsoft/pylance-release/issues/5737)
+-   Enhancement: Moving generic symbol doesn't move/import associated TypeVars [pylance-release#5552](https://github.com/microsoft/pylance-release/issues/5552)
+-   Enhancement: show indication in vscode statusbar when there are pending reload request [pylance-release#5438](https://github.com/microsoft/pylance-release/issues/5438)
+-   Enhancement: 'Move to file' refactoring should allow me to specify a new file name [pylance-release#5219](https://github.com/microsoft/pylance-release/issues/5219)
+-   Enhancement: Add an informational notification when "go to definition" falls back to "go to declaration" behaviour [pylance-release#5007](https://github.com/microsoft/pylance-release/issues/5007)
+-   Enhancement: Add a warning when writing a Python file inside virtual environments [pylance-release#4975](https://github.com/microsoft/pylance-release/issues/4975)
+-   Bug fix: Support for PyScript & Brython. [pylance-release#6760](https://github.com/microsoft/pylance-release/issues/6760)
+
+## 2026.3.101 (27 August 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Slow performance with large python file. Pylance>=2026.2.104 [pylance-release#8175](https://github.com/microsoft/pylance-release/issues/8175)
+-   Bug fix: Auto-import completions disappear inside pytest test functions when `enablePytestSupport` is enabled [pylance-release#8170](https://github.com/microsoft/pylance-release/issues/8170)
+-   Bug fix: reportCallIssue false positive when chaining dynamic `type()` calls [pylance-release#8166](https://github.com/microsoft/pylance-release/issues/8166)
+-   Bug fix: [TSP] Goto implementation doesn't work for Pyrefly [pylance-release#8127](https://github.com/microsoft/pylance-release/issues/8127)
+-   Bug fix: [TSP] When using Pyrefly as a diagnostics source, there are no import code actions [pylance-release#8121](https://github.com/microsoft/pylance-release/issues/8121)
+
+## 2026.3.100 (19 August 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: Attribute docstring missing from hover for dataclass_transform field with converter [pylance-release#8156](https://github.com/microsoft/pylance-release/issues/8156)
+-   Bug fix: Pylance causes auto whitespaces to be trimmed [pylance-release#8139](https://github.com/microsoft/pylance-release/issues/8139)
+-   Bug fix: A Simple Highlight Error [pylance-release#8138](https://github.com/microsoft/pylance-release/issues/8138)
+-   Bug fix: Completion crashes in pytest test files [pylance-release#8136](https://github.com/microsoft/pylance-release/issues/8136)
+-   Bug fix: StrEnum members show at the bottom of the autocomplete list instead of the top [pylance-release#8135](https://github.com/microsoft/pylance-release/issues/8135)
+-   Bug fix: Shared link renaming doesn't update errors after undo [pylance-release#8132](https://github.com/microsoft/pylance-release/issues/8132)
+-   Bug fix: [TSP] Weird failing getComputedType call [pylance-release#8122](https://github.com/microsoft/pylance-release/issues/8122)
+-   Enhancement: Complete Django `urlpatterns` entries from exported views [pylance-release#8119](https://github.com/microsoft/pylance-release/issues/8119)
+-   Bug fix: 4+1 indenting on new line when tabs in a file [pylance-release#8112](https://github.com/microsoft/pylance-release/issues/8112)
+-   Bug fix: PEP 829 needs to be handled for editable install paths [pylance-release#8038](https://github.com/microsoft/pylance-release/issues/8038)
+-   Bug fix: Add capability to ignore certain packages [pylance-release#7976](https://github.com/microsoft/pylance-release/issues/7976)
+-   Enhancement: Hovering over instance of derived class shows docstring for base class [pylance-release#7970](https://github.com/microsoft/pylance-release/issues/7970)
+-   Bug fix: Forever "... files and ... cells to analyze" [pylance-release#7969](https://github.com/microsoft/pylance-release/issues/7969)
+-   Enhancement: Feature Request - make not working `python.analysis` settings more discoverable [pylance-release#7927](https://github.com/microsoft/pylance-release/issues/7927)
+-   Bug fix: Add #AARRGGBB color mode option [pylance-release#7921](https://github.com/microsoft/pylance-release/issues/7921)
+-   Enhancement: Feature Request: Filter or Visually Distinguish Workspace vs Library Symbols in Outgoing Call Hierarchy [pylance-release#7910](https://github.com/microsoft/pylance-release/issues/7910)
+-   Bug fix: Inlay hints should not be displayed for optional positional-only parameters [pylance-release#7905](https://github.com/microsoft/pylance-release/issues/7905)
+-   Bug fix: Github Copilot is referencing old documentation [pylance-release#7788](https://github.com/microsoft/pylance-release/issues/7788)
+-   Bug fix: Add setting to disable "enable type checking" notification [pylance-release#7623](https://github.com/microsoft/pylance-release/issues/7623)
+-   Bug fix: Find All References doesn't ignore files in **editable**.modulename.xxx directories [pylance-release#7412](https://github.com/microsoft/pylance-release/issues/7412)
+-   Bug fix: Auto imports in pytest files are not working [pylance-release#7410](https://github.com/microsoft/pylance-release/issues/7410)
+-   Bug fix: Add workspace 2 workspace reference concept to pylance [pylance-release#7396](https://github.com/microsoft/pylance-release/issues/7396)
+-   Bug fix: Use pyright from virtual environment [pylance-release#7339](https://github.com/microsoft/pylance-release/issues/7339)
+-   Bug fix: Error parsing pth file [pylance-release#7271](https://github.com/microsoft/pylance-release/issues/7271)
+-   Bug fix: Disable built-in stubs [pylance-release#7265](https://github.com/microsoft/pylance-release/issues/7265)
+-   Bug fix: UV generated project has no completions [pylance-release#7242](https://github.com/microsoft/pylance-release/issues/7242)
+-   Bug fix: Incorrect "No parameter named" Warning [pylance-release#7222](https://github.com/microsoft/pylance-release/issues/7222)
+-   Bug fix: Path for `python.analysis.stubPath` in `.vscode/settings.json` is resolved relative to workspace root instead of settings file [pylance-release#7178](https://github.com/microsoft/pylance-release/issues/7178)
+-   Bug fix: Multi-root workspace with hidden directories uses wrong python interpreter [pylance-release#6751](https://github.com/microsoft/pylance-release/issues/6751)
+-   Bug fix: Syntax highlighting does not support negative literals [pylance-release#6267](https://github.com/microsoft/pylance-release/issues/6267)
+-   Bug fix: Symlink would block pylance from working [pylance-release#6006](https://github.com/microsoft/pylance-release/issues/6006)
+-   Bug fix: The automatic behavior of `python.analysis.exclude` is ambiguous when I specify excluded paths. [pylance-release#5970](https://github.com/microsoft/pylance-release/issues/5970)
+-   Bug fix: Syntax highlighting works differently in the last curly brackets in f-strings [pylance-release#5877](https://github.com/microsoft/pylance-release/issues/5877)
+-   Bug fix: Virtual workspace has duplicates for show call hierarchy [pylance-release#5811](https://github.com/microsoft/pylance-release/issues/5811)
+-   Bug fix: Semantic colorization for quoted type annotations is inconsistent [pylance-release#5810](https://github.com/microsoft/pylance-release/issues/5810)
+-   Bug fix: Long string changes color if split it and add "\" to the end [pylance-release#5733](https://github.com/microsoft/pylance-release/issues/5733)
+-   Bug fix: Intellisense not working when using pylance (no suggestions Ctrl+Space) [pylance-release#5689](https://github.com/microsoft/pylance-release/issues/5689)
+-   Enhancement: Add imports favors 3rd party imports over current package [pylance-release#5660](https://github.com/microsoft/pylance-release/issues/5660)
+-   Bug fix: When function with `Optional` param is moved, `Optional` is not imported in target file [pylance-release#5553](https://github.com/microsoft/pylance-release/issues/5553)
+-   Bug fix: Incorrect function argument indentation [pylance-release#5456](https://github.com/microsoft/pylance-release/issues/5456)
+-   Enhancement: Add support for create function, class or parameter code actions depending on context [pylance-release#5368](https://github.com/microsoft/pylance-release/issues/5368)
+-   Enhancement: Globs in extra paths [pylance-release#5364](https://github.com/microsoft/pylance-release/issues/5364)
+-   Enhancement: Offer quick fix suggestion to update type annotation [pylance-release#5254](https://github.com/microsoft/pylance-release/issues/5254)
+-   Bug fix: Find all references doesn't look in closed notebook files [pylance-release#5175](https://github.com/microsoft/pylance-release/issues/5175)
+-   Enhancement: Add paths next to references when "Show Call Hierarchy" is run [pylance-release#5104](https://github.com/microsoft/pylance-release/issues/5104)
+-   Bug fix: Signature helper for a overload without docstring is showing the docstring of a different overload (of the same function) [pylance-release#5079](https://github.com/microsoft/pylance-release/issues/5079)
+-   Bug fix: TextMate grammar for python doesn't correctly handle `match` statement followed by `~` token [pylance-release#4753](https://github.com/microsoft/pylance-release/issues/4753)
+-   Enhancement: Import resolution errors should show more information about the environment in use [pylance-release#4368](https://github.com/microsoft/pylance-release/issues/4368)
+-   Bug fix: Slow hover/completions could put up a quick action to switch to 'super' trace mode [pylance-release#4228](https://github.com/microsoft/pylance-release/issues/4228)
+-   Enhancement: Offer to install type stub packages for users [pylance-release#3702](https://github.com/microsoft/pylance-release/issues/3702)
+-   Enhancement: Provide improved support for django [pylance-release#3701](https://github.com/microsoft/pylance-release/issues/3701)
+-   Bug fix: Support for PyScript & Brython. [pylance-release#6760](https://github.com/microsoft/pylance-release/issues/6760)
+
 ## 2026.3.1 (21 July 2026) Release
 
 Notable changes:

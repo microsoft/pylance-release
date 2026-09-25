@@ -101,7 +101,7 @@ In multi-root workspaces, you can also **exclude entire workspace folders** you'
 }
 ```
 
-> **Note**: Virtual environments (`.venv`, `venv`, etc.) are auto-excluded by default. You don't need to add them to `exclude` manually.
+> **Note**: The built-in defaults (`**/node_modules`, `**/__pycache__`, dotfiles, and auto-detected virtual environments like `.venv` / `venv`) are excluded **by default**, and your `exclude` entries are added on top of them. You don't need to re-list the defaults to keep them excluded. To turn the built-in defaults off, set [`python.analysis.useDefaultExcludes`](../settings/python_analysis_useDefaultExcludes.md) to `false`.
 
 > **Note**: If [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` exists, the VS Code `exclude` setting is **ignored** — set `exclude` in the config file instead. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 

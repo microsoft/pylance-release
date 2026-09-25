@@ -124,6 +124,12 @@ If this works but Pylance shows errors, see [How to Fix Unresolved Import Errors
 
 3. **Check Python version in `.pth` filename**: The `.pth` file must be in the `site-packages` of the Python interpreter Pylance is using. If you have multiple interpreters, ensure the correct one is selected.
 
+### Imports Resolve but Auto-Import Completions Are Missing
+
+[`python.analysis.showOnlyDirectDependenciesInAutoImport`](../settings/python_analysis_showOnlyDirectDependenciesInAutoImport.md#editable-installs) can filter out editable packages that are not recognized as direct dependencies, even when their source is in the workspace. This includes Poetry's path-based `.pth` installs. [`full` language server mode](../settings/python_analysis_languageServerMode.md) enables this filter by default.
+
+Explicitly set `python.analysis.showOnlyDirectDependenciesInAutoImport` to `false` to disable the filter while keeping `full` mode. See the linked setting guide for a `settings.json` example and other settings that affect suggestions. This filtering does not prevent `.pth` import resolution or affect the "Add import" code action.
+
 ### Wrong Interpreter Selected
 
 The `.pth` files are in a specific interpreter's `site-packages`. If Pylance uses a different interpreter, it won't see them.
@@ -201,7 +207,7 @@ With [uv workspaces](https://docs.astral.sh/uv/concepts/workspaces/):
 
 4. Select the Poetry-managed venv as the Python interpreter in VS Code.
 
-Poetry uses path-based `.pth` files for editable installs, which Pylance reads natively. No additional `extraPaths` or config changes are needed.
+Poetry uses path-based `.pth` files for editable installs, which Pylance reads natively. No additional `extraPaths` or config changes are needed for import resolution. If imports resolve but auto-import suggestions are missing, see [Imports Resolve but Auto-Import Completions Are Missing](#imports-resolve-but-auto-import-completions-are-missing).
 
 ### Q: My build backend doesn't support compat mode. What are my options?
 

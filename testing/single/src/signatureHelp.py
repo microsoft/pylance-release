@@ -1,6 +1,6 @@
 # SCENARIO: trigger signature help for `print()`
 # TARGET: the cursor position between `(` and `)` in `print()` below
-# TRIGGER: Trigger Parameter Hints
+# TRIGGER: Trigger Parameter Hints (In Visual Studio Press Ctrl+Shift+Space)
 # EXPECT: the cursor is between the empty parentheses in `print()`
 # VERIFY: signature help opens for `print` and shows the tooltip, overload information, and an active parameter highlight
 # RECOVER: none

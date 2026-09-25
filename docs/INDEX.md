@@ -64,6 +64,7 @@ Each page explains one `python.analysis.*` setting: what it does, accepted value
 | ---------------------------------------------- | --------------------------------------------- |
 | [include](settings/python_analysis_include.md) | Files and directories to analyze              |
 | [exclude](settings/python_analysis_exclude.md) | Files and directories to skip                 |
+| [useDefaultExcludes](settings/python_analysis_useDefaultExcludes.md) | Toggle the built-in default exclusions (defaults are additive) |
 | [ignore](settings/python_analysis_ignore.md)   | Files to analyze but suppress diagnostics for |
 
 ### Indexing and Completions

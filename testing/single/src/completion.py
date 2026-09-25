@@ -106,7 +106,7 @@ class TypeWithOverload:
     def ha
 
 # SCENARIO: show named-parameter completion for `sep`
-# TARGET: `sep` in `print("Hello", sep)` below
+# TARGET: the cursor position immediately after the final character in `sep`, before the closing parenthesis below
 # TRIGGER: Trigger Suggestion
 # EXPECT: the completion list opens at the named-parameter target
 # VERIFY: the suggestion list includes `sep=`
