@@ -573,7 +573,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - path to a pyright-langserver.js file. For example, the Pyright installed by the PyPI Pyright module. In that case the path would be something like `~/.cache/pyright-python/1.1.397/node_modules/pyright/dist/pyright-langserver.js`
 
 - `python.analysis.pyreflyVersion`
-    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 1.1.1.
+    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 1.0.0.
     - Accepted values:
         - empty (default) — automatically find or download the latest version
         - version string, e.g. `1.1.1` — download and use that specific version
