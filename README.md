@@ -4,7 +4,7 @@ Pylance
 
 This repository is for providing feedback and documentation on the [Pylance language server extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to [Pyright](https://github.com/microsoft/pyright) to make improvements to the core typing engine that powers the Pylance experience.
 
-See the [Pylance documentation index](docs/INDEX.md) for guides, settings references, and diagnostic rule documentation.
+> **Looking for help?** Browse the [Pylance how-to guides and documentation index](docs/INDEX.md) for setup, configuration, and troubleshooting guidance.
 
 Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency. 
 
