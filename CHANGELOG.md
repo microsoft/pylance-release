@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026.4.100 (9 October 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: double-click return type insertion inserts tuple[Never] instead of tuple[()] [pylance-release#8256](https://github.com/microsoft/pylance-release/issues/8256)
+-   Bug fix: userFileIndexFollowSymlinkedFolders regression: workspace symbols no longer index symlinked folders in 2026.4.1 [pylance-release#8253](https://github.com/microsoft/pylance-release/issues/8253)
+-   Bug fix: "1 file and 0 cells to analyze" stays indefinitely after saving an unmodified file [pylance-release#8252](https://github.com/microsoft/pylance-release/issues/8252)
+-   Bug fix: Pylance memory grows to ~4 GB and is never released after opening .py files from outside the workspace folder [pylance-release#8246](https://github.com/microsoft/pylance-release/issues/8246)
+-   Bug fix: Pytest fixtures returning or yielding a Callable not type hinted inside tests body. [pylance-release#8245](https://github.com/microsoft/pylance-release/issues/8245)
+-   Bug fix: Pylance 2026.4.1 crash loop on startup: Unhandled method python/mcpPort + exit code 10, even with zero source files (Python 3.14.7) [pylance-release#8242](https://github.com/microsoft/pylance-release/issues/8242)
+-   Bug fix: Incorrect type narrowing: Dynamic `__init__ = __init_impl` assignment not followed [pylance-release#8238](https://github.com/microsoft/pylance-release/issues/8238)
+-   Bug fix: Pylance restart limiter can miss repeated crashes outside the 3-minute window [pylance-release#8237](https://github.com/microsoft/pylance-release/issues/8237)
+-   Bug fix: type variables in popup hint become `Unknown` when the last argument is empty [pylance-release#8223](https://github.com/microsoft/pylance-release/issues/8223)
+-   Bug fix: Pylance should suggest better imports - frequency sorting might be enough [pylance-release#8214](https://github.com/microsoft/pylance-release/issues/8214)
+-   Bug fix: "Move symbol to new file" produces modules that do not comply with PEP 8, and manually renaming the module to a lower-case name does not trigger a refactor or fails to apply. [pylance-release#8201](https://github.com/microsoft/pylance-release/issues/8201)
+-   Bug fix: Brython type errors are not shown on the containing HTML document [pylance-release#8199](https://github.com/microsoft/pylance-release/issues/8199)
+-   Bug fix: Go to Definition in a mapped JavaScript cell magic opens an empty JSON editor [pylance-release#8198](https://github.com/microsoft/pylance-release/issues/8198)
+-   Bug fix: Pylance adds types for inlay hints that cause errors [pylance-release#8189](https://github.com/microsoft/pylance-release/issues/8189)
+-   Bug fix: Syntax highlighting bug after conditions with os.name as left hand side argument [pylance-release#8146](https://github.com/microsoft/pylance-release/issues/8146)
+-   Bug fix: switch to a different tool for python syntax highlighting [pylance-release#5824](https://github.com/microsoft/pylance-release/issues/5824)
+-   Enhancement: Support for Pydantic dynamic models [pylance-release#4008](https://github.com/microsoft/pylance-release/issues/4008)
+
 ## 2026.4.1 (23 September 2026) Release
 
 Notable changes:
