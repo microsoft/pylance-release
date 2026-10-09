@@ -1,0 +1,5028 @@
+{
+  "execution": {
+    "client": "pylance-language-server",
+    "enableAsyncProgram": true,
+    "enableExternalTypeServer": true,
+    "programMode": "typeServer",
+    "pythonEnvironment": {
+      "dependencies": [
+        "pip==26.0.1",
+        "typing-extensions==4.12.2"
+      ],
+      "dependencySource": {
+        "declaration": "pytorch/pytorch@0ab6f77f3478f367c8eab3e20a11594252356c81/pyproject.toml",
+        "pins": "pytorch/pytorch@0ab6f77f3478f367c8eab3e20a11594252356c81/.ci/docker/requirements-ci.txt"
+      },
+      "interpreter": "<pythonEnvRoot>/python",
+      "isolation": "venv",
+      "pythonVersion": "3.13.0",
+      "torchDistributionInstalled": false,
+      "typingExtensionsFile": "<pythonEnvRoot>/site-packages/typing_extensions.py"
+    },
+    "typeServer": "pyright"
+  },
+  "messages": {
+    "lsp": [
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "kind": "notification",
+        "method": "textDocument/didOpen",
+        "params": {
+          "textDocument": {
+            "languageId": "python",
+            "text": "# mypy: allow-untyped-defs\n# Copyright (c) Meta Platforms, Inc. and affiliates\nimport collections\nimport logging\nfrom collections.abc import Iterator, Sequence\nfrom typing import Any\n\nimport torch\nfrom torch.autograd.graph import GradientEdge, Node\nfrom torch.nn import Parameter\n\nfrom ._debug import map_debug_info\n\n\nlogger = logging.getLogger(__name__)\n\n\ndef _get_grad_fn_or_grad_acc(t: torch.Tensor) -> Node | None:\n    \"\"\"\n    Get the grad function or grad accumulator for a tensor.\n\n    Accumulate grad nodes are lazily created, so we need to a\n    dummy view in order to trigger its creation.\n    \"\"\"\n    if t.requires_grad and t.grad_fn is None:\n        # if no grad function (leaf tensors) we use view\n        viewed_t = t.view_as(t)\n        grad_fn = viewed_t.grad_fn\n        if grad_fn is not None:\n            return grad_fn.next_functions[0][0]\n        else:\n            raise RuntimeError(\n                \"Attempted to get grad_fn, but got None.\"\n                \"Is this being created in a no-grad context?\"\n            )\n    else:\n        return t.grad_fn\n\n\ndef reverse_closure(\n    roots: list[Node], target_nodes: set[Node], reverse_edges_dict\n) -> tuple[set[Node], set[Node]]:\n    \"\"\"\n    This function returns the reverse closure of the given roots,\n    i.e. the set of nodes that can be reached from the roots by following the\n    reverse edges of the graph. The target_nodes are the nodes that we want to\n    include in the closure.\n    \"\"\"\n    # Recurse until we reach a target node\n    closure: set[Node] = set()\n    visited_target_nodes = set()\n    q: collections.deque[Node] = collections.deque()\n    for node in roots:\n        if node is not None and node not in closure:\n            closure.add(node)\n            q.append(node)\n    while q:\n        node = q.popleft()\n        reverse_edges = reverse_edges_dict[node]\n        for fn in reverse_edges:\n            if fn in closure or fn is None:\n                continue\n            if fn in target_nodes:\n                visited_target_nodes.add(fn)\n                continue\n            closure.add(fn)\n            q.append(fn)\n    return closure, visited_target_nodes\n\n\ndef construct_reverse_graph(roots: list[Node]) -> dict[Node, list[Node]]:\n    q: collections.deque[Node] = collections.deque()\n    root_seen: set[Node] = set()\n    reverse_edges_dict: dict[Node, list[Node]] = collections.defaultdict(list)\n    for node in roots:\n        if node is not None and node not in root_seen:\n            q.append(node)\n            root_seen.add(node)\n    while q:\n        node = q.popleft()\n        for fn, _ in node.next_functions:\n            if fn is not None:\n                if len(reverse_edges_dict[fn]) == 0:\n                    q.append(fn)\n                reverse_edges_dict[fn].append(node)\n    return reverse_edges_dict\n\n\ndef get_param_groups(\n    inputs: list[Node], params: list[Node], reverse_edges_dict\n) -> list[dict[str, Any]]:\n    \"\"\"\n    Given a list of inputs and a list of parameters, return a list of parameter\n    groups, where each group contains the parameters and the intermediates that\n    are connected to the parameters.\n\n    The returned list of parameter groups is a list of dictionaries, where each\n    dictionary contains the following keys:\n    - \"params\": a set of parameters\n    - \"intermediates\": a set of intermediates\n\n    The returned list of parameter groups is a list of dictionaries,\n    \"\"\"\n    # reverse graph that starts with inputs, and goes up to the dOutput or the loss,\n    # but omits weights and any subgraphs connecting weights to this closure\n    inputs_closure, _ = reverse_closure(inputs, set(), reverse_edges_dict)\n    param_groups: dict[Node, dict[str, set]] = dict()  # keyed on intermediates\n    for param in params:\n        closure, intersected = reverse_closure(\n            [param], inputs_closure, reverse_edges_dict\n        )\n        param_group: dict[str, set] = {\n            \"params\": {param},\n            \"intermediates\": intersected,\n        }\n        for input_node in intersected:\n            existing = param_groups.get(input_node)\n            if existing is not None:\n                existing[\"params\"] = existing[\"params\"].union(param_group[\"params\"])\n                existing[\"intermediates\"] = existing[\"intermediates\"].union(\n                    param_group[\"intermediates\"]\n                )\n                param_group = existing\n            else:\n                param_groups[input_node] = param_group\n\n    # Sanity check: union of all param_groups params should be equal to all params\n    union_params: set[Node] = set()\n    seen_ids: set[int] = set()\n    unique_param_groups = []\n    for param_group in param_groups.values():\n        if id(param_group) not in seen_ids:\n            seen_ids.add(id(param_group))\n            unique_param_groups.append(param_group)\n            union_params = union_params.union(param_group[\"params\"])\n\n    # The assert will only be true if the input tensor requires gradients,\n    # otherwise the autograd graph will miss the first layer of inputs\n    # assert union_params == set(params)\n    return unique_param_groups\n\n\ndef _autograd_grad_for_inputs(\n    outputs: Sequence[torch.Tensor],\n    inputs: Sequence[Any],\n    grad_outputs: Sequence[torch.Tensor | None] | None = None,\n    retain_graph: bool = False,\n    allow_unused: bool = False,\n) -> tuple[torch.Tensor | None, ...]:\n    \"\"\"Compute input gradients, returning ``None`` for non-grad inputs.\"\"\"\n    # Some inputs may not be used or may not require gradients, so we filter them out\n    # before calling autograd.grad and place None for those positions in the result.\n    grad_indices: list[int] = []\n    inputs_requiring_grad: list[torch.Tensor] = []\n    for i, inp in enumerate(inputs):\n        if isinstance(inp, torch.Tensor) and inp.requires_grad:\n            grad_indices.append(i)\n            inputs_requiring_grad.append(inp)\n\n    if not inputs_requiring_grad:\n        return tuple(None for _ in inputs)\n\n    grads = torch.autograd.grad(\n        outputs=outputs,\n        inputs=inputs_requiring_grad,\n        grad_outputs=grad_outputs,\n        retain_graph=retain_graph,\n        allow_unused=allow_unused,\n    )\n\n    result: list[torch.Tensor | None] = [None] * len(inputs)\n    for idx, g in zip(grad_indices, grads, strict=True):\n        result[idx] = g\n    return tuple(result)\n\n\ndef stage_backward_input(\n    stage_outputs_or_loss: list[torch.Tensor],\n    output_grads: list[torch.Tensor] | None,\n    input_values: list[Any],\n    weights: Iterator[Parameter],\n) -> tuple[tuple[torch.Tensor | None, ...], list[dict[str, Any]]]:\n    \"\"\"\n    Compute the gradients for only the stage inputs with\n    respect to the stage outputs (if non-last stage) or loss (if last stage)\n\n    After computing input gradients, we save the intermediate nodes in `param_groups`\n    for later use in stage_backward_weight. We don't need to save any other intermediate nodes\n    that aren't needed for dW because when we do dW calculation, we start from saved intermediates.\n    Detaching the stage_outputs_or_loss at the end of this function is important as\n    it frees up the memory that the autograd graph is anticipating to be used later (but doesn't actually need).\n    \"\"\"\n    valid_outputs: list[torch.Tensor] = []\n    valid_output_grads: list[torch.Tensor | None] = []\n    for i, stage_output in enumerate(stage_outputs_or_loss):\n        if not stage_output.requires_grad and stage_output.grad_fn is None:\n            continue\n        valid_outputs.append(stage_output)\n        valid_output_grads.append(\n            torch.ones_like(stage_output) if output_grads is None else output_grads[i]\n        )\n\n    stage_output_grad_fns: list[Node] = list(\n        filter(None, map(_get_grad_fn_or_grad_acc, valid_outputs))\n    )\n    stage_input_grad_fns: list[Node] = list(\n        filter(\n            None,\n            (\n                _get_grad_fn_or_grad_acc(inp)\n                for inp in input_values\n                if isinstance(inp, torch.Tensor)\n            ),\n        )\n    )\n    weight_grad_fns: list[Node] = list(\n        filter(None, map(_get_grad_fn_or_grad_acc, weights))\n    )\n\n    reverse_edges_dict = construct_reverse_graph(stage_output_grad_fns)\n    param_groups = get_param_groups(\n        stage_input_grad_fns, weight_grad_fns, reverse_edges_dict\n    )\n\n    handles = []\n    try:\n        for param_group in param_groups:\n            intermediates = list(param_group[\"intermediates\"])\n            param_group[\"intermediates\"] = intermediates\n            for i, intermediate in enumerate(intermediates):\n\n                def get_hook(param_group, i):\n                    def hook(grad_inputs):\n                        if param_group.get(\"grads\", None) is None:\n                            param_group[\"grads\"] = [None] * len(\n                                param_group[\"intermediates\"]\n                            )\n                        param_group[\"grads\"][i] = grad_inputs\n\n                    return hook\n\n                handle = intermediate.register_prehook(get_hook(param_group, i))\n                handles.append(handle)\n\n        if valid_outputs:\n            dinputs = _autograd_grad_for_inputs(\n                valid_outputs,\n                input_values,\n                valid_output_grads,\n                retain_graph=True,\n                allow_unused=True,\n            )\n        else:\n            dinputs = tuple(None for _ in input_values)\n\n        for inp, dinput in zip(input_values, dinputs):\n            if isinstance(inp, torch.Tensor) and dinput is not None:\n                if inp.grad is None:\n                    inp.grad = dinput\n                else:\n                    inp.grad += dinput\n\n        # drop output side graph state we no longer need\n        for t in stage_outputs_or_loss:\n            t.detach_()\n\n        return dinputs, param_groups\n    except Exception as e:\n        exc_msg = f\"\"\"\n        Failed to run stage backward input:\n        Stage output: {map_debug_info(stage_outputs_or_loss)}\n        Output gradient: {map_debug_info(output_grads)}\n        Input: {map_debug_info(input_values)}\n        \"\"\"\n        raise RuntimeError(exc_msg) from e\n    finally:\n        for handle in handles:\n            handle.remove()\n\n\ndef stage_backward_weight(\n    weights: Iterator[Parameter], param_groups: list[dict[str, Any]], retain_graph=False\n) -> tuple[torch.Tensor | None, ...]:\n    # map weights to param_group_weights\n    grad_acc_to_weight = {}\n    weight_grads: list[torch.Tensor | None] = []\n    for index, weight in enumerate(weights):\n        grad_acc = _get_grad_fn_or_grad_acc(weight)\n        grad_acc_to_weight[grad_acc] = weight, index\n        weight_grads.append(weight.grad)\n\n    for param_group in param_groups:\n        valid_edges = []\n        valid_grad_outputs: list[torch.Tensor] = []\n\n        for grads_tuple, intermediate in zip(\n            param_group[\"grads\"], param_group[\"intermediates\"]\n        ):\n            for i, grad in enumerate(grads_tuple):\n                if grad is not None:\n                    valid_edges.append(GradientEdge(intermediate, i))\n                    # pyrefly: ignore [bad-argument-type]\n                    valid_grad_outputs.append(grad)\n\n        # clamp saved grads to avoid double counting through descendant intermediates.\n        handles = []\n        try:\n            if len(param_group[\"intermediates\"]) > 1:\n                for grads_tuple, intermediate in zip(\n                    param_group[\"grads\"],\n                    param_group[\"intermediates\"],\n                    strict=True,\n                ):\n                    handles.append(\n                        intermediate.register_prehook(\n                            lambda grad_outputs, sg=grads_tuple: sg\n                        )\n                    )\n\n            # break the hook -> param_group -> intermediates cycle\n            del param_group[\"intermediates\"]\n\n            if valid_edges:\n                weights_edges = tuple(GradientEdge(w, 0) for w in param_group[\"params\"])\n                dweights = torch.autograd.grad(\n                    valid_edges,\n                    weights_edges,\n                    grad_outputs=valid_grad_outputs,\n                    retain_graph=retain_graph,\n                )\n\n                del param_group[\"grads\"]\n\n                for grad_acc, dw in zip(param_group[\"params\"], dweights):\n                    weight, index = grad_acc_to_weight[grad_acc]\n                    if weight.grad is None:\n                        weight.grad = dw\n                    else:\n                        weight.grad += dw\n        finally:\n            for handle in handles:\n                handle.remove()\n    return tuple(weight_grads)\n\n\ndef stage_backward(\n    stage_output,\n    output_grads,\n    input_values,\n    outputs_with_grads_idxs: list[int] | None = None,  # deprecated, not used\n) -> tuple[torch.Tensor | None, ...]:\n    \"\"\"\n    This is a helper function to:\n    1. compute the gradients for the stage inputs, and\n    2. accumulate gradients for the stage module's parameters.\n\n    Given the input value(s) and the corresponding gradient for the output\n    value(s), compute and accumulate gradients for all parameter values (leaves\n    in the autograd trace) as well as return a list of the gradients for the\n    input values\n    \"\"\"\n    if outputs_with_grads_idxs is not None:\n        # Deprecated, not used in runtime calls, only exists in compiler\n        stage_output = [stage_output[i] for i in outputs_with_grads_idxs]\n        output_grads = [output_grads[i] for i in outputs_with_grads_idxs]\n\n    try:\n        # stage_output may be a composite datatype like dict. Extract all individual\n        # tensor values here\n        stage_output_tensors: list[torch.Tensor] = []\n        output_grad_tensors: list[torch.Tensor | None] = []\n\n        def extract_tensors_with_grads(\n            output_val,\n            grad_val,\n            # Don't delete me- see [Note: ref cycle]\n            extract_tensors_with_grads,\n        ):\n            if isinstance(output_val, torch.Tensor):\n                if not output_val.requires_grad and output_val.grad_fn is None:\n                    return\n                if not isinstance(grad_val, (torch.Tensor, type(None))):\n                    raise AssertionError(\n                        f\"Expected Tensor or None gradient but got {type(grad_val)}\"\n                    )\n                stage_output_tensors.append(output_val)\n                output_grad_tensors.append(grad_val)\n            elif isinstance(output_val, (tuple, list)):\n                if grad_val is None:\n                    return\n                if not isinstance(grad_val, (tuple, list)):\n                    raise AssertionError(\n                        f\"grad_value expected to have type {type(output_val)} but got {type(grad_val)}\"\n                    )\n                if not len(output_val) == len(grad_val):\n                    raise AssertionError(\n                        f\"Expected len(output_val) == len(grad_val), got {len(output_val)} != {len(grad_val)}\"\n                    )\n                for ov, gv in zip(output_val, grad_val):\n                    extract_tensors_with_grads(\n                        ov,\n                        gv,\n                        extract_tensors_with_grads,\n                    )\n            elif isinstance(output_val, dict):\n                if grad_val is None:\n                    return\n                if not isinstance(grad_val, dict):\n                    raise AssertionError(f\"Expected dict, got {type(grad_val)}\")\n                if not set(output_val.keys()) == set(grad_val.keys()):\n                    raise AssertionError(\n                        f\"Expected keys {set(output_val.keys())}, got {set(grad_val.keys())}\"\n                    )\n                for k in output_val:\n                    extract_tensors_with_grads(\n                        output_val[k], grad_val[k], extract_tensors_with_grads\n                    )\n            else:\n                # Output is a non-tensor type; just ignore it\n                pass\n\n        # Note: ref cycle\n        # break a ref cycle that would keep tensors alive until GC runs\n        # 1. extract_tensors_with_grads refers to a cell that holds refs to any vars defined in stage_backward\n        #    and used in extract_tensors_with_grads\n        # 2. extract_tensors_with_grads referred to both stage_output_tensors, output_grad_tensors,\n        #    and to itself (extract_tensors_with_grads) since it makes a recursive call\n        # 3. stage_output_tensors was kept alive by the above refcycle, and it holds activation tensors, which is bad\n        # fix -> explicitly pass in the ref to the fn, so there is no gc cycle anymore\n        extract_tensors_with_grads(\n            stage_output, output_grads, extract_tensors_with_grads\n        )\n\n        torch.autograd.backward(\n            stage_output_tensors,\n            grad_tensors=output_grad_tensors,  # type: ignore[arg-type]\n        )\n\n        # Extract gradients wrt the input values\n        grad_inputs: list[torch.Tensor | None] = []\n        for val in input_values:\n            if isinstance(val, torch.Tensor):\n                grad_inputs.append(val.grad)\n                # Since gradients that will pass back to previous stages do not require gradient accumulation,\n                # by decrementing the gradients' reference count at this point, the memory of gradients will be\n                # returned to the allocator as soon as the next micro batch's get_bwd_send_ops comes and current\n                # asynchronous send completes.\n                # This prevents the gradients from persisting in GPU memory for the entire duration of step_microbatches\n                # until clear_runtime_states() is called.\n                val.grad = None\n            else:\n                grad_inputs.append(None)\n\n        # Alternative impl: `torch.autograd.grad`.\n        # Note that `torch.autograd.grad` will not accumulate gradients into the\n        # model's parameters.\n        \"\"\"\n        inputs_with_grad = []\n        for val in input_values:\n            if isinstance(val, torch.Tensor) and val.requires_grad:\n                inputs_with_grad.append(val)\n\n        grad_inputs = torch.autograd.grad(\n            stage_output_tensors, inputs_with_grad, output_grad_tensors,  # type: ignore[arg-type]\n        )\n        \"\"\"\n\n    except Exception as e:\n        exc_msg = f\"\"\"\n        Failed to run stage backward:\n        Stage output: {map_debug_info(stage_output)}\n        Output gradient: {map_debug_info(output_grads)}\n        Input: {map_debug_info(input_values)}\n        \"\"\"\n        raise RuntimeError(exc_msg) from e\n\n    return tuple(grad_inputs)\n\n\n# TODO: handling requires_grad=False dynamically. Can we analyze this during initial\n# IR emission?\ndef _null_coalesce_accumulate(lhs, rhs):\n    \"\"\"\n    Coalesce two values, even if one of them is null, returning the non-null\n    value.\n    \"\"\"\n    if lhs is None:\n        return rhs\n    elif rhs is None:\n        return lhs\n    else:\n        return torch.add(lhs, rhs)\n",
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py",
+            "version": 1
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 0
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "client-to-pylance",
+        "id": 1,
+        "kind": "request",
+        "method": "textDocument/hover",
+        "params": {
+          "position": {
+            "character": 21,
+            "line": 9
+          },
+          "textDocument": {
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+          }
+        },
+        "protocol": "lsp",
+        "sequence": 1
+      },
+      {
+        "channel": "pylance-client",
+        "direction": "pylance-to-client",
+        "id": 1,
+        "kind": "response",
+        "protocol": "lsp",
+        "result": {
+          "contents": {
+            "kind": "markdown",
+            "value": "```python\nclass Parameter(\n    data: Tensor = ...,\n    requires_grad: bool = ...\n)\n```\n---\nA kind of Tensor that is to be considered a module parameter.\n\nParameters are `~torch.Tensor` subclasses, that have a  \nvery special property when used with `Module` s - when they're\nassigned as Module attributes they are automatically added to the list of  \nits parameters, and will appear e.g. in `~Module.parameters` iterator.\nAssigning a Tensor doesn't have such effect. This is because one might\nwant to cache some temporary state, like last hidden state of the RNN, in  \nthe model. If there was no such class as `Parameter`, these\ntemporaries would get registered too.\n\nArgs:  \n&nbsp;&nbsp;&nbsp;&nbsp;data (Tensor): parameter tensor.  \n&nbsp;&nbsp;&nbsp;&nbsp;requires\\_grad (bool, optional): if the parameter requires gradient. Note that  \n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the torch.no\\_grad() context does NOT affect the default behavior of\nParameter creation--the Parameter will still have `requires_grad=True` in  \n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~no_grad` mode. See `locally-disable-grad-doc` for more  \n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;details. Default: `True`"
+          },
+          "range": {
+            "end": {
+              "character": 30,
+              "line": 9
+            },
+            "start": {
+              "character": 21,
+              "line": 9
+            }
+          }
+        },
+        "sequence": 2
+      }
+    ],
+    "lspOrdering": "captured",
+    "tsp": [
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 12,
+                "line": 407
+              },
+              "start": {
+                "character": 5,
+                "line": 407
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 12,
+                "line": 407
+              },
+              "start": {
+                "character": 5,
+                "line": 407
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1059
+              },
+              "start": {
+                "character": 11,
+                "line": 1059
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 180
+              },
+              "start": {
+                "character": 1,
+                "line": 180
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 210
+              },
+              "start": {
+                "character": 6,
+                "line": 210
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 251
+              },
+              "start": {
+                "character": 1,
+                "line": 251
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 15,
+                "line": 156
+              },
+              "start": {
+                "character": 13,
+                "line": 156
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 21,
+                "line": 101
+              },
+              "start": {
+                "character": 13,
+                "line": 101
+              }
+            },
+            "uri": "<workspaceRoot>/torch/_tensor.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 22,
+                "line": 156
+              },
+              "start": {
+                "character": 20,
+                "line": 156
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 22,
+                "line": 4
+              },
+              "start": {
+                "character": 16,
+                "line": 4
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 26,
+                "line": 234
+              },
+              "start": {
+                "character": 23,
+                "line": 234
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 30,
+                "line": 9
+              },
+              "start": {
+                "character": 21,
+                "line": 9
+              }
+            },
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 32,
+                "line": 101
+              },
+              "start": {
+                "character": 13,
+                "line": 101
+              }
+            },
+            "uri": "<workspaceRoot>/torch/_tensor.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 34,
+                "line": 234
+              },
+              "start": {
+                "character": 31,
+                "line": 234
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 35,
+                "line": 5
+              },
+              "start": {
+                "character": 29,
+                "line": 5
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 40,
+                "line": 210
+              },
+              "start": {
+                "character": 28,
+                "line": 210
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 40,
+                "line": 210
+              },
+              "start": {
+                "character": 28,
+                "line": 210
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing_extensions.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 41,
+                "line": 5
+              },
+              "start": {
+                "character": 38,
+                "line": 5
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 1058
+              },
+              "start": {
+                "character": 1,
+                "line": 1058
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 158
+              },
+              "start": {
+                "character": 1,
+                "line": 158
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/typing.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 711
+              },
+              "start": {
+                "character": 1,
+                "line": 711
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 6,
+                "line": 715
+              },
+              "start": {
+                "character": 1,
+                "line": 715
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 62,
+                "line": 5
+              },
+              "start": {
+                "character": 58,
+                "line": 5
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 68,
+                "line": 5
+              },
+              "start": {
+                "character": 65,
+                "line": 5
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 77,
+                "line": 5
+              },
+              "start": {
+                "character": 73,
+                "line": 5
+              }
+            },
+            "uri": "<workspaceRoot>/torch/nn/parameter.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "collections",
+              "abc",
+              "Callable"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "collections",
+              "OrderedDict"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "copy"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "copy",
+              "deepcopy"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "copyreg"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "enum"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "functorch"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "functorch",
+              "dim"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "functorch",
+              "dim",
+              "index"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "numbers"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "numbers",
+              "Number"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch_xla"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch_xla",
+              "utils"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch_xla",
+              "utils",
+              "dlpack"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_C",
+              "_disabled_torch_function_impl"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/parameter.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_linalg_utils",
+              "_symeig"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_linalg_utils",
+              "eig"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_linalg_utils",
+              "lstsq"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_linalg_utils",
+              "solve"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "_prims_common"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "autograd",
+              "_functions"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "autograd",
+              "_functions",
+              "Resize"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "device"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/parameter.pyi"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "dtype"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/parameter.pyi"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "fx",
+              "experimental",
+              "symbolic_shapes",
+              "guard_or_false"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "attention"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "init"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "modules"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parallel"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parallel",
+              "DataParallel"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parameter"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parameter",
+              "Buffer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parameter",
+              "Parameter"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parameter",
+              "UninitializedBuffer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "parameter",
+              "UninitializedParameter"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "nn",
+              "utils"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "overrides",
+              "get_default_nowrap_functions"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "overrides",
+              "handle_torch_function"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "overrides",
+              "has_torch_function_unary"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "overrides",
+              "has_torch_function_variadic"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "overrides",
+              "has_torch_function"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "Tensor"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/parameter.pyi"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "utils",
+              "dlpack",
+              "DLDeviceType"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "utils",
+              "hooks"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "utils",
+              "hooks",
+              "RemovableHandle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "torch",
+              "utils",
+              "hooks",
+              "warn_if_has_hooks"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing_extensions",
+              "ParamSpec"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing_extensions",
+              "TypeIs"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/parameter.pyi"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing",
+              "cast"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing",
+              "Concatenate"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing",
+              "TypeVar"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 0,
+            "nameParts": [
+              "typing",
+              "Union"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "_linalg_utils"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "_linalg_utils",
+              "cholesky"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/_tensor.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "CELU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "ELU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "GELU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "GLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Hardshrink"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Hardsigmoid"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Hardswish"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Hardtanh"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "LeakyReLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "LogSigmoid"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "LogSoftmax"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Mish"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "MultiheadAttention"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "PReLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "ReLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "ReLU6"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "RReLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "SELU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Sigmoid"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "SiLU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softmax"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softmax2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softmin"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softplus"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softshrink"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Softsign"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Tanh"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Tanhshrink"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "activation",
+              "Threshold"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "adaptive"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "adaptive",
+              "AdaptiveLogSoftmaxWithLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "BatchNorm1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "BatchNorm2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "BatchNorm3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "LazyBatchNorm1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "LazyBatchNorm2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "LazyBatchNorm3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "batchnorm",
+              "SyncBatchNorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "channelshuffle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "channelshuffle",
+              "ChannelShuffle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "Container"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "ModuleDict"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "ModuleList"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "ParameterDict"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "ParameterList"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "container",
+              "Sequential"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "Conv1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "Conv2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "Conv3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "ConvTranspose1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "ConvTranspose2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "ConvTranspose3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConv1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConv2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConv3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConvTranspose1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConvTranspose2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "conv",
+              "LazyConvTranspose3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "distance"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "distance",
+              "CosineSimilarity"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "distance",
+              "PairwiseDistance"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "AlphaDropout"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "Dropout"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "Dropout1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "Dropout2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "Dropout3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "dropout",
+              "FeatureAlphaDropout"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "flatten"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "flatten",
+              "Flatten"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "flatten",
+              "Unflatten"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "fold"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "fold",
+              "Fold"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "fold",
+              "Unfold"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "InstanceNorm1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "InstanceNorm2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "InstanceNorm3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "LazyInstanceNorm1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "LazyInstanceNorm2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "instancenorm",
+              "LazyInstanceNorm3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear_cross_entropy_options"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear_cross_entropy_options",
+              "LinearCrossEntropyOptions"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear",
+              "Bilinear"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear",
+              "Identity"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear",
+              "LazyLinear"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "linear",
+              "Linear"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "BCELoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "BCEWithLogitsLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "CosineEmbeddingLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "CrossEntropyLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "CTCLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "GaussianNLLLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "HingeEmbeddingLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "HuberLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "KLDivLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "L1Loss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "LinearCrossEntropyLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "MarginRankingLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "MSELoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "MultiLabelMarginLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "MultiLabelSoftMarginLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "MultiMarginLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "NLLLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "NLLLoss2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "PoissonNLLLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "SmoothL1Loss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "SoftMarginLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "TripletMarginLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "loss",
+              "TripletMarginWithDistanceLoss"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "module"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "module",
+              "Module"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization",
+              "CrossMapLRN2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization",
+              "GroupNorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization",
+              "LayerNorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization",
+              "LocalResponseNorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "normalization",
+              "RMSNorm"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "CircularPad1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "CircularPad2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "CircularPad3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ConstantPad1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ConstantPad2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ConstantPad3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReflectionPad1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReflectionPad2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReflectionPad3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReplicationPad1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReplicationPad2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ReplicationPad3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ZeroPad1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ZeroPad2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "padding",
+              "ZeroPad3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pixelshuffle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pixelshuffle",
+              "PixelShuffle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pixelshuffle",
+              "PixelUnshuffle"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveAvgPool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveAvgPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveAvgPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveMaxPool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveMaxPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AdaptiveMaxPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AvgPool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AvgPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "AvgPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "FractionalMaxPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "FractionalMaxPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "LPPool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "LPPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "LPPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxPool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxPool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxPool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxUnpool1d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxUnpool2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "pooling",
+              "MaxUnpool3d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "GRU"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "GRUCell"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "LSTM"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "LSTMCell"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "RNN"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "RNNBase"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "RNNCell"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "rnn",
+              "RNNCellBase"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "sparse"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "sparse",
+              "Embedding"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "sparse",
+              "EmbeddingBag"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer",
+              "Transformer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer",
+              "TransformerDecoder"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer",
+              "TransformerDecoderLayer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer",
+              "TransformerEncoder"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "transformer",
+              "TransformerEncoderLayer"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "upsampling"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "upsampling",
+              "Upsample"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "upsampling",
+              "UpsamplingBilinear2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/resolveImport",
+        "params": {
+          "moduleDescriptor": {
+            "leadingDots": 1,
+            "nameParts": [
+              "upsampling",
+              "UpsamplingNearest2d"
+            ]
+          },
+          "sourceUri": "<workspaceRoot>/torch/nn/modules/__init__.py"
+        },
+        "protocol": "tsp"
+      }
+    ],
+    "tspComparison": "unordered-multiset",
+    "tspOrdering": "canonical-for-serialization",
+    "tspScope": "pylance-initiated",
+    "tspWindow": "feature-request"
+  },
+  "result": {
+    "kind": "Hover"
+  },
+  "scenario": {
+    "benchmark": {
+      "entryFile": "torch/distributed/pipelining/_backward.py",
+      "reference": "facebook/pyrefly@99b5b38f7e22829f5667b95ef345f0b7e7c5ee0b"
+    },
+    "category": "hover",
+    "id": "hover-pytorch-parameter",
+    "requestMethod": "textDocument/hover",
+    "source": {
+      "file": "torch/distributed/pipelining/_backward.py",
+      "repository": "pytorch/pytorch",
+      "revision": "0ab6f77f3478f367c8eab3e20a11594252356c81"
+    },
+    "target": {
+      "context": "from torch.nn import Parameter",
+      "position": {
+        "character": 21,
+        "line": 9
+      },
+      "text": "Parameter"
+    },
+    "targetRationale": "Matches the Pyrefly cold-start target at 0-indexed line 9, column 21.",
+    "title": "Hover over the Pyrefly PyTorch benchmark target"
+  },
+  "schemaVersion": 1
+}

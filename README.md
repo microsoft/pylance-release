@@ -4,10 +4,6 @@ Pylance
 
 This repository is for providing feedback and documentation on the [Pylance language server extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) in Visual Studio Code. You can use the repository to report issues or submit feature requests. The Pylance codebase is not open-source but you can contribute to [Pyright](https://github.com/microsoft/pyright) to make improvements to the core typing engine that powers the Pylance experience.
 
-### How-to guides and documentation
-
-Browse the [Pylance documentation index](docs/INDEX.md) for setup, configuration, and troubleshooting guidance.
-
 Pylance is the default language support for [Python in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and is shipped as part of that extension as an optional dependency. 
 
 The Pylance name is a small ode to Monty Python's Lancelot who was the first knight to answer the bridgekeeper's questions in the Holy Grail.
@@ -38,9 +34,10 @@ Pylance provides some awesome features for Python 3, including:
 * Native multi-root workspace support
 * Jupyter Notebooks compatibility
 * Semantic highlighting
+* Generate Dependency File command for workspace roots, Explorer folders, and Python scripts (`Pylance: Generate Dependency File`)
 * Toggle Block Comment command for Python (`Pylance: Toggle Block Comment`)
 * Install Matching Type Stubs command that finds and installs type stub packages for your installed dependencies (`Pylance: Install Matching Type Stubs`)
-* Copilot Chat skills for fact-grounded Python help, type inference, inline type annotations, stub authoring, Pylance docs, refactoring, profiling, and adding or dropping Python version support
+* Copilot Chat skills for fact-grounded Python help, type inference, inline type annotations, finding reviewed third-party stubs, stub authoring, Pylance docs, refactoring, profiling, improving Pylance type-evaluation performance, and adding or dropping Python version support
 
 See the [changelog](CHANGELOG.md) for the latest release.
 
@@ -265,6 +262,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.userFileIndexFollowSymlinkedFolders`
     - Used to specify whether user-file indexing should follow files that are located under symlinked folders in the workspace.
+    - With indexing enabled and this setting set to `true`, workspace symbol search (`Ctrl+T`) includes symbols from linked package folders, even when their targets are outside the workspace.
     - Default value: `true`
     - Available values:
         - `true` (default)
@@ -274,6 +272,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Note:
         - This setting affects only user-file indexing. It does not change how installed third-party libraries are indexed, including packages in `site-packages` or `dist-packages`.
         - Symlinked individual files are still indexed; this setting only controls files discovered under symlinked folders.
+        - Source discovery skips directory links to filesystem roots or ancestors of included folders unless the target is covered by an explicit include.
         - Only takes effect when `python.analysis.indexing` is enabled.
         - This can change which import suggestions are offered. For example, if the same symbol could be imported as `from lib import Symbol` or `from symlinked import Symbol`, turning this setting off can prevent `from symlinked import Symbol` from being offered when `symlinked` is reached through a symlinked folder.
 
@@ -460,6 +459,23 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
+- `python.analysis.enableTreeSitterColorization` [Experimental]
+    - Uses an incremental Tree-sitter Rust sidecar for Python syntax colors, combined with Pylance's type-aware semantic tokens.
+    - Set this to `true` and enable `editor.semanticHighlighting.enabled` to use it. Requires a trusted workspace and a supported native binary.
+    - Supports open Python files up to 2 MiB. Notebooks, virtual content, and larger files keep existing highlighting.
+    - Themes control the colors; unstyled tokens retain TextMate colors. TextMate remains the fallback.
+    - Default value: `false`
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
+- `python.analysis.enablePydanticSupport` [Experimental]
+    - Enables field IntelliSense and constructor type checking for statically recoverable Pydantic `create_model` calls.
+    - Default value: `false`
+    - Accepted values:
+        - `true`
+        - `false` (default)
+
 - `python.analysis.autoFormatStrings`
     - When typing a `{` in a string, automatically puts an `f` on the front of the string. 
     - Accepted values:
@@ -565,6 +581,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.diagnosticsSource`
     - Allows specifying a different type checker to use for diagnostics. Pylance will combine its results with the chosen server.
+    - This setting applies to all workspace folders in the current VS Code window.
     - Accepted values:
         - `Pylance` (default) - Use Pylance for diagnostics.
         - `Pylance + Pyright` - Use a different version of Pyright for diagnostics. Allows running a different Pyright than the one shipped with the Pylance extension. Pyright diagnostics will completely replace the diagnostics from Pylance. See the `python.analysis.pyrightVersion` setting.
@@ -577,7 +594,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - path to a pyright-langserver.js file. For example, the Pyright installed by the PyPI Pyright module. In that case the path would be something like `~/.cache/pyright-python/1.1.397/node_modules/pyright/dist/pyright-langserver.js`
 
 - `python.analysis.pyreflyVersion`
-    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 1.0.0.
+    - Specifies the version of Pyrefly to use for diagnostics. This setting is only used when `python.analysis.diagnosticsSource` is set to `Pylance + Pyrefly`. Minimum version allowed is 1.1.1.
     - Accepted values:
         - empty (default) — automatically find or download the latest version
         - version string, e.g. `1.1.1` — download and use that specific version
@@ -614,6 +631,13 @@ Pylance provides users with the ability to customize their Python language suppo
     - Diagnostics are projected when the configured language provider publishes them for hidden virtual documents. Pull-only diagnostic providers, including VS Code's built-in JSON support, do not supply diagnostics for mapped cells.
     - Default value: `{}`
     - Example: `{"sql": "sql", "kql": "kusto", "cypher": "cypher"}`
+
+- `python.analysis.enablePyreflyNotificationForAll` (**Experimental**)
+    - Offers to switch the Python diagnostics provider to Pyrefly when the effective type-checking mode is `off`, even if Pyrefly is not installed or configured. Pylance downloads Pyrefly if needed after you accept the offer.
+    - This setting works independently of `python.analysis.enablePyreflyNotification` and respects a previous dismissal of the offer.
+    - Accepted values:
+        - `true`
+        - `false` (default)
 
 - `python.analysis.enablePyreflyShadowExperiment` (**Experimental**)
     - Force-enable a hidden Pyrefly-typed Pylance language server alongside the primary server and log its telemetry events. When disabled, enrollment remains controlled by the experiment service. For internal performance and reliability testing only. Requires reloading the window.
@@ -754,6 +778,12 @@ Source (whole-file) code actions
 Troubleshooting
 ===============
 Known issues are documented in [TROUBLESHOOTING](TROUBLESHOOTING.md).
+
+### Repeated crashes
+
+In desktop VS Code, Pylance automatically restarts after an unexpected server exit. To avoid an endless crash loop, it stops restarting after five crashes unless the server has run continuously for at least 10 minutes between failures. Reaching a ready state briefly does not reset this count; time spent starting or stopped does not count toward recovery. The five-crashes-in-three-minutes limit also remains in effect.
+
+If Pylance stops restarting, inspect the Pylance output channel for crash details and address the reported cause before reloading the VS Code window to try again. The restart limits prevent repeated failures from continuing indefinitely; they do not fix the cause of a crash.
 
 Contributing
 ===============
