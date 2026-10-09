@@ -2,7 +2,7 @@
 
 This document provides a comprehensive overview of the most requested features and bugs in the Pylance extension, based on community feedback from GitHub Discussions and Issues. Items were selected from highly reacted issues; reaction counts below refer to total GitHub reactions.
 
-**Last Updated:** September 1, 2026  
+**Last Updated:** October 9, 2026  
 **Maintenance:** This document is maintained by the community and should be updated quarterly or when significant changes occur in top-requested items.
 
 ## Top Features and Enhancements
@@ -12,9 +12,9 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Enhanced support for Python docstrings, including recognition of existing docstrings with defined parameters/types and auto-generation of docstrings with type inference from function signatures.
 
-### 2. Show Class Hierarchy / Method Override Indicators (368 reactions) - ⏳ OPEN
+### 2. Show Class Hierarchy / Method Override Indicators (368 reactions) - ✅ COMPLETED
 **Issue:** [#4972](https://github.com/microsoft/pylance-release/issues/4972)  
-**Status:** Open (assigned)  
+**Status:** Closed  
 **Description:** Display visual indicators (similar to PyCharm) showing which methods in a class override parent class methods, with ability to jump to the overriding parent method through icons.
 
 ### 3. Import Resolution Issues (130 reactions) - ✅ COMPLETED
@@ -65,23 +65,33 @@ This document provides a comprehensive overview of the most requested features a
 **Status:** Closed  
 **Description:** Support for Google-style docstrings and other popular docstring formats (not just reStructuredText).
 
-### 11. Support Language Features in Cell Magics (24 reactions) - ⏳ OPEN
+### 11. Support Language Features in Cell Magics (24 reactions) - ✅ COMPLETED
 **Issue:** [#4969](https://github.com/microsoft/pylance-release/issues/4969)  
-**Status:** Open (reopened, assigned)  
+**Status:** Closed (fixed in next version)  
 **Description:** Use language request forwarding so cell magics such as `%%html`, `%%sql`, `%%js`, and `%%kql` get proper language features instead of being treated as Python code, with a configurable mapping of magics to languages.
 
-### 12. Switch Python Syntax Highlighting Tool (10 reactions) - ⏳ OPEN
+### 12. Switch Python Syntax Highlighting Tool (11 reactions) - ⏳ OPEN
 **Issue:** [#5824](https://github.com/microsoft/pylance-release/issues/5824)  
-**Status:** Open (waiting for upstream)  
+**Status:** Open (fixed in next version (main), waiting for upstream)  
 **Description:** Replace the outdated MagicPython TextMate grammar, which lacks Python 3.12+ syntax support and incorrectly highlights raw strings as regex.
+
+### 13. Pylance Extremely Slow with `transformers` Package (5 reactions) - ⏳ OPEN
+**Issue:** [#7615](https://github.com/microsoft/pylance-release/issues/7615)  
+**Status:** Open (assigned)  
+**Description:** Binding and analysis of the `transformers` package takes tens of seconds, causing very slow completions and checking in large projects that depend on it.
+
+### 14. Support for Pydantic Dynamic Models (3 reactions) - ⏳ OPEN
+**Issue:** [#4008](https://github.com/microsoft/pylance-release/issues/4008)  
+**Status:** Open (fixed in next version (main))  
+**Description:** Add autocomplete/IntelliSense support for Pydantic dynamic models created via `pydantic.create_model`, similar to PyCharm's Pydantic plugin.
 
 ## Top Open Discussion Requests
 
 These items come from [GitHub Discussions](https://github.com/microsoft/pylance-release/discussions) sorted by top upvotes.
 
-### 1. Support for PEP 723 (86 upvotes) - ⏳ OPEN
+### 1. Support for PEP 723 (86 upvotes) - ✅ CLOSED
 **Discussion:** [#6522](https://github.com/microsoft/pylance-release/discussions/6522)  
-**Status:** Open  
+**Status:** Closed  
 **Description:** Add better support for inline script metadata, including TOML syntax highlighting/formatting and dependency or environment handling for PEP 723 scripts.
 
 ### 2. Rename Symbols in Docstrings (40 upvotes) - ⏳ OPEN
@@ -272,39 +282,39 @@ These items come from [GitHub Discussions](https://github.com/microsoft/pylance-
 
 ## Summary Statistics
 
-This report covers **39 GitHub Issues** and **8 GitHub Discussions** (47 items total). Discussions are not closed when implemented, so open/closed percentages are calculated from issues only.
+This report covers **41 GitHub Issues** and **8 GitHub Discussions** (49 items total). Discussions are not closed when implemented, so open/closed percentages are calculated from issues only.
 
-- **GitHub Issues Analyzed:** 39
-- **GitHub Discussions Analyzed:** 8 (all open; discussions are not closed when implemented)
-- **Issues Closed/Completed:** 36 (92% of issues)
-- **Issues Still Open:** 3 (8% of issues)
-- **Discussions Open:** 8 (100% of discussions)
+- **GitHub Issues Analyzed:** 41
+- **GitHub Discussions Analyzed:** 8 (1 closed, 7 open)
+- **Issues Closed/Completed:** 38 (93% of issues)
+- **Issues Still Open:** 3 (7% of issues)
+- **Discussions Open:** 7 (88% of discussions)
 - **Average Reactions (Top 20 Issues):** 87 reactions
-- **Peak Reactions:** 368 reactions (#4972 - Class Hierarchy)
+- **Peak Reactions:** 368 reactions (#4972 - Class Hierarchy, now closed)
 
 ## Key Themes
 
 ### Most Requested Features (By Category):
 1. **Refactoring & Code Actions** - Move files/folders, rename with auto-update, context-based code generation (completed), docstring-aware rename
-2. **Enhanced Language Support** - PyScript/Brython (completed), Django (completed), PEP 723, better library stubs
-3. **Developer Experience** - Class hierarchy visualization, docstring management, auto-imports control, CodeLens references, notebook cell-magic language support
+2. **Enhanced Language Support** - PyScript/Brython (completed), Django (completed), PEP 723 (closed), Pydantic dynamic models, better library stubs
+3. **Developer Experience** - Class hierarchy visualization (completed), docstring management, auto-imports control, CodeLens references, notebook cell-magic language support (completed)
 4. **Type Checking Improvements** - Better handling of dynamic types, partial function support, pytest fixture inference
 
 ### Most Common Bugs (By Category):
 1. **Import Resolution** - Local imports, virtual environments, editable installs
 2. **Jupyter Notebook Issues** - Stability, syntax highlighting, cell operations
-3. **Library Compatibility** - NumPy, TensorFlow, OpenCV, attrs
+3. **Library Compatibility** - NumPy, TensorFlow, OpenCV, attrs, transformers
 4. **Performance** - File handle limits, large projects
 
 ## Recommendations
 
 ### High Priority Open Items:
-1. **Class Hierarchy/Method Override Indicators** (#4972) - Highly requested IDE feature parity with PyCharm
-2. **PEP 723 Support** (Discussion #6522) - Highest-upvoted open discussion request
-3. **Rename Symbols in Docstrings** (Discussion #2938) - Refactoring quality-of-life improvement
-4. **Support Language Features in Cell Magics** (#4969) - Improve notebook cell-magic (e.g. `%%sql`, `%%html`) editing experience
-5. **Switch Python Syntax Highlighting Tool** (#5824) - Address outdated MagicPython grammar and raw-string highlighting issues
-6. **Apply Class Docstrings to Fields** (Discussion #4759) - Documentation quality-of-life improvement
+1. **Switch Python Syntax Highlighting Tool** (#5824) - Address outdated MagicPython grammar and raw-string highlighting issues
+2. **Pylance Extremely Slow with `transformers` Package** (#7615) - Performance regression affecting large ML-dependent projects
+3. **Support for Pydantic Dynamic Models** (#4008) - Improve IntelliSense parity with PyCharm's Pydantic plugin
+4. **Rename Symbols in Docstrings** (Discussion #2938) - Refactoring quality-of-life improvement
+5. **Apply Class Docstrings to Fields** (Discussion #4759) - Documentation quality-of-life improvement
+6. **Reference-Style Markdown Links in Docstrings** (Discussion #4402) - Improve mkdocstrings/Sphinx hover rendering
 
 ### Community Engagement:
 - The community is very active with detailed bug reports and feature requests
