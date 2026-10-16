@@ -24,7 +24,7 @@ This guide explains how Pylance picks an interpreter, how to switch it correctly
 
 ## How Pylance Picks an Interpreter
 
-Pylance does not select interpreters on its own. It uses the interpreter chosen by the [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python).
+Pylance uses the interpreter selected in Python Environments, or the [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) when Python Environments is unavailable.
 
 The Python extension picks an interpreter for each workspace folder using roughly this order, stopping at the first match:
 
@@ -61,7 +61,7 @@ If your environment is not listed:
 
 ### From settings
 
-Set `python.defaultInterpreterPath` in the appropriate scope. Workspace-folder scope wins:
+Set a default path, then use **Python: Select Interpreter** to select it:
 
 ```jsonc
 // .vscode/settings.json
@@ -79,7 +79,7 @@ Copilot can see and change the interpreter through Pylance's MCP tools:
 - `pylancePythonEnvironments` &mdash; lists all discovered environments for a workspace root and marks which one is active.
 - `pylanceUpdatePythonEnvironment` &mdash; switches the active environment.
 
-`pylanceUpdatePythonEnvironment` accepts either a value returned by `pylancePythonEnvironments` or an absolute path to a Python executable. Pass the same `workspaceRoot` URI you got from `pylanceWorkspaceRoots`.
+Choose a path returned by `pylancePythonEnvironments` and pass the same `workspaceRoot` URI you got from `pylanceWorkspaceRoots`. Recheck the active interpreter after updating.
 
 After switching, re-check diagnostics with `pylanceLSP` `textDocument/diagnostic` or `workspace/diagnostic`. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
 
@@ -149,7 +149,7 @@ Each VS Code workspace folder gets its own active interpreter. Pick the right st
 
 | Setup                                                               | Recommendation                                                                                                                                                                                              |
 | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| One repo, one logical project, one venv.                            | Single-folder workspace. Pin the interpreter via `python.defaultInterpreterPath` in `.vscode/settings.json`.                                                                                                |
+| One repo, one logical project, one venv.                            | Single-folder workspace. Select the interpreter through **Python: Select Interpreter**; use `python.defaultInterpreterPath` to configure a default.                                                         |
 | One repo, several packages, one shared venv.                        | Single-folder workspace plus [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable installs to share code.                                                                                  |
 | One repo, several packages, several venvs.                          | Multi-root workspace (`.code-workspace`). Each folder picks its own interpreter. See [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md).                                                     |
 | Different Python versions for different parts.                      | Multi-root workspace, or use `executionEnvironments` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration). See [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md). |
@@ -172,7 +172,7 @@ uv sync                  # if a pyproject.toml exists
 uv pip install -r requirements.txt
 ```
 
-Then point Pylance at it the same as any other venv:
+Select the environment through **Python: Select Interpreter**. You can also configure its default path:
 
 ```json
 {
@@ -183,7 +183,7 @@ Then point Pylance at it the same as any other venv:
 Notes specific to `uv`:
 
 - `uv run <script>` resolves dependencies in a managed environment. Running a script with `uv run` does not change which interpreter Pylance uses in the editor &mdash; you still need to select the matching environment via the Python extension.
-- `uv` supports [PEP 723 inline script metadata](dependency-management.md#pep-723-inline-script-metadata) for single-file scripts. Pylance does not currently parse PEP 723 metadata to add to its analysis search path; for an editor experience, point Pylance at a venv that has those dependencies installed.
+- `uv` supports [PEP 723 inline script metadata](dependency-management.md#pep-723-inline-script-metadata) for single-file scripts. For an open local `.py` script, Pylance can use the file-specific PEP 723 interpreter selected by Python Environments; its dependencies must be installed in that environment.
 - `uv` can create environments in arbitrary locations (`uv venv --python 3.12 path/to/env`). Add such environments by absolute interpreter path.
 
 ---
@@ -210,7 +210,7 @@ Things to watch for:
 | `pipenv` | `pipenv --venv`, then append `/bin/python` or `\Scripts\python.exe`.                          |
 | `hatch`  | `hatch env find <env-name>`, then append `/bin/python` or `\Scripts\python.exe`.              |
 
-Either select that path through **Python: Select Interpreter** &rarr; **Enter interpreter path...** or pin it in `python.defaultInterpreterPath`.
+Select that path through **Python: Select Interpreter** &rarr; **Enter interpreter path...**. You can also configure `python.defaultInterpreterPath` as a default, but verify the active selection separately.
 
 For `poetry`, see also [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md#q-how-do-i-set-up-a-poetry-monorepo).
 
@@ -236,8 +236,8 @@ When the user reports "Pylance is broken", run this checklist before changing an
 
 1. Get the active interpreter from `pylancePythonEnvironments`. Verify the path matches the user's expected venv.
 2. From `pylanceRunCodeSnippet`, confirm `sys.executable` and `sys.version`.
-3. From `pylanceInstalledTopLevelModules`, confirm the missing package is actually importable.
-4. From `pylanceSettings`, look for `python.defaultInterpreterPath`, `python.analysis.extraPaths`, and any `pyrightconfig.json` / `[tool.pyright]` overrides (including `pythonVersion`).
+3. From `pylanceInstalledTopLevelModules`, inspect module names and installed distributions; use a runtime import to confirm importability.
+4. From `pylanceSettings`, check the interpreter and analysis settings. Inspect `pyrightconfig.json` / `[tool.pyright]` separately for project overrides, including `pythonVersion`.
 5. Only then consider settings changes.
 
 ---
@@ -246,7 +246,7 @@ When the user reports "Pylance is broken", run this checklist before changing an
 
 ### Q: Why does Pylance ignore the venv I activated in the terminal?
 
-The editor uses the interpreter selected by the Python extension. Terminal activation only affects new processes started from that terminal, not the language server. Select the interpreter through the UI or pin it in settings.
+The editor uses the active interpreter reported by Python Environments or the Python extension. Terminal activation only affects new processes started from that terminal, not the language server. Select the interpreter through the UI and verify the active path.
 
 ### Q: I switched interpreters and Pylance still shows the old errors.
 
@@ -254,7 +254,7 @@ Run **Developer: Reload Window** if diagnostics do not refresh after a switch. I
 
 ### Q: Can Pylance use multiple interpreters in a single folder?
 
-Not directly. Each VS Code workspace folder gets one active interpreter. To analyze parts of the same folder under different Python versions or platforms, use `executionEnvironments` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration). See [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md#approach-3-execution-environments).
+Yes. To use separate project interpreters in a single-root workspace, declare the projects in `python-envs.pythonProjects`, assign their environments in Python Environments, and enable `python.analysis.usePerProjectEnvironments`. Open local `.py` scripts can also use file-specific interpreters, including selected PEP 723 environments. To analyze parts of the same folder under different Python versions or platforms, use `executionEnvironments` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration). See [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md#approach-3-execution-environments).
 
 ### Q: Should I commit `.vscode/settings.json` with `python.defaultInterpreterPath`?
 
@@ -266,4 +266,6 @@ CI typically does not use Pylance at all; it runs `pyright` (or another type che
 
 ### Q: How do I tell Copilot which environment to use?
 
-Tell Copilot the workspace root and let it run `pylancePythonEnvironments` &rarr; `pylanceUpdatePythonEnvironment`. You can also pass the absolute interpreter path directly. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
+Tell Copilot the workspace root and let it run `pylancePythonEnvironments` &rarr; `pylanceUpdatePythonEnvironment`. Choose a path returned by `pylancePythonEnvironments`. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

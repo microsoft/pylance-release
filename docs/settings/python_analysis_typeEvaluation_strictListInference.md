@@ -6,7 +6,7 @@ The `python.analysis.typeEvaluation.strictListInference` setting controls how Py
 
 ## What `python.analysis.typeEvaluation.strictListInference` does
 
-When inferring the type of a list literal, Pylance must decide how to combine the types of its elements. With this setting disabled, Pylance may find a common supertype or use a broader type like `list[Any]`. With it enabled, Pylance infers the element type as the union of the observed types.
+When inferring the type of a list literal, Pylance must decide how to combine the types of its elements. With this setting disabled, mixed-type lists have an unknown element type. With it enabled, Pylance infers the element type as the union of the observed types.
 
 The default value is `false`.
 
@@ -20,7 +20,7 @@ The default value is `false`.
 my_list = [1, "a", 3.4]
 ```
 
-- With `false` (default): Pylance may infer `list[Any]` or find a common supertype.
+- With `false` (default): Pylance infers `list[Unknown]`.
 - With `true`: Pylance infers `list[int | str | float]`, using the union of observed element types.
 
 ## Accepted values
@@ -73,7 +73,7 @@ If your code works with lists containing elements of different types, strict inf
 
 ### Keeping the default
 
-If you prefer fewer diagnostics or your codebase relies on Pylance finding common supertypes for list elements, leave this at `false`.
+If you prefer fewer diagnostics for mixed-type lists, leave this at `false`.
 
 ## Interaction with explicit type annotations
 
@@ -106,7 +106,7 @@ Strict list inference primarily affects unannotated list literals.
 
 ### Q: How does this relate to `strict` type checking mode?
 
-**A:** `typeCheckingMode: "strict"` enables stricter diagnostic rules overall. `strictListInference` specifically changes how list types are inferred. They are independent settings that can be used separately or together.
+**A:** `typeCheckingMode: "strict"` enables stricter diagnostic rules overall. `strictListInference` specifically changes how list types are inferred. Strict Pyright configurations enable strict list inference by default, although an explicit `strictListInference` value can override it.
 
 ---
 
@@ -115,3 +115,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

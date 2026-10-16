@@ -10,7 +10,7 @@ Pylance is built on the Pyright type checker. This setting lets you select a spe
 
 This is useful when you need diagnostics to match a particular Pyright release — for example, to align editor results with a Pyright version used in CI, or to validate behavior against a specific build.
 
-> **Important:** This setting only takes effect when `python.analysis.diagnosticsSource` is set to `Pyright`.
+> **Important:** This setting only takes effect when `python.analysis.diagnosticsSource` is set to `Pylance + Pyright`.
 
 **Type**: `string`
 **Default**: `""` (use the bundled Pyright version)
@@ -19,10 +19,11 @@ This is useful when you need diagnostics to match a particular Pyright release �
 
 ### Accepted values
 
-The value can be either of the following:
+The value can be one of the following:
 
 - A **version string**, for example `1.1.397`.
 - A **path** to a local `pyright-langserver.js` file. The referenced build must also be version `1.1.397` or higher.
+- `fromEnvironment`: Uses the version of the `pyright` package installed in the selected Python environment.
 
 ## How to Change `python.analysis.pyrightVersion`
 
@@ -30,7 +31,7 @@ The value can be either of the following:
 
 1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run **Preferences: Open Settings (UI)**.
 2. Search for `python.analysis.pyrightVersion`.
-3. Enter a version string or a path.
+3. Enter a version string, a path, or `fromEnvironment`.
 
 ### Using `settings.json`
 
@@ -38,7 +39,7 @@ Pin to a published version:
 
 ```json
 {
-    "python.analysis.diagnosticsSource": "Pyright",
+    "python.analysis.diagnosticsSource": "Pylance + Pyright",
     "python.analysis.pyrightVersion": "1.1.397"
 }
 ```
@@ -47,8 +48,19 @@ Use a local build:
 
 ```json
 {
-    "python.analysis.diagnosticsSource": "Pyright",
+    "python.analysis.diagnosticsSource": "Pylance + Pyright",
     "python.analysis.pyrightVersion": "/path/to/pyright-langserver.js"
+}
+```
+
+Use the version installed in the selected Python environment:
+
+Install your intended `pyright` version in the Python environment selected in VS Code, then use:
+
+```json
+{
+    "python.analysis.diagnosticsSource": "Pylance + Pyright",
+    "python.analysis.pyrightVersion": "fromEnvironment"
 }
 ```
 
@@ -59,7 +71,7 @@ Use a local build:
 
 ## Related Settings
 
-- The `python.analysis.diagnosticsSource` setting selects which engine produces diagnostics; `pyrightVersion` applies only when it is set to `Pyright`.
+- The `python.analysis.diagnosticsSource` setting selects which engine produces diagnostics; `pyrightVersion` applies only when it is set to `Pylance + Pyright`.
 - [`python.analysis.typeCheckingMode`](python_analysis_typeCheckingMode.md) — controls how strict diagnostics are.
 
 ---
@@ -69,3 +81,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

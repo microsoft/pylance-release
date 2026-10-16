@@ -12,7 +12,7 @@
 ## Examples
 
 ```python
-path = "C:\new_folder\test"  # Warning: Unsupported escape character "\n" and "\t"
+path = "C:\new_folder\test"  # No invalid-escape warning: "\n" and "\t" are valid
                              #   (\n is treated as newline, \t as tab)
 
 pattern = "\d+\.\d+"  # Warning: Unsupported escape character "\d"
@@ -43,3 +43,5 @@ path = "C:\\new_folder\\test"  # OK: escaped backslashes
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -10,7 +10,7 @@ When enabled, Pylance recognizes color strings in the `#RRGGBB` and `#RRGGBBAA` 
 
 This exists to make working with colors more convenient — for example when defining theme values, plot colors, or UI constants — without having to compute hex values by hand.
 
-**Type**: `boolean`
+**Type**: `boolean` or `string` (`"RRGGBBAA"` or `"AARRGGBB"`)
 **Default**: `true`
 **Scope**: resource (can be set per workspace or folder)
 
@@ -43,6 +43,14 @@ With the setting **disabled**, no swatch appears and the strings render as plain
 }
 ```
 
+For eight-digit strings in the `#AARRGGBB` format, use:
+
+```json
+{
+    "python.analysis.enableColorPicker": "AARRGGBB"
+}
+```
+
 ## When to Use It
 
 - **Keep enabled** (the default) if you work with hex color values and want to preview or edit them visually.
@@ -59,3 +67,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

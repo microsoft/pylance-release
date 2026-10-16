@@ -32,11 +32,11 @@ Without inlay hints, you need to hover or navigate to see what these functions r
 def greet(name) -> str:
     return f"Hello, {name}!"
 
-def add_numbers(a, b) -> int:
+def add_numbers(a, b) -> Any:
     return a + b
 ```
 
-The hints (`-> str`, `-> int`) appear inline in the editor, showing the inferred return type at a glance.
+The hints (`-> str`, `-> Any`) appear inline in the editor, showing the inferred return type at a glance.
 
 ## Accepted values
 
@@ -75,7 +75,7 @@ This makes it easy to adopt explicit annotations incrementally.
 Pylance may omit the return type inlay hint in certain cases:
 
 - **Explicit annotations**: If the function already has a return type annotation, no hint is needed.
-- **Obvious return types**: Pylance may skip hints for functions returning literals or built-in types in simple cases where the return type is readily apparent.
+- **Incomplete or placeholder bodies**: Pylance omits hints for incomplete function definitions and bodies containing only `...`.
 
 ## Related settings
 
@@ -111,3 +111,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

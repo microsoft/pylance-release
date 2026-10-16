@@ -31,14 +31,14 @@ def main_func(): ...
 def helper(): ...
 ```
 
-Another unsupported pattern:
+Another supported pattern:
 
 ```python
 __all__ = ["a"]
-__all__ += ["b"]  # Augmented assignment not supported by type checkers
+__all__ += ["b"]  # Supported extension with a literal list
 ```
 
-Fix by assigning the full list at once:
+Alternatively, assign the full list at once:
 
 ```python
 __all__ = ["a", "b"]
@@ -55,3 +55,5 @@ __all__ = ["a", "b"]
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

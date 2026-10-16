@@ -10,10 +10,10 @@ Historically, Python type checkers allowed `bytearray` and `memoryview` to be us
 
 When this setting is `true`, Pylance disables the legacy promotion and treats `bytes`, `bytearray`, and `memoryview` as distinct, incompatible types. When `false`, the legacy promotion remains active.
 
-The default value is `false`.
+The default value is `true`.
 
 ```json
-"python.analysis.typeEvaluation.disableBytesTypePromotions": false
+"python.analysis.typeEvaluation.disableBytesTypePromotions": true
 ```
 
 ### Example
@@ -26,13 +26,13 @@ buf = bytearray(b"hello")
 write_data(buf)
 ```
 
-- With `false` (default): No error — `bytearray` is promoted to `bytes`.
-- With `true`: Pylance reports an error because `bytearray` is not assignable to `bytes`.
+- With `false`: No error — `bytearray` is promoted to `bytes`.
+- With `true` (default): Pylance reports an error because `bytearray` is not assignable to `bytes`.
 
 ## Accepted values
 
-- `true`: Disable bytes type promotions. `bytes`, `bytearray`, and `memoryview` are treated as distinct types.
-- `false` (default): Enable legacy promotions. `bytearray` and `memoryview` are accepted where `bytes` is expected.
+- `true` (default): Disable bytes type promotions. `bytes`, `bytearray`, and `memoryview` are treated as distinct types.
+- `false`: Enable legacy promotions. `bytearray` and `memoryview` are accepted where `bytes` is expected.
 
 ## How to change the setting
 
@@ -62,7 +62,7 @@ If your project requires precise type distinctions between `bytes`, `bytearray`,
 
 ### Keeping the default
 
-If your codebase passes `bytearray` or `memoryview` to functions annotated with `bytes` and you are not ready to update those call sites, leave this at `false`.
+If your codebase passes `bytearray` or `memoryview` to functions annotated with `bytes` and you are not ready to update those call sites, set this to `false`.
 
 ## Resolving type errors after enabling
 
@@ -96,3 +96,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

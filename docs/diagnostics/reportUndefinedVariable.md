@@ -1,6 +1,6 @@
 ## Overview
 
-`reportUndefinedVariable` flags cases where a variable is used before it is defined or assigned a value. This diagnostic helps catch potential runtime errors and improves code reliability by ensuring all variables are properly declared before use.
+`reportUndefinedVariable` flags cases where a name cannot be resolved in the current scope. This diagnostic helps catch potential runtime errors and improves code reliability by ensuring all variables are properly declared before use.
 
 ## Representative Issues
 
@@ -47,3 +47,5 @@ def greet():
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

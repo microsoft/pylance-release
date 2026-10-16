@@ -20,18 +20,18 @@ The default value is `false`.
 
 ```python
 def process(value: int) -> None:
-    if isinstance(value, str):
+    if not isinstance(value, int):
         print("string")   # grayed out when setting is true
     else:
         print("integer")
 ```
 
-Since `value` is annotated as `int`, the `isinstance(value, str)` check can never be true according to static analysis. With the setting enabled, Pylance grays out the `if` branch.
+Since `value` is annotated as `int`, the negated `isinstance(value, int)` check can never be true according to static analysis. With the setting enabled, Pylance grays out the `if` branch.
 
 ## Accepted values
 
 - `true`: Enable type-based reachability analysis. Unreachable code is grayed out.
-- `false` (default): Disable type-based reachability analysis. Only structurally unreachable code (e.g., after `return`) is reported.
+- `false` (default): Disable type-based reachability hints. Structurally unreachable code (e.g., after `return`) and statically false branches are still reported.
 
 ## How to change the setting
 
@@ -53,9 +53,7 @@ You can also set this in `pyrightconfig.json`:
 
 ```json
 {
-    "typeEvaluation": {
-        "enableReachabilityAnalysis": true
-    }
+    "enableReachabilityAnalysis": true
 }
 ```
 
@@ -85,7 +83,7 @@ In codebases that interface with dynamic or untyped code, static type analysis m
 
 ### Q: Can I disable reachability analysis for specific files?
 
-**A:** The setting applies globally to the workspace. There is no per-file override. You can use a `pyrightconfig.json` with `include`/`exclude` to scope the configuration to specific directories.
+**A:** There is no per-file comment override. Configure this setting for the applicable workspace or project.
 
 ## Related Diagnostics
 
@@ -102,3 +100,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

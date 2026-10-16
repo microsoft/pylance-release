@@ -193,8 +193,8 @@ Usually only if the codebase is already well annotated or the team is prepared f
 
 `typeCheckingMode` controls the default severity of all `report*` diagnostic rules. Each stricter mode enables more rules. Key diagnostics by mode:
 
-- **`basic`**: [`reportMissingImports`](../diagnostics/reportMissingImports.md), [`reportUndefinedVariable`](../diagnostics/reportUndefinedVariable.md), [`reportDuplicateImport`](../diagnostics/reportDuplicateImport.md), [`reportInvalidStringEscapeSequence`](../diagnostics/reportInvalidStringEscapeSequence.md)
-- **`standard`** (adds): [`reportReturnType`](../diagnostics/reportReturnType.md), [`reportArgumentType`](../diagnostics/reportArgumentType.md), [`reportAssignmentType`](../diagnostics/reportAssignmentType.md), [`reportOptionalMemberAccess`](../diagnostics/reportOptionalMemberAccess.md), [`reportCallIssue`](../diagnostics/reportCallIssue.md)
+- **`basic`**: [`reportMissingImports`](../diagnostics/reportMissingImports.md), [`reportUndefinedVariable`](../diagnostics/reportUndefinedVariable.md), [`reportReturnType`](../diagnostics/reportReturnType.md), [`reportInvalidStringEscapeSequence`](../diagnostics/reportInvalidStringEscapeSequence.md)
+- **`standard`** (also active in `basic`): [`reportReturnType`](../diagnostics/reportReturnType.md), [`reportArgumentType`](../diagnostics/reportArgumentType.md), [`reportAssignmentType`](../diagnostics/reportAssignmentType.md), [`reportOptionalMemberAccess`](../diagnostics/reportOptionalMemberAccess.md), [`reportCallIssue`](../diagnostics/reportCallIssue.md)
 - **`strict`** (adds): [`reportUnknownVariableType`](../diagnostics/reportUnknownVariableType.md), [`reportUnknownArgumentType`](../diagnostics/reportUnknownArgumentType.md), [`reportUnknownMemberType`](../diagnostics/reportUnknownMemberType.md), [`reportMissingParameterType`](../diagnostics/reportMissingParameterType.md)
 
 For the full rule-by-rule defaults table, see the [Pyright diagnostic rule defaults](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#diagnostic-settings-defaults).
@@ -210,3 +210,5 @@ For a step-by-step approach to moving between modes, see [How to Gradually Adopt
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

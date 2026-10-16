@@ -1,6 +1,6 @@
 ## Overview
 
-`reportIndexIssue` is a diagnostic in Pylance and Pyright that warns about problems with indexing or subscripting objects, such as using an invalid index type or subscripting a value that does not support it. This helps catch type errors and incorrect usage of lists, tuples, dictionaries, and other indexable types.
+`reportIndexIssue` is a diagnostic in Pylance and Pyright that warns about problems with indexing or subscripting objects, such as subscripting a value that does not support it. An incompatible dictionary key type is reported by `reportArgumentType` instead. This helps catch type errors and incorrect usage of lists, tuples, dictionaries, and other indexable types.
 
 ## Representative Issues
 
@@ -11,7 +11,7 @@
 
 ```python
 my_dict: dict[str, int] = {"a": 1}
-my_dict[0]  # Error: Argument of type "int" is incompatible with "str"
+my_dict[0]  # Error (reportArgumentType): Argument of type "int" is incompatible with "str"
 
 x: int = 42
 x[0]  # Error: Object of type "int" is not subscriptable
@@ -41,3 +41,5 @@ my_list[0]  # OK: list supports integer indexing
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -36,28 +36,28 @@ Auto-imports also work through **quick fixes**: if you write code with an unreso
 
 ## Suggestion ordering and history
 
-Auto-import completions, "Add import" quick fixes, and the import search picker use the same ranking policy for available import alternatives, in this order:
+"Add import" quick fixes use the ranking below. Completions keep their own recent-completion history, while the import search picker presents candidates without this quick-fix ranking:
 
 1. **Recent choices**, with the most recently accepted symbol and source first.
 2. **The same symbol from the same source** already imported in open project files.
-3. **Other symbols from that exact source** already imported in open project files.
+3. **Other candidates matching imports** in open project files.
 4. **Symbols defined in your project**.
 5. **Symbols from `typing`**.
 6. **Standard library symbols**.
 7. **Third-party library symbols**.
 8. **Library symbols re-exported by your project**.
 
-Open-file preferences use a bounded scan of top-level imports in open project files, not workspace-wide usage or frequency analysis. Matches use original symbol names, not local aliases. Within a priority, ties are broken by symbol name, then module path depth (fewer dots first), then source text alphabetically.
+Open-file preferences use a bounded scan of top-level imports in open project files, not workspace-wide usage or frequency analysis. Local aliases can affect name matching. Within a priority, symbol names and module paths affect ordering.
 
 Without recent choices or open-file preferences, `typing.Literal` ranks before third-party `schema.Literal`, and `pathlib.Path` ranks before third-party `Path` alternatives. A same-name symbol defined in your project ranks above those library candidates. Explicitly choosing `schema.Literal` can move it ahead of `typing.Literal` next time, even ahead of open-file preferences. Check the source before accepting: identically named symbols can have different purposes.
 
-The interfaces can still show different lists because their filtering and presentation differ. Your environment, indexing, and [which symbols are included](#control-which-symbols-appear) determine the available candidates; ranking does not add missing candidates. Import suggestions keep their category placement within completions, and quick fixes show at most three import candidates after ranking.
+The interfaces can still show different lists because their ranking, filtering, and presentation differ. Your environment, indexing, and [which symbols are included](#control-which-symbols-appear) determine the available candidates; ranking does not add missing candidates. Import suggestions keep their category placement within completions, and quick fixes show at most three import candidates after ranking.
 
-**History tracks recency, not frequency.** It keeps up to 100 distinct symbol-and-source choices, shared across these import interfaces within a workspace folder. Choosing the same pair again moves it to the front; the oldest distinct choices are evicted when the limit is reached. Local aliases do not create separate history entries. Accepting a completion records a choice; highlighting or previewing it does not. Quick fixes and picker selections record a choice after the import edit succeeds.
+**History tracks recency, not frequency.** Quick fixes and picker selections keep up to 100 distinct symbol-and-source choices. Choosing the same pair again moves it to the front; the oldest distinct choices are evicted when the limit is reached. Local aliases do not create separate history entries. Completions keep their own history. Quick fixes and picker selections record a choice when it is selected, before applying the import edit.
 
-History is saved in VS Code workspace storage, with separate histories for each folder in a multi-root workspace. Opening the same folder in a different VS Code workspace gives it separate history. Files not associated with a workspace folder have session-only history.
+Import history is kept for the current language-server session and shared across workspace folders.
 
-Accepted choices affect ordering immediately; workspace history is saved asynchronously. After restarting the language server or VS Code, workspace history is restored from the last successful save. Missing or invalid saved history starts empty. Storage failures are logged; a failed save preserves live history in memory, and the next accepted import retries saving.
+Recent choices can affect subsequent ordering in the running server. Restarting the language server or VS Code clears this in-memory history.
 
 Suggestion ordering helps you choose **which symbol and source to import**. It is separate from [organizing imports](#organize-imports-on-save), which rearranges import statements already in your file.
 
@@ -138,15 +138,15 @@ Increase `depth` for packages where auto-imports miss deeply nested symbols.
 
 #### How default depths vary by language server mode
 
-In `default` mode, most packages are indexed at depth **1** (top-level only). A few popular libraries (`sklearn`, `matplotlib`, `scipy`, `django`, `flask`, `fastapi`) default to depth **2**, and `cuda` defaults to depth **3** with `includeAllSymbols: true`.
+In `default` mode, most packages are indexed at depth **1** (top-level only). A few popular libraries (`sklearn`, `matplotlib`, `scipy`, `flask`, `fastapi`) default to depth **2**, `django` defaults to depth **4**, and `cuda` defaults to depth **3** with `includeAllSymbols: true`.
 
-In `full` mode, **all** packages default to depth **4** with `includeAllSymbols: true`, providing much broader auto-import coverage at the cost of higher resource usage.
+In `full` mode, **most** packages default to depth **4** with `includeAllSymbols: true`, providing much broader auto-import coverage at the cost of higher resource usage.
 
 In `light` mode, indexing is disabled by default. Enable [`python.analysis.indexing`](../settings/python_analysis_indexing.md) explicitly to use package indexing in light mode.
 
 #### Automatic depth boost for direct dependencies
 
-Packages declared in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even when the global default is 1. Explicit entries in `packageIndexDepths` take priority over the automatic boost. See the [`packageIndexDepths` setting page](../settings/python_analysis_packageIndexDepths.md#automatic-depth-boost-for-direct-dependencies) for details.
+Packages declared in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even when the global default is 1. Named entries in `packageIndexDepths` take priority over the automatic boost. See the [`packageIndexDepths` setting page](../settings/python_analysis_packageIndexDepths.md#automatic-depth-boost-for-direct-dependencies) for details.
 
 #### Namespace packages
 
@@ -232,38 +232,34 @@ Without indexing, Pylance only knows about symbols from files it has already ope
 | `autoImportCompletions` is `false`                                                     | Set [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) to `true`                                                                                                       |
 | Package not installed in selected environment                                          | Install the package in the active interpreter's environment                                                                                                                                         |
 | Symbol is deeply nested                                                                | Increase `depth` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md). Direct dependencies declared in `requirements.txt`/`pyproject.toml` are automatically indexed deeper |
-| Symbol is not in `__all__`                                                             | Set `includeAllSymbols: true` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md) for that package                                                                         |
+| Symbol omitted from `__all__` in an untyped `.py` package                              | Set `includeAllSymbols: true` in [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md) for that package                                                                         |
 | Private symbol (underscore prefix)                                                     | Pylance hides private symbols by default. Import manually                                                                                                                                           |
 | [`languageServerMode`](../settings/python_analysis_languageServerMode.md) is `"light"` | Switch to `"default"` or `"full"` for better indexing                                                                                                                                               |
-| Symbol only available through a re-export                                              | Enable [`includeAliasesFromUserFiles`](../settings/python_analysis_includeAliasesFromUserFiles.md)                                                                                                  |
+| Symbol only available through a re-export in your code                                 | Enable [`includeAliasesFromUserFiles`](../settings/python_analysis_includeAliasesFromUserFiles.md)                                                                                                  |
 
 ---
 
 ## Organize Imports on Save
 
-VS Code can automatically sort and remove unused imports when you save. This works alongside auto-imports.
+VS Code can automatically remove unused imports with Pylance when you save; sorting requires a separate import organizer. This works alongside auto-imports.
 
 Add to `.vscode/settings.json`:
 
 ```json
 {
     "editor.codeActionsOnSave": {
-        "source.organizeImports.pylance": "explicit"
+        "source.unusedImports": "explicit"
     }
 }
 ```
 
-This runs Pylance's import organizer on save. It:
-
-- Sorts imports alphabetically
-- Groups imports by standard lib → third-party → local
-- Removes unused imports
+This removes unused imports on save.
 
 See [`python.analysis.fixAll`](../settings/python_analysis_fixAll.md) for other code actions available on save.
 
-> **Note**: Pylance's organizer handles sorting and removing unused imports. For more advanced import formatting (custom grouping rules, blank lines between groups, line length), consider using [isort](https://pycqa.github.io/isort/) or [Ruff](https://docs.astral.sh/ruff/formatter/) as a complementary tool.
+> **Note**: To sort and format imports (custom grouping rules, blank lines between groups, line length), consider using [isort](https://pycqa.github.io/isort/) or [Ruff](https://docs.astral.sh/ruff/formatter/).
 
-Example `settings.json` for using Ruff as the import organizer instead of Pylance:
+Example `settings.json` for using Ruff as the import organizer:
 
 ```json
 {
@@ -294,7 +290,7 @@ When auto-imports aren't working as expected:
 - [ ] **Indexing enabled**: [`python.analysis.indexing`](../settings/python_analysis_indexing.md) is `true`
 - [ ] **Auto-import completions enabled**: [`python.analysis.autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) is `true`
 - [ ] **Correct interpreter**: Package is installed in the selected Python environment
-- [ ] **Indexing complete**: Check **Output → Pylance** — auto-imports improve after indexing finishes
+- [ ] **Indexing complete**: Check **Output → Python Language Server** — auto-imports improve after indexing finishes
 - [ ] **Language server mode**: Not set to `"light"` (limits indexing)
 - [ ] **Config file**: No `pyrightconfig.json` overriding VS Code settings unexpectedly. See [Settings Troubleshooting](settings-troubleshooting.md)
 
@@ -311,7 +307,7 @@ Pylance suggests the path where the symbol is defined, not necessarily the re-ex
 
 ### Q: Can I auto-import from packages in `extraPaths`?
 
-Yes. Packages found through [`extraPaths`](../settings/python_analysis_extraPaths.md) are treated like installed packages for auto-import purposes.
+Yes. Pylance can offer auto-imports from packages found through [`extraPaths`](../settings/python_analysis_extraPaths.md).
 
 ### Q: Does auto-import work with `pyrightconfig.json`?
 
@@ -332,3 +328,5 @@ This is the default behavior. Pylance generates `from module import name` style 
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

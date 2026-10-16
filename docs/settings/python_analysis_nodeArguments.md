@@ -6,7 +6,7 @@ The `python.analysis.nodeArguments` setting lets you pass extra command-line arg
 
 ## What is `python.analysis.nodeArguments`?
 
-When [`python.analysis.nodeExecutable`](python_analysis_nodeExecutable.md) is set (to `"auto"` or a custom path), Pylance launches a separate Node.js process for the language server. `nodeArguments` controls the arguments passed to that process.
+When [`python.analysis.nodeExecutable`](python_analysis_nodeExecutable.md) is set (to `"auto"` or a custom path), Pylance launches a separate Node.js process for the language server. `nodeArguments` controls the arguments passed to that process. Full mode also selects `"auto"` by default in trusted workspaces.
 
 **Default value**: `["--max-old-space-size=8192"]` (8 GB heap limit)
 
@@ -39,7 +39,7 @@ Or remove the setting entirely.
 
 ## Important Considerations
 
-- **Requires `nodeExecutable`**: `nodeArguments` only takes effect when `python.analysis.nodeExecutable` is set to `"auto"` or a custom Node.js path. When Pylance uses VS Code's bundled Node.js, this setting is ignored.
+- **Requires a separate Node.js process**: `nodeArguments` takes effect when `python.analysis.nodeExecutable` is set to `"auto"` or a custom Node.js path, including full mode's default. When Pylance uses VS Code's bundled Node.js, this setting is ignored.
 
 - **Scope**: This is a **machine-scoped** setting. It cannot be set in workspace or folder settings (`.vscode/settings.json`) for security reasons.
 
@@ -72,3 +72,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

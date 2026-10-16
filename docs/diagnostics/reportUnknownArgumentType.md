@@ -1,6 +1,6 @@
 ## Overview
 
-`reportUnknownArgumentType` is a diagnostic in Pylance and Pyright that warns when an argument passed to a function or method has an unknown type. This rule is primarily active in strict mode (`typeCheckingMode: "strict"`), where `Any` types from untyped libraries are treated as unknown. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
+`reportUnknownArgumentType` is a diagnostic in Pylance and Pyright that warns when an argument passed to a function or method has an unknown type. This rule is primarily active in strict mode (`typeCheckingMode: "strict"`), where unknown types from untyped libraries are reported. This helps catch missing or ambiguous type information, improving code reliability and maintainability.
 
 ## Representative Issues
 
@@ -22,7 +22,7 @@ raw = get_value()
 process(raw)  # Argument type is unknown
 ```
 
-When a library has no type stubs and no `py.typed` marker, all imports resolve to unknown types in strict mode (with `useLibraryCodeForTypes` disabled).
+When a library has no type stubs and no `py.typed` marker, disabling `useLibraryCodeForTypes` can leave imported symbols such as `get_value` with unknown types.
 
 **Fix — install type stubs or add annotations:**
 
@@ -56,3 +56,5 @@ process(data)  # Argument type is now known
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

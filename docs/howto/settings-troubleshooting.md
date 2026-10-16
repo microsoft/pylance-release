@@ -51,11 +51,11 @@ These per-file comments override both config files and VS Code settings for that
 
 ## pyrightconfig.json Overrides VS Code Settings
 
-When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` (with `[tool.pyright]`) exists in a workspace folder, the following VS Code settings **are ignored** — the config file takes precedence:
+When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` (with `[tool.pyright]`) exists in a workspace folder, many overlapping VS Code settings **are ignored**. The table below identifies those settings and the exceptions:
 
-| Ignored VS Code Setting                                                                                     | Where to Set Instead                                                                                                                                                 |
+| VS Code Setting                                                                                             | Where to Set Instead                                                                                                                                                 |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md)                                   | `"extraPaths"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                        |
+| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md)                                   | `extraPaths` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration); if omitted, VS Code paths still apply.                                  |
 | [`python.analysis.include`](../settings/python_analysis_include.md)                                         | `"include"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                           |
 | [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                         | `"exclude"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                           |
 | [`python.analysis.ignore`](../settings/python_analysis_ignore.md)                                           | `"ignore"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                            |
@@ -64,11 +64,11 @@ When a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuratio
 | [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)           | `"useLibraryCodeForTypes"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                            |
 | [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) | `"reportXxx"` rules in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                   |
 | [`python.analysis.typeshedPaths`](../settings/python_analysis_typeshedPaths.md)                             | `"typeshedPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                      |
-| [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                         | `"autoSearchPaths"` is always `true` in Pyright CLI; config file `extraPaths` takes precedence                                                                       |
-| `python.analysis.venvPath`                                                                                  | `"venvPath"` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                          |
+| [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                         | Controls src detection when project extraPaths is absent; CLI enables it. Use config extraPaths for shared roots.                                                    |
+| `python.venvPath`                                                                                           | `venvPath` in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)                                                                            |
 | `python.analysis.typeEvaluation.*`                                                                          | Corresponding settings in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) (e.g. `"strictListInference"`, `"enableExperimentalFeatures"`) |
 
-Pylance shows a **yellow warning squiggle** in `settings.json` for any setting that a config file overrides. The warning message reads: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used."_
+Pylance marks configuration conflicts with warnings in workspace settings and hints in user settings. The warning message reads: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used."_
 
 ---
 
@@ -142,7 +142,7 @@ Common examples:
 2. Resolve the path from the correct base.
 3. Confirm the resolved path exists on disk.
 4. Confirm the path points to the root expected by that setting, not just a similarly named folder.
-5. Check **Output → Pylance** for config warnings. Some cases are noisy, like an explicit `stubPath` pointing to a missing directory. Other cases are quieter, like a real but irrelevant folder.
+5. Check **Output → Python Language Server** for config warnings. Some cases are noisy, like an explicit `stubPath` pointing to a missing directory. Other cases are quieter, like a real but irrelevant folder.
 
 Base rules:
 
@@ -154,15 +154,15 @@ Base rules:
 
 ## Common Problematic Combinations
 
-| Combination                                                                                                                               | What Happens                                                                                                            | Fix                                                                                                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `light` mode + `diagnosticMode: "workspace"`                                                                                              | `exclude: ["**"]` means no files are discovered, so `"workspace"` mode has nothing to analyze                           | Either switch to `"default"` mode, or explicitly set `exclude` to a narrower pattern                                                               |
-| `light` mode + `indexing: true` (explicit)                                                                                                | Works — indexing is enabled because you explicitly set it. But `exclude: ["**"]` limits what gets indexed to open files | Also explicitly set `exclude` to include the directories you need                                                                                  |
-| Config file exists + `extraPaths` in `settings.json`                                                                                      | VS Code setting ignored, yellow warning squiggle                                                                        | Move `extraPaths` into the config file                                                                                                             |
-| `autoSearchPaths: true` + [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Auto-detected `src/` only applies to the **default** environment, not explicitly defined ones                           | Add `"src"` to each environment's `extraPaths`                                                                                                     |
-| `useNearestConfiguration: true` + `exclude: ["**"]`                                                                                       | All virtual workspaces are excluded                                                                                     | Set `exclude` to only what you actually want excluded                                                                                              |
-| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                  | Each folder analyzes all its files — combined memory can exceed the heap limit                                          | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
-| Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                      | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` for files in that environment        | Repeat common paths in each environment's `extraPaths`                                                                                             |
+| Combination                                                                                                                               | What Happens                                                                                                     | Fix                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `light` mode + `diagnosticMode: "workspace"`                                                                                              | With default exclude-all, no project files are discovered; open files still receive diagnostics                  | Either switch to `"default"` mode, or explicitly set `exclude` to a narrower pattern                                                                               |
+| `light` mode + `indexing: true` (explicit)                                                                                                | Explicit indexing is enabled; exclude-all limits user-file discovery, not all library indexing                   | Narrow exclude so the directories you need can be discovered                                                                                                       |
+| Config file exists + `extraPaths` in `settings.json`                                                                                      | Config `extraPaths` takes priority; otherwise VS Code paths apply                                                | Move `extraPaths` into the config file                                                                                                                             |
+| `autoSearchPaths: true` + [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Environments inherit detected src unless their own extraPaths list replaces the default roots                    | Omit per-environment extraPaths to inherit defaults, or repeat shared paths when replacing them                                                                    |
+| `useNearestConfiguration: true` + `exclude: ["**"]`                                                                                       | Prevents background discovery of nested configuration roots                                                      | Set `exclude` to only what you actually want excluded                                                                                                              |
+| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                  | Each folder analyzes all its files — combined memory can exceed the heap limit                                   | Use `"openFilesOnly"` or one workspace folder with [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
+| Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                      | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` for files in that environment | Repeat common paths in each environment's `extraPaths`                                                                                                             |
 
 > **Memory note**: By default Pylance runs inside VS Code's Node.js runtime, which caps the heap at ~4 GB (V8 pointer compression). If you hit "JavaScript heap out of memory" errors, set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` to run in an external Node.js process with an 8 GB default. See [How to Tune Pylance Performance — Node.js Heap Limit](performance-tuning.md#nodejs-heap-limit) for details.
 
@@ -193,7 +193,7 @@ Base rules:
 
 1. Is [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md) set to `false`? → This is the Pylance default in `"default"` and `"light"` modes (only `"full"` mode enables it automatically). Set it to `true` to see auto-import suggestions in the completion list.
 2. Is the correct Python interpreter selected? → **Ctrl+Shift+P → Python: Select Interpreter**. Packages must be installed in the selected environment.
-3. Is [`indexing`](../settings/python_analysis_indexing.md) disabled? → Without indexing, auto-imports only work for open files and standard library.
+3. Is [`indexing`](../settings/python_analysis_indexing.md) disabled? → Without indexing, auto-imports can still use open files, their imports, and available standard-library symbols.
 4. Is [`languageServerMode`](../settings/python_analysis_languageServerMode.md) set to `"light"`? → Light mode disables indexing. Switch to `"default"` or `"full"`.
 
 > **Note**: Even with `autoImportCompletions` off, the **quick fix** (light bulb / Ctrl+.) "Add import" code action still works for unresolved names.
@@ -209,9 +209,9 @@ See [How to Configure Auto-Imports in Pylance](auto-import-guide.md) for the ful
 ### Checks
 
 1. Is [`diagnosticMode`](../settings/python_analysis_diagnosticMode.md) set to `"openFilesOnly"`? → Only open files get diagnostics
-2. Is the file in [`python.analysis.exclude`](../settings/python_analysis_exclude.md)? → Remove it from exclude
+2. Is the file in [`python.analysis.exclude`](../settings/python_analysis_exclude.md)? → Remove it from exclude for workspace checks
 3. Is [`python.analysis.include`](../settings/python_analysis_include.md) set? → Setting [`include`](../settings/python_analysis_include.md) overrides the default (all files). Make sure your file is covered.
-4. Is [`languageServerMode`](../settings/python_analysis_languageServerMode.md) set to `"light"`? → In light mode, [`exclude`](../settings/python_analysis_exclude.md) defaults to `["**"]`, so only open files are analyzed
+4. Is [`languageServerMode`](../settings/python_analysis_languageServerMode.md) set to `"light"`? → In light mode, [`exclude`](../settings/python_analysis_exclude.md) defaults to `["**"]`, limiting which project files are found for analysis
 
 ---
 
@@ -225,7 +225,7 @@ When settings aren't working as expected:
 - [ ] **Path validity**: For any setting that points to a file or folder, confirm the resolved path exists and points to the intended root, not just an existing but irrelevant directory
 - [ ] **Language server mode**: Is a mode active that changes defaults?
 - [ ] **Restart**: Run "Python: Restart Language Server" after any configuration change
-- [ ] **Pylance output**: Check **Output → Pylance** for errors or config warnings
+- [ ] **Pylance output**: Check **Output → Python Language Server** for errors or config warnings
 - [ ] **Trace logging**: Enable `"python.analysis.logLevel": "Trace"` and look for which settings are in effect. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md)
 
 ---
@@ -263,7 +263,7 @@ These three settings control which files Pylance discovers, analyzes, and report
 
 ### Q: Does `autoSearchPaths` work with execution environments?
 
-[`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (default: `true`) auto-adds a `src/` directory to the search path if it exists and doesn't contain `__init__.py`. When execution environments are defined in a config file, the auto-detected `src/` path goes into the default execution environment but **does not** automatically apply to explicitly defined execution environments. Add `src` to each environment's [`extraPaths`](../settings/python_analysis_extraPaths.md) if needed.
+[`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (default: `true`) auto-adds a `src/` directory to the search path if it exists and doesn't contain `__init__.py`. Execution environments inherit default search roots, including auto-detected `src/`, unless they specify their own [`extraPaths`](../settings/python_analysis_extraPaths.md) list. That list replaces the inherited roots; repeat `src` there if needed.
 
 ### Q: Pylance shows wrong Python version features (e.g., `match` statements flagged as errors)
 
@@ -284,7 +284,7 @@ If Pylance flags valid syntax (like `match` on 3.10+), the detected version is w
 
 Or select the correct interpreter: **Ctrl+Shift+P → Python: Select Interpreter** and choose the 3.12 environment.
 
-**Diagnosis**: check the Output panel (Pylance) for the line `Assuming Python version X.Y` to see what version Pylance is using.
+**Diagnosis**: check **Output → Python Language Server** for the line `Assuming Python version X.Y` to see what version Pylance is using.
 
 > **Note**: The old `python.pythonPath` setting is deprecated and ignored. Pylance reads the interpreter from the Python extension's selection, not from `python.pythonPath`. If you changed `python.pythonPath` and it had no effect, use **Python: Select Interpreter** instead.
 
@@ -307,3 +307,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

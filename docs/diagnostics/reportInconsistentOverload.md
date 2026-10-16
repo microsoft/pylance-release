@@ -1,6 +1,6 @@
 ## Overview
 
-`reportInconsistentOverload` is a diagnostic in Pylance and Pyright that warns when function overloads are inconsistent—such as when overload signatures overlap or do not match the implementation. This helps catch subtle bugs and ensures that type hints for overloaded functions are accurate and unambiguous.
+`reportInconsistentOverload` is a diagnostic in Pylance and Pyright that warns when function overloads are inconsistent—such as when overload signatures do not match the implementation. This helps catch subtle bugs and ensures that type hints for overloaded functions are accurate and unambiguous.
 
 ## Representative Issues
 
@@ -39,7 +39,7 @@ def parse(value: str | int) -> str | int:
 ## Common Fixes & Workarounds
 
 1. Make sure that overload signatures do not overlap and are mutually exclusive.
-2. Ensure that the implementation of the function matches at least one of the overload signatures.
+2. Ensure that the implementation of the function is compatible with every overload signature.
 3. Use precise and non-overlapping type annotations for each overload.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportInconsistentOverload) for options to adjust or suppress this diagnostic if needed.
 
@@ -47,3 +47,5 @@ def parse(value: str | int) -> str | int:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

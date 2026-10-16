@@ -152,10 +152,10 @@ project/
 
 **Issue**:
 
-Pylance cannot resolve imports from `src/package` in `main.py`:
+This layout is normally recognized by `autoSearchPaths`, which is enabled by default. You can also configure `src` explicitly:
 
 ```python
-from package.utils import helper_function  # Unresolved import
+from package.utils import helper_function  # src is the import root
 ```
 
 **Solution**:
@@ -232,3 +232,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

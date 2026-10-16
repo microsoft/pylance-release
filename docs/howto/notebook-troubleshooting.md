@@ -20,7 +20,7 @@ Pylance provides IntelliSense, diagnostics, and type checking inside Jupyter not
 
 ## How Pylance Analyzes Notebooks
 
-Pylance treats each notebook as a single virtual document by concatenating all code cells in order. This means:
+Pylance analyzes Python code cells in order, parsing each cell separately and making names from earlier cells available to later cells. This means:
 
 - A variable defined in Cell 1 is visible in Cell 2 (as long as Cell 1 appears earlier in the notebook).
 - Imports in an earlier cell apply to later cells.
@@ -90,13 +90,13 @@ df: pd.DataFrame  # Pylance now knows df exists and its type
 
 1. **Pylance is the active language server**: Open Settings and verify `"python.languageServer"` is `"Pylance"` (or `"Default"`, which uses Pylance).
 
-2. **Notebook is trusted**: VS Code requires you to trust a notebook before extensions can run. Click **Trust** in the notification bar if prompted.
+2. **Workspace trust**: Installed-library analysis requires a trusted workspace.
 
 3. **Restart**: Run **"Python: Restart Language Server"** from the Command Palette (Ctrl+Shift+P).
 
 4. **Check [`languageServerMode`](../settings/python_analysis_languageServerMode.md)**: If set to `"light"`, diagnostics are limited. Try `"default"` or `"full"`.
 
-5. **Check Pylance output**: Open **Output** panel → select **Pylance** → look for errors.
+5. **Check Pylance output**: Open **Output** panel → select **Python Language Server** → look for errors.
 
 ---
 
@@ -117,17 +117,17 @@ df: pd.DataFrame  # Pylance now knows df exists and its type
 
 **Symptom**: Pylance resolves different packages than your notebook kernel uses.
 
-Notebooks in VS Code have **two** Python selections that must match:
+Notebook execution and analysis use these environment selections:
 
 1. **Kernel**: The Python environment that executes cells (shown in the top-right kernel selector).
-2. **Language server**: The Python interpreter Pylance uses for analysis (shown in the VS Code status bar).
+2. **Language server**: Pylance uses the interpreter information supplied for the notebook's kernel.
 
-If these point to different environments, Pylance may report missing imports for packages that work at runtime.
+If a package works at runtime but Pylance cannot resolve it, check the notebook kernel's environment.
 
 ### Fix
 
 1. Click the kernel selector in the notebook → choose your environment.
-2. Click the Python version in the VS Code status bar → choose the **same** environment.
+2. Confirm imports resolve in the notebook after changing the kernel.
 3. Run **"Python: Restart Language Server"** to pick up the change.
 
 ---
@@ -138,7 +138,7 @@ Pylance's notebook analysis has a few differences from standalone file analysis:
 
 - **Cell boundaries are transparent**: Variables flow across cells but Pylance treats them like consecutive blocks in one file.
 - **IPython magics are ignored**: Lines starting with `%` or `!` are treated as comments by Pylance. No errors, but no analysis either.
-- **`display()` and IPython builtins**: Pylance may not know about `display()`, `get_ipython()`, or other IPython-injected globals. Add explicit imports if you see errors:
+- **`display()` and IPython builtins**: Pylance normally recognizes `display()` when IPython is available. Add explicit imports for other injected globals or unresolved names:
 
 ```python
 from IPython.display import display
@@ -146,16 +146,28 @@ from IPython.display import display
 
 ---
 
+For non-Python cell bodies, the experimental `python.analysis.cellMagicLanguages` setting maps magic names (without `%%`) to VS Code language IDs. Install an extension that provides the desired language, then add a mapping in `.vscode/settings.json`, for example:
+
+```json
+{
+    "python.analysis.cellMagicLanguages": {
+        "sql": "sql"
+    }
+}
+```
+
+Keep the notebook cell's language set to Python and put `%%sql` at the start of the cell, with SQL on the following lines. Pylance forwards completions, hover, and Go to Definition for the body to that language extension. Use Ctrl+Space to request completions manually. Available language features depend on the extension.
+
 ## Diagnostic Checklist
 
 When Pylance isn't working correctly in a notebook:
 
-- [ ] **Kernel matches language server**: Both point to the same Python environment
+- [ ] **Notebook environment**: Select the kernel where your packages are installed
 - [ ] **Package is installed**: Run `%pip show <package>` in a cell to verify
 - [ ] **Cell order**: Definitions appear above usages in document order (not just execution order)
-- [ ] **Notebook is trusted**: Check the trust banner at the top
+- [ ] **Workspace trust**: Installed-library analysis requires a trusted workspace
 - [ ] **Restart**: Run "Python: Restart Language Server" after changes
-- [ ] **Output panel**: Check **Output → Pylance** for errors or warnings
+- [ ] **Output panel**: Check **Output → Python Language Server** for errors or warnings
 
 ---
 
@@ -167,7 +179,7 @@ Yes. If a `pyrightconfig.json` exists in the workspace root, it applies to noteb
 
 ### Q: Why does Pylance flag `display()` as undefined?
 
-`display()` is injected into the IPython namespace at runtime. Pylance doesn't know about it without an explicit import:
+`display()` is normally recognized when IPython is available. If it is unresolved, check the notebook's environment or try an explicit import:
 
 ```python
 from IPython.display import display
@@ -175,7 +187,7 @@ from IPython.display import display
 
 ### Q: How do I suppress diagnostics for cells that use magic commands?
 
-Add `# type: ignore` on lines that Pylance cannot analyze, or use [`python.analysis.ignore`](../settings/python_analysis_ignore.md) to suppress diagnostics for the entire notebook file (not recommended for most cases).
+For Python diagnostics, add `# type: ignore` on lines that Pylance cannot analyze, or use [`python.analysis.ignore`](../settings/python_analysis_ignore.md) to suppress diagnostics for the entire notebook file (not recommended for most cases). For errors from another cell language, use that language extension's diagnostic settings.
 
 ### Q: Can Pylance analyze `.ipynb` files outside VS Code?
 
@@ -192,3 +204,5 @@ Pylance runs only inside VS Code. For static type checking of notebooks outside 
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

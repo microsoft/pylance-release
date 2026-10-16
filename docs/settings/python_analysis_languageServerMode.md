@@ -39,14 +39,14 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 | `python.analysis.autoImportCompletions`                  | `false`        | `false`      | `true`      |
 | `python.analysis.showOnlyDirectDependenciesInAutoImport` | `false`        | `false`      | `true`      |
 | `python.analysis.userFileIndexingLimit`                  | `2000`         | `2000`       | `-1`        |
-| `python.analysis.functionReturnTypes`                    | `false`        | `false`      | `true`      |
-| `python.analysis.pytestParameters`                       | `false`        | `false`      | `true`      |
-| `python.analysis.supportDocstringTemplate`               | `false`        | `false`      | `true`      |
+| `python.analysis.inlayHints.functionReturnTypes`         | `false`        | `false`      | `true`      |
+| `python.analysis.inlayHints.pytestParameters`            | `false`        | `false`      | `true`      |
+| `python.analysis.supportDocstringTemplate`               | `false`        | `false`      | `false`     |
 | `python.analysis.packageIndexDepths`                     | `default`      | `default`    | `full`      |
 | `python.analysis.nodeExecutable`                         | ``             | ``           | `auto`      |
 | `python.analysis.includeAliasesFromUserFiles`            | `false`        | `false`      | `true`      |
 
-- **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies paths to directories or files that Pylance should not include in the analysis. In `light` mode, it is set to `["**"]`, which means Pylance will exclude all files from the workspace, enabling IntelliSense support for open files only.
+- **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specifies where Pylance looks for files to analyze. In `light` mode, it defaults to `["**"]`, so Pylance starts with open files and their imports.
 
 - **[`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md)**: When set to `true`, Pylance parses the source code of libraries when type stubs are not available. In `light` mode, this is set to `false`, reducing memory usage.
 
@@ -60,20 +60,20 @@ When you change the `python.analysis.languageServerMode` setting, Pylance automa
 
 - **[`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)**: Limits the number of user files indexed in the workspace. In `full` mode, there is no limit (`-1`), allowing comprehensive indexing of all files.
 
-- **`python.analysis.functionReturnTypes`**: Enables inlay hints for function return types in `full` mode, providing additional type information during development.
+- **`python.analysis.inlayHints.functionReturnTypes`**: Enables inlay hints for function return types in `full` mode, providing additional type information during development.
 
-- **`python.analysis.pytestParameters`**: Enables inlay hints for Pytest function parameters in `full` mode, enhancing test development support.
+- **`python.analysis.inlayHints.pytestParameters`**: Enables inlay hints for Pytest function parameters in `full` mode, enhancing test development support.
 
-- **`python.analysis.supportDocstringTemplate`**: Enables support for docstring generation in `full` mode, facilitating better code documentation.
+- **`python.analysis.supportDocstringTemplate`**: Set it to `true` to offer a **Generate Docstring** completion immediately after the opening triple quotes of an empty docstring. `full` mode does not enable it automatically.
 
-- **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. By default, only top-level modules are indexed (depth 1). A few popular libraries default to depth 2.
+- **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Used to override how many levels under installed packages to index on a per-package basis. Most packages default to depth 1. A few popular libraries are indexed deeper.
     - **Default value** (for `default` and `light` modes):
         ```jsonc
         [
             { "name": "sklearn", "depth": 2 },
             { "name": "matplotlib", "depth": 2 },
             { "name": "scipy", "depth": 2 },
-            { "name": "django", "depth": 2 },
+            { "name": "django", "depth": 4 },
             { "name": "flask", "depth": 2 },
             { "name": "fastapi", "depth": 2 },
             { "name": "cuda", "depth": 3, "includeAllSymbols": true },
@@ -110,7 +110,7 @@ Alternatively, you can edit your `settings.json` file directly:
 ## When and Why to Use Each Mode
 
 - **`light`**
-    - **Large Projects**: Improves performance by analyzing only open files, reducing resource usage.
+    - **Large Projects**: Improves performance by limiting where Pylance looks for files to analyze, reducing resource usage.
     - **Limited Resources**: Suitable for systems with low memory or CPU power.
     - **Quick Edits**: Ideal if you don't need advanced features and just need a simple editor setup.
 
@@ -130,7 +130,7 @@ Alternatively, you can edit your `settings.json` file directly:
 
 ### Q: How does `light` mode affect existing projects and what features are disabled?
 
-**A:** In `light` mode, Pylance does not analyze closed files, perform indexing, extract type information from library code, or provide Pytest support. This reduces resource usage but limits IntelliSense features like auto-import suggestions, workspace-wide code navigation, find all references, and multi-file rename. Editor features such as completion, hover, and go-to definition will still work, but third-party library symbols may be unavailable if stubs or type information are missing, which can also affect diagnostics.
+**A:** In `light` mode, Pylance starts with open files and their imports, disables indexing and Pytest support, and stops inferring types from untyped library source. This reduces resource usage but limits IntelliSense features like auto-import suggestions, workspace-wide code navigation, find all references, and multi-file rename. Editor features such as completion, hover, and go-to definition will still work, but third-party library symbols may be unavailable if stubs or type information are missing, which can also affect diagnostics.
 
 ### Q: Can I customize individual settings after switching to `light` mode?
 
@@ -156,3 +156,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

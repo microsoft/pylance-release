@@ -80,11 +80,11 @@ If you disable `# type: ignore` support, you can still address type errors throu
 
 ### Q: What is the difference between `# type: ignore` and `# pyright: ignore`?
 
-**A:** `# type: ignore` is defined by PEP 484 and is recognized by most type checkers. `# pyright: ignore` is Pyright-specific and is always recognized by Pylance regardless of this setting. `# pyright: ignore` also supports error codes for more targeted suppression (e.g., `# pyright: ignore[reportGeneralClassIssues]`).
+**A:** `# type: ignore` is defined by PEP 484 and is recognized by most type checkers. `# pyright: ignore` is Pyright-specific and is always recognized by Pylance regardless of this setting. `# pyright: ignore` also supports error codes for more targeted suppression (e.g., `# pyright: ignore[reportArgumentType]`).
 
 ### Q: Can I disable `# type: ignore` for specific files only?
 
-**A:** The setting applies globally to the workspace. You can use a `pyrightconfig.json` with `include`/`exclude` to scope the configuration to specific directories.
+**A:** No. `include` and `exclude` choose files for analysis; they do not set different values for individual files.
 
 ## Related Diagnostics
 
@@ -97,3 +97,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

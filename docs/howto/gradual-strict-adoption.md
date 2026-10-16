@@ -52,7 +52,7 @@ Or in `pyrightconfig.json`:
 
 - [`reportMissingImports`](../diagnostics/reportMissingImports.md) — unresolved imports
 - [`reportUndefinedVariable`](../diagnostics/reportUndefinedVariable.md) — undefined names
-- [`reportDuplicateImport`](../diagnostics/reportDuplicateImport.md) — duplicate imports
+- [`reportReturnType`](../diagnostics/reportReturnType.md) — return value does not match its declared type
 - [`reportInvalidStringEscapeSequence`](../diagnostics/reportInvalidStringEscapeSequence.md) — bad escape sequences
 
 Fix these first. They are almost always real bugs.
@@ -67,13 +67,13 @@ Once `basic` is clean, enable additional rules one at a time using [`diagnosticS
 {
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportReturnType": "warning",
-        "reportArgumentType": "warning"
+        "reportIncompatibleMethodOverride": "warning",
+        "reportPossiblyUnboundVariable": "warning"
     }
 }
 ```
 
-Good rules to enable early (high value, low noise):
+Good rules to review early (high value, low noise; already enabled in `basic`):
 
 | Rule                                                                         | What it catches                          |
 | ---------------------------------------------------------------------------- | ---------------------------------------- |
@@ -103,7 +103,7 @@ When most `basic` + custom overrides are clean:
 {
     "python.analysis.typeCheckingMode": "standard",
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportUnusedImport": "information",
+        "reportIncompatibleMethodOverride": "information",
         "reportCallIssue": "warning"
     }
 }
@@ -173,8 +173,8 @@ Some rules may never fit your project. Use [`diagnosticSeverityOverrides`](../se
 {
     "python.analysis.typeCheckingMode": "strict",
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportUnusedCallResult": "none",
-        "reportMissingSuperCall": "none"
+        "reportUnknownMemberType": "none",
+        "reportUnusedImport": "none"
     }
 }
 ```
@@ -233,7 +233,7 @@ This applies `strict` checking to all files under `src/core/` while the rest of 
 Run Pyright CLI:
 
 ```bash
-npx pyright --outputjson | python -c "import json,sys; d=json.load(sys.stdin); print(len(d['generalDiagnostics']))"
+npx pyright --outputjson | python -c "import json,sys; d=json.load(sys.stdin); print(d['summary']['errorCount'])"
 ```
 
 ### Q: Does `diagnosticSeverityOverrides` work with `pyrightconfig.json`?
@@ -264,3 +264,5 @@ See [Settings Troubleshooting](settings-troubleshooting.md) for the full precede
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

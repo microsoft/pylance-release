@@ -70,11 +70,11 @@ To further customize indexing behavior in Pylance, you can use additional settin
 
 - **[`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md)**: Allows you to control how deeply specific packages are indexed, providing flexibility in managing indexing performance.
 
-- **`python.analysis.include`**: Specifies which directories or files belong to the VS Code workspace, which indirectly affects what files the indexer will process.
+- **`python.analysis.include`**: Specifies where Pylance looks for files to analyze, which indirectly affects what files the indexer will process.
 
-- **`python.analysis.exclude`**: Excludes specific directories or files from being part of the VS Code workspace, which affects what files the indexer will process.
+- **`python.analysis.exclude`**: Limits where Pylance looks for files to analyze, which affects what files the indexer will process.
 
-- **`python.analysis.extraPaths`**: By default, the indexer will index packages in import roots returned by `sys.path`. If there are other packages or modules you want to include, use `extraPaths` to add them as third-party packages to the workspace, which will indirectly cause the indexer to index them.
+- **`python.analysis.extraPaths`**: By default, the indexer will index packages in import roots returned by `sys.path`. If there are other packages or modules you want to include, use `extraPaths` to add their import search paths.
 
 - **`python.analysis.userFileIndexingLimit`**: Limits the number of user files to index, which can help manage performance on larger projects.
 
@@ -118,3 +118,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
 ---
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

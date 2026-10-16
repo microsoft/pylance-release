@@ -57,7 +57,7 @@ While both `python.analysis.ignore` and [`python.analysis.exclude`](python_analy
 
 - **`python.analysis.exclude`**:
     - Excludes the specified paths from the workspace.
-    - Pylance does not process these files for features like code navigation, auto-imports, or symbol searches.
+    - Pylance can still process excluded files for IntelliSense when they are opened or imported.
     - If an excluded file is imported by a non-excluded file, Pylance still reports diagnostics for the non-excluded file, potentially generating import errors.
 
 The `ignore` setting is useful when you want Pylance to recognize the files (e.g., for code completion when imported), but you don't want to see diagnostics for them.
@@ -88,7 +88,7 @@ This way, Pylance won't show errors or warnings for the generated code but will 
 
 ### Q: How does `python.analysis.ignore` affect performance?
 
-**A:** `python.analysis.ignore` does not significantly affect performance. To improve performance in large projects, use `python.analysis.exclude` to completely exclude files from being processed.
+**A:** `python.analysis.ignore` does not significantly affect performance. To improve performance in large projects, use `python.analysis.exclude` to limit where Pylance looks for files to analyze.
 
 ### Q: Can I use `python.analysis.ignore` to suppress specific types of diagnostics?
 
@@ -96,11 +96,11 @@ This way, Pylance won't show errors or warnings for the generated code but will 
 
 ### Q: Should I use `python.analysis.ignore` or `python.analysis.exclude` in most cases?
 
-**A:** Most of the time, users would want to use `python.analysis.exclude` rather than `python.analysis.ignore`. The `exclude` setting removes files from processing, ensuring no errors or warnings appear from those files. `ignore` should only be used in situations where files are included in the workspace but you want to suppress diagnostics specifically without excluding them entirely, such as for complex file structures.
+**A:** Use `python.analysis.exclude` to limit where Pylance looks for files to analyze. Opened or imported files can still be analyzed. Use `python.analysis.ignore` to suppress diagnostics.
 
 ## Related Settings
 
-- [`python.analysis.exclude`](python_analysis_exclude.md): Excludes files from analysis entirely.
+- [`python.analysis.exclude`](python_analysis_exclude.md): Controls where Pylance looks for files to analyze.
 - [`python.analysis.include`](python_analysis_include.md): Controls which files are included in analysis.
 
 ## See Also
@@ -112,3 +112,5 @@ This way, Pylance won't show errors or warnings for the generated code but will 
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

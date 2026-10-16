@@ -23,7 +23,7 @@ def add(a, b):
 result = add(1, "2")
 ```
 
-With the setting set to `true`, Pylance may report a type error for the call `add(1, "2")` because it infers types within the function and detects the mismatch.
+With the setting set to `true`, this call does not report the int/string mismatch because the parameters are unannotated. Add parameter annotations to check the argument types.
 
 With the setting set to `false`, Pylance skips analysis of the unannotated `add` function and does not report errors within it.
 
@@ -73,11 +73,11 @@ If your codebase has many unannotated functions and the resulting diagnostics ar
 
 ### Q: Does this setting affect third-party library code?
 
-**A:** No. This setting applies to your own source files. Third-party library analysis is controlled by other settings such as [`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md).
+**A:** It can affect unannotated functions in library source that Pylance analyzes. [`python.analysis.useLibraryCodeForTypes`](python_analysis_useLibraryCodeForTypes.md) separately controls whether untyped library source is used for type inference.
 
 ## Related Diagnostics
 
-When this setting is disabled, unannotated functions are not fully analyzed, so these diagnostics will not fire for them:
+Disabling this setting suppresses errors inside unannotated function bodies, but enabled checks on function signatures still apply:
 
 - [`reportMissingParameterType`](../diagnostics/reportMissingParameterType.md) — parameter missing type annotation
 - [`reportUnknownParameterType`](../diagnostics/reportUnknownParameterType.md) — parameter has unknown type
@@ -90,3 +90,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

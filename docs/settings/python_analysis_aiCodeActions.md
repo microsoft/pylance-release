@@ -23,7 +23,7 @@ Pylance offers a set of code actions that delegate part of the work to GitHub Co
 | `generateDocstring`            | `false` | Generates a reStructuredText docstring. Triggered from inside an empty docstring. |
 | `convertLambdaToNamedFunction` | `false` | Converts a lambda expression into a named function.                               |
 
-If you set `aiCodeActions` at all, the object you provide replaces the default object, so include every action you want enabled.
+When you set `aiCodeActions`, only the actions you specify are changed. Other actions keep their current settings.
 
 ## Example
 
@@ -41,7 +41,7 @@ After applying the action:
 greeting = f"Hello, {name}!"
 ```
 
-The other actions work the same way — each appears as a Quick Fix in the relevant context (for example, `implementAbstractClasses` on a class that inherits unimplemented abstract methods, or `generateDocstring` from inside an empty docstring).
+The other actions appear in their matching code-action contexts (for example, use **Refactor...** on the name of a class that inherits unimplemented abstract methods, or invoke docstring generation from inside an empty docstring).
 
 ## How to Change `python.analysis.aiCodeActions`
 
@@ -67,11 +67,17 @@ Enable all available AI-assisted actions:
 }
 ```
 
-Disable AI-assisted actions entirely:
+Disable the actions controlled by this setting:
 
 ```json
 {
-    "python.analysis.aiCodeActions": {}
+    "python.analysis.aiCodeActions": {
+        "implementAbstractClasses": false,
+        "generateSymbol": false,
+        "convertFormatString": false,
+        "generateDocstring": false,
+        "convertLambdaToNamedFunction": false
+    }
 }
 ```
 
@@ -86,13 +92,13 @@ You can also turn off **all** of VS Code's AI features at once with the built-in
 ## When to Use It
 
 - **Enable specific actions** that fit your workflow — for example, keep `implementAbstractClasses` on if you frequently subclass abstract base classes.
-- **Disable** (set to `{}`) if you do not use GitHub Copilot, or prefer Pylance to offer only its non-AI code actions.
+- **Disable** (set each action to `false`) if you do not use GitHub Copilot.
 
 ## Frequently Asked Questions
 
 ### Why don't the AI code actions appear?
 
-They require the **GitHub Copilot Chat** extension to be installed and enabled. Also confirm the specific action is enabled and that you invoke the Quick Fix (lightbulb) in the matching context (for example, `implementAbstractClasses` only appears on a class with unimplemented inherited abstract methods).
+They require the **GitHub Copilot Chat** extension to be installed and enabled. Also confirm the specific action is enabled and that you invoke code actions in the matching context (for example, `implementAbstractClasses` only appears on a class with unimplemented inherited abstract methods).
 
 ### Which actions are enabled by default?
 
@@ -100,11 +106,17 @@ They require the **GitHub Copilot Chat** extension to be installed and enabled. 
 
 ### I set one action and the others stopped working. Why?
 
-The value you provide **replaces** the default object rather than merging with it. Include every action you want enabled in your `settings.json` entry.
+When you set `aiCodeActions`, only the actions you specify are changed. Other actions keep their current settings.
 
 ### How do I turn off all AI-assisted actions?
 
-Set the value to an empty object: `"python.analysis.aiCodeActions": {}`. To disable every VS Code AI feature (not just Pylance's), set `"chat.disableAIFeatures": true` instead.
+Set each of the five properties to `false`, as shown above. To disable every VS Code AI feature (not just Pylance's), set `"chat.disableAIFeatures": true` instead.
+
+## AI Parameter Type Annotations
+
+For an unannotated function parameter, place the cursor on its name and choose **Refactor...** &rarr; **Infer parameter type with AI**. For a whole file, choose **Source Action...** &rarr; **Infer unresolved parameter types with AI**. Both actions open Copilot Agent Chat to infer inline annotations; review the generated annotations.
+
+These annotation actions are separate from the five `aiCodeActions` properties above.
 
 ## Related Settings
 
@@ -123,3 +135,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

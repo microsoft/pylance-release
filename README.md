@@ -59,55 +59,55 @@ Pylance provides users with the ability to customize their Python language suppo
     - Individual settings can be configured to override the defaults set by `languageServerMode`.
     - Default settings based on mode are:
 
-        | Mode                           | light      | default    | full       |
-        | :----------------------------- | :--------- | :--------- | :--------- |
-        | python.analysis.exclude                   | ["**"]      | []         | []         |
-        | python.analysis.useLibraryCodeForTypes    | false       | true       | true       |
-        | python.analysis.enablePytestSupport       | false       | true       | true       |
-        | python.analysis.indexing                  | false       | true       | true       |
-        | python.analysis.userFileIndexFollowSymlinkedFolders | true | true | true |
-        | python.analysis.autoImportCompletions     | false       | false      | true       |
-        | python.analysis.showOnlyDirectDependenciesInAutoImport | false | false | true     |
-        | python.analysis.packageIndexDepths        | See | settings | below |
-        | python.analysis.regenerateStdLibIndices   | false       | false      | true       |
-        | python.analysis.userFileIndexingLimit     | 2000        | 2000       | -1         |
-        | python.analysis.includeAliasesFromUserFiles | false     | false      | true       |
-        | python.analysis.functionReturnTypes       | false       | false      | true       |
-        | python.analysis.pytestParameters          | false       | false      | true       |
-        | python.analysis.supportRestructuredText   | false       | true       | true       |
-        | python.analysis.supportDocstringTemplate  | false       | false      | true       |
-        | python.analysis.nodeExecutable            | ""          | ""         | "auto"     |
+        | Mode                                                   | light  | default  | full   |
+        | :----------------------------------------------------- | :----- | :------- | :----- |
+        | python.analysis.exclude                                | ["**"] | []       | []     |
+        | python.analysis.useLibraryCodeForTypes                 | false  | true     | true   |
+        | python.analysis.enablePytestSupport                    | false  | true     | true   |
+        | python.analysis.indexing                               | false  | true     | true   |
+        | python.analysis.userFileIndexFollowSymlinkedFolders    | true   | true     | true   |
+        | python.analysis.autoImportCompletions                  | false  | false    | true   |
+        | python.analysis.showOnlyDirectDependenciesInAutoImport | false  | false    | true   |
+        | python.analysis.packageIndexDepths                     | See    | settings | below  |
+        | python.analysis.regenerateStdLibIndices                | false  | false    | true   |
+        | python.analysis.userFileIndexingLimit                  | 2000   | 2000     | -1     |
+        | python.analysis.includeAliasesFromUserFiles            | false  | false    | true   |
+        | python.analysis.inlayHints.functionReturnTypes         | false  | false    | true   |
+        | python.analysis.inlayHints.pytestParameters            | false  | false    | true   |
+        | python.analysis.supportRestructuredText                | true   | true     | true   |
+        | python.analysis.supportDocstringTemplate               | false  | false    | false  |
+        | python.analysis.nodeExecutable                         | ""     | ""       | "auto" |
 
 - `python.analysis.typeCheckingMode`
     - Used to specify the level of type checking analysis performed.
     - Default: `off`. 
         > Note that the value of this setting can be overridden by having a pyrightconfig.json or a pyproject.toml. For more information see this [link](https://aka.ms/AArua4c).
     - Available values:
-        - `off`: No type checking analysis is conducted; unresolved imports/variables diagnostics are produced.
+        - `off`: Most type-checking diagnostics are disabled; unresolved imports/variables diagnostics are produced.
         - `basic`: All rules from `off` + `basic` type checking rules.
         - `standard`: All rules from `basic` + `standard` type checking rules.
         - `strict`: All rules from `standard` + `strict` type checking rules.
         > You can refer to [pyright](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-settings-defaults) documentation to reference the default type checking rules for each of the type checking modes. 
     - Performance Consideration:
-        - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by disabling type checking analysis, which can be resource-intensive, especially in large codebases.
+        - Setting `python.analysis.typeCheckingMode` to `off` can improve performance by reducing diagnostic checks, especially in large codebases.
 
 - `python.analysis.diagnosticMode`
-    - Used to allow a user to specify what files they want the language server to analyze to get problems flagged in their code.
+    - Used to allow a user to specify which files receive full diagnostics.
     - Available values:
         - `workspace`
         - `openFilesOnly` (default)
     - Performance Consideration:
-        - Setting `python.analysis.diagnosticMode` to `openFilesOnly` limits analysis to open files, improving performance by reducing the amount of code Pylance needs to process in large workspaces.
+        - Setting `python.analysis.diagnosticMode` to `openFilesOnly` limits full diagnostics to open files, reducing checking in large workspaces. Imported dependencies can still be analyzed.
 
 - [`python.analysis.include`](docs/settings/python_analysis_include.md)
-    - Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the directory that contains workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
+    - Paths of directories or files that should be included. If no paths are specified, Pylance defaults to the workspace root. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character).
     - Default value: empty array
 
 - [`python.analysis.exclude`](docs/settings/python_analysis_exclude.md)
     - Paths of directories or files that should not be included. These override the include directories, allowing specific subdirectories to be excluded. Note that files in the exclude paths may still be included in the analysis if they are referenced (imported) by source files that are not excluded. Paths may contain wildcard characters `**` (a directory or multiple levels of directories), `*` (a sequence of zero or more characters), or `?` (a single character). If no exclude paths are specified, Pylance automatically excludes the following: `**/node_modules`, `**/__pycache__`, `.git` and any virtual environment directories.
     - Default value: empty array (or `["**"]` in `light` mode)
     - Performance Consideration:
-        - Excluding unnecessary files or directories can significantly improve performance by reducing the scope of analysis. For example, setting `python.analysis.exclude` to `["**"]` will exclude all files except those currently open, minimizing resource consumption.
+        - Excluding unnecessary files or directories can significantly improve performance by reducing workspace discovery. For example, setting `python.analysis.exclude` to `["**"]` disables discovery of workspace files; open files and imports needed by them can still be analyzed.
 
 - `python.analysis.useDefaultExcludes`
     - When enabled (the default), Pylance adds a set of built-in default excludes in addition to any paths listed in `python.analysis.exclude`: `**/node_modules`, `**/__pycache__`, `**/__editable__.*`, hidden directories (dotfiles), and auto-detected virtual environment directories. These defaults take precedence over `python.analysis.include`, so a directory auto-detected as a virtual environment stays excluded even if it is explicitly included.
@@ -124,7 +124,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - This feature is experimental and may have performance implications in large workspaces.
         - Virtual workspaces respect `python.analysis.exclude` patterns.
         - Only `pyproject.toml` files containing `[tool.pyright]` sections are discovered.
-        - **Important**: Files in different virtual workspaces are isolated from each other. If you need files in one workspace to import from another workspace, you must configure `extraPaths` in your `pyrightconfig.json` or `pyproject.toml` to reference the other workspace directories. For example:
+        - **Important**: Imports between virtual workspaces use normal import resolution. Configure `extraPaths` in your `pyrightconfig.json` or `pyproject.toml` when the other workspace's source directories are not otherwise found. For example:
           ```json
           {
             "extraPaths": ["../other-workspace"]
@@ -192,7 +192,7 @@ Pylance provides users with the ability to customize their Python language suppo
     - Performance Consideration:
         - Enabling this setting may slow down Workspace Symbol search.
     - Note:
-        - For non-`py.typed` libraries, only symbols exported via a package `__init__.py` `__all__` are included.
+        - With `includeAllSymbols` set to `false`, Python source files in non-`py.typed` packages contribute only symbols in `__all__`; stubs and typed packages can contribute other symbols.
 
 - `python.analysis.includeVenvInWorkspaceSymbols`
     - Include symbols from installed third-party packages (venv `site-packages`) in Workspace Symbol search.
@@ -202,7 +202,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - Only takes effect when `python.analysis.indexing` is enabled.
     - Note:
         - Only symbols from packages installed in `site-packages` (or `dist-packages` on Debian/Ubuntu) are included. Standard library symbols are excluded.
-        - For non-`py.typed` libraries, only symbols exported via a package `__init__.py` `__all__` are included.
+        - With `includeAllSymbols` set to `false`, Python source files in non-`py.typed` packages contribute only symbols in `__all__`; stubs and typed packages can contribute other symbols.
         - When the search query is empty, venv/library symbols are not returned (the result set would be too large). User-code symbols are always returned regardless of the query.
         - The depth of sub-packages searched depends on `python.analysis.packageIndexDepths`. By default, only top-level modules (depth 1) are indexed. To include symbols from deeper sub-modules (e.g., `django.views`), increase the `depth` for the corresponding package in `packageIndexDepths`.
 
@@ -311,7 +311,7 @@ Pylance provides users with the ability to customize their Python language suppo
             "includeAllSymbols": "whether to include all symbols (bool)"
         }
         ```
-        If `includeAllSymbols` is set to `false`, only symbols in each package's `__all__` are included. When it's set to `true`, Pylance will index every module/top level symbol declarations in the file.
+        If `includeAllSymbols` is set to `false`, Python source files in packages without `py.typed` contribute only symbols in `__all__`. Stub files and typed packages can contribute other symbols. When it's set to `true`, Pylance will index every module/top level symbol declarations in the file.
     - Example:
         ```jsonc
         [
@@ -459,7 +459,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.enableTreeSitterColorization` [Experimental]
+- `python.analysis.enableTreeSitterColorization` [Experimental; not available in Pylance 2026.4.1]
     - Uses an incremental Tree-sitter Rust sidecar for Python syntax colors, combined with Pylance's type-aware semantic tokens.
     - Set this to `true` and enable `editor.semanticHighlighting.enabled` to use it. Requires a trusted workspace and a supported native binary.
     - Supports open Python files up to 2 MiB. Notebooks, virtual content, and larger files keep existing highlighting.
@@ -469,7 +469,7 @@ Pylance provides users with the ability to customize their Python language suppo
         - `true`
         - `false` (default)
 
-- `python.analysis.enablePydanticSupport` [Experimental]
+- `python.analysis.enablePydanticSupport` [Experimental; not available in Pylance 2026.4.1]
     - Enables field IntelliSense and constructor type checking for statically recoverable Pydantic `create_model` calls.
     - Default value: `false`
     - Accepted values:
@@ -522,13 +522,13 @@ Pylance provides users with the ability to customize their Python language suppo
     - Accepted values:
         - `true`
         - `false` (default)
-    - Note: Requires GitHub Copilot to be installed and active.
+    - Note: Requires GitHub Copilot Chat and `python.analysis.supportRestructuredText` enabled; `chat.disableAIFeatures` must not be `true`.
     - Performance Consideration:
         - Enabling `python.analysis.autoTranslateDocstrings` may make hover tooltips display significantly slower due to the time required to call GitHub Copilot for AI-powered translation before showing the hover content.
 
 - `python.analysis.supportRestructuredText`
     - Enable/disable support for reStructuredText in docstrings.
-    - Default value: `false` (or `true` in `full` mode)
+    - Default value: `true`
     - Accepted values:
         - `true` (default)
         - `false` 
@@ -557,7 +557,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.supportDocstringTemplate`
     - Enable/disable support for reStructuredText docstring generation.
-    - Default value: `false` (or `true` in `full` mode)
+    - Default value: `false`
     - Accepted values:
         - `true`
         - `false` (default)
@@ -574,14 +574,14 @@ Pylance provides users with the ability to customize their Python language suppo
         - `false` (default)
 
 - `python.analysis.generateWithTypeAnnotation`
-    - Add type annotations when generating code. Defaults to `false` for type checking mode `off`, and `true` for other modes.
+    - Add type annotations to generated override and abstract-method signatures. Defaults to `false` for type checking mode `off`, and `true` for other modes.
     - Accepted values:
         - `true`
         - `false` (default)
 
 - `python.analysis.diagnosticsSource`
     - Allows specifying a different type checker to use for diagnostics. Pylance will combine its results with the chosen server.
-    - This setting applies to all workspace folders in the current VS Code window.
+    - This setting is resource-scoped and can be configured per workspace folder.
     - Accepted values:
         - `Pylance` (default) - Use Pylance for diagnostics.
         - `Pylance + Pyright` - Use a different version of Pyright for diagnostics. Allows running a different Pyright than the one shipped with the Pylance extension. Pyright diagnostics will completely replace the diagnostics from Pylance. See the `python.analysis.pyrightVersion` setting.
@@ -667,7 +667,7 @@ Semantic colors can be customized in settings.json by associating the Pylance se
 - Semantic token types
     - class, enum
     - parameter, variable, property, enumMember
-    - function, member
+    - function, method
     - module
     - intrinsic
     - magicFunction (dunder methods)
@@ -727,6 +727,8 @@ Quick Fixes
 - Select Interpreter / Select Kernel (for unresolved imports)
 - Learn more about import resolution
 - Fix formatted string (for specific diagnostics that provide a fix)
+- Create function `...` / Create class `...` / Create parameter `...` (for undefined names, depending on context)
+- Create method `...` / Create attribute `...` (for missing members of user-defined classes)
 
 Refactorings
 ------------
@@ -804,3 +806,5 @@ Feedback
 # License
 
 See [Pylance's license](https://marketplace.visualstudio.com/items/ms-python.vscode-pylance/license) and [the pylance-release repository's license](LICENSE) for more information.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

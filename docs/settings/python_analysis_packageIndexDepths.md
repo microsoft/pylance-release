@@ -22,7 +22,7 @@ Distribution-name-to-module-name mapping is handled automatically (e.g., `scikit
 
 ### Namespace Package Handling
 
-[PEP 420](https://peps.python.org/pep-0420/) namespace packages (e.g., `azure`, `google`) lack an `__init__.py` at the top level. Pylance automatically looks up to 4 levels deep to find the first real subpackage containing an `__init__.py`. This means imports like `from azure.storage.blob import BlobClient` work even at the default depth of 1, without requiring a per-package depth override.
+[PEP 420](https://peps.python.org/pep-0420/) namespace packages (e.g., `azure`, `google`) lack an `__init__.py` at the top level. Pylance automatically looks up to 4 levels deep to find the first real subpackage containing an `__init__.py`. This adjustment reaches the nearest real subpackage; deeper modules may still require a per-package depth override.
 
 ### Why Adjust Indexing Depth?
 
@@ -40,9 +40,9 @@ Each configuration in the list should be an object with the following properties
 
 - `"name"`: The name of the package (string).
 - `"depth"`: The depth to which Pylance should index the package (integer).
-- `"includeAllSymbols"` (optional): Whether to include all symbols in the indexing (boolean). If set to `false`, only symbols specified in a module's `__all__` attribute are included. Default is `false` if not specified.
+- `"includeAllSymbols"` (optional): Whether to include all symbols in the indexing (boolean). If set to `false`, ordinary untyped `.py` modules contribute only symbols in `__all__`; stub files and `py.typed` packages contribute their public symbols. Default is `false` if not specified.
 
-**Note**: When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is removed. This means you need to explicitly add any additional packages that you want indexed to this setting, even if you still want them indexed at the default depth.
+**Note**: Your list replaces the configured per-package overrides. Unlisted packages are still indexed at their default depth.
 
 #### Example Structure:
 
@@ -91,7 +91,7 @@ To adjust the `packageIndexDepths` setting in Visual Studio Code:
 ### `includeAllSymbols`
 
 - **`includeAllSymbols: false`** (default):
-    - Pylance includes only symbols that are specified in a module's `__all__` attribute.
+    - For ordinary untyped `.py` modules, Pylance includes only symbols specified in `__all__`. Stub files and `py.typed` packages contribute their public symbols.
     - This helps reduce the number of irrelevant or private symbols in the index.
 
 - **`includeAllSymbols: true`**:
@@ -198,7 +198,7 @@ In **`default`** and **`light`** modes, most packages are indexed at depth 1 (to
     { "name": "sklearn", "depth": 2 },
     { "name": "matplotlib", "depth": 2 },
     { "name": "scipy", "depth": 2 },
-    { "name": "django", "depth": 2 },
+    { "name": "django", "depth": 4 },
     { "name": "flask", "depth": 2 },
     { "name": "fastapi", "depth": 2 },
     { "name": "cuda", "depth": 3, "includeAllSymbols": true },
@@ -209,7 +209,7 @@ Note: In `light` mode, indexing is disabled by default. These depth values only 
 
 In addition, packages listed as direct dependencies in `requirements.txt` or `pyproject.toml` are automatically indexed at depth **2**, even if they are not in the list above (see [Automatic Depth Boost for Direct Dependencies](#automatic-depth-boost-for-direct-dependencies)).
 
-In **`full`** mode, **all** packages default to depth 4 with `includeAllSymbols: true`:
+In **`full`** mode, most packages default to depth 4 with `includeAllSymbols: true`:
 
 ```jsonc
 [{ "name": "", "depth": 4, "includeAllSymbols": true }]
@@ -225,7 +225,7 @@ This provides broad auto-import coverage at the cost of higher resource usage.
 
 ### Q: What happens to the default `packageIndexDepth` when I manually set the depth?
 
-**A:** When you manually set the `python.analysis.packageIndexDepths` setting, the default indexing behavior is overridden. Therefore, you need to explicitly add any packages that you want indexed to this setting, even if you still want them indexed at the default depth. Make sure to include all required packages in the configuration to avoid losing indexing capabilities for important packages.
+**A:** Your list replaces the configured per-package overrides. Unlisted packages are still indexed at their default depth.
 
 Note: The automatic depth boost for direct dependencies (from `requirements.txt`/`pyproject.toml`) still applies for packages that are **not** listed in your custom `packageIndexDepths`. If you explicitly list a package, your depth takes priority over the automatic boost.
 
@@ -246,3 +246,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 _"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."_
 
 ---
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -58,7 +58,7 @@ For `stubPath`, path validity means more than "the directory exists".
 
 If the setting points at an existing but unrelated folder, Pylance treats that folder as the stub root and simply finds no matching custom stubs. That can make it look like Pylance is ignoring your stubs even though the setting is being applied.
 
-If `stubPath` is explicitly set to a missing directory, Pylance may also log a warning in **Output → Pylance** that the directory is not valid.
+If `stubPath` is explicitly set to a missing directory, Pylance may also log a warning in **Output → Python Language Server** that the directory is not valid.
 
 ## Expected directory structure
 
@@ -237,7 +237,7 @@ By default, Pylance uses `typings` as the stub directory name. If that directory
 Custom stubs provided through `stubPath` can resolve or suppress:
 
 - [`reportMissingTypeStubs`](../diagnostics/reportMissingTypeStubs.md) — providing stubs for a library eliminates this diagnostic
-- [`reportMissingModuleSource`](../diagnostics/reportMissingModuleSource.md) — stubs satisfy the type checker even without source
+- [`reportMissingModuleSource`](../diagnostics/reportMissingModuleSource.md) — stubs provide type information, but this diagnostic can remain if the runtime module is missing
 - [`reportIncompleteStub`](../diagnostics/reportIncompleteStub.md) — you can write complete stubs without `__getattr__` fallback
 - [`reportMissingImports`](../diagnostics/reportMissingImports.md) — stubs make the import resolvable
 
@@ -251,3 +251,5 @@ Custom stubs provided through `stubPath` can resolve or suppress:
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -6,7 +6,7 @@ The `python.analysis.typeEvaluation.strictSetInference` setting controls how Pyl
 
 ## What `python.analysis.typeEvaluation.strictSetInference` does
 
-When inferring the type of a set literal, Pylance must decide how to combine the types of its elements. With this setting disabled, Pylance may use a broader type like `set[Any]`. With it enabled, Pylance infers the element type as the union of the observed types.
+When inferring the type of a set literal, Pylance must decide how to combine the types of its elements. With this setting disabled, mixed-type sets have an unknown element type. With it enabled, Pylance infers the element type as the union of the observed types.
 
 The default value is `false`.
 
@@ -20,7 +20,7 @@ The default value is `false`.
 my_set = {1, "a", 3.4}
 ```
 
-- With `false` (default): Pylance may infer `set[Any]` or find a common supertype.
+- With `false` (default): Pylance infers `set[Unknown]`.
 - With `true`: Pylance infers `set[int | str | float]`, using the union of observed element types.
 
 ## Accepted values
@@ -111,3 +111,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

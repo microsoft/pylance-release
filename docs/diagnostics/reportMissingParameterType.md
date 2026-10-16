@@ -11,10 +11,10 @@
 ## Examples
 
 ```python
-def greet(name):  # Warning: Type of parameter "name" is unknown
+def greet(name):  # Warning: Type annotation is missing for parameter "name"
     print(f"Hello, {name}")
 
-def add(a, b):  # Warning: Type of parameter "a" is unknown
+def add(a, b):  # Warning: Type annotation is missing for parameter "a"
     return a + b
 ```
 
@@ -39,3 +39,5 @@ def add(a: int, b: int) -> int:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

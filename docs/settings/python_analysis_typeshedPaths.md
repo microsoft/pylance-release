@@ -189,7 +189,7 @@ If your custom typeshed isn't being picked up:
 
 1. **Check the first configured path**: Only the first entry matters, and it must point to the typeshed root rather than directly to `stdlib/` or `stubs/`.
 2. **Verify directory structure**: The selected path must contain a `stdlib/` subdirectory with a `VERSIONS` file.
-3. **Check the Output panel**: Open **Output → Pylance** for errors about missing or malformed typeshed directories.
+3. **Check the Output panel**: Open **Output → Python Language Server** for errors about missing or malformed typeshed directories.
 4. **Enable trace logging**: Add `"python.analysis.logLevel": "Trace"` to settings and look for typeshed resolution messages. See [Reading Pylance Logs](../howto/reading-pylance-logs.md).
 5. **Restart**: Run **"Python: Restart Language Server"** after changing this setting.
 6. **Config file override**: If a `pyrightconfig.json` exists with `typeshedPath` set, the VS Code setting is ignored. See [Settings Troubleshooting](../howto/settings-troubleshooting.md#validate-path-based-settings).
@@ -197,3 +197,5 @@ If your custom typeshed isn't being picked up:
 ---
 
 For more information on Pylance settings and customization, refer to the [Pylance Settings and Customization](https://code.visualstudio.com/docs/python/settings-reference) documentation.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

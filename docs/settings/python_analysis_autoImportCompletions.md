@@ -73,7 +73,7 @@ Alternatively, you can edit your `settings.json` file directly:
 - [`python.analysis.indexing`](python_analysis_indexing.md)
     - Used to specify whether Pylance should index installed third party libraries and user files to improve features such as auto-import, add import, workspace symbols, etc.
 
-- [`python.analysis.includeAliasFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md)
+- [`python.analysis.includeAliasesFromUserFiles`](python_analysis_includeAliasesFromUserFiles.md)
     - Include alias symbols from user files. This will make alias symbols appear in features such as `add import` and `auto import`.
 
 - [`python.analysis.userFileIndexingLimit`](python_analysis_userFileIndexingLimit.md)
@@ -92,7 +92,7 @@ Alternatively, you can edit your `settings.json` file directly:
 
 ### Q: Why aren't auto-import completions working for some packages?
 
-**A:** By default, Pylance indexes only the top-level modules of packages to optimize performance. If auto-import completions aren't suggesting symbols from deeper submodules, you may need to adjust the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting to increase the indexing depth for those packages.
+**A:** By default, Pylance limits package indexing depth to optimize performance. If auto-import completions aren't suggesting symbols from deeper submodules, you may need to adjust the [`python.analysis.packageIndexDepths`](python_analysis_packageIndexDepths.md) setting to increase the indexing depth for those packages.
 
 ### Q: Will enabling auto-import completions affect performance?
 
@@ -127,7 +127,7 @@ The behavior for top-level variables differs between user files and third-party 
 
 - **User files (your own workspace):**
   For variables defined at the top level in user files, Pylance only includes them in auto-import/add import suggestions if:
-    - The variable name is all uppercase (e.g., `MY_CONSTANT`), or
+    - The variable has a public constant- or type-alias-style name (e.g., `MY_CONSTANT` or `TypeAlias`), or
     - The variable is explicitly listed in the module’s `__all__` attribute.
 
     This is because user workspaces often contain many scripts with numerous temporary or local variables, and there is no reliable way for Pylance to know which variables are intended to be imported by other modules. Using `__all__` signals that a variable is meant to be exported and available for import elsewhere.
@@ -150,3 +150,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

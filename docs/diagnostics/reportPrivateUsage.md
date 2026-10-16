@@ -1,6 +1,6 @@
 ## Overview
 
-`reportPrivateUsage` flags cases where private variables or functions (those prefixed with an underscore) are accessed from outside their defining module or class. This diagnostic helps enforce encapsulation and prevent accidental use of private implementation details.
+`reportPrivateUsage` flags access to private or protected names outside their allowed scope. Class members such as `__member` are private to their defining class; members such as `_member` are protected and may be accessed from that class or its subclasses. This diagnostic helps enforce encapsulation and prevent accidental use of private implementation details.
 
 ## Representative Issues
 
@@ -29,7 +29,7 @@ class MyClass:
 from my_module import MyClass
 
 obj = MyClass()
-print(obj._internal_value)   # Warning: "_internal_value" is private
+print(obj._internal_value)   # Warning: "_internal_value" is protected
 print(obj.__private_value)   # Warning: "__private_value" is private
 ```
 
@@ -56,3 +56,5 @@ class MyClass:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

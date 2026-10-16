@@ -21,7 +21,7 @@ This setting exists for developers who find the visual styling distracting, or w
 
 ## Example
 
-A common reason to disable tagged hints is a defensive runtime check that static analysis considers unreachable. Given a parameter annotated as `int`, Pylance narrows `value` to `int` and treats the validation branch as dead code:
+A common reason to disable tagged hints is a defensive runtime check that static analysis considers unreachable. Given a parameter annotated as `int`, Pylance narrows `value` to `int` and treats the validation branch as dead code. The graying shown below requires `python.analysis.typeEvaluation.enableReachabilityAnalysis` to be enabled:
 
 ```python
 def process(value: int) -> None:
@@ -82,3 +82,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

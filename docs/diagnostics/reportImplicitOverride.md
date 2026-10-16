@@ -1,6 +1,6 @@
 ## Overview
 
-`reportImplicitOverride` is a diagnostic in Pylance and Pyright that warns when a method or attribute in a subclass implicitly overrides a member from a superclass without an explicit `@override` decorator. This helps ensure that overrides are intentional and clear, reducing the risk of accidental bugs.
+`reportImplicitOverride` is a diagnostic in Pylance and Pyright that warns when a method or property getter in a subclass implicitly overrides a member from a superclass without an explicit `@override` decorator. This helps ensure that overrides are intentional and clear, reducing the risk of accidental bugs.
 
 ## Representative Issues
 
@@ -39,7 +39,7 @@ class Child(Base):
 
 ## Common Fixes & Workarounds
 
-1. Use the `@override` decorator when overriding methods or attributes from a superclass.
+1. Use the `@override` decorator when overriding methods or property getters from a superclass.
 2. Double-check that overrides are intentional and not accidental name collisions.
 3. Implement all required abstract methods in subclasses.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportImplicitOverride) for options to adjust or suppress this diagnostic if needed.
@@ -48,3 +48,5 @@ class Child(Base):
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

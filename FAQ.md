@@ -3,7 +3,7 @@
 ## General Questions
 
 ### What is the relationship between Pylance, Pyright and the Python extension?
-Pylance is a language server, which provides features like IntelliSense, logical linting (e.g., errors and warnings), code actions, code navigation, semantic colorization, etc. Pyright is the open-source type checker which Pylance uses under the hood to provide its functionality. Pylance provides a superset of Pyright's functionality. To use Pylance, you must have the core Python extension installed in Visual Studio Code as it builds upon that experience.
+Pylance is a language server, which provides features like IntelliSense, logical linting (e.g., errors and warnings), code actions, code navigation, semantic colorization, etc. Pyright is the open-source type checker which Pylance uses under the hood to provide its functionality. Pylance provides a superset of Pyright's functionality. The Python and Python Environments extensions provide interpreter integration in Visual Studio Code, but they are optional dependencies.
 
 ### What features are in Pylance but not in Pyright? What is the difference exactly?
 Pylance has a handful of valuable features that are not available in Pyright, including semantic highlighting, refactoring code actions (extract variable/extract method), docstrings for built-in/standard library modules, and IntelliCode compatibility. Pylance also ships with a collection of type stubs for popular modules to provide fast and accurate auto-completions and type checking.
@@ -25,7 +25,7 @@ You can read about how we collect and use telemetry, including how to disable it
 Pylance comes bundled as an optional dependency with the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python). Simply install the Python extension from the VS Code marketplace, and Pylance will be installed automatically. Open any Python (.py) file to activate it.
 
 ### What is the minimum VS Code version required for Pylance?
-Pylance requires VS Code version 1.57 or above.
+Pylance requires VS Code version 1.107.0 or above.
 
 ### How do I switch to Pylance from another language server?
 If you've previously set a different language server, update your `settings.json` file with: `"python.languageServer": "Pylance"` or `"python.languageServer": "Default"`. You can also use the Settings Editor UI to make this change.
@@ -37,7 +37,7 @@ Pylance offers three predefined modes via the `python.analysis.languageServerMod
 
 - **`default`**: Balanced experience with many useful features enabled. Suitable for most users.
 - **`light`**: Lightweight, memory-efficient setup with fewer features. Ideal for resource-constrained environments or when you prefer minimal IntelliSense.
-- **`full`**: Most extensive feature set with all capabilities enabled. Provides the richest IntelliSense experience but uses more resources.
+- **`full`**: Most extensive feature set with more features enabled. Provides the richest IntelliSense experience but uses more resources.
 
 You can override individual settings regardless of which mode you choose.
 
@@ -46,20 +46,20 @@ Large projects can cause Pylance to use significant memory. To reduce memory usa
 
 1. **Use `light` mode**: Set `"python.analysis.languageServerMode": "light"` in settings.json
 2. **Exclude unnecessary files**: Add `"python.analysis.exclude": ["**/testFiles/*.py", "**/node_modules/**"]` to exclude files you don't need analyzed
-3. **Use `openFilesOnly` diagnostic mode**: Set `"python.analysis.diagnosticMode": "openFilesOnly"` to only analyze open files
-4. **Provide a custom Node.js executable**: Set `"python.analysis.nodeExecutable": "auto"` to use a version without memory limits (see [TROUBLESHOOTING.md](TROUBLESHOOTING.md#pylance-is-crashing) for details)
+3. **Use `openFilesOnly` diagnostic mode**: Set `"python.analysis.diagnosticMode": "openFilesOnly"` to limit diagnostics to open files
+4. **Provide a custom Node.js executable**: Set `"python.analysis.nodeExecutable": "auto"` to use an external Node.js process with an 8 GB default memory limit (see [TROUBLESHOOTING.md](TROUBLESHOOTING.md#pylance-is-crashing) for details)
 
 ### What's the difference between `diagnosticMode` settings?
-- **`openFilesOnly`** (default): Only analyzes files you have open in the editor. Faster and uses less memory.
-- **`workspace`**: Analyzes all Python files in your workspace. Finds more issues but uses more resources.
+- **`openFilesOnly`** (default): Reports diagnostics for files you have open in the editor; their imports can still be analyzed. Faster and uses less memory.
+- **`workspace`**: Reports diagnostics for discovered user Python files in your workspace. Finds more issues but uses more resources.
 
 ### What type checking modes are available?
 Pylance offers four type checking modes via `python.analysis.typeCheckingMode`:
 
-- **`off`** (default): No type checking analysis; only shows unresolved imports/variables
+- **`off`** (default): Reports syntax, import and undefined-name errors
 - **`basic`**: Basic type checking rules
 - **`standard`**: Standard type checking rules (more strict)
-- **`strict`**: Strictest type checking with all rules enforced
+- **`strict`**: Strictest type checking
 
 Note: This can be overridden by `pyrightconfig.json` or `pyproject.toml` configuration files.
 
@@ -91,7 +91,7 @@ Create a `.vscode/settings.json` file in your workspace and add the directories 
 Relative paths are relative to the workspace root. The `src` directory is automatically detected, so no configuration is needed for standard `src` layouts.
 
 ### Why can't Pylance find my editable install modules?
-Pylance requires editable installs to use `.pth` files rather than import hooks. Configure your package manager to use path-based editable installs:
+On Python 3.13+, Pylance can find source files from import-hook editable installs when `python.analysis.enableEditableInstalls` is enabled (the default). If discovery fails, or you use an older Python version, configure your package manager to use path-based editable installs:
 
 - **pip/setuptools**: Use compat mode or strict mode (see setuptools documentation)
 - **uv**: Add `config-settings = { editable_mode = "compat" }` to `[tool.uv]` in pyproject.toml
@@ -131,7 +131,7 @@ Ensure you're running an official build of VS Code (not VS Codium or other varia
 When using Pylance with WSL (Windows Subsystem for Linux), make sure your workspace is located under a WSL folder (`/home/...`) and not on a Windows-shared path (`/mnt/...`). See [issue #1443](https://github.com/microsoft/pylance-release/issues/1443#issuecomment-867863124) for more details.
 
 ### How do I disable specific diagnostic rules?
-You can disable specific diagnostics in your `settings.json` or `pyrightconfig.json`. For example:
+Use the following in `settings.json` when you do not have a project config. Otherwise, set the `reportXxx` rules in `pyrightconfig.json` or `[tool.pyright]`:
 
 ```json
 {
@@ -157,3 +157,5 @@ Pylance respects configuration in `pyrightconfig.json` or the `[tool.pyright]` s
 
 ### Can I use Pylance in a multi-root workspace?
 Yes, Pylance has native multi-root workspace support. Place `.vscode/settings.json` in the root directory of each workspace for workspace-specific configuration.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

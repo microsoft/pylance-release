@@ -1,6 +1,6 @@
 ## Overview
 
-`reportOverlappingOverload` is a diagnostic in Pylance and Pyright that warns when function overloads overlap, meaning multiple overload signatures could match the same call. This can lead to ambiguity and unexpected behavior in type checking and code execution.
+`reportOverlappingOverload` is a diagnostic in Pylance and Pyright that warns when an overload is obscured by an earlier signature or overlapping signatures have incompatible return types. This can lead to ambiguity and unexpected behavior in type checking and code execution.
 
 ## Representative Issues
 
@@ -51,3 +51,5 @@ def process(x: int | str) -> str | int:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

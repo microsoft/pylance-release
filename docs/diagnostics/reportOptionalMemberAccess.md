@@ -6,7 +6,7 @@
 
 - [#1506](https://github.com/microsoft/pylance-release/issues/1506): Adjust diagnostic severity overrides in IDE settings to control type-checking behavior after updates.
 - [#2385](https://github.com/microsoft/pylance-release/issues/2385): Update type stubs in typeshed to indicate non-Optional attributes when parameters like PIPE guarantee their presence.
-- [#2424](https://github.com/microsoft/pylance-release/issues/2424): Avoid using `NoReturn` with complex overloads and unions, as the current implementation does not fully support this scenario.
+- [#2424](https://github.com/microsoft/pylance-release/issues/2424): Use accurate `NoReturn` annotations; Pylance supports `NoReturn` overloads.
 - [#2751](https://github.com/microsoft/pylance-release/issues/2751): Ensure that variables holding optional types are properly initialized and checked before accessing their attributes.
 - [#3358](https://github.com/microsoft/pylance-release/issues/3358): Users can revert to previous default type checking settings by adjusting configurations in their IDE.
 - [#3809](https://github.com/microsoft/pylance-release/issues/3809): Adjust the diagnostic settings in your code editor to disable specific rules causing false positives or errors.
@@ -58,3 +58,5 @@ def get_upper(text: Optional[str]) -> str:
 - [How to Use Type Narrowing to Fix Type Errors](../howto/type-narrowing.md) — check for `None` before accessing members
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -2,11 +2,11 @@
 
 [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast and feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright static type checker.
 
-The `python.analysis.generateWithTypeAnnotation` setting controls whether Pylance includes type annotations when it generates code.
+The `python.analysis.generateWithTypeAnnotation` setting controls whether Pylance includes type annotations in generated method signatures.
 
 ## What is `python.analysis.generateWithTypeAnnotation`?
 
-When Pylance generates code — for example through its AI-assisted code actions — this setting determines whether the generated functions, parameters, and variables include type annotations.
+When Pylance overrides a method or implements an abstract method, this setting determines whether the generated signature includes parameter and return type annotations.
 
 The effective default depends on your type checking mode:
 
@@ -21,7 +21,7 @@ Setting `generateWithTypeAnnotation` explicitly overrides this behavior regardle
 
 ## Example
 
-When Pylance generates a function, this setting determines whether the result includes type annotations.
+When Pylance generates a method signature from a typed declaration, this setting determines whether the result includes its type annotations.
 
 With the setting **disabled**, generated code omits annotations:
 
@@ -55,7 +55,7 @@ def add(a: int, b: int) -> int:
 
 ## When to Use It
 
-- **Set to `true`** if you want generated code to always include type annotations, even when type checking is off.
+- **Set to `true`** if you want generated method signatures to include declared parameter and return types, even when type checking is off.
 - **Set to `false`** if you prefer generated code without annotations, for example in scripts or notebooks where you do not use type checking.
 
 ## Related Settings
@@ -74,3 +74,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

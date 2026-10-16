@@ -50,19 +50,19 @@ If the user only describes a symptom, Copilot should run [Standard Diagnosis Loo
 | `pylanceWorkspaceUserFiles`          | List the user Python files Pylance considers part of the workspace (after include/exclude).                                      |
 | `pylancePythonEnvironments`          | List discovered Python interpreters and which one is active per workspace root.                                                  |
 | `pylanceUpdatePythonEnvironment`     | Switch the active interpreter for a workspace root.                                                                              |
-| `pylanceSettings`                    | Inspect effective `python.analysis.*` settings for a workspace.                                                                  |
+| `pylanceSettings`                    | Inspect analysis settings; check project configuration separately.                                                               |
 | `pylanceFileSyntaxErrors`            | Quickly check parse errors in a single workspace file.                                                                           |
 | `pylanceSyntaxErrors`                | Parse-check an arbitrary code snippet without saving a file.                                                                     |
 | `pylanceLSP`                         | Issue read-only LSP requests: hover, completion, diagnostics (file or workspace), references, symbols, call/type hierarchy, etc. |
 | `pylanceImports`                     | List resolved and unresolved imports across the workspace.                                                                       |
-| `pylanceInstalledTopLevelModules`    | List top-level modules importable from the active environment.                                                                   |
+| `pylanceInstalledTopLevelModules`    | List installed packages and top-level module names.                                                                              |
 | `pylanceInvokeRefactoring`           | Apply automated refactorings (unused imports, fix-all, convert imports, add type annotations, etc.).                             |
 | `pylanceCheckSignatureCompatibility` | Verify that all callers of a function still match its current signature.                                                         |
 | `pylanceSemanticContext`             | Get rich semantic context (types, related snippets, dependencies) at a cursor position.                                          |
 | `pylanceRunCodeSnippet`              | Execute Python code against the workspace's active interpreter.                                                                  |
 | `pylancePythonDebug`                 | Launch the debugger to inspect runtime values, breakpoints, and stack frames.                                                    |
 
-These tools all operate against the same in-memory analysis Pylance is using in the editor, so their answers reflect the user's actual VS Code state, not a separate copy.
+These tools use Pylance's current workspace and environment, but tool output can differ from the editor's.
 
 ---
 
@@ -70,7 +70,7 @@ These tools all operate against the same in-memory analysis Pylance is using in 
 
 When the user reports a Pylance problem, run this loop before guessing.
 
-1. **Ground the workspace.** Call `pylanceWorkspaceRoots` and `pylanceWorkspaceUserFiles` for the affected root. Confirm the workspace root URI and that the file Pylance is complaining about is actually a user file.
+1. **Ground the workspace.** Call `pylanceWorkspaceRoots` and `pylanceWorkspaceUserFiles` for the affected root. Confirm the workspace root URI and check whether the affected file is listed. An opened file can still be checked even when it is outside the discovered user-file list.
 2. **Confirm the interpreter.** Call `pylancePythonEnvironments` for the same root. Verify the active interpreter is the one the user expects (right venv, right Python version, right interpreter type).
 3. **Inspect settings.** Call `pylanceSettings`. Note any `python.analysis.*` settings that diverge from defaults, especially `extraPaths`, `include`, `exclude`, `diagnosticMode`, `typeCheckingMode`, `languageServerMode`, and `useLibraryCodeForTypes`.
 4. **Get diagnostics.** Call `pylanceLSP` with `textDocument/diagnostic` for the file in question, or `workspace/diagnostic` for the whole workspace. See [How to Get Whole-Workspace Diagnostics from Pylance](workspace-vs-open-files-diagnostics.md).
@@ -107,14 +107,14 @@ Always start here for any Pylance issue.
 
 1. `pylanceWorkspaceRoots` &mdash; with no arguments to list all roots, or with `fileUri` to find the root that owns a specific file.
 2. `pylancePythonEnvironments` for the relevant `workspaceRoot`.
-3. If the active interpreter is wrong, call `pylanceUpdatePythonEnvironment` with either an environment value returned by `pylancePythonEnvironments`, or the absolute path to a Python executable.
+3. If the active interpreter is wrong, call `pylanceUpdatePythonEnvironment` with an executable returned by `pylancePythonEnvironments`, then recheck the active environment.
 4. Re-check diagnostics after switching &mdash; many Pylance "errors" are simply the wrong interpreter selected.
 
 See [How to Choose a Python Environment for Pylance](python-environments.md).
 
 ### Get Diagnostics for One File or the Whole Workspace
 
-For a single file, prefer the LSP path because it returns the same diagnostics the editor shows:
+For a single file, use `pylanceLSP` to get its diagnostics:
 
 ```jsonc
 // pylanceLSP
@@ -124,7 +124,7 @@ For a single file, prefer the LSP path because it returns the same diagnostics t
 }
 ```
 
-For the whole workspace, ask LSP directly. This works even when `python.analysis.diagnosticMode` is `"openFilesOnly"` because the LSP request targets all known files:
+For the whole workspace, use `pylanceLSP` with `workspace/diagnostic`. This MCP tool explicitly analyzes all known user files even when `python.analysis.diagnosticMode` is `"openFilesOnly"`:
 
 ```jsonc
 // pylanceLSP
@@ -141,7 +141,7 @@ See [How to Get Whole-Workspace Diagnostics from Pylance](workspace-vs-open-file
 ### Fix Unresolved Imports
 
 1. Confirm the interpreter with `pylancePythonEnvironments`.
-2. Call `pylanceInstalledTopLevelModules` for that environment to see whether the module is actually importable.
+2. Call `pylanceInstalledTopLevelModules` for that environment to inspect its module names and distribution metadata. Use `pylanceRunCodeSnippet` to test the import itself.
 3. Call `pylanceImports` to see what Pylance currently treats as resolved vs unresolved across the workspace.
 4. If the package is installed but Pylance does not see it, the issue is almost always one of:
     - Wrong interpreter (fix with `pylanceUpdatePythonEnvironment`).
@@ -156,7 +156,7 @@ See [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md), [Ho
 `pylanceInvokeRefactoring` exposes the same source actions VS Code does, plus a few extras:
 
 - `source.unusedImports` &mdash; remove every unused `import` from a file.
-- `source.fixAll.pylance` &mdash; run every action listed in the `python.analysis.fixAll` array setting (a subset of `source.unusedImports`, `source.convertImportFormat`, `source.convertImportStar`, `source.addTypeAnnotation`). This is the same code action VS Code's `editor.codeActionsOnSave` invokes when the user opts into fix-on-save, but the two are configured independently &mdash; calling `source.fixAll.pylance` runs whatever is in `python.analysis.fixAll` regardless of any save-time configuration.
+- `source.fixAll.pylance` &mdash; run every action listed in the `python.analysis.fixAll` array setting (a subset of `source.unusedImports`, `source.optionalMemberAccessAssert`, `source.convertImportFormat`, `source.convertImportStar`, `source.addTypeAnnotation`). This is the same code action VS Code's `editor.codeActionsOnSave` invokes when the user opts into fix-on-save, but the two are configured independently &mdash; calling `source.fixAll.pylance` runs whatever is in `python.analysis.fixAll` regardless of any save-time configuration.
 - `source.convertImportFormat` &mdash; flip absolute &harr; relative imports per `python.analysis.importFormat`.
 - `source.convertImportStar` &mdash; expand `from x import *` into explicit names.
 - `source.convertImportToModule` &mdash; turn `from x import a, b` into `import x` plus qualified references.
@@ -166,8 +166,8 @@ See [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md), [Ho
 Each refactoring takes a single `fileUri` and an optional `mode`:
 
 - `mode: "edits"` returns a `WorkspaceEdit` without touching the editor. Useful for previewing or for "does this file actually need cleanup?" checks.
-- `mode: "string"` returns the rewritten file as text.
-- `mode: "update"` (default) applies a `WorkspaceEdit` to the editor. **It does not write to disk.** The change appears as an unsaved edit in the active editor. Copilot must explicitly save the file (for example by calling the host's save-file action) for the change to land on disk. Skipping the save step is a frequent source of "the refactoring did nothing" confusion.
+- `mode: "string"` returns the rewritten file as text for text-edit refactorings. Use `mode: "edits"` to preview resource operations such as file renames.
+- `mode: "update"` (default) asks the host to apply a `WorkspaceEdit`. Save any documents left dirty after text edits (for example by calling the host's save-file action). Do not assume every operation is only an unsaved editor edit: a workspace edit can also contain file renames.
 
 For multi-file cleanup, iterate `pylanceWorkspaceUserFiles`, call `pylanceInvokeRefactoring` per file, save each file, and then re-run `pylanceLSP` `workspace/diagnostic` to confirm.
 
@@ -180,11 +180,11 @@ For multi-file cleanup, iterate `pylanceWorkspaceUserFiles`, call `pylanceInvoke
 5. Decide between, in order of preference:
     1. **Fixing the code** so the types line up.
     2. **Narrowing the type** with `isinstance`, `is None`, `assert`, or a type guard. See [How to Use Type Narrowing](type-narrowing.md).
-    3. **Adjusting annotations** (more precise input types, `TypeGuard`, `cast`, `assert_type`).
+    3. **Adjusting annotations** (more precise input types, `TypeGuard`, `cast`).
     4. **Suppressing in source** for a single line that is genuinely correct but not provable. Two forms:
-        - `# type: ignore[ruleName]` &mdash; the standard typing-PEP comment, honored by Pylance and other type checkers.
+        - `# type: ignore` &mdash; suppresses type-checking diagnostics on the line.
         - `# pyright: ignore[ruleName]` &mdash; Pyright/Pylance-specific. Prefer this when you only want to silence Pylance/Pyright and keep the diagnostic visible to other tools.
-          Always pin the rule name in brackets so the suppression does not also hide unrelated future errors. Add a brief comment explaining why the suppression is safe.
+          For rule-specific Pylance suppression, pin the rule name in `# pyright: ignore[...]` so the suppression does not also hide unrelated future errors. Add a brief comment explaining why the suppression is safe.
     5. **Project-wide rule changes** via [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) or [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md). Reserve this for rules that are genuinely wrong for the project, not for one-off failures.
 6. After editing, re-run `textDocument/diagnostic` for the same file.
 
@@ -208,7 +208,7 @@ These conventions apply to every tool call:
 - `workspaceRoot` is a directory URI. On Windows the canonical form is `file:///c:/path/to/workspace` (lowercase drive letter, forward slashes).
 - `fileUri` is a file URI, for example `file:///c:/path/to/workspace/pkg/module.py`. Files outside any workspace root are typically rejected.
 - LSP `position` and `range` use 0-based `line` and `character`.
-- Pylance only reports user files; library and dependency files are excluded from diagnostics and from `pylanceWorkspaceUserFiles`.
+- Workspace file lists contain user code. Opened library files can also be checked.
 - Always pass an explicit `workspaceRoot` when the tool accepts one. Do not assume the current working directory.
 
 When in doubt, run `pylanceWorkspaceRoots` first to capture the canonical root URI, then reuse that string in subsequent calls.
@@ -219,8 +219,8 @@ When in doubt, run `pylanceWorkspaceRoots` first to capture the canonical root U
 
 - Do not infer the active interpreter from `which python` / `where python`. Use `pylancePythonEnvironments`.
 - Do not run `pip install` to "fix" an unresolved import without first confirming the active environment with `pylancePythonEnvironments`. Installing into the wrong environment will not change Pylance's behavior.
-- Do not blanket-suppress diagnostics with bare `# type: ignore` (no rule name) or [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) before understanding the rule. Read the rule page via `pylanceDocuments` first, and prefer rule-pinned suppressions like `# type: ignore[reportArgumentType]` or `# pyright: ignore[reportArgumentType]` when suppression is justified.
-- Do not assume `pylanceInvokeRefactoring` `mode: "update"` persists changes &mdash; it leaves the file dirty in the editor. Always save explicitly after editing, then re-check diagnostics.
+- Do not suppress diagnostics with `# type: ignore` or [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) before understanding the rule. Read the rule page via `pylanceDocuments` first, and prefer rule-pinned Pylance suppressions like `# pyright: ignore[reportArgumentType]` when suppression is justified.
+- Do not assume `pylanceInvokeRefactoring` `mode: "update"` has saved every modified document. Save any documents left dirty after editing, then re-check diagnostics.
 - Do not edit `pyrightconfig.json` or `pyproject.toml` to override VS Code settings unless the user asked for project-level configuration. Many `python.analysis.*` settings are silently ignored when a config file exists (see [How to Troubleshoot Pylance Settings](settings-troubleshooting.md)).
 - Do not assume `pylanceRunCodeSnippet` succeeded means the import will resolve in Pylance. The two paths can disagree when the runtime uses import hooks or `.pth` tricks. See [How to Use Editable Installs with Pylance](editable-installs.md).
 
@@ -237,3 +237,5 @@ When in doubt, run `pylanceWorkspaceRoots` first to capture the canonical root U
 - [How to Tune Pylance Performance](performance-tuning.md)
 - [How to Use Type Narrowing](type-narrowing.md)
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md)
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

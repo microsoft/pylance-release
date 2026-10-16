@@ -108,7 +108,7 @@ The alias symbol with the highest score will be chosen. In case of a tie, the sy
 
 For example, the alias symbol from `usage.py` has the lowest score and will be disregarded. The alias symbols from `__init__.py`, `redundant.py`, and `all.py` each have 1 point, but the one from `__init__.py` has the shortest import module path, so it will be selected. If `__init__.py` had used `from .utils import helper_function as helper_function` instead, it would have received 2 points and be selected.
 
-Unlike auto-import suggestions in the completion list, the add/search import for code action will display all available alias symbols, allowing you to choose one. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and continue suggesting it for future imports.
+Unlike auto-import suggestions in the completion list, the import-search picker can list all matching alias alternatives. Add import quick fixes show at most three candidates. Once you select an alias, the Most Recently Used (MRU) feature will remember your choice and prioritize it in later Add import quick fixes.
 
 ### Consistent Import Paths
 
@@ -160,3 +160,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
 ---
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

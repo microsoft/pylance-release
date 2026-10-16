@@ -5,7 +5,7 @@
 ## Representative Issues
 
 - [#10013](https://github.com/microsoft/pyright/issues/10013): Explicitly declare attribute types at assignment to help type checkers recognize variable types.
-- [#7192](https://github.com/microsoft/pyright/issues/7192): Avoid redeclaring variables with the same type to prevent shadowing and ensure clear variable identification.
+- [#7192](https://github.com/microsoft/pyright/issues/7192): Use the same type for repeated variable annotations; conflicting annotation types are reported as redeclarations.
 - [#8504](https://github.com/microsoft/pyright/issues/8504): Ensure `Final` and `TypeAlias` are only used directly in type annotations without unsupported combinations.
 
 ## Examples
@@ -55,3 +55,5 @@ def process(x: int | str) -> int | str:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

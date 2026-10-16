@@ -27,7 +27,7 @@ urlpatterns = [
 ]
 ```
 
-With the setting **enabled** (the default), invoking **Go to Definition** on the `"blog.urls"` string navigates to that module (for example `blog/urls.py`). It also resolves a string that names a member of a module — for example **Go to Definition** on `"myapp.Reporter"` in a Django `ForeignKey` jumps to the `Reporter` class. The same works for dynamic imports such as `importlib.import_module("my_package.utils")`.
+With the setting **enabled** (the default), invoking **Go to Definition** on the `"blog.urls"` string navigates to that module (for example `blog/urls.py`). It also resolves a string that names a member of a module — for example **Go to Definition** on `"myapp.Reporter"` in a Django `ForeignKey` jumps to the `Reporter` class when `python.analysis.enableDjangoSupport` is enabled. The same works for dynamic imports such as `importlib.import_module("my_package.utils")`.
 
 With the setting **disabled**, **Go to Definition** does nothing on the string, because the text is treated as a plain literal rather than a module reference.
 
@@ -78,3 +78,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

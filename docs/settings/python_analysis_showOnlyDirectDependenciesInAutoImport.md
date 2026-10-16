@@ -18,11 +18,11 @@ This setting affects **auto-import completions only** — the symbols that appea
 Pylance reads the following files in your workspace root:
 
 - **`requirements.txt`** — including recursive `-r` includes
-- **`pyproject.toml`** — both `[project.dependencies]` and `[tool.poetry.dependencies]` sections
+- **`pyproject.toml`** — the `dependencies` array under `[project]` and the `[tool.poetry.dependencies]` table
 
 Distribution names are automatically mapped to top-level module names (e.g., `scikit-learn` → `sklearn`, `Pillow` → `PIL`).
 
-If neither file exists, the setting has no effect — all packages are shown as if the setting were `false`.
+If neither file exists, third-party auto-import completions are filtered out. Set this option to `false` to show them without declaring dependencies.
 
 ## Language Server Mode Defaults
 
@@ -89,3 +89,5 @@ Auto-import completions will suggest symbols from `flask`, `requests`, the stand
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
