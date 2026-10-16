@@ -600,6 +600,10 @@ Pylance provides users with the ability to customize their Python language suppo
         - version string, e.g. `1.1.1` — download and use that specific version
         - path to a local pyrefly executable
 
+    Automatic downloads use PyPI directly, not pip's package-feed settings. If Pylance cannot find or download Pyrefly, it shows recovery instructions and switches `python.analysis.diagnosticsSource` back to `Pylance` for the workspace (or user settings in a folderless window). The configured version or executable path is preserved.
+
+    To use an approved package feed, install Pyrefly into the Python environment selected in VS Code using your organization's package-installation procedure. Clear `python.analysis.pyreflyVersion` to let Pylance discover that installation, or set it to the installed Pyrefly executable's absolute path. Then select `Pylance + Pyrefly` again. A version string forces an automatic download of that version instead of searching the selected environment.
+
 - `python.analysis.enableColorPicker`
     - Enable/disable color picker in the editor for '#RRGGBB' strings. For all eight-digit hex strings in a workspace, choose the alpha placement explicitly.
     - Accepted values:

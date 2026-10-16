@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026.4.101 (15 October 2026) PreRelease
+
+Notable changes:
+
+-   Bug fix: incorrect hover tooltip for a lambda passed to a union of functions with different types [pylance-release#8257](https://github.com/microsoft/pylance-release/issues/8257)
+
 ## 2026.4.100 (9 October 2026) PreRelease
 
 Notable changes:
