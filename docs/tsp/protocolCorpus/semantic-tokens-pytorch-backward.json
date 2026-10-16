@@ -4720,11 +4720,11 @@
             "range": {
               "end": {
                 "character": 105,
-                "line": 2302
+                "line": 2249
               },
               "start": {
                 "character": 100,
-                "line": 2302
+                "line": 2249
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -4904,11 +4904,11 @@
             "range": {
               "end": {
                 "character": 116,
-                "line": 2299
+                "line": 2246
               },
               "start": {
                 "character": 96,
-                "line": 2299
+                "line": 2246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -4927,11 +4927,11 @@
             "range": {
               "end": {
                 "character": 119,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 115,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5157,11 +5157,11 @@
             "range": {
               "end": {
                 "character": 12,
-                "line": 73
+                "line": 72
               },
               "start": {
                 "character": 5,
-                "line": 73
+                "line": 72
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5206,11 +5206,11 @@
                 "line": 79
               },
               "start": {
-                "character": 8,
+                "character": 5,
                 "line": 79
               }
             },
-            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -5226,14 +5226,14 @@
             "range": {
               "end": {
                 "character": 12,
-                "line": 80
+                "line": 79
               },
               "start": {
-                "character": 5,
-                "line": 80
+                "character": 8,
+                "line": 79
               }
             },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
           }
         },
         "protocol": "tsp"
@@ -5249,11 +5249,11 @@
             "range": {
               "end": {
                 "character": 127,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 122,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5295,11 +5295,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 1343
+                "line": 1338
               },
               "start": {
                 "character": 5,
-                "line": 1343
+                "line": 1338
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5318,11 +5318,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 1438
+                "line": 1433
               },
               "start": {
                 "character": 5,
-                "line": 1438
+                "line": 1433
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5341,11 +5341,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 1440
+                "line": 1435
               },
               "start": {
                 "character": 5,
-                "line": 1440
+                "line": 1435
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5364,11 +5364,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 1606
+                "line": 1553
               },
               "start": {
                 "character": 9,
-                "line": 1606
+                "line": 1553
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5387,11 +5387,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2294
+                "line": 2241
               },
               "start": {
                 "character": 5,
-                "line": 2294
+                "line": 2241
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5410,11 +5410,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2296
+                "line": 2243
               },
               "start": {
                 "character": 5,
-                "line": 2296
+                "line": 2243
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5433,11 +5433,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2298
+                "line": 2245
               },
               "start": {
                 "character": 5,
-                "line": 2298
+                "line": 2245
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5456,11 +5456,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2300
+                "line": 2247
               },
               "start": {
                 "character": 5,
-                "line": 2300
+                "line": 2247
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5479,11 +5479,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2304
+                "line": 2251
               },
               "start": {
                 "character": 5,
-                "line": 2304
+                "line": 2251
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5502,11 +5502,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2308
+                "line": 2255
               },
               "start": {
                 "character": 5,
-                "line": 2308
+                "line": 2255
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5525,11 +5525,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 2320
+                "line": 2267
               },
               "start": {
                 "character": 5,
-                "line": 2320
+                "line": 2267
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -5870,6 +5870,29 @@
             "range": {
               "end": {
                 "character": 13,
+                "line": 77
+              },
+              "start": {
+                "character": 6,
+                "line": 77
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 13,
                 "line": 78
               },
               "start": {
@@ -5893,11 +5916,11 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 79
+                "line": 80
               },
               "start": {
                 "character": 6,
-                "line": 79
+                "line": 80
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6008,29 +6031,6 @@
             "range": {
               "end": {
                 "character": 13,
-                "line": 85
-              },
-              "start": {
-                "character": 6,
-                "line": 85
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 13,
                 "line": 9
               },
               "start": {
@@ -6054,34 +6054,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 100
-              },
-              "start": {
-                "character": 1,
-                "line": 100
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 14,
-                "line": 1064
+                "line": 1059
               },
               "start": {
                 "character": 11,
-                "line": 1064
+                "line": 1059
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6100,11 +6077,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1148
+                "line": 1143
               },
               "start": {
                 "character": 1,
-                "line": 1148
+                "line": 1143
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6123,11 +6100,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1229
+                "line": 1224
               },
               "start": {
                 "character": 1,
-                "line": 1229
+                "line": 1224
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6146,11 +6123,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1292
+                "line": 1287
               },
               "start": {
                 "character": 1,
-                "line": 1292
+                "line": 1287
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6169,11 +6146,57 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1436
+                "line": 1431
               },
               "start": {
                 "character": 1,
-                "line": 1436
+                "line": 1431
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1502
+              },
+              "start": {
+                "character": 1,
+                "line": 1502
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 1538
+              },
+              "start": {
+                "character": 1,
+                "line": 1538
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6200,52 +6223,6 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 14,
-                "line": 1555
-              },
-              "start": {
-                "character": 1,
-                "line": 1555
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 14,
-                "line": 1591
-              },
-              "start": {
-                "character": 1,
-                "line": 1591
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -6307,11 +6284,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 181
+                "line": 1768
               },
               "start": {
                 "character": 1,
-                "line": 181
+                "line": 1768
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6330,11 +6307,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1821
+                "line": 180
               },
               "start": {
                 "character": 1,
-                "line": 1821
+                "line": 180
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6353,11 +6330,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 1892
+                "line": 1839
               },
               "start": {
                 "character": 1,
-                "line": 1892
+                "line": 1839
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6422,11 +6399,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 2292
+                "line": 2239
               },
               "start": {
                 "character": 1,
-                "line": 2292
+                "line": 2239
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6445,11 +6422,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 2361
+                "line": 2312
               },
               "start": {
                 "character": 1,
-                "line": 2361
+                "line": 2312
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6468,11 +6445,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 249
+                "line": 245
               },
               "start": {
                 "character": 1,
-                "line": 249
+                "line": 245
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -6491,11 +6468,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 252
+                "line": 251
               },
               "start": {
                 "character": 1,
-                "line": 252
+                "line": 251
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6583,11 +6560,34 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 367
+                "line": 366
               },
               "start": {
                 "character": 1,
-                "line": 367
+                "line": 366
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 438
+              },
+              "start": {
+                "character": 1,
+                "line": 438
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6611,29 +6611,6 @@
               "start": {
                 "character": 1,
                 "line": 439
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 14,
-                "line": 443
-              },
-              "start": {
-                "character": 1,
-                "line": 443
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -6652,11 +6629,11 @@
             "range": {
               "end": {
                 "character": 14,
-                "line": 488
+                "line": 487
               },
               "start": {
                 "character": 1,
-                "line": 488
+                "line": 487
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -6706,6 +6683,29 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 14,
+                "line": 99
+              },
+              "start": {
+                "character": 1,
+                "line": 99
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -6951,14 +6951,14 @@
             "range": {
               "end": {
                 "character": 15,
-                "line": 75
+                "line": 74
               },
               "start": {
-                "character": 11,
-                "line": 75
+                "character": 8,
+                "line": 74
               }
             },
-            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -6977,11 +6977,11 @@
                 "line": 75
               },
               "start": {
-                "character": 8,
+                "character": 11,
                 "line": 75
               }
             },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
           }
         },
         "protocol": "tsp"
@@ -7779,11 +7779,11 @@
             "range": {
               "end": {
                 "character": 18,
-                "line": 1866
+                "line": 1813
               },
               "start": {
                 "character": 12,
-                "line": 1866
+                "line": 1813
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -7802,11 +7802,11 @@
             "range": {
               "end": {
                 "character": 18,
-                "line": 1886
+                "line": 1833
               },
               "start": {
                 "character": 13,
-                "line": 1886
+                "line": 1833
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8515,11 +8515,11 @@
             "range": {
               "end": {
                 "character": 19,
-                "line": 94
+                "line": 93
               },
               "start": {
                 "character": 12,
-                "line": 94
+                "line": 93
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8538,11 +8538,11 @@
             "range": {
               "end": {
                 "character": 19,
-                "line": 98
+                "line": 97
               },
               "start": {
                 "character": 12,
-                "line": 98
+                "line": 97
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8607,11 +8607,11 @@
             "range": {
               "end": {
                 "character": 20,
-                "line": 2318
+                "line": 2265
               },
               "start": {
                 "character": 16,
-                "line": 2318
+                "line": 2265
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8630,11 +8630,11 @@
             "range": {
               "end": {
                 "character": 20,
-                "line": 2331
+                "line": 2278
               },
               "start": {
                 "character": 16,
-                "line": 2331
+                "line": 2278
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8814,11 +8814,11 @@
             "range": {
               "end": {
                 "character": 20,
-                "line": 93
+                "line": 92
               },
               "start": {
                 "character": 13,
-                "line": 93
+                "line": 92
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -8929,11 +8929,11 @@
             "range": {
               "end": {
                 "character": 21,
-                "line": 1893
+                "line": 1840
               },
               "start": {
                 "character": 10,
-                "line": 1893
+                "line": 1840
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -9826,11 +9826,11 @@
             "range": {
               "end": {
                 "character": 23,
-                "line": 1605
+                "line": 1552
               },
               "start": {
                 "character": 13,
-                "line": 1605
+                "line": 1552
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -10217,11 +10217,11 @@
             "range": {
               "end": {
                 "character": 23,
-                "line": 489
+                "line": 488
               },
               "start": {
                 "character": 10,
-                "line": 489
+                "line": 488
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -10401,11 +10401,11 @@
             "range": {
               "end": {
                 "character": 24,
-                "line": 1437
+                "line": 1432
               },
               "start": {
                 "character": 10,
-                "line": 1437
+                "line": 1432
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -10447,11 +10447,11 @@
             "range": {
               "end": {
                 "character": 24,
-                "line": 1822
+                "line": 1769
               },
               "start": {
                 "character": 13,
-                "line": 1822
+                "line": 1769
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -10493,11 +10493,11 @@
             "range": {
               "end": {
                 "character": 24,
-                "line": 2293
+                "line": 2240
               },
               "start": {
                 "character": 10,
-                "line": 2293
+                "line": 2240
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -10700,6 +10700,29 @@
             "range": {
               "end": {
                 "character": 25,
+                "line": 1510
+              },
+              "start": {
+                "character": 12,
+                "line": 1510
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 25,
                 "line": 153
               },
               "start": {
@@ -10731,29 +10754,6 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 25,
-                "line": 1563
-              },
-              "start": {
-                "character": 12,
-                "line": 1563
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -10999,11 +10999,11 @@
             "range": {
               "end": {
                 "character": 26,
-                "line": 1344
+                "line": 1339
               },
               "start": {
                 "character": 23,
-                "line": 1344
+                "line": 1339
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -11045,11 +11045,11 @@
             "range": {
               "end": {
                 "character": 26,
-                "line": 1884
+                "line": 1831
               },
               "start": {
                 "character": 20,
-                "line": 1884
+                "line": 1831
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -11114,11 +11114,11 @@
             "range": {
               "end": {
                 "character": 26,
-                "line": 259
+                "line": 255
               },
               "start": {
                 "character": 24,
-                "line": 259
+                "line": 255
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -11459,11 +11459,11 @@
             "range": {
               "end": {
                 "character": 27,
-                "line": 1149
+                "line": 1144
               },
               "start": {
                 "character": 12,
-                "line": 1149
+                "line": 1144
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -11528,14 +11528,14 @@
             "range": {
               "end": {
                 "character": 27,
-                "line": 154
+                "line": 1503
               },
               "start": {
-                "character": 18,
-                "line": 154
+                "character": 16,
+                "line": 1503
               }
             },
-            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -11551,14 +11551,14 @@
             "range": {
               "end": {
                 "character": 27,
-                "line": 1556
+                "line": 154
               },
               "start": {
-                "character": 16,
-                "line": 1556
+                "character": 18,
+                "line": 154
               }
             },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
           }
         },
         "protocol": "tsp"
@@ -11666,11 +11666,11 @@
             "range": {
               "end": {
                 "character": 27,
-                "line": 268
+                "line": 264
               },
               "start": {
                 "character": 25,
-                "line": 268
+                "line": 264
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -11942,11 +11942,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 1151
+                "line": 1146
               },
               "start": {
                 "character": 25,
-                "line": 1151
+                "line": 1146
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -11988,11 +11988,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 1257
+                "line": 1252
               },
               "start": {
                 "character": 25,
-                "line": 1257
+                "line": 1252
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12057,11 +12057,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2311
+                "line": 2258
               },
               "start": {
                 "character": 15,
-                "line": 2311
+                "line": 2258
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12080,11 +12080,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2312
+                "line": 2259
               },
               "start": {
                 "character": 15,
-                "line": 2312
+                "line": 2259
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12103,11 +12103,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2313
+                "line": 2260
               },
               "start": {
                 "character": 15,
-                "line": 2313
+                "line": 2260
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12126,11 +12126,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2314
+                "line": 2261
               },
               "start": {
                 "character": 15,
-                "line": 2314
+                "line": 2261
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12149,11 +12149,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2315
+                "line": 2262
               },
               "start": {
                 "character": 15,
-                "line": 2315
+                "line": 2262
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12172,11 +12172,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2318
+                "line": 2265
               },
               "start": {
                 "character": 23,
-                "line": 2318
+                "line": 2265
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12195,11 +12195,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2323
+                "line": 2270
               },
               "start": {
                 "character": 15,
-                "line": 2323
+                "line": 2270
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12218,11 +12218,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2324
+                "line": 2271
               },
               "start": {
                 "character": 15,
-                "line": 2324
+                "line": 2271
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12241,11 +12241,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2325
+                "line": 2272
               },
               "start": {
                 "character": 15,
-                "line": 2325
+                "line": 2272
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12264,11 +12264,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2326
+                "line": 2273
               },
               "start": {
                 "character": 15,
-                "line": 2326
+                "line": 2273
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12287,11 +12287,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2327
+                "line": 2274
               },
               "start": {
                 "character": 15,
-                "line": 2327
+                "line": 2274
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12310,11 +12310,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2328
+                "line": 2275
               },
               "start": {
                 "character": 15,
-                "line": 2328
+                "line": 2275
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12333,11 +12333,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2331
+                "line": 2278
               },
               "start": {
                 "character": 23,
-                "line": 2331
+                "line": 2278
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12379,11 +12379,11 @@
             "range": {
               "end": {
                 "character": 28,
-                "line": 2465
+                "line": 2416
               },
               "start": {
                 "character": 19,
-                "line": 2465
+                "line": 2416
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12747,11 +12747,11 @@
             "range": {
               "end": {
                 "character": 29,
-                "line": 1443
+                "line": 1438
               },
               "start": {
                 "character": 27,
-                "line": 1443
+                "line": 1438
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12816,11 +12816,11 @@
             "range": {
               "end": {
                 "character": 29,
-                "line": 1866
+                "line": 1813
               },
               "start": {
                 "character": 26,
-                "line": 1866
+                "line": 1813
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12839,11 +12839,11 @@
             "range": {
               "end": {
                 "character": 29,
-                "line": 1886
+                "line": 1833
               },
               "start": {
                 "character": 26,
-                "line": 1886
+                "line": 1833
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12908,11 +12908,11 @@
             "range": {
               "end": {
                 "character": 29,
-                "line": 2332
+                "line": 2279
               },
               "start": {
                 "character": 9,
-                "line": 2332
+                "line": 2279
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -12931,11 +12931,11 @@
             "range": {
               "end": {
                 "character": 29,
-                "line": 2393
+                "line": 2344
               },
               "start": {
                 "character": 16,
-                "line": 2393
+                "line": 2344
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -13322,11 +13322,11 @@
             "range": {
               "end": {
                 "character": 30,
-                "line": 1230
+                "line": 1225
               },
               "start": {
                 "character": 11,
-                "line": 1230
+                "line": 1225
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -13368,11 +13368,11 @@
             "range": {
               "end": {
                 "character": 30,
-                "line": 1439
+                "line": 1434
               },
               "start": {
                 "character": 26,
-                "line": 1439
+                "line": 1434
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -13445,6 +13445,29 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 30,
+                "line": 1552
+              },
+              "start": {
+                "character": 26,
+                "line": 1552
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -13483,34 +13506,11 @@
             "range": {
               "end": {
                 "character": 30,
-                "line": 1605
-              },
-              "start": {
-                "character": 26,
-                "line": 1605
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 30,
-                "line": 2420
+                "line": 2371
               },
               "start": {
                 "character": 21,
-                "line": 2420
+                "line": 2371
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -13759,11 +13759,11 @@
             "range": {
               "end": {
                 "character": 30,
-                "line": 484
+                "line": 482
               },
               "start": {
                 "character": 20,
-                "line": 484
+                "line": 482
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/logging/__init__.pyi"
@@ -13897,11 +13897,11 @@
             "range": {
               "end": {
                 "character": 31,
-                "line": 1237
+                "line": 1232
               },
               "start": {
                 "character": 29,
-                "line": 1237
+                "line": 1232
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -13989,11 +13989,11 @@
             "range": {
               "end": {
                 "character": 31,
-                "line": 250
+                "line": 246
               },
               "start": {
                 "character": 12,
-                "line": 250
+                "line": 246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -14702,11 +14702,11 @@
             "range": {
               "end": {
                 "character": 32,
-                "line": 444
+                "line": 440
               },
               "start": {
                 "character": 18,
-                "line": 444
+                "line": 440
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -14909,11 +14909,11 @@
             "range": {
               "end": {
                 "character": 33,
-                "line": 2302
+                "line": 2249
               },
               "start": {
                 "character": 20,
-                "line": 2302
+                "line": 2249
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -14932,11 +14932,11 @@
             "range": {
               "end": {
                 "character": 33,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 20,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -14955,11 +14955,11 @@
             "range": {
               "end": {
                 "character": 33,
-                "line": 2330
+                "line": 2277
               },
               "start": {
                 "character": 20,
-                "line": 2330
+                "line": 2277
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -15369,11 +15369,11 @@
             "range": {
               "end": {
                 "character": 34,
-                "line": 2303
+                "line": 2250
               },
               "start": {
                 "character": 9,
-                "line": 2303
+                "line": 2250
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -15714,11 +15714,11 @@
             "range": {
               "end": {
                 "character": 35,
-                "line": 1293
+                "line": 1288
               },
               "start": {
                 "character": 11,
-                "line": 1293
+                "line": 1288
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -16059,11 +16059,11 @@
             "range": {
               "end": {
                 "character": 36,
-                "line": 1456
+                "line": 1451
               },
               "start": {
                 "character": 24,
-                "line": 1456
+                "line": 1451
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -16220,11 +16220,11 @@
             "range": {
               "end": {
                 "character": 36,
-                "line": 2295
+                "line": 2242
               },
               "start": {
                 "character": 32,
-                "line": 2295
+                "line": 2242
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -16818,11 +16818,11 @@
             "range": {
               "end": {
                 "character": 37,
-                "line": 484
+                "line": 482
               },
               "start": {
                 "character": 33,
-                "line": 484
+                "line": 482
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/logging/__init__.pyi"
@@ -16933,11 +16933,11 @@
             "range": {
               "end": {
                 "character": 38,
-                "line": 259
+                "line": 255
               },
               "start": {
                 "character": 34,
-                "line": 259
+                "line": 255
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/collections/__init__.pyi"
@@ -17416,14 +17416,14 @@
             "range": {
               "end": {
                 "character": 39,
-                "line": 226
+                "line": 2254
               },
               "start": {
-                "character": 27,
-                "line": 226
+                "character": 9,
+                "line": 2254
               }
             },
-            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -17439,14 +17439,14 @@
             "range": {
               "end": {
                 "character": 39,
-                "line": 2307
+                "line": 226
               },
               "start": {
-                "character": 9,
-                "line": 2307
+                "character": 27,
+                "line": 226
               }
             },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+            "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
           }
         },
         "protocol": "tsp"
@@ -17922,11 +17922,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 1327
+                "line": 1322
               },
               "start": {
                 "character": 22,
-                "line": 1327
+                "line": 1322
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -17945,11 +17945,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 1344
+                "line": 1339
               },
               "start": {
                 "character": 37,
-                "line": 1344
+                "line": 1339
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -17968,11 +17968,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 1443
+                "line": 1438
               },
               "start": {
                 "character": 37,
-                "line": 1443
+                "line": 1438
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -17991,11 +17991,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 1602
+                "line": 1549
               },
               "start": {
                 "character": 14,
-                "line": 1602
+                "line": 1549
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -18175,11 +18175,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 2297
+                "line": 2244
               },
               "start": {
                 "character": 28,
-                "line": 2297
+                "line": 2244
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -18198,11 +18198,11 @@
             "range": {
               "end": {
                 "character": 41,
-                "line": 2299
+                "line": 2246
               },
               "start": {
                 "character": 28,
-                "line": 2299
+                "line": 2246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -18405,11 +18405,11 @@
             "range": {
               "end": {
                 "character": 42,
-                "line": 1604
+                "line": 1551
               },
               "start": {
                 "character": 14,
-                "line": 1604
+                "line": 1551
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -18681,11 +18681,11 @@
             "range": {
               "end": {
                 "character": 43,
-                "line": 1237
+                "line": 1232
               },
               "start": {
                 "character": 39,
-                "line": 1237
+                "line": 1232
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -18704,11 +18704,11 @@
             "range": {
               "end": {
                 "character": 43,
-                "line": 1557
+                "line": 1504
               },
               "start": {
                 "character": 31,
-                "line": 1557
+                "line": 1504
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -19164,6 +19164,52 @@
             "range": {
               "end": {
                 "character": 44,
+                "line": 2242
+              },
+              "start": {
+                "character": 39,
+                "line": 2242
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 44,
+                "line": 2266
+              },
+              "start": {
+                "character": 9,
+                "line": 2266
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 44,
                 "line": 227
               },
               "start": {
@@ -19195,52 +19241,6 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 44,
-                "line": 2295
-              },
-              "start": {
-                "character": 39,
-                "line": 2295
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 44,
-                "line": 2319
-              },
-              "start": {
-                "character": 9,
-                "line": 2319
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -19601,11 +19601,11 @@
             "range": {
               "end": {
                 "character": 45,
-                "line": 1328
+                "line": 1323
               },
               "start": {
                 "character": 24,
-                "line": 1328
+                "line": 1323
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -19624,11 +19624,11 @@
             "range": {
               "end": {
                 "character": 45,
-                "line": 1441
+                "line": 1436
               },
               "start": {
                 "character": 33,
-                "line": 1441
+                "line": 1436
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -20153,11 +20153,11 @@
             "range": {
               "end": {
                 "character": 47,
-                "line": 1603
+                "line": 1550
               },
               "start": {
                 "character": 14,
-                "line": 1603
+                "line": 1550
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -20291,11 +20291,34 @@
             "range": {
               "end": {
                 "character": 48,
-                "line": 1344
+                "line": 1339
               },
               "start": {
                 "character": 44,
-                "line": 1344
+                "line": 1339
+              }
+            },
+            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
+          }
+        },
+        "protocol": "tsp"
+      },
+      {
+        "channel": "pyright-type-server",
+        "direction": "pylance-to-pyright",
+        "jsonrpc": "2.0",
+        "kind": "request",
+        "method": "typeServer/getComputedType",
+        "params": {
+          "arg": {
+            "range": {
+              "end": {
+                "character": 48,
+                "line": 1549
+              },
+              "start": {
+                "character": 44,
+                "line": 1549
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -20322,29 +20345,6 @@
               }
             },
             "uri": "<workspaceRoot>/torch/distributed/pipelining/_backward.py"
-          }
-        },
-        "protocol": "tsp"
-      },
-      {
-        "channel": "pyright-type-server",
-        "direction": "pylance-to-pyright",
-        "jsonrpc": "2.0",
-        "kind": "request",
-        "method": "typeServer/getComputedType",
-        "params": {
-          "arg": {
-            "range": {
-              "end": {
-                "character": 48,
-                "line": 1602
-              },
-              "start": {
-                "character": 44,
-                "line": 1602
-              }
-            },
-            "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
           }
         },
         "protocol": "tsp"
@@ -20636,11 +20636,11 @@
             "range": {
               "end": {
                 "character": 48,
-                "line": 484
+                "line": 482
               },
               "start": {
                 "character": 42,
-                "line": 484
+                "line": 482
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/logging/__init__.pyi"
@@ -20705,11 +20705,11 @@
             "range": {
               "end": {
                 "character": 49,
-                "line": 1604
+                "line": 1551
               },
               "start": {
                 "character": 45,
-                "line": 1604
+                "line": 1551
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -21464,11 +21464,11 @@
             "range": {
               "end": {
                 "character": 53,
-                "line": 1104
+                "line": 1099
               },
               "start": {
                 "character": 12,
-                "line": 1104
+                "line": 1099
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -21487,11 +21487,11 @@
             "range": {
               "end": {
                 "character": 53,
-                "line": 1456
+                "line": 1451
               },
               "start": {
                 "character": 41,
-                "line": 1456
+                "line": 1451
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -21717,11 +21717,11 @@
             "range": {
               "end": {
                 "character": 54,
-                "line": 1603
+                "line": 1550
               },
               "start": {
                 "character": 50,
-                "line": 1603
+                "line": 1550
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -21786,11 +21786,11 @@
             "range": {
               "end": {
                 "character": 54,
-                "line": 1884
+                "line": 1831
               },
               "start": {
                 "character": 44,
-                "line": 1884
+                "line": 1831
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22016,11 +22016,11 @@
             "range": {
               "end": {
                 "character": 55,
-                "line": 1557
+                "line": 1504
               },
               "start": {
                 "character": 52,
-                "line": 1557
+                "line": 1504
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22062,11 +22062,11 @@
             "range": {
               "end": {
                 "character": 55,
-                "line": 2302
+                "line": 2249
               },
               "start": {
                 "character": 42,
-                "line": 2302
+                "line": 2249
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22085,11 +22085,11 @@
             "range": {
               "end": {
                 "character": 55,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 42,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22269,11 +22269,11 @@
             "range": {
               "end": {
                 "character": 57,
-                "line": 1441
+                "line": 1436
               },
               "start": {
                 "character": 53,
-                "line": 1441
+                "line": 1436
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22292,11 +22292,11 @@
             "range": {
               "end": {
                 "character": 57,
-                "line": 2295
+                "line": 2242
               },
               "start": {
                 "character": 49,
-                "line": 2295
+                "line": 2242
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22614,11 +22614,11 @@
             "range": {
               "end": {
                 "character": 59,
-                "line": 1557
+                "line": 1504
               },
               "start": {
                 "character": 58,
-                "line": 1557
+                "line": 1504
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22706,11 +22706,11 @@
             "range": {
               "end": {
                 "character": 6,
-                "line": 1063
+                "line": 1058
               },
               "start": {
                 "character": 1,
-                "line": 1063
+                "line": 1058
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22729,11 +22729,11 @@
             "range": {
               "end": {
                 "character": 6,
-                "line": 1103
+                "line": 1098
               },
               "start": {
                 "character": 1,
-                "line": 1103
+                "line": 1098
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22775,11 +22775,11 @@
             "range": {
               "end": {
                 "character": 6,
-                "line": 1562
+                "line": 1509
               },
               "start": {
                 "character": 1,
-                "line": 1562
+                "line": 1509
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -22867,11 +22867,11 @@
             "range": {
               "end": {
                 "character": 6,
-                "line": 715
+                "line": 711
               },
               "start": {
                 "character": 1,
-                "line": 715
+                "line": 711
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
@@ -22890,11 +22890,11 @@
             "range": {
               "end": {
                 "character": 6,
-                "line": 725
+                "line": 721
               },
               "start": {
                 "character": 1,
-                "line": 725
+                "line": 721
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/types.pyi"
@@ -23097,11 +23097,11 @@
             "range": {
               "end": {
                 "character": 61,
-                "line": 2297
+                "line": 2244
               },
               "start": {
                 "character": 57,
-                "line": 2297
+                "line": 2244
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23465,11 +23465,11 @@
             "range": {
               "end": {
                 "character": 62,
-                "line": 93
+                "line": 92
               },
               "start": {
                 "character": 59,
-                "line": 93
+                "line": 92
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23488,11 +23488,11 @@
             "range": {
               "end": {
                 "character": 63,
-                "line": 2299
+                "line": 2246
               },
               "start": {
                 "character": 50,
-                "line": 2299
+                "line": 2246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23672,11 +23672,11 @@
             "range": {
               "end": {
                 "character": 66,
-                "line": 1344
+                "line": 1339
               },
               "start": {
                 "character": 56,
-                "line": 1344
+                "line": 1339
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23695,11 +23695,11 @@
             "range": {
               "end": {
                 "character": 66,
-                "line": 1884
+                "line": 1831
               },
               "start": {
                 "character": 62,
-                "line": 1884
+                "line": 1831
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23787,11 +23787,11 @@
             "range": {
               "end": {
                 "character": 67,
-                "line": 94
+                "line": 93
               },
               "start": {
                 "character": 57,
-                "line": 94
+                "line": 93
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23810,11 +23810,11 @@
             "range": {
               "end": {
                 "character": 68,
-                "line": 1557
+                "line": 1504
               },
               "start": {
                 "character": 64,
-                "line": 1557
+                "line": 1504
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -23902,11 +23902,11 @@
             "range": {
               "end": {
                 "character": 69,
-                "line": 2297
+                "line": 2244
               },
               "start": {
                 "character": 64,
-                "line": 2297
+                "line": 2244
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24247,11 +24247,11 @@
             "range": {
               "end": {
                 "character": 77,
-                "line": 2302
+                "line": 2249
               },
               "start": {
                 "character": 64,
-                "line": 2302
+                "line": 2249
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24270,11 +24270,11 @@
             "range": {
               "end": {
                 "character": 77,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 64,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24362,11 +24362,11 @@
             "range": {
               "end": {
                 "character": 79,
-                "line": 98
+                "line": 97
               },
               "start": {
                 "character": 57,
-                "line": 98
+                "line": 97
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24477,11 +24477,11 @@
             "range": {
               "end": {
                 "character": 83,
-                "line": 2299
+                "line": 2246
               },
               "start": {
                 "character": 79,
-                "line": 2299
+                "line": 2246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24592,11 +24592,11 @@
             "range": {
               "end": {
                 "character": 89,
-                "line": 2297
+                "line": 2244
               },
               "start": {
                 "character": 74,
-                "line": 2297
+                "line": 2244
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24753,11 +24753,11 @@
             "range": {
               "end": {
                 "character": 91,
-                "line": 2299
+                "line": 2246
               },
               "start": {
                 "character": 86,
-                "line": 2299
+                "line": 2246
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24776,11 +24776,11 @@
             "range": {
               "end": {
                 "character": 97,
-                "line": 2302
+                "line": 2249
               },
               "start": {
                 "character": 93,
-                "line": 2302
+                "line": 2249
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
@@ -24799,11 +24799,11 @@
             "range": {
               "end": {
                 "character": 99,
-                "line": 2306
+                "line": 2253
               },
               "start": {
                 "character": 86,
-                "line": 2306
+                "line": 2253
               }
             },
             "uri": "<repoRoot>/packages/pyright/packages/pyright-typeserver/dist/typeshed-fallback/stdlib/builtins.pyi"
