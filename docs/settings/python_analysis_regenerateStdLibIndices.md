@@ -64,14 +64,14 @@ Alternatively, you can edit your `settings.json` file directly:
 
    - Add or modify the following line in your `settings.json` file:
      ```json
-     "python.analysis.indexOptions": {
-         "regenerateStdLibIndices": true
+     {
+         "python.analysis.regenerateStdLibIndices": true
      }
      ```
 
 ### Note on Performance
 
-Regenerating the standard library indices can take a few seconds when you open a workspace, depending on your machine's performance. The indices are generated per workspace and are not shared across projects. However, this ensures that Pylance provides accurate code completions and suggestions for your specific Python version and platform.
+Regenerating the standard library indices can take a few seconds when you open a workspace, depending on your machine's performance. The indices use your workspace's Python version and platform; compatible indices can be reused across workspaces. However, this ensures that Pylance provides accurate code completions and suggestions for your specific Python version and platform.
 
 ## Benefits of Regenerating Standard Library Indices
 
@@ -99,3 +99,5 @@ Regenerating the standard library indices can take a few seconds when you open a
 ---
 
 *This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness.*
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

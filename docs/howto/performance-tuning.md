@@ -48,8 +48,8 @@ You can **override any individual setting** even when a mode is active — the m
 
 [`python.analysis.diagnosticMode`](../settings/python_analysis_diagnosticMode.md) controls which files Pylance actively analyzes for errors:
 
-- **`"openFilesOnly"`** (default): Only files open in the editor are analyzed. The most memory-efficient option.
-- **`"workspace"`**: All Python files in the workspace are analyzed. Provides project-wide diagnostics but uses more memory and CPU.
+- **`"openFilesOnly"`** (default): Diagnostics are limited to files open in the editor; imported files can still be loaded for type analysis. The most memory-efficient option.
+- **`"workspace"`**: All discovered workspace Python files are analyzed, subject to the configured include and exclude patterns. Provides project-wide diagnostics but uses more memory and CPU.
 
 For large projects, `"openFilesOnly"` is strongly recommended. Switch to `"workspace"` only if you need to see all errors across the project without opening each file.
 
@@ -109,7 +109,7 @@ In multi-root workspaces, you can also **exclude entire workspace folders** you'
 
 ## Extra Path Cost
 
-Every directory in [`extraPaths`](../settings/python_analysis_extraPaths.md) becomes an import **search root** and a **file-watch root**. Each unresolved import is probed against every extra path in order, and each root is watched for changes, so a large `extraPaths` list adds both lookup time and memory.
+Every directory in [`extraPaths`](../settings/python_analysis_extraPaths.md) becomes an import **search root**. Large lists add import-lookup cost, and broad globs can increase file-watching overhead.
 
 This matters most when an entry uses a [glob pattern](extra-paths-glob-resolution.md): a broad glob can expand to hundreds of directories. Keep the cost down by:
 
@@ -126,11 +126,11 @@ Glob expansion itself happens once when configuration loads, not per import. See
 
 By default, Pylance runs inside VS Code's built-in Node.js runtime, which uses [pointer compression](https://v8.dev/blog/pointer-compression). This limits the effective heap to approximately **4 GB**, regardless of system RAM.
 
-When `languageServerMode` is `"full"` (or `python.analysis.nodeExecutable` is set), Pylance launches in a separate Node.js process where the `--max-old-space-size=8192` argument takes effect, raising the limit to **8 GB**.
+When Pylance runs with an external Node.js runtime, the default `--max-old-space-size=8192` argument raises the limit to **8 GB**. Full mode selects that runtime unless you explicitly choose VS Code's built-in runtime.
 
 If you hit "JavaScript heap out of memory" errors or "Extension host terminated unexpectedly," switch to an external Node.js runtime and optionally increase the heap:
 
-1. Set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` (downloads a standalone Node.js) or set `languageServerMode` to `"full"` (which does this automatically):
+1. In a trusted workspace, set [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md) to `"auto"` (downloads a standalone Node.js) or set `languageServerMode` to `"full"` (which selects `"auto"` when `nodeExecutable` has not been explicitly configured):
 
     ```json
     {
@@ -170,20 +170,20 @@ In multi-root workspaces, each workspace folder creates a separate analyzer serv
 
 ### Diagnosis
 
-1. Open **Output → Pylance** and look for per-folder startup/analysis messages
+1. Open **Output → Python Language Server** and look for per-folder startup/analysis messages
 2. Check how many workspace folders are configured in your `.code-workspace` file
 3. Look for "JavaScript heap out of memory" or "Extension host terminated unexpectedly" in the Output panel
 
 ### Mitigations
 
-| Strategy                                                                                                                  | Effect                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Single analyzer instead of per-folder — dramatically reduces memory            |
-| Use [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)                                   | Single workspace with auto-discovered configs — lower overhead than multi-root |
-| Set [`languageServerMode`](../settings/python_analysis_languageServerMode.md) to `"light"`                                | Minimizes per-folder memory footprint                                          |
-| Use `"openFilesOnly"` diagnostic mode                                                                                     | Avoids analyzing all files in every folder                                     |
-| Exclude unused folders                                                                                                    | `"python.analysis.exclude": ["${workspaceFolder:unused-folder}"]`              |
-| Increase the heap limit                                                                                                   | See [Node.js Heap Limit](#nodejs-heap-limit) above                             |
+| Strategy                                                                                                                  | Effect                                                            |
+| ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | Use one VS Code workspace folder to share an analyzer             |
+| Review [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)                                | Each nested configuration creates a separate analyzer             |
+| Set [`languageServerMode`](../settings/python_analysis_languageServerMode.md) to `"light"`                                | Minimizes per-folder memory footprint                             |
+| Use `"openFilesOnly"` diagnostic mode                                                                                     | Avoids analyzing all files in every folder                        |
+| Exclude unused folders                                                                                                    | `"python.analysis.exclude": ["${workspaceFolder:unused-folder}"]` |
+| Increase the heap limit                                                                                                   | See [Node.js Heap Limit](#nodejs-heap-limit) above                |
 
 ---
 
@@ -228,12 +228,12 @@ Each workspace folder creates a separate analyzer service. With many folders (>1
 
 1. Use [`languageServerMode`](../settings/python_analysis_languageServerMode.md)`: "light"` to minimize per-folder memory
 2. Exclude folders you're not working on
-3. Switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) instead (single analyzer)
-4. Use [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md) instead (single workspace)
+3. Switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) within one VS Code workspace folder and one configuration instead
+4. Review [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md); each nested configuration creates a separate analyzer
 
 ### Q: Does `diagnosticMode: "workspace"` affect auto-imports?
 
-No. Auto-import completions are driven by the indexer, not by diagnostic mode. You can use `"openFilesOnly"` and still get full auto-import coverage if indexing is enabled.
+With indexing enabled, you can use `"openFilesOnly"` and still get indexed auto-import suggestions without workspace diagnostics. With indexing disabled, suggestions depend on loaded files and available indices, so changing diagnostic mode can change coverage.
 
 ### Q: Can I enable indexing in light mode?
 
@@ -246,11 +246,11 @@ Yes. Override the default:
 }
 ```
 
-But also set `exclude` to a narrower pattern — light mode defaults `exclude` to `["**"]`, which limits indexing to open files.
+But also set `exclude` to a narrower pattern — light mode defaults `exclude` to `["**"]`, which prevents finding other project files for analysis.
 
 ### Q: How do I know if Pylance is running out of memory?
 
-Look for these signs in the **Output → Pylance** panel or VS Code notifications:
+Look for these signs in the **Output → Python Language Server** panel or VS Code notifications:
 
 - "Extension host terminated unexpectedly"
 - "JavaScript heap out of memory"
@@ -273,3 +273,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

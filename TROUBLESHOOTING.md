@@ -47,7 +47,7 @@ Note that if you are coming to Pylance from using the Microsoft Python Language 
 
 If you want to use static analysis tools with an editable install, you should configure the editable install to use `.pth` files that contain file paths rather than executable lines (prefixed with `import`) that install import hooks. See your package manager’s documentation for details on how to do this. We have provided some basic information for common package managers below.
 
-Import hooks can provide an editable installation that is a more accurate representation of your real installation. However, because resolving module locations using an import hook requires executing Python code, they are not usable by Pylance and other static analysis tools. Therefore, if your editable install is configured to use import hooks, Pylance will be unable to find the corresponding source files.
+Import hooks can provide an editable installation that is a more accurate representation of your real installation. On Python 3.13+, Pylance attempts to resolve them in a Python sandbox when `python.analysis.enableEditableInstalls` is enabled (the default). Discovery must yield existing Python source files; if it fails, use the path-based alternatives below.
 
 #### pip / setuptools
 
@@ -80,11 +80,11 @@ files by default. It will only use import hooks if you set `editable-backend` to
 #### meson-python
 
 Packages installed via [meson-python](https://meson-python.readthedocs.io/en/latest/) do **not** support `compat_mode=strict` or `compat_mode=compat`.  
-As a result, Pylance cannot resolve modules from editable installs made with meson-python.  
+On Python 3.13+, Pylance can try to find Python source files through import-hook discovery, as described above.  
 
 As a workaround, users can manually add the package path to `python.analysis.extraPaths` in Pylance to help resolve imports. However, this requires manual configuration and does not fully replicate proper editable install behavior, so type checking issues may still occur.
 
-This limitation is expected to persist.
+
 
 ### Migrating from the Microsoft Python Language Server to Pylance
 
@@ -92,7 +92,7 @@ If you are moving from the Microsoft Python Language Server over to Pylance, a g
 
 ### Minimum VS Code version
 
-To use Pylance, you will need to be using VS Code version 1.57 or above.
+To use Pylance, you will need to be using VS Code version 1.107.0 or above.
 
 ### Pylance does not start up, or shows an error on startup
 
@@ -118,7 +118,7 @@ If you think you're hitting an out-of-memory situation, you can alleviate this p
 
 Pylance (by default) runs using VS Code's Node.js executable (which has the 4GB limit).
 
-To specify your own Node.js executable, set this setting in your User settings.json or Remote settings.json and restart VS Code:
+To specify your own Node.js executable in a trusted workspace, set this setting in your User settings.json or Remote settings.json and restart VS Code:
 
 ```json
 "python.analysis.nodeExecutable": "<path to node.js exe>"
@@ -147,7 +147,7 @@ For more details, visit [--max-old-space-size](https://nodejs.org/api/cli.html#-
 
 To minimize memory usage by Pylance, exclude unneeded `*.py` files using [`python.analysis.exclude`](docs/settings/python_analysis_exclude.md). For instance, you can add `"python.analysis.exclude": ["**/testFiles/*.py"]` to your `.vscode/settings.json`.
 
-For environments with multiple root workspaces, place the `.vscode/settings.json` in the root directory of each workspace instead of using `settings` section in a `*.code-workspace` file.
+For environments with multiple root workspaces, use the `settings` section in a `*.code-workspace` file for shared exclusions, or place `.vscode/settings.json` in each workspace root for folder-specific exclusions.
 
 ## Filing an issue
 
@@ -155,7 +155,7 @@ When filing an issue, make sure you do the following:
 
 - Check existing issues for the same problem (also see the "Known Issues" section above for widespread problems).
 - Enable trace logging by adding `"python.analysis.logLevel": "Trace"` to your settings.json configuration file or by using the `Pylance: Start Logging` command.
-    - Adding this will cause a large amount of info to be printed to the Python output panel.
+    - Adding this will cause a large amount of info to be printed to the Python Language Server output panel.
       This should not be left long term, as the performance impact of the logging is significant.
       Use `Pylance: Stop Logging` to disable trace logging when you are done.
 - Select "View: Toggle Output" from the command palette (Ctrl+Shift+P on Windows/Linux, Command+Shift+P on macOS), then select "**Python Language Server**" in the dropdown on the right.
@@ -164,3 +164,5 @@ When filing an issue, make sure you do the following:
     - If using a virtual environment, please include the requirements.txt file.
     - If working with a conda environment, attach the environment.yml file.
 - A code example (or any other additional information) we can use to reproduce the issue.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -22,7 +22,7 @@ Pylance also has an option to allow you to run a specific version of Pyright to 
 To get Pylance to run Pyight for diagnostics, set these two settings in your settings.json:
 
 ```jsonc
-"python.analysis.diagnosticsSource": "Pyright"
+"python.analysis.diagnosticsSource": "Pylance + Pyright"
 
 "python.analysis.pyrightVersion": "1.1.397" // Has to be at least 1.1.397 or higher
 ```
@@ -34,8 +34,8 @@ Internally Pylance will run a separate copy of Pyright to generate diagnostics. 
 Pylance comes bundled with a number of stubs, usually found here in the installation:
 
 ```
-<pylance-extension-install>/dist/bundled
-<pylance-extension-install>/dist/native-stubs
+<pylance-extension-install>/dist/bundled/stubs
+<pylance-extension-install>/dist/bundled/native-stubs
 ```
 
 For Pyright to produce the same errors as Pylance, it needs to use the same stub files.
@@ -57,9 +57,11 @@ or pyproject.toml
 stubPath="./pylanceStubs"
 ```
 
-Where `pylanceStubs` contains the contents of the `bundled` and `native-stubs` folders.
+Where `pylanceStubs` contains the contents of the `stubs` and `native-stubs` folders.
 
 We have plans to make this easier in the [future](https://github.com/microsoft/pylance-release/discussions/3638).
+
+The external Pyright diagnostics provider already receives Pylance's bundled third-party stub directory automatically. For its opt-out behavior and CLI comparisons, see [the bundled-stub guide](docs/howto/bundled-stubs.md).
 
 ## Settings differences
 
@@ -67,9 +69,9 @@ Both Pylance and Pyright have [settings](https://github.com/microsoft/pylance-re
 
 | Setting          | Pylance default | Pyright default | Description                                                                             | Potential Impact                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | --------------- | --------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| autoSearchPaths  | true            | false           | Adds 'src' to the list of search paths.                                                 | This may change what files are found when analyzing. So if you're getting missing imports for modules in your 'src' tree, this might be why.                                                                                                                                                                                                                                                                                               |
+| autoSearchPaths  | true            | true            | Adds 'src' to the list of search paths.                                                 | Both enable automatic src detection by default. Use a shared extraPaths list to align import search paths.                                                                                                                                                                                                                                                                                                                                 |
 | extraPaths       | `PYTHONPATH`    | [ ]             | Additional search paths that will be used when searching for modules imported by files. | Pylance includes paths found in the `PYTHONPATH` environment variable and the `PYTHONPATH` definition from your [`.env` file](https://code.visualstudio.com/docs/python/environments#_environment-variable-definitions-file). Pyright ignores `.env` files and treats paths from the `PYTHONPATH` environment variable as third party library paths. This results in a difference in prioritization of these paths when resolving imports. |
-| typeCheckingMode | off             | standard        | Determines what diagnostics are shown.                                                  | Pylance defaults to `off`. If you want to guarantee this is the same as Pyright, set it to `standard` (or whatever you want to enforce) by specifying it in your settings.json.                                                                                                                                                                                                                                                            |
+| typeCheckingMode | off             | standard        | Determines what diagnostics are shown.                                                  | Set typeCheckingMode in a shared pyrightconfig.json or [tool.pyright] section to align Pylance and CLI Pyright.                                                                                                                                                                                                                                                                                                                            |
 
 Here's an example `pyrightconfig.json` you would use to ensure Pylance and Pyright both picked up the same settings:
 
@@ -92,7 +94,7 @@ typeCheckingMode="standard"
 
 ## Diagnostic severity overrides
 
-Both Pylance and Pyright support a [`python.analysis.diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults) setting. Differences in this setting have a direct impact on the diagnostics returned. If you were attempting to get the same error output from both Pylance and Pyright, ensure that they are using the same value for this setting.
+Pylance supports [`python.analysis.diagnosticSeverityOverrides`](https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults) in VS Code; CLI Pyright reads individual diagnostic-rule keys from `pyrightconfig.json` or `[tool.pyright]`. Differences in this setting have a direct impact on the diagnostics returned. If you were attempting to get the same error output from both Pylance and Pyright, use matching diagnostic-rule severities in the shared project configuration.
 
 For example, to downgrade `reportMissingImports` from an error to a warning, set this value in a `pyrightconfig.json`
 
@@ -108,3 +110,5 @@ or pyproject.toml
 [tool.pyright]
 reportMissingImports="warning"
 ```
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

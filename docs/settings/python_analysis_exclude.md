@@ -97,7 +97,7 @@ The `python.analysis.include` setting specifies paths to directories or files th
 
 The `python.analysis.ignore` setting specifies paths whose diagnostic output (errors and warnings) should be suppressed, even if they are included in the analysis.
 
-- **Difference from `exclude`**: While `exclude` prevents files from being processed (unless imported), `ignore` allows files to be processed but suppresses diagnostic messages.
+- **Difference from `exclude`**: While `exclude` limits where Pylance looks for files to analyze, opened or imported files can still be processed. `ignore` suppresses diagnostic messages.
 
 ## Examples
 
@@ -115,7 +115,7 @@ The default exclusions (`**/node_modules`, `**/__pycache__`, dotfiles, virtual e
 
 ### Excluding All Files Except Opened Ones
 
-To exclude all files from workspace, effectively processing only the files you have open:
+To stop looking for workspace files to analyze, while still analyzing open files and their imports:
 
 ```json
 {
@@ -135,7 +135,7 @@ If your workspace contains a large directory that you don't need Pylance to incl
 
 ### Re-including a Subdirectory
 
-If you want to exclude a directory but include a specific subdirectory, you can adjust both `include` and `exclude`:
+An `include` entry cannot override an excluded directory. Instead, include the directories you need and exclude only the unwanted subdirectories, as in this example:
 
 ```json
 {
@@ -204,7 +204,7 @@ Set `python.analysis.exclude` to `["**"]`:
 }
 ```
 
-This configuration tells Pylance to exclude all files from analysis, effectively only analyzing files you have open in the editor.
+This configuration stops Pylance from looking for workspace files to analyze. Open files and their imports can still be analyzed.
 
 ### Why do certain `**` patterns fail to match the file structure?
 
@@ -217,7 +217,7 @@ my_project/
 │   │   ├── module2/
 ```
 
-The pattern `**/src/**` does not match `src/` because there is no folder preceding `src`. Similarly, `src/**/module1` does not match `src/module1/` because there is no folder between `src` and `module1`. However, `src/**/module2` successfully matches `module2/` because `module1` exists between `src` and `module2`.
+The pattern `**/src/**` matches `src/` because `**` can match zero directory levels. Similarly, `src/**/module1` matches `src/module1/`, and `src/**/module2` matches `src/module1/module2/`.
 
 ## Related Settings
 
@@ -235,3 +235,5 @@ The pattern `**/src/**` does not match `src/` because there is no folder precedi
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

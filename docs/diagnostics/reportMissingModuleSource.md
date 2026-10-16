@@ -1,6 +1,6 @@
 ## Overview
 
-`reportMissingModuleSource` is a diagnostic in Pylance and Pyright that warns you when an imported module is found, but its source code cannot be located. This often happens with compiled modules, missing files, or misconfigured environments, and can affect features like IntelliSense and type checking.
+`reportMissingModuleSource` is a diagnostic in Pylance and Pyright that warns you when a type stub is found but the corresponding runtime module cannot be resolved. This often happens with missing packages or misconfigured environments, and can affect features like IntelliSense and type checking.
 
 ## Representative Issues
 
@@ -27,17 +27,17 @@
 **Error:**
 
 ```python
-import cv2  # Module source cannot be found (compiled C extension)
+import cv2  # Type stub found, but runtime module cannot be resolved
 ```
 
-**Fix — install type stubs or configure Pylance:**
+**For type information — install type stubs:**
 
 ```bash
 # Install type stubs for the library
 pip install opencv-stubs
 ```
 
-Or add the module’s install location to `extraPaths` in your Pylance/Pyright config:
+To resolve the runtime module, install its runtime package in the selected environment or add its install location to `extraPaths` in your Pylance/Pyright config:
 
 ```json
 {
@@ -48,7 +48,7 @@ Or add the module’s install location to `extraPaths` in your Pylance/Pyright c
 ## Common Fixes & Workarounds
 
 1. Install the required module or package in your Python environment.
-2. Add or update type stubs (`.pyi` files) for compiled or missing modules.
+2. Check the runtime package associated with an installed stub package.
 3. Check your Python environment and ensure the correct interpreter is selected.
 4. Use conditional imports and type checking guards for platform-specific or optional modules.
 5. Adjust your `pyrightconfig.json` or `pyproject.toml` to include or exclude relevant paths and directories.
@@ -62,3 +62,5 @@ For more details on configuring this diagnostic, see the [Pyright configuration 
 - [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) — add extra search paths for imports
 - [`python.analysis.useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) — use library source when type stubs are missing
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -25,7 +25,7 @@ Many docstrings use reStructuredText field markup such as:
 
 With the setting **enabled** (the default), hovering over the symbol renders this as a formatted parameter and return list rather than raw markup.
 
-With the setting **disabled**, the hover shows the raw text, including the `:param:` and `:returns:` markers, exactly as written in the source.
+With the setting **disabled**, the hover uses basic Markdown formatting, with field markers such as `:param:` still visible.
 
 ## How to Change `python.analysis.supportRestructuredText`
 
@@ -46,13 +46,13 @@ With the setting **disabled**, the hover shows the raw text, including the `:par
 ## When to Use It
 
 - **Keep enabled** (the default) if you want reStructuredText docstrings rendered as formatted documentation in hovers and completions.
-- **Disable** if you prefer to see raw docstring text, or if rendering produces unexpected results for the libraries you use.
+- **Disable** if you prefer basic Markdown formatting, or if rendering produces unexpected results for the libraries you use.
 
 ## Frequently Asked Questions
 
 ### Why isn't my docstring rendered as formatted text?
 
-This is a preview feature, so not every reStructuredText construct is supported, and the docstring must actually use reST markup. Docstrings written in other styles are not converted.
+This is a preview feature, so not every reStructuredText construct is supported. Pylance also converts supported Google-style docstring sections before rendering them.
 
 ### Is it enabled by default?
 
@@ -60,7 +60,7 @@ Yes. The default is `true`.
 
 ### Does it affect non-reStructuredText docstrings?
 
-The feature targets reStructuredText markup. Docstrings that do not use reST are shown as-is.
+Yes. Pylance also formats Google-style docstring sections.
 
 ## Related Settings
 
@@ -74,3 +74,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -16,21 +16,21 @@
 ## Examples
 
 ```python
-from typing import assert_type
+from typing import Literal, assert_type
 
 x: int = 42
-assert_type(x, int)  # OK
+assert_type(x, Literal[42])  # OK
 
 assert_type(x, str)  # Error: Type "int" is not assignable to type "str"
 
 y: int | str = "hello"
-assert_type(y, str)  # Error: Type "int | str" is not assignable to type "str"
+assert_type(y, str)  # Error: expected str, received Literal["hello"]
 ```
 
 **Fix — use the correct expected type:**
 
 ```python
-assert_type(y, int | str)  # OK: matches the actual type
+assert_type(y, Literal["hello"])  # OK: matches the actual type
 ```
 
 ## Common Fixes & Workarounds
@@ -45,3 +45,5 @@ assert_type(y, int | str)  # OK: matches the actual type
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

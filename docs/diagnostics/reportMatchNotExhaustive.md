@@ -52,7 +52,7 @@ def describe(color: Color) -> str:
             return "cool"
 ```
 
-**Fix — add a catch-all case:**
+**Exhaustiveness check — detect an unhandled case with `assert_never`:**
 
 ```python
 from enum import Enum
@@ -70,7 +70,7 @@ def describe(color: Color) -> str:
         case Color.GREEN:
             return "cool"
         case _:
-            assert_never(color)  # Ensures all cases are handled
+            assert_never(color)  # Error: unhandled Color.BLUE is not Never
 ```
 
 ## Common Fixes & Workarounds
@@ -84,3 +84,5 @@ def describe(color: Color) -> str:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

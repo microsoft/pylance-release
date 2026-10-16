@@ -124,13 +124,13 @@ When working on a particular module or component of your project, you might want
 
 ### Avoiding Analysis of Generated or External Code
 
-Your project may contain directories with generated code, build artifacts, or external dependencies that you don't want Pylance to analyze. By specifying the directories to include, you can prevent Pylance from analyzing these parts of your codebase.
+Your project may contain directories with generated code, build artifacts, or external dependencies that you don't want Pylance to analyze. By specifying the directories to include, you can control where Pylance looks for files to analyze. Other files can still be analyzed when opened or imported.
 
 ## Frequently Asked Questions
 
 ### Q: What happens if I customize `python.analysis.include` but forget to include the workspace root?
 
-**A:** If you set `python.analysis.include` without including the workspace root (e.g., `"**/*"`), Pylance will only analyze the paths you specified. This means any files not under the specified paths will be ignored in the analysis. If you want to include the entire workspace root along with additional paths, you should explicitly include it:
+**A:** If you set `python.analysis.include` without including the workspace root (e.g., `"**/*"`), Pylance looks for files to analyze under the paths you specified. Other files can still be analyzed when opened or imported. If you want to include the entire workspace root along with additional paths, you should explicitly include it:
 
 ```json
 "python.analysis.include": ["**/*", "/additional/path/**/*"]
@@ -142,7 +142,7 @@ Your project may contain directories with generated code, build artifacts, or ex
 
 ### Q: How does `python.analysis.include` interact with `python.analysis.exclude`?
 
-**A:** Paths specified in [`python.analysis.exclude`](python_analysis_exclude.md) take precedence over those in `python.analysis.include`. This means you can include a broad set of directories and then use `exclude` to remove specific subdirectories or files from the analysis.
+**A:** Paths specified in [`python.analysis.exclude`](python_analysis_exclude.md) take precedence over those in `python.analysis.include`. This means you can include a broad set of directories and then use `exclude` to remove specific subdirectories or files from Pylance's search for files to analyze.
 
 ### Q: Can I use `python.analysis.include` to include files outside of my workspace?
 
@@ -207,7 +207,7 @@ These methods offer flexibility for managing analysis settings per workspace roo
 
 ## Related Settings
 
-- [`python.analysis.exclude`](python_analysis_exclude.md): Controls which files are excluded from analysis.
+- [`python.analysis.exclude`](python_analysis_exclude.md): Controls where Pylance looks for files to analyze.
 - [`python.analysis.useDefaultExcludes`](python_analysis_useDefaultExcludes.md): Turns the built-in default exclusions on or off.
 - [`python.analysis.ignore`](python_analysis_ignore.md): Suppresses diagnostics for specific paths without excluding them.
 - [`python.analysis.extraPaths`](python_analysis_extraPaths.md): Adds directories to the import search path.
@@ -221,3 +221,5 @@ These methods offer flexibility for managing analysis settings per workspace roo
 ## Related Documentation
 
 For additional guidance on managing large workspaces, refer to the [Opening Large Workspaces in VS Code](https://github.com/microsoft/pylance-release/wiki/Opening-Large-Workspaces-in-VS-Code#manually-configure-your-workspace) guide.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

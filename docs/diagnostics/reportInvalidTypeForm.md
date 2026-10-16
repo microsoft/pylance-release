@@ -28,7 +28,7 @@ from typing import Literal
 x: Literal[3]  # Use Literal for value types
 ```
 
-Another common case:
+A related `reportInvalidTypeArguments` case:
 
 ```python
 def process(items: list[int] | str[float]) -> None:  # str is not generic
@@ -45,7 +45,7 @@ def process(items: list[int] | str) -> None:
 ## Common Fixes & Workarounds
 
 1. Use only valid PEP 484 type annotation syntax.
-2. Define `NewType` and `TypeAlias` at the global scope, not inside functions or classes.
+2. Define `NewType` at global scope; `TypeAlias` may be defined at module or class scope, but not inside functions.
 3. Use literal values and fully qualified names in type annotations.
 4. Avoid variable names that conflict with type annotations in the same class.
 5. Refactor code to use supported type annotation forms.
@@ -55,3 +55,5 @@ def process(items: list[int] | str) -> None:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

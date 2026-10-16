@@ -25,7 +25,7 @@ Add to `settings.json`:
 }
 ```
 
-Then open the **Output** panel in VS Code (View → Output) and select **Pylance** from the dropdown.
+Then open the **Output** panel in VS Code (View → Output) and select **Python Language Server** from the dropdown.
 
 > **Warning**: Trace logging significantly increases output volume and may impact performance. Enable it temporarily for diagnosis, then remove it.
 
@@ -33,7 +33,7 @@ Then open the **Output** panel in VS Code (View → Output) and select **Pylance
 
 ## Import Resolution Search Order
 
-Pylance tries these locations in order, stopping at the first match:
+Pylance checks these locations in order. A later stub can take priority over an earlier source-file match:
 
 | Priority | Search Location                                                      | Log Prefix                                                 |
 | -------- | -------------------------------------------------------------------- | ---------------------------------------------------------- |
@@ -57,7 +57,7 @@ Pylance tries these locations in order, stopping at the first match:
 
 | Log Message                                      | Meaning                                                                            |
 | ------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| `Resolved import with file '...'`                | Pylance found the module. The path tells you _where_ it resolved to.               |
+| `Resolved import with file '...'`                | Pylance found a candidate module. A later stub can take priority.                  |
 | `Did not find file '...' or '...'`               | Exhausted options in that search location, trying the next.                        |
 | `Partially resolved import with directory '...'` | Found a directory but no `__init__.py` or module file.                             |
 | `Looking in bundled stubs path '...'`            | Pylance is checking bundled third-party stubs after installed packages.            |
@@ -66,14 +66,14 @@ Pylance tries these locations in order, stopping at the first match:
 ### What to Look For
 
 1. **Where did Pylance look?** The log shows every search location in order.
-2. **Where did it resolve (or fail)?** A successful `Resolved import with file` line tells you the exact file path.
+2. **Where did it resolve (or fail)?** A `Resolved import with file` line identifies a candidate path; check later entries for a higher-priority stub.
 3. **Is the resolution correct?** If it resolved to `site-packages` instead of your workspace source, adjust [`extraPaths`](../settings/python_analysis_extraPaths.md) so the preferred source has higher priority.
 
 ---
 
 ## Example: Successful Import Resolution
 
-A successful resolution looks like this — Pylance finds the module in one of its search locations and stops:
+A successful lookup looks like this — Pylance finds a candidate module:
 
 ```text
 Looking in root directory of execution environment '/workspace'
@@ -81,7 +81,7 @@ Attempting to resolve using root path '/workspace'
 Resolved import with file '/workspace/packages/shared/src/shared/utils.py'
 ```
 
-This tells you the import resolved from the project root. If the path looks wrong (e.g., resolving to `site-packages` instead of your workspace source), adjust [`extraPaths`](../settings/python_analysis_extraPaths.md) so the preferred source has higher priority.
+This tells you a candidate was found from the project root; later log entries may show another candidate. If the path looks wrong (e.g., resolving to `site-packages` instead of your workspace source), adjust [`extraPaths`](../settings/python_analysis_extraPaths.md) so the preferred source has higher priority.
 
 ---
 
@@ -112,7 +112,7 @@ This means Pylance checked `stubPath`, the workspace root, and `site-packages` b
 
 ### Q: What's the difference between `logLevel: "Trace"` and `verboseOutput` in pyrightconfig.json?
 
-Import resolution logs are controlled by `"python.analysis.logLevel": "Trace"` in VS Code settings. The `verboseOutput` option in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) is a Pyright-level setting for additional CLI diagnostics — it does not affect the Output panel logs.
+Import resolution logs are controlled by `"python.analysis.logLevel": "Trace"` in VS Code settings. The `verboseOutput` option in [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) also affects analysis-service output, including search-path summaries.
 
 ### Q: The log says "No python interpreter search path." What does that mean?
 
@@ -147,3 +147,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

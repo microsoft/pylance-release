@@ -119,14 +119,14 @@ A VS Code [multi-root workspace](https://code.visualstudio.com/docs/editor/multi
 
 An [editable install](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs) (`pip install -e .`) installs a package so that Python resolves imports to the source directory instead of copying files to `site-packages`.
 
-**How Pylance detects editable installs**: Pylance reads `.pth` files in `site-packages`. These files contain directory paths that extend the import search path.
+**How Pylance detects editable installs**: Pylance reads `.pth` files in the selected interpreter's `site-packages` to find package source. Python 3.15+ installations can also use `.start` files.
 
 ```text
 # Example .pth file content (path-based — works with Pylance):
 /home/user/monorepo/packages/shared/src
 ```
 
-> **Critical**: By default, Pylance only reads **path-based** `.pth` files. If a `.pth` file starts with `import` (an import-hook-based editable install), Pylance **ignores it**. This is a common cause of unresolved imports in monorepos. See [Python 3.13+ enhanced support](#python-313-enhanced-editable-install-support) below for an exception.
+> **Critical**: Path-based `.pth` files work directly. Import-hook-based installs require **Python 3.13+** and [`python.analysis.enableEditableInstalls`](../settings/python_analysis_enableEditableInstalls.md), which is enabled by default. See [Python 3.13+ enhanced support](#python-313-enhanced-editable-install-support) below.
 
 #### Python 3.13+ Enhanced Editable Install Support
 
@@ -138,18 +138,18 @@ When using **Python 3.13 or later**, Pylance can resolve import-hook-based edita
 }
 ```
 
-With this setting enabled, Pylance uses a sandboxed Python environment to execute dynamic `.pth` files and resolve the actual module paths. This means build backends that use import hooks (like setuptools' default mode) work **without** needing compat or strict mode.
+With this setting enabled, Pylance uses a sandboxed Python environment to execute dynamic `.pth` files and resolve the actual module paths. For supported hooks, this avoids the need for compat or strict mode.
 
 **Requirements**:
 
 - Python 3.13 or later selected as the workspace interpreter
 - `python.analysis.enableEditableInstalls` set to `true`
 
-**What changes**: The [Build Backend Compatibility](#build-backend-compatibility) table below assumes the default behavior (setting disabled or Python < 3.13). With this setting enabled on Python 3.13+, all build backends in the table that show "❌ No" become "✅ Yes" automatically.
+**What changes**: The [Build Backend Compatibility](#build-backend-compatibility) table below describes behavior when discovery is disabled or Python < 3.13. On Python 3.13+, Pylance can resolve supported import hooks.
 
 #### Build Backend Compatibility
 
-The table below shows compatibility with the **default** Pylance behavior. On Python 3.13+ with `python.analysis.enableEditableInstalls` enabled, all backends work regardless of their `.pth` file type.
+The table below describes behavior when enhanced discovery is disabled or unavailable. On Python 3.13+ with `python.analysis.enableEditableInstalls` enabled, supported import hooks can work too.
 
 | Build Backend        | Default Behavior  | Works with Pylance? | How to Fix                                                                                                                                                                                                                                                                  |
 | -------------------- | ----------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -197,7 +197,7 @@ pip install -e . --config-settings editable_mode=strict
 
 #### Verifying Editable Install Works
 
-Check that a path-based `.pth` file exists in your `site-packages`:
+Check the `.pth` files in your selected Python environment's `site-packages`:
 
 ```bash
 # Find .pth files for your package
@@ -213,7 +213,7 @@ A working `.pth` file looks like:
 /absolute/path/to/your/package/src
 ```
 
-A **dynamic** `.pth` file (ignored by default, but supported on Python 3.13+ with `enableEditableInstalls`) looks like:
+A **dynamic** `.pth` file (supported on Python 3.13+ with `enableEditableInstalls`) looks like:
 
 ```text
 import _editable_finder; _editable_finder.install(...)
@@ -295,7 +295,7 @@ monorepo/
 
 Each package gets its own analysis scope without needing a `.code-workspace` file.
 
-**Skipped directories**: any directory starting with `.` (covers `.git`, `.vscode`, `.venv`, `.env`, `.tox`, `.nox`, `.mypy_cache`, `.pytest_cache`, `.eggs`, etc.), plus `node_modules`, `__pycache__`, `venv`, `env`, `site-packages`, `dist`, `build`, and `*.egg-info`.
+**Skipped directories**: Configuration discovery follows the same [`include`](../settings/python_analysis_include.md) and [`exclude`](../settings/python_analysis_exclude.md) settings used for finding files for analysis.
 
 ### How They Relate
 
@@ -341,14 +341,14 @@ Each package gets its own analysis scope without needing a `.code-workspace` fil
 
 ## Import Resolution Order
 
-When you write `import mypackage`, Pylance searches in this order (see also [Pyright import resolution](https://microsoft.github.io/pyright/#/import-resolution)):
+When you write `import mypackage`, Pylance checks the following locations (see also [Pyright import resolution](https://microsoft.github.io/pyright/#/import-resolution)). Stdlib stubs and typed packages can take priority over source matches.
 
 | Priority | Source                              | Configured By                                                                                                                                                                       |
 | -------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1        | Custom stub path                    | [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md) or `stubPath` in config                                                                                       |
 | 2        | Execution environment root          | Workspace root or `executionEnvironments[].root`                                                                                                                                    |
 | 3        | Extra paths (in order)              | [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) or `executionEnvironments[].extraPaths` (entries may use [glob patterns](extra-paths-glob-resolution.md)) |
-| 4        | Auto-detected `src/` directory      | [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (only when no execution environments)                                                           |
+| 4        | Auto-detected `src/` directory      | [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md); inherited unless an environment supplies its own `extraPaths`                                  |
 | 5        | Installed stub packages (`*-stubs`) | Python environment (`site-packages`)                                                                                                                                                |
 | 6        | Inline stubs (`.pyi` in packages)   | Python environment                                                                                                                                                                  |
 | 7        | `py.typed` packages                 | Python environment                                                                                                                                                                  |
@@ -430,7 +430,7 @@ Create a `.code-workspace` file with each package as a separate folder.
 
 **Per-folder interpreter**: VS Code Python extension lets you select a different interpreter per folder. The status bar shows which interpreter is active.
 
-**Per-folder settings**: Add folder-specific settings in the `.code-workspace` file:
+**Per-folder settings**: Put folder-specific overrides in each folder's `.vscode/settings.json`; `.code-workspace` settings apply across the listed folders:
 
 ```jsonc
 {
@@ -606,7 +606,7 @@ uv sync
 **Cons**:
 
 - Requires installing packages (not just opening the folder)
-- Build backend must produce path-based `.pth` files (see [Build Backend Compatibility](#build-backend-compatibility))
+- Needs path-based `.pth` files or successful enhanced discovery of import hooks (see [Build Backend Compatibility](#build-backend-compatibility))
 - Need to re-install when adding new packages
 
 **Best for**: Monorepos that already use `pip install -e` or uv workspaces as part of their development workflow.
@@ -739,7 +739,7 @@ Settings in `.vscode/settings.json` at the workspace root apply to everything in
 
 ### Folder-Level Settings in .code-workspace
 
-In a `.code-workspace` file, you can set per-folder overrides:
+A `.code-workspace` file lists the folders and shared settings; put per-folder overrides in each folder's `.vscode/settings.json`:
 
 ```jsonc
 {
@@ -787,7 +787,7 @@ monorepo/
 
 ### pyrightconfig.json / pyproject.toml
 
-[Pyright configuration files](https://microsoft.github.io/pyright/#/configuration) provide settings that VS Code `.vscode/settings.json` cannot:
+[Pyright configuration files](https://microsoft.github.io/pyright/#/configuration) provide shared analysis settings, including options available only in those files:
 
 - [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) — per-subtree analysis contexts
 - [`include` / `exclude`](https://microsoft.github.io/pyright/#/configuration?id=main-configuration-options) — file-level control with wildcard support
@@ -817,22 +817,22 @@ typeCheckingMode = "standard"
 
 ### Settings Precedence
 
-When multiple settings sources exist, they are applied in this order (later wins):
+Project configuration takes precedence for overlapping analysis options. VS Code combines its own settings separately:
 
-1. Pyright defaults
-2. [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` `[tool.pyright]`
-3. VS Code user settings
-4. VS Code workspace settings (`.code-workspace` or `.vscode/settings.json`)
+1. Pyright supplies defaults for options not configured
+2. [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` `[tool.pyright]` supplies project analysis options
+3. VS Code user settings supply preferences and analysis options not set in project configuration
+4. VS Code workspace and folder settings override the corresponding VS Code user settings
 5. `python.analysis.languageServerMode` overrides (for settings at their default values)
 
 **Important**:
 
 - If a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists, its [`include`](../settings/python_analysis_include.md)/[`exclude`](../settings/python_analysis_exclude.md) take precedence over the VS Code [`python.analysis.include`](../settings/python_analysis_include.md)/[`python.analysis.exclude`](../settings/python_analysis_exclude.md) settings.
-- [`extraPaths`](../settings/python_analysis_extraPaths.md) from `pyrightconfig.json` and from VS Code settings are **not merged** — the config file's takes precedence.
+- [`extraPaths`](../settings/python_analysis_extraPaths.md) from project configuration and VS Code settings are **not merged**. If the project config defines `extraPaths`, that list wins. Otherwise, the VS Code paths still apply.
 
 ### Variable Substitution
 
-The following variables are supported in Pylance path settings (in `pyrightconfig.json` and VS Code settings). Note that only three specific environment variables are recognized — arbitrary `${env:VAR}` is not supported.
+The following variables are supported in Pylance path settings in VS Code settings, not in `pyrightconfig.json`. Note that only three specific environment variables are recognized — arbitrary `${env:VAR}` is not supported.
 
 | Variable                  | Expands To                        | Example                              |
 | ------------------------- | --------------------------------- | ------------------------------------ |
@@ -935,16 +935,16 @@ This completely prevents Pylance from creating an analyzer for that folder, savi
 
 Each feature below runs within a **single workspace folder's analyzer** unless noted otherwise. In multi-root workspaces, features only see files within that folder's program — which includes files reachable through [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable installs.
 
-| Feature                              | Needs [`extraPaths`](../settings/python_analysis_extraPaths.md) / editable for cross-package? | Depends on [`indexing`](../settings/python_analysis_indexing.md)?                                    | Light mode behavior                                                        | Multi-root scope                                                                                          | Key settings                                                                                                                                                                                                                                                            |
-| ------------------------------------ | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Import resolution**                | Yes — module must be reachable                                                                | No                                                                                                   | Works (only open files analyzed)                                           | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`extraPaths`](../settings/python_analysis_extraPaths.md), [`stubPath`](../settings/python_analysis_stubPath.md), [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                                                                                   |
-| **Go to definition**                 | Yes — target module must be reachable                                                         | No                                                                                                   | Works                                                                      | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`extraPaths`](../settings/python_analysis_extraPaths.md), [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)                                                                                                                            |
-| **Auto-import completions**          | Yes — source must be discoverable                                                             | Improves coverage but not required; without indexing, only open/loaded files and stdlib are searched | Reduced coverage (indexing off by default), but still works for open files | Per-folder only                                                                                           | [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md), [`indexing`](../settings/python_analysis_indexing.md), [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md)                                                       |
-| **Workspace symbol search** (Ctrl+T) | No — searches all user files in program                                                       | Improves coverage; without indexing, falls back to on-demand parsing                                 | Reduced scope (only open files in program), but still works                | **All folders** (aggregated across workspaces)                                                            | [`indexing`](../settings/python_analysis_indexing.md), [`includeVenvInWorkspaceSymbols`](../settings/python_analysis_includeVenvInWorkspaceSymbols.md), [`includeExtraPathSymbolsInSymbolSearch`](../settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md) |
-| **Find all references**              | Yes — target files must be in the program                                                     | No                                                                                                   | Searches all files in program (in light mode, mainly open files)           | Per-folder only                                                                                           | —                                                                                                                                                                                                                                                                       |
-| **Rename symbol**                    | Yes — but only **user code** files are modified                                               | No                                                                                                   | Only user code files in program (in light mode, mainly open files)         | Per-folder only                                                                                           | —                                                                                                                                                                                                                                                                       |
-| **Type checking diagnostics**        | Yes — imported types must be resolvable                                                       | No                                                                                                   | Works for open files only                                                  | Per-folder                                                                                                | [`diagnosticMode`](../settings/python_analysis_diagnosticMode.md), [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md), [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md)                                   |
-| **Hover information**                | Yes — symbol's type info must be reachable                                                    | No                                                                                                   | Works                                                                      | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)                                                                                                                                                                                       |
+| Feature                              | Needs [`extraPaths`](../settings/python_analysis_extraPaths.md) / editable for cross-package? | Depends on [`indexing`](../settings/python_analysis_indexing.md)?                            | Light mode behavior                                              | Multi-root scope                                                                                          | Key settings                                                                                                                                                                                                                                                            |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Import resolution**                | Yes — module must be reachable                                                                | No                                                                                           | Works (open files and needed imports analyzed)                   | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`extraPaths`](../settings/python_analysis_extraPaths.md), [`stubPath`](../settings/python_analysis_stubPath.md), [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md)                                                                                   |
+| **Go to definition**                 | Yes — target module must be reachable                                                         | No                                                                                           | Works                                                            | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`extraPaths`](../settings/python_analysis_extraPaths.md), [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)                                                                                                                            |
+| **Auto-import completions**          | Yes — source must be discoverable                                                             | Improves coverage; loaded files and available pre-built indices can be used without indexing | Enable `autoImportCompletions` for suggestions from loaded files | Per-folder only                                                                                           | [`autoImportCompletions`](../settings/python_analysis_autoImportCompletions.md), [`indexing`](../settings/python_analysis_indexing.md), [`packageIndexDepths`](../settings/python_analysis_packageIndexDepths.md)                                                       |
+| **Workspace symbol search** (Ctrl+T) | No — searches all user files in program                                                       | Improves coverage; without indexing, falls back to on-demand parsing                         | Can be empty with the default exclude-all setting                | **All folders** (aggregated across workspaces)                                                            | [`indexing`](../settings/python_analysis_indexing.md), [`includeVenvInWorkspaceSymbols`](../settings/python_analysis_includeVenvInWorkspaceSymbols.md), [`includeExtraPathSymbolsInSymbolSearch`](../settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md) |
+| **Find all references**              | Yes — target files must be in the program                                                     | No                                                                                           | Searches all files in program (in light mode, mainly open files) | Per-folder only                                                                                           | —                                                                                                                                                                                                                                                                       |
+| **Rename symbol**                    | Yes — global rename requires **user code**                                                    | No                                                                                           | Global rename: user code; limited single-file rename also exists | Selected program, including eligible cross-folder sources                                                 | —                                                                                                                                                                                                                                                                       |
+| **Type checking diagnostics**        | Yes — imported types must be resolvable                                                       | No                                                                                           | Works for open files only                                        | Per-folder                                                                                                | [`diagnosticMode`](../settings/python_analysis_diagnosticMode.md), [`typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md), [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md)                                   |
+| **Hover information**                | Yes — symbol's type info must be reachable                                                    | No                                                                                           | Works                                                            | Per-folder only; cross-folder needs [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable | [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md)                                                                                                                                                                                       |
 
 ### What Each Feature Needs
 
@@ -955,7 +955,7 @@ Each feature below runs within a **single workspace folder's analyzer** unless n
 - [`executionEnvironments[].extraPaths`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options)
 - Installed package in the interpreter's `site-packages`
 
-**Auto-import completions**: Work best with [`indexing`](../settings/python_analysis_indexing.md) enabled, which pre-indexes all workspace and library symbols for fast lookup. Without indexing, auto-imports still work but only for files already loaded in the program (open files, their imports, and pre-built stdlib indices). Third-party packages that haven't been opened or imported won't appear.
+**Auto-import completions**: Work best with [`indexing`](../settings/python_analysis_indexing.md) enabled, which pre-indexes workspace and library symbols within the indexing limits. Without indexing, auto-imports can still use loaded files and available pre-built indices, including some third-party packages.
 
 **Workspace symbol search (Ctrl+T)**: The only feature that searches **all workspace folders** in multi-root. With [`indexing`](../settings/python_analysis_indexing.md) enabled, searches pre-built indices for fast results. Without indexing, falls back to on-demand parsing of files in the program. By default, only **user code** is searched. To include library symbols, enable:
 
@@ -964,9 +964,9 @@ Each feature below runs within a **single workspace folder's analyzer** unless n
 
 Enabling these may slow down workspace symbol search.
 
-**Find all references**: Searches all files within the current workspace folder's program. Includes user code files, and also includes non-user files (like those in [`extraPaths`](../settings/python_analysis_extraPaths.md) or `site-packages`) if the file is **open in the editor**. In multi-root, only works within a single folder.
+**Find all references**: Searches the current workspace folder's program, including user code and open files. A request from non-user code can also search other non-user files in that program. Files reachable through [`extraPaths`](../settings/python_analysis_extraPaths.md) or editable installs can be in another physical folder.
 
-**Rename symbol**: Similar to Find All References, but **only modifies user code files** (files that are tracked by your workspace and are not third-party imports or typeshed stubs). Files reachable through [`extraPaths`](../settings/python_analysis_extraPaths.md) or `site-packages` that are not user code will be excluded from the rename — Pylance intentionally avoids modifying library code. In multi-root, only works within a single folder.
+**Rename symbol**: Global rename modifies **user code** in the current workspace folder's program. Discovered editable source can be tracked as user code even in another physical folder. For a local symbol defined in an open library file, rename can be limited to that file.
 
 ---
 
@@ -977,12 +977,12 @@ Before troubleshooting, identify which setup approach your workspace uses. Check
 | Indicator                                                                                                                                                                                        | What It Means                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `.code-workspace` file present                                                                                                                                                                   | **Multi-root workspace** (Approach 2 or 3)                                                                                                                      |
-| Multiple folders listed in VS Code Explorer sidebar                                                                                                                                              | **Multi-root workspace** — check `.code-workspace` for per-folder settings                                                                                      |
+| Multiple folders listed in VS Code Explorer sidebar                                                                                                                                              | **Multi-root workspace** — check each folder's `.vscode/settings.json` for per-folder settings                                                                  |
 | [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) with [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) | **Execution environments** (Approach 3)                                                                                                                         |
 | `pyproject.toml` with `[tool.pyright]` containing [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options)                                | **Execution environments** (Approach 3)                                                                                                                         |
 | [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` at workspace root (without `executionEnvironments`)                        | **Single root with config file** — VS Code settings that the config overrides are ignored (see [Setting Interaction Reference](#setting-interaction-reference)) |
-| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) in `settings.json`                                                                                                     | **Extra paths** (Approach 1) — check if config file also exists (they conflict)                                                                                 |
-| `__editable__*.pth` files in `site-packages`                                                                                                                                                     | **Editable installs** (Approach 4)                                                                                                                              |
+| [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) in `settings.json`                                                                                                     | **Extra paths** (Approach 1) — check whether the project config defines `extraPaths` too                                                                        |
+| Editable `.pth` or Python 3.15+ `.start` files in `site-packages`                                                                                                                                | **Editable installs** (Approach 4)                                                                                                                              |
 | [`python.analysis.useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)`: true` in `settings.json`                                                                   | **Nearest configuration** (Approach 5)                                                                                                                          |
 | Multiple [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) files in subdirectories                                                                                     | Likely **nearest configuration** (if enabled) or **multi-root workspace**                                                                                       |
 | None of the above                                                                                                                                                                                | **Single root with defaults** — Pylance analyzes the workspace root as one project                                                                              |
@@ -1003,7 +1003,7 @@ When a user reports a monorepo issue, these questions quickly narrow down the ca
 Run these in the VS Code integrated terminal to gather facts:
 
 ```bash
-# 1. Which Python interpreter is Pylance using?
+# 1. Which Python interpreter is the terminal using?
 #    (click the Python version in the status bar to verify)
 python -c "import sys; print(sys.prefix)"
 
@@ -1011,13 +1011,13 @@ python -c "import sys; print(sys.prefix)"
 python -c "import sys; print('\n'.join(sys.path))"
 
 # 3. Any editable installs?
-ls .venv/lib/python*/site-packages/__editable__*.pth 2>/dev/null   # Linux/macOS
-Get-ChildItem .venv\Lib\site-packages\__editable__*.pth 2>$null    # Windows
+ls .venv/lib/python*/site-packages/*.pth .venv/lib/python*/site-packages/*.start 2>/dev/null   # Linux/macOS
+Get-ChildItem .venv\Lib\site-packages\* -Include *.pth,*.start 2>$null    # Windows
 
 # 4. Import-hook or path-based .pth?
-cat .venv/lib/python*/site-packages/__editable__*.pth              # Linux/macOS
-Get-Content .venv\Lib\site-packages\__editable__*.pth              # Windows
-# Lines starting with "import" = import-hook (Pylance can't follow these)
+cat .venv/lib/python*/site-packages/*.pth              # Linux/macOS
+Get-Content .venv\Lib\site-packages\*.pth              # Windows
+# Lines starting with "import" = import-hook (Python 3.13+ discovery can resolve these)
 # Plain paths = path-based (Pylance reads these)
 
 # 5. Any pyrightconfig.json files?
@@ -1032,9 +1032,9 @@ grep -rl "tool.pyright" . --include="pyproject.toml"               # Linux/macOS
 
 | Conflict                                                                                                                                                                           | Symptom                                                                                                                | Resolution                                                                                                                                      |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists                | Yellow warning: _"python.analysis.extraPaths cannot be set when a Pyrightconfig.json or pyproject.toml is being used"_ | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
-| Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                          | Paths break when adding/removing workspace folders                                                                     | Use `${workspaceFolder}` variables or absolute paths                                                                                            |
-| [`languageServerMode`](../settings/python_analysis_languageServerMode.md)`: "light"` + [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)`: true` | Virtual workspaces created but all files excluded                                                                      | Switch to `"default"` mode, or explicitly set [`exclude`](../settings/python_analysis_exclude.md) to a narrower pattern                         |
+| `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists                | Configured project `extraPaths` takes precedence; `.vscode` warnings and user-setting hints flag the possible conflict | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) |
+| Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                          | Relative paths resolve from each requesting folder, not the .code-workspace file                                       | Use `${workspaceFolder}` variables or absolute paths                                                                                            |
+| [`languageServerMode`](../settings/python_analysis_languageServerMode.md)`: "light"` + [`useNearestConfiguration`](../settings/python_analysis_useNearestConfiguration.md)`: true` | Default exclude-all suppresses background nested-config discovery                                                      | Switch to `"default"` mode, or explicitly set [`exclude`](../settings/python_analysis_exclude.md) to a narrower pattern                         |
 | Editable install + wrong interpreter selected                                                                                                                                      | `.pth` files exist but Pylance looks in wrong `site-packages`                                                          | Select the interpreter whose `site-packages` contains the `.pth` files                                                                          |
 
 ---
@@ -1045,13 +1045,13 @@ grep -rl "tool.pyright" . --include="pyproject.toml"               # Linux/macOS
 
 ### Key Monorepo-Specific Interactions
 
-| Combination                                                                                                                                                         | What Happens                                                                       | Fix                                                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists | Yellow warning: VS Code setting ignored                                            | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)    |
-| Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                           | Paths break when adding/removing workspace folders                                 | Use `${workspaceFolder}` variables or absolute paths                                                                                               |
-| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                                            | Each folder analyzes all its files — combined memory can exceed the heap limit     | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
-| Editable install + wrong interpreter selected                                                                                                                       | `.pth` files exist but Pylance looks in wrong `site-packages`                      | Select the interpreter whose `site-packages` contains the `.pth` files                                                                             |
-| Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                                                | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths` | Repeat common paths in each environment's `extraPaths`                                                                                             |
+| Combination                                                                                                                                                         | What Happens                                                                                                           | Fix                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `settings.json` sets [`extraPaths`](../settings/python_analysis_extraPaths.md) + [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) exists | Configured project `extraPaths` takes precedence; `.vscode` warnings and user-setting hints flag the possible conflict | Move [`extraPaths`](../settings/python_analysis_extraPaths.md) into [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)    |
+| Multi-root workspace + relative [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                           | Relative paths resolve from the requesting folder, not the workspace file                                              | Use `${workspaceFolder}` variables or absolute paths                                                                                               |
+| Multi-root (>10 folders) + `diagnosticMode: "workspace"`                                                                                                            | Each folder analyzes all its files — combined memory can exceed the heap limit                                         | Use `"openFilesOnly"` or switch to [`executionEnvironments`](https://microsoft.github.io/pyright/#/configuration?id=execution-environment-options) |
+| Editable install + wrong interpreter selected                                                                                                                       | `.pth` files exist but Pylance looks in wrong `site-packages`                                                          | Select the interpreter whose `site-packages` contains the `.pth` files                                                                             |
+| Global `extraPaths` in config + `executionEnvironments[].extraPaths`                                                                                                | Each execEnv's `extraPaths` **replaces** (not merges with) the global `extraPaths`                                     | Repeat common paths in each environment's `extraPaths`                                                                                             |
 
 ---
 
@@ -1094,7 +1094,7 @@ monorepo/
         └── factories.py     # shared test factory functions
 ```
 
-pytest makes the root `conftest.py` and `tests/helpers/` accessible via `sys.path` manipulation. Pylance can't see these. Fix:
+Pylance's [pytest support](../settings/python_analysis_enablePytestSupport.md) finds fixtures in ancestor `conftest.py` files within the analysis root. If the shared `conftest.py` is above a package's workspace folder, open the monorepo root or explicitly import its fixtures. For helper imports, configure their source roots:
 
 ```json
 {
@@ -1112,7 +1112,7 @@ pytest makes the root `conftest.py` and `tests/helpers/` accessible via `sys.pat
 
 1. Click the Python version in the status bar
 2. Select **"Enter interpreter path..."** or choose from the list
-3. Confirm with: `python -c "import sys; print(sys.prefix)"`
+3. Compare the selected environment with the terminal environment: `python -c "import sys; print(sys.prefix)"`
 
 **Hidden directory gotcha**: If workspace folders use hidden directories (starting with `.`), the Python extension may have trouble detecting the correct interpreter. Explicitly set the interpreter path.
 
@@ -1187,7 +1187,7 @@ When something isn't working in your monorepo, run through this checklist:
 - [ ] **Interpreter**: Is the correct Python interpreter selected? (status bar)
 - [ ] **Interpreter path**: Does `python -c "import sys; print(sys.prefix)"` in the VS Code terminal point to the right venv?
 - [ ] **Package installed**: Is the package installed in that venv? (`pip show <package>`)
-- [ ] **Editable install**: If editable, is the `.pth` file path-based (not import-hook)?
+- [ ] **Editable install**: Is the source found through a path-based `.pth` file or Python 3.13+ import-hook discovery?
 - [ ] **[`extraPaths`](../settings/python_analysis_extraPaths.md)**: Are paths configured to the right directory level?
 - [ ] **[`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: Does a config file exist that might override settings?
 - [ ] **[`include`](../settings/python_analysis_include.md)/[`exclude`](../settings/python_analysis_exclude.md)**: Are the correct files included and not excluded?
@@ -1218,7 +1218,7 @@ Yes. [`extraPaths`](../settings/python_analysis_extraPaths.md) at the global lev
 
 ### Q: Does [`python.analysis.autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) work with execution environments?
 
-[`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (default: `true`) auto-adds a `src/` directory to the search path if it exists and doesn't contain `__init__.py`. When execution environments are defined in a config file, the auto-detected `src/` path goes into the default execution environment but **does not** automatically apply to explicitly defined execution environments. Add `src` to each environment's [`extraPaths`](../settings/python_analysis_extraPaths.md) if needed.
+[`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) (default: `true`) auto-adds a `src/` directory if it exists without `__init__.py` and project `extraPaths` has not supplied the default paths. Execution environments inherit those paths unless they define their own [`extraPaths`](../settings/python_analysis_extraPaths.md) list. Repeat `src` in that list if needed.
 
 ### Q: How do I debug import resolution?
 
@@ -1230,7 +1230,7 @@ Each workspace folder creates a separate analyzer service. With many folders (>1
 
 ### Q: My .env file with PYTHONPATH is being ignored. Why?
 
-Pylance does **not** read `.env` files for `PYTHONPATH`. Use [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) instead. See [How to Fix Unresolved Import Errors — FAQ](unresolved-imports.md#q-my-env-file-with-pythonpath-is-being-ignored-why).
+Pylance can use `PYTHONPATH` from the Python extension's `.env` file. Check `python.envFile` and the selected environment, or use explicit [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md). See [How to Fix Unresolved Import Errors — FAQ](unresolved-imports.md#q-my-env-file-with-pythonpath-is-being-ignored-why).
 
 ### Q: How do I set up a uv workspace monorepo?
 
@@ -1254,14 +1254,14 @@ With [uv workspaces](https://docs.astral.sh/uv/concepts/workspaces/):
     config-settings = { editable_mode = "compat" }
     ```
 
-5. Verify `.pth` files exist:
+5. Verify editable-install files exist:
     ```bash
-    ls .venv/lib/python*/site-packages/__editable__*.pth
+    ls .venv/lib/python*/site-packages/*.pth .venv/lib/python*/site-packages/*.start
     ```
 
 ### Q: Can I use `PYTHONPATH` environment variable instead of [`extraPaths`](../settings/python_analysis_extraPaths.md)?
 
-Pylance does not use `PYTHONPATH` directly. It relies on [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) and the selected Python interpreter's `sys.path`. If you need the same paths available:
+Pylance can use `PYTHONPATH` supplied by the Python extension. To specify analysis paths explicitly, use [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md):
 
 ```json
 {
@@ -1270,7 +1270,7 @@ Pylance does not use `PYTHONPATH` directly. It relies on [`python.analysis.extra
 }
 ```
 
-The `python.envFile` setting gives the Python extension access to env vars for terminal use, but it does **not** affect Pylance's import resolution.
+The Python extension can supply `PYTHONPATH` from `python.envFile` to Pylance for import resolution. The `extraPaths` setting provides an explicit alternative.
 
 ### Q: How do I handle namespace packages (no `__init__.py`) in a monorepo?
 
@@ -1303,11 +1303,11 @@ Both `from mycompany.core import X` and `from mycompany.utils import Y` will res
 
 ### Q: What's the difference between [`include`](../settings/python_analysis_include.md), [`exclude`](../settings/python_analysis_exclude.md), and [`ignore`](../settings/python_analysis_ignore.md)?
 
-| Setting                                                    | Effect on File Discovery | Effect on Diagnostics  | Effect on Import Resolution                                                         |
-| ---------------------------------------------------------- | ------------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
-| Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | No diagnostics         | Not resolved as workspace file                                                      |
-| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | No diagnostics         | Not resolved as workspace file (but still resolved if imported by an included file) |
-| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed | Resolved normally                                                                   |
+| Setting                                                    | Effect on File Discovery | Effect on Diagnostics     | Effect on Import Resolution                              |
+| ---------------------------------------------------------- | ------------------------ | ------------------------- | -------------------------------------------------------- |
+| Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | Open files can be checked | Still resolvable if imported; include controls discovery |
+| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | Open files can be checked | Still resolvable if imported; exclude controls discovery |
+| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed    | Resolved normally                                        |
 
 ### Q: How do I make Pylance see packages across workspace folders?
 
@@ -1441,3 +1441,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

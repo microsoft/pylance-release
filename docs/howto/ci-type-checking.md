@@ -133,7 +133,7 @@ In VS Code, use `settings.json` with softer settings:
 
 **Option B: Shared config + VS Code per-file overrides**
 
-Use `pyrightconfig.json` for CI (strict). Developers add `# pyright: reportUnusedImport=information` in files they're actively editing.
+Use `pyrightconfig.json` for CI (strict). A `# pyright: reportUnusedImport=information` comment softens the rule in both the editor and CI. Use Option A to keep different severities.
 
 ---
 
@@ -149,7 +149,7 @@ Use `pyrightconfig.json` for CI (strict). Developers add `# pyright: reportUnuse
 
 ## Pre-commit Hook
 
-You can run Pyright as a [pre-commit](https://pre-commit.com/) hook using the official mirror:
+You can run Pyright as a [pre-commit](https://pre-commit.com/) hook using the community-maintained Python wrapper:
 
 ```yaml
 # .pre-commit-config.yaml
@@ -176,7 +176,7 @@ repos:
 
 **Tips for pre-commit**:
 
-- Set `pass_filenames: false` — Pyright analyzes the whole project, not individual files
+- Set `pass_filenames: false` so Pyright checks the configured project instead of using pre-commit's file list
 - Pin the version to avoid surprise breakage
 - Ensure your virtual environment is active so Pyright can find installed packages
 
@@ -214,3 +214,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

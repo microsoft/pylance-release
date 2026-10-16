@@ -6,7 +6,7 @@ The `python.analysis.typeEvaluation.strictDictionaryInference` setting controls 
 
 ## What `python.analysis.typeEvaluation.strictDictionaryInference` does
 
-When inferring the type of a dictionary literal, Pylance must decide how to combine the types of its keys and values. With this setting disabled, Pylance may use a broader type like `dict[str, Any]`. With it enabled, Pylance uses a stricter union of the observed types.
+When inferring the type of a dictionary literal, Pylance must decide how to combine the types of its keys and values. With this setting disabled, mixed key or value types are inferred as unknown. With it enabled, Pylance uses a stricter union of the observed types.
 
 The default value is `false`.
 
@@ -20,7 +20,7 @@ The default value is `false`.
 my_dict = {"a": 1, "b": "hello"}
 ```
 
-- With `false` (default): Pylance infers `dict[str, Any]` or a broad common type.
+- With `false` (default): Pylance infers `dict[str, Unknown]`.
 - With `true`: Pylance infers `dict[str, int | str]`, using the union of observed value types.
 
 ## Accepted values
@@ -91,7 +91,7 @@ Strict dictionary inference primarily affects unannotated dictionary literals.
 
 ### Q: How does this interact with `typeCheckingMode`?
 
-**A:** The `typeCheckingMode` setting controls which diagnostic rules are enabled. `strictDictionaryInference` specifically controls how dictionary types are inferred. They are independent but complementary — stricter inference can surface more issues when diagnostic rules are also strict.
+**A:** The `typeCheckingMode` setting controls which diagnostic rules are enabled. `strictDictionaryInference` specifically controls how dictionary types are inferred. Strict Pyright configurations enable strict dictionary inference by default — stricter inference can surface more issues when diagnostic rules are also strict.
 
 ---
 
@@ -100,3 +100,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

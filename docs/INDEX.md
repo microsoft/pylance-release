@@ -167,7 +167,7 @@ All rules can be configured via [`diagnosticSeverityOverrides`](settings/python_
 | [reportAttributeAccessIssue](diagnostics/reportAttributeAccessIssue.md)                   | Accessing undefined attributes                                    |
 | [reportCallInDefaultInitializer](diagnostics/reportCallInDefaultInitializer.md)           | Function calls in default parameter values                        |
 | [reportCallIssue](diagnostics/reportCallIssue.md)                                         | Problems with function or method calls                            |
-| [reportConstantRedefinition](diagnostics/reportConstantRedefinition.md)                   | Redefining a `Final` constant                                     |
+| [reportConstantRedefinition](diagnostics/reportConstantRedefinition.md)                   | Reassigning an uppercase constant                                 |
 | [reportDeprecated](diagnostics/reportDeprecated.md)                                       | Using deprecated functions, classes, or parameters                |
 | [reportDuplicateImport](diagnostics/reportDuplicateImport.md)                             | Same module imported more than once                               |
 | [reportFunctionMemberAccess](diagnostics/reportFunctionMemberAccess.md)                   | Accessing non-standard attributes on functions                    |
@@ -243,3 +243,5 @@ All rules can be configured via [`diagnosticSeverityOverrides`](settings/python_
 | Document                                            | Description                                                   |
 | --------------------------------------------------- | ------------------------------------------------------------- |
 | [Type Server Protocol](tsp/type-server-protocol.md) | Protocol overview and compatibility contract for type servers |
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

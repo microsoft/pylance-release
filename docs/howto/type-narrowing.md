@@ -166,7 +166,7 @@ Pylance supports these narrowing expressions:
 | `x is C` (class identity)           | `if x is MyClass:`                       | Yes                            |
 | Truthiness (`if x:`)                | `if name:`                               | Partial (falsy values overlap) |
 | `x == L` (literal comparison)       | `if x == "hello":`                       | Depends on type                |
-| `x in collection`                   | `if x in valid_set:`                     | Yes                            |
+| `x in collection`                   | `if x in valid_set:`                     | Depends on collection type     |
 | `S in D` (TypedDict key check)      | `if "name" in d:`                        | Yes                            |
 | `len(x) == L` (tuple length)        | `if len(t) == 2:`                        | Yes                            |
 | `x.field is/== V` (discriminator)   | `if obj.kind == "a":`                    | Yes                            |
@@ -273,7 +273,7 @@ Narrowing only works on certain expression forms: simple names, member access ch
 Both `assert` and `if` work for narrowing, but use them differently:
 
 - `assert x is not None` — narrows from that line forward (good for preconditions)
-- `if x is not None:` — narrows within the `if` block only
+- `if x is not None:` — narrows within the `if` branch; the type afterward depends on which paths continue
 
 ---
 
@@ -305,8 +305,8 @@ def process(data: Any):
 
 If type narrowing doesn't apply (e.g., dynamic code), you can:
 
-- `# type: ignore[rule-name]` — suppress a specific diagnostic on one line
-- `# pyright: ignore[rule-name]` — Pyright-specific equivalent
+- `# type: ignore` — suppress type-checking diagnostics on one line
+- `# pyright: ignore[rule-name]` — suppress a specific Pyright diagnostic on one line
 - `cast(TargetType, value)` — assert a type without runtime check
 - `python.analysis.ignore` — suppress all diagnostics for entire files
 
@@ -323,3 +323,5 @@ See [How to Gradually Adopt Strict Type Checking](gradual-strict-adoption.md) fo
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

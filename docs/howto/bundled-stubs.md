@@ -8,7 +8,7 @@ Bundled stubs are a fallback. If the bundled stub for a package is incomplete or
 
 ## When bundled stubs are used
 
-Pylance looks for imports in several places and stops at the first usable match. For third-party packages, the important order is:
+Pylance checks these locations for imports. A later stub can take priority over an earlier source-file match:
 
 1. [`stubPath`](../settings/python_analysis_stubPath.md), which defaults to `typings`
 2. workspace source and [`extraPaths`](../settings/python_analysis_extraPaths.md)
@@ -17,7 +17,7 @@ Pylance looks for imports in several places and stops at the first usable match.
 5. bundled third-party stubs
 6. typeshed third-party fallback stubs
 
-This means custom stubs in `stubPath` have higher priority than bundled stubs. Installed stub packages also take priority over bundled stubs, including PEP 561 `-stubs` packages (with or without a `py.typed` marker) and partial stub packages. Bundled stubs apply only when the installed package ships no stub (`.pyi`) files of its own.
+This means custom stubs in `stubPath` have higher priority than bundled stubs. Installed stub packages also take priority over bundled stubs, including PEP 561 `-stubs` packages (with or without a `py.typed` marker) and partial stub packages. A bare inline `.pyi` file in a runtime package without a `py.typed` marker or installed `-stubs` package does not take priority over a bundled stub.
 
 For the complete import-resolution order, see [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md#how-pylance-resolves-imports). To inspect the order in your workspace, enable trace logging and see [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
 
@@ -111,6 +111,22 @@ For the most accurate result, copy or adapt the declarations from a `django-stub
 
 ---
 
+## Disable a mismatched bundled stub
+
+To use installed package information without maintaining a replacement stub, set `python.analysis.disableBundledStubs` in `settings.json`:
+
+```json
+{
+    "python.analysis.disableBundledStubs": ["django"]
+}
+```
+
+Use the import name (`django`), not the stub-directory name (`django-stubs`). Set the value to `true` to disable all bundled stubs, or `false` (the default) to restore them.
+
+If you use external Pyright diagnostics, only `true` disables the bundled stubs there; per-package lists apply to Pylance only.
+
+---
+
 ## Check which stub Pylance used
 
 Enable trace logging:
@@ -121,7 +137,7 @@ Enable trace logging:
 }
 ```
 
-Then open **Output -> Pylance** and search for the module name. Helpful lines include:
+Then open **Output -> Python Language Server** and search for the module name. Helpful lines include:
 
 | Log Message | Meaning |
 | ----------- | ------- |
@@ -147,3 +163,5 @@ Use [`python.analysis.typeshedPaths`](../settings/python_analysis_typeshedPaths.
 - [Understanding `python.analysis.stubPath`](../settings/python_analysis_stubPath.md) - setting reference and directory layouts
 - [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md) - full import-resolution order and troubleshooting checklist
 - [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) - trace logging and log interpretation
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

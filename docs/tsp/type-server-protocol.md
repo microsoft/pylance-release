@@ -24,7 +24,7 @@ TSP uses semantic version strings for client/server compatibility checks. While 
 
 ## Connection Model
 
-A client starts a type server and communicates with it over stdio on the main JSON-RPC connection. stdout must be reserved for JSON-RPC protocol messages.
+A client starts a type server and communicates with it over the main JSON-RPC connection using a transport the server supports, such as stdio or Node IPC. When using stdio, stdout must be reserved for JSON-RPC protocol messages.
 
 A type server is expected to receive enough workspace and document state to answer the TSP requests it supports. Clients commonly use normal LSP initialization and document synchronization for this state, then send `typeServer/*` requests on the same JSON-RPC connection.
 
@@ -79,7 +79,7 @@ A server that can serve extra TSP channels returns the same capability shape in 
 
 Multi-connection mode is enabled only when both sides advertise `typeServerMultiConnection` and the two `supportedTransports` lists have at least one transport in common. If either side omits the capability, or if there is no common transport, the session remains single-connection and the client must not send `typeServer/connection`.
 
-The currently supported built-in transport kind for extra connections is `ipc`. The main connection uses stdio; `ipc` applies only to dynamically opened extra connections.
+The currently supported built-in transport kind for extra connections is `ipc`. This negotiation is separate from the main connection, which can use stdio or Node IPC.
 
 ### Opening An Extra Connection
 
@@ -267,3 +267,5 @@ A compatible type server should verify these behaviors:
 1. Type queries (computed, declared, and expected) return well-formed `Type` objects, or `undefined`, for the snapshot supplied by the client.
 1. Multi-connection support is advertised only when the server can serve the negotiated extra transport.
 1. Extra connections accept every TSP request allowed for the negotiated TSP version and reject LSP traffic, state-changing notifications, `typeServer/connection`, and TSP requests not allowed for that version.
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

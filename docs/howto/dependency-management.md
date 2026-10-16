@@ -1,6 +1,6 @@
 # How to Manage Python Dependencies for Pylance
 
-Pylance does not install packages. It only sees what is importable from the active Python interpreter. Most "missing dependency" complaints in the editor are really one of:
+Pylance does not automatically install declared dependencies. It resolves imports using the selected interpreter and configured search paths. Most "missing dependency" complaints in the editor are really one of:
 
 - The dependency is not installed in the active environment.
 - It is installed, but in a different environment than the one Pylance is using.
@@ -14,6 +14,7 @@ This guide explains how the common dependency declaration styles affect Pylance,
 
 - [How Pylance Sees Dependencies](#how-pylance-sees-dependencies)
 - [Inspect What Pylance Sees](#inspect-what-pylance-sees)
+- [Generate a Dependency File](#generate-a-dependency-file)
 - [Declaration Styles](#declaration-styles)
     - [requirements.txt](#requirementstxt)
     - [pyproject.toml](#pyprojecttoml)
@@ -35,11 +36,11 @@ Pylance treats a dependency as "available" only when it can resolve an import fo
 2. Or the package source is reachable via [`extraPaths`](../settings/python_analysis_extraPaths.md), `pyrightconfig.json` `extraPaths`, or an editable install.
 3. Or a stub-only package is installed (for example `types-requests`).
 
-Pylance does **not**:
+Pylance's dependency handling:
 
-- Read `requirements.txt`, `pyproject.toml`, `Pipfile`, `poetry.lock`, or `uv.lock` to learn what should be installed.
-- Run `pip install` for you.
-- Honor `PYTHONPATH` from `.env` files in editor analysis (the Python extension may load `.env` for runtime, but Pylance's analysis search paths come from the interpreter and from `extraPaths`).
+- Pylance reads `requirements.txt` and `pyproject.toml` to discover direct dependencies for auto-import suggestions. It does not automatically install packages declared in those files, `Pipfile`, `poetry.lock`, or `uv.lock`.
+- The opt-in [Troubleshoot Missing Imports](../settings/python_analysis_enableTroubleshootMissingImports.md) Quick Fix can offer installation through Python Environments after you choose the packages.
+- `PYTHONPATH` supplied by the Python environment-variable API, including `.env` values, can provide analysis search paths. Explicit `extraPaths` are placed before those paths.
 
 Practical consequence: a project can be perfectly declared in `pyproject.toml` and still show import errors in the editor if you never installed the dependencies into the active environment.
 
@@ -51,15 +52,27 @@ See [How to Choose a Python Environment for Pylance](python-environments.md) for
 
 Before changing any declaration file, confirm reality.
 
-| Question                                  | How to answer it                                                                                                                            |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Which interpreter is active?              | `pylancePythonEnvironments` for the workspace root.                                                                                         |
-| What is actually importable right now?    | `pylanceInstalledTopLevelModules` for the same workspace root. This lists top-level module names from the active environment.               |
-| Which imports across the project resolve? | `pylanceImports`. Returns resolved and unresolved imports per file across the workspace.                                                    |
-| What does the runtime say?                | `pylanceRunCodeSnippet` with `import sys, importlib; print(importlib.import_module("pkg").__file__)` &mdash; tells you the actual location. |
-| What are my effective settings?           | `pylanceSettings`. Watch for `extraPaths`, `useLibraryCodeForTypes`, and any overrides from `pyrightconfig.json`.                           |
+| Question                                  | How to answer it                                                                                                                                               |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Which interpreter is active?              | `pylancePythonEnvironments` for the workspace root.                                                                                                            |
+| What packages does the environment list?  | `pylanceInstalledTopLevelModules` for the same workspace root. This lists top-level module names from the active environment.                                  |
+| Which imports across the project resolve? | `pylanceImports`. Returns aggregated resolved and unresolved module-name lists across the workspace.                                                           |
+| What does the runtime say?                | `pylanceRunCodeSnippet` with `import sys, importlib; print(importlib.import_module("pkg").__file__)` &mdash; tells you the actual location.                    |
+| What settings does Pylance report?        | `pylanceSettings`. Watch for `extraPaths` and `useLibraryCodeForTypes`, and inspect `pyrightconfig.json` or `[tool.pyright]` separately for project overrides. |
 
-If `pylanceInstalledTopLevelModules` does not list the package, it is genuinely not installed in the active environment, regardless of what your `requirements.txt` says.
+A missing inventory entry does not prove that the runtime import will fail. Confirm with the runtime check above.
+
+---
+
+## Generate a Dependency File
+
+Pylance can generate or update a dependency file from workspace imports:
+
+1. Open the Command Palette and run **Pylance: Generate Dependency File**. Select the workspace folder if prompted.
+2. Choose the dependency-file format and version-pinning style.
+3. Choose **Merge only** to add missing packages while keeping existing entries, or **Sync** to also remove packages not found in the code.
+
+The command applies edits to the dependency file; it does not install packages. Review the updated file, then use your package manager's install or sync workflow for the selected environment.
 
 ---
 
@@ -71,11 +84,11 @@ Different projects declare dependencies in different ways. They do not all behav
 
 A flat list of pinned (or unpinned) packages, typically installed with `pip install -r requirements.txt`.
 
-- **Pylance impact**: None directly. Pylance never reads this file. It only sees the result after `pip install` runs.
+- **Pylance impact**: Pylance reads the root `requirements.txt` to discover direct dependencies for auto-import suggestions. The declarations do not install packages; imports still need installed packages or reachable sources.
 - **Best for**: Simple deployments, CI pipelines, environments where you do not own the project metadata.
 - **Common pitfalls**:
     - Multiple `requirements*.txt` files (`requirements.txt`, `requirements-dev.txt`, `requirements-test.txt`) often drift apart. The active environment may have only one of them installed, leaving editor errors for symbols defined in another.
-    - `-r requirements-other.txt` chaining is supported by `pip` but does not signal intent to Pylance.
+    - `-r requirements-other.txt` chaining is followed by Pylance's direct-dependency discovery as well as by `pip`.
     - Unpinned versions can install a different release than CI uses, leading to type errors that only show up locally.
 
 If you use `requirements.txt`, install the union of every file you need analyzed and confirm with `pylanceInstalledTopLevelModules`.
@@ -97,7 +110,7 @@ dependencies = [
 dev = ["pytest", "ruff"]
 ```
 
-- **Pylance impact**: None for `[project]` metadata directly. Pylance reads `[tool.pyright]` if present and ignores the rest of the file. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
+- **Pylance impact**: Pylance reads `[project]` dependencies and optional dependencies for direct-dependency discovery, and `[tool.pyright]` for analysis configuration. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 - **Best for**: Distributable libraries, tool-driven workflows.
 - **Common pitfalls**:
     - Optional dependency groups (`pip install '.[dev]'`, `uv sync --all-extras`) must be installed explicitly. Forgetting `[dev]` is a frequent cause of "test framework not found" errors in the editor.
@@ -136,7 +149,7 @@ from rich import print
 
 Pylance impact:
 
-- Pylance does not currently treat PEP 723 metadata as input to import resolution. The editor will not magically resolve `httpx` just because the script declares it inline.
+- For an open local `.py` script, Pylance can use the file-specific PEP 723 interpreter selected by Python Environments.
 - For an editor experience on PEP 723 scripts, point Pylance at a real environment that has those dependencies installed (for example a shared `.venv` you created with `uv pip install httpx rich`).
 - For runtime, `pylanceRunCodeSnippet` runs against the workspace's active interpreter. If you actually want PEP 723 resolution at runtime, invoke `uv run` from a terminal instead.
 
@@ -152,7 +165,7 @@ requirements-dev.txt      # tests, linters
 requirements-docs.txt     # documentation toolchain
 ```
 
-Pylance has no concept of "groups". It sees one active environment per workspace folder and asks "is this importable?". To get a clean editor experience:
+Pylance recognizes `[project.optional-dependencies]` and `[dependency-groups]` for direct-dependency discovery, but those declarations do not install the packages. To get a clean editor experience:
 
 1. Decide which set of requirements is needed for the editor to be useful (usually production + dev).
 2. Install all of them into the active venv.
@@ -187,12 +200,12 @@ When two transitive dependencies require incompatible versions of a third, no ed
 
 Pylance can sometimes resolve an import but show many `unknown` types or attribute errors for it. Common causes:
 
-| Cause                                                                                                              | Fix                                                                                                                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package is untyped (no `py.typed` marker, no inline annotations).                                                  | Install a stub package if available (`pip install types-requests`, `pip install types-PyYAML`, etc.).                                                                                                                                       |
-| Package is typed but [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) is `false`. | Enable it. `light` language server mode disables it by default &mdash; see [How to Tune Pylance Performance](performance-tuning.md).                                                                                                        |
-| Stubs you wrote locally are not picked up.                                                                         | Verify [`stubPath`](../settings/python_analysis_stubPath.md) points at the stub root (the directory containing per-package subdirectories), not at one specific package.                                                                    |
-| Stub-only package installed but the runtime package is missing.                                                    | You will get `reportMissingModuleSource`. Install the runtime package or suppress the rule. See [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md#import-could-not-be-resolved-from-source-reportmissingmodulesource). |
+| Cause                                                                                                                                                     | Fix                                                                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Package is untyped (no `py.typed` marker, no inline annotations).                                                                                         | Install a stub package if available (`pip install types-requests`, `pip install types-PyYAML`, etc.).                                                                                                                                       |
+| Package lacks stubs and needs library-source inference, but [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md) is `false`. | Enable it. `light` language server mode disables it by default &mdash; see [How to Tune Pylance Performance](performance-tuning.md).                                                                                                        |
+| Stubs you wrote locally are not picked up.                                                                                                                | Verify [`stubPath`](../settings/python_analysis_stubPath.md) points at the stub root (the directory containing per-package subdirectories), not at one specific package.                                                                    |
+| Stub-only package installed but the runtime package is missing.                                                                                           | You will get `reportMissingModuleSource`. Install the runtime package or suppress the rule. See [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md#import-could-not-be-resolved-from-source-reportmissingmodulesource). |
 
 For a wider tour of when to use `stubPath` vs `typeshedPaths` vs `useLibraryCodeForTypes`, see [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 
@@ -204,9 +217,9 @@ Use this when "missing dependency" complaints reach you:
 
 1. `pylanceWorkspaceRoots` &mdash; capture the canonical workspace root URI.
 2. `pylancePythonEnvironments` &mdash; confirm the active interpreter is the one the user expects.
-3. `pylanceInstalledTopLevelModules` &mdash; confirm the package is actually installed there.
+3. `pylanceInstalledTopLevelModules` &mdash; inspect installed packages, then verify the import with `pylanceRunCodeSnippet`.
 4. If not installed, install with the user's preferred package manager into that environment.
-5. If installed but Pylance does not resolve it, run `pylanceImports` and check `pylanceSettings` for `extraPaths` or a config-file override.
+5. If installed but Pylance does not resolve it, run `pylanceImports` and check `pylanceSettings` for `extraPaths`, then inspect the project configuration separately for overrides.
 6. If resolved but types are unknown, look for a stub package or change [`useLibraryCodeForTypes`](../settings/python_analysis_useLibraryCodeForTypes.md).
 7. Re-run `pylanceLSP` `textDocument/diagnostic` to confirm the error is gone.
 
@@ -224,7 +237,7 @@ Adding the line does not install the package. Run your install/sync command (`uv
 
 ### Q: Can Pylance use a `requirements.txt` to know what to install?
 
-No. Pylance never installs anything. The presence of `requirements.txt` is informational only.
+Pylance reads `requirements.txt` for direct-dependency discovery, but does not automatically install it. Use your package manager for the full file; the opt-in missing-import Quick Fix can offer user-confirmed installation of individual missing packages.
 
 ### Q: How do I pin the editor to the same Python version as production?
 
@@ -232,8 +245,10 @@ The Python version comes from the selected interpreter. To pin the version indep
 
 ### Q: Does Pylance support PEP 723 scripts?
 
-Pylance does not currently use PEP 723 inline metadata to extend its import-resolution search path. Scripts that rely on PEP 723 work fine when run with `uv run`, but for the editor experience point Pylance at a real environment that has the dependencies installed.
+Pylance can use a PEP 723 interpreter selected for an open local `.py` script by Python Environments. Scripts that rely on PEP 723 work fine when run with `uv run`, but for the editor experience point Pylance at a real environment that has the dependencies installed.
 
 ### Q: How do I get Copilot to install a missing package?
 
 Copilot can read this guide via `pylanceDocuments` and use `pylancePythonEnvironments` to identify the environment, but it should not run `pip install` against the wrong one. Tell Copilot the workspace root, ask it to confirm the active environment, and only then install. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

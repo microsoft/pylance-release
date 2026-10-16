@@ -12,6 +12,7 @@ The `python.analysis.enablePytestSupport` setting controls whether Pylance enabl
 
 - **Go to Definition for fixtures**: Navigate to the definition of a pytest fixture by clicking on its usage in test function parameters.
 - **Inlay hints for fixture parameters**: Display inline type hints for pytest function parameters, improving code readability.
+- **Fixture completions**: When adding a parameter to a test or fixture function, invoke completions with `Ctrl+Space` to select a fixture name. Pylance also uses inferred fixture types for member completions in the function body.
 
 ## The `python.analysis.enablePytestSupport` Setting
 
@@ -72,7 +73,7 @@ Pylance can display inlay hints for pytest function parameters, showing the infe
 
 ```python
 def test_example(my_fixture):
-    # Inlay hint shows: my_fixture: str
+    # Inlay hint shows: my_fixture: Literal['Hello, World!']
     assert isinstance(my_fixture, str)
 ```
 
@@ -92,7 +93,7 @@ If you experience performance issues:
 
 ### Q: Will disabling pytest support affect other Pylance features?
 
-**A:** No. Disabling pytest support only turns off pytest-specific IntelliSense features (fixture go-to-definition and inlay hints). All other Pylance features — code completion, type checking, diagnostics, hover — continue to work normally.
+**A:** Disabling pytest support turns off fixture IntelliSense, including fixture navigation, completions, inferred types, and inlay hints. All other Pylance features — code completion, type checking, diagnostics, hover — continue to work normally.
 
 ### Q: I'm not using pytest. Should I disable this?
 
@@ -123,3 +124,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

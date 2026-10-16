@@ -85,8 +85,8 @@ When using [Remote SSH](https://code.visualstudio.com/docs/remote/ssh), Pylance 
 **Key considerations**:
 
 - Ensure Node.js and Python are available on the remote host
-- If you use [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md), the path must be valid on the remote host. Setting it to `"auto"` is the safest approach for mixed local/remote workflows.
-- `nodeExecutable` has `"scope": "machine"`, so a global (User Settings) value set for your local machine will also be sent to the remote — override it in the remote machine's settings if needed.
+- If you use [`python.analysis.nodeExecutable`](../settings/python_analysis_nodeExecutable.md), the path must be valid on the remote host. In a trusted workspace, setting it to `"auto"` lets Pylance download a runtime for that host.
+- `nodeExecutable` has `"scope": "machine"`. Configure it in the remote window's **Remote Settings**, using a path valid on that host or `"auto"`, rather than in a shared workspace settings file.
 - Use per-project `.vscode/settings.json` files (committed to the repo) so settings apply correctly on the remote host
 
 ---
@@ -119,7 +119,7 @@ Some settings like [`python.analysis.nodeExecutable`](../settings/python_analysi
 
 ### Editable Installs Are the Most Portable Pattern
 
-Editable installs (`pip install -e`) create `.pth` files in the interpreter's `site-packages`. Since the interpreter path is already environment-specific (each container/WSL/remote host has its own), editable installs "just work" across environments without any extra Pylance configuration.
+Editable installs can use path-based `.pth` files or import hooks. Path-based installs work without extra Pylance configuration. Import-hook discovery requires Python 3.13+ with [`enableEditableInstalls`](../settings/python_analysis_enableEditableInstalls.md) enabled; use a path-based install or explicit [`extraPaths`](../settings/python_analysis_extraPaths.md) if discovery fails.
 
 ---
 
@@ -129,13 +129,13 @@ Editable installs (`pip install -e`) create `.pth` files in the interpreter's `s
 
 Check whether settings are in the right place:
 
-- **User Settings** (on your host): These are sent to the container, but may be overridden by workspace settings
+- **User Settings** (on your host): Workspace settings can override these. Use Remote Settings for machine-specific values.
 - **Workspace settings** (`.vscode/settings.json`): Apply inside the container if the repo is mounted
 - **`devcontainer.json` settings**: Apply via `customizations.vscode.settings` — this is the most reliable place for container-specific settings
 
 ### Q: Can I use different Pylance settings for local vs. remote development?
 
-Yes. Use per-machine User Settings for machine-specific values (like `nodeExecutable`), and commit `.vscode/settings.json` with portable settings (like `extraPaths` with relative paths). Machine settings override workspace settings for machine-scoped properties.
+Yes. Use local User Settings or Remote Settings for machine-scoped values (like `nodeExecutable`), and commit `.vscode/settings.json` with portable settings (like `extraPaths` with relative paths). Machine-scoped properties belong in the machine's settings, not a shared workspace file.
 
 ---
 
@@ -152,3 +152,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

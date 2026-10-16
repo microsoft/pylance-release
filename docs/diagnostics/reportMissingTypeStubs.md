@@ -1,6 +1,6 @@
 ## Overview
 
-`reportMissingTypeStubs` is a diagnostic in Pylance and Pyright that warns when a module is missing type stubs (`.pyi` files) or type annotations. This helps catch missing type information for third-party libraries, improving static analysis and type safety.
+`reportMissingTypeStubs` is a diagnostic in Pylance and Pyright that warns when a third-party import lacks both type stubs (`.pyi` files) and a `py.typed` marker. This helps catch missing type information for third-party libraries, improving static analysis and type safety.
 
 ## Representative Issues
 
@@ -20,7 +20,7 @@ pip install types-some_library
 pip install types-requests types-PyYAML
 ```
 
-**Fix — use `useLibraryCodeForTypes` to infer types from source:**
+**Improve type inference — use `useLibraryCodeForTypes` to infer types from source:**
 
 ```json
 // .vscode/settings.json
@@ -62,3 +62,5 @@ If a stub package produces errors itself (e.g., internal stub inconsistencies), 
 - [`python.analysis.stubPath`](../settings/python_analysis_stubPath.md) — specify a custom path for type stubs
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

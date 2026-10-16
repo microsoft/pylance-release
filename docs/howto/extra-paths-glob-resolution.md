@@ -51,19 +51,19 @@ Glob entries use the same wildcard syntax as `include`, `exclude`, and `ignore`:
 | `**`     | Any number of path segments, including none (recursive)     | `external/**/site-packages` |
 | `?`      | A single character                                          | `pkg_31?/site-packages`     |
 
-Relative globs resolve from the same base directory as literal extra paths: the **workspace root** for the VS Code setting, or the **config file's directory** for `pyrightconfig.json` / `pyproject.toml`. Path variables such as `${workspaceFolder}` are substituted first, then the glob is expanded (see [What You See in Pylance](#what-you-see-in-pylance)).
+Relative globs resolve from the same base directory as literal extra paths: the **workspace root** for the VS Code setting, or the **config file's directory** for `pyrightconfig.json` / `pyproject.toml`. In VS Code settings, path variables such as `${workspaceFolder}` are substituted first, then the glob is expanded (see [What You See in Pylance](#what-you-see-in-pylance)).
 
 ---
 
 ## Deterministic Ordering and Precedence
 
-Because `extraPaths` is order-sensitive (the first matching root wins during import resolution), glob expansion is designed to produce the **same ordered list on every machine**, regardless of how the filesystem enumerates directories.
+Because `extraPaths` is order-sensitive (earlier roots break ties between otherwise equivalent import candidates), glob expansion is designed to produce the **same ordered list on every machine**, regardless of how the filesystem enumerates directories.
 
 Two rules govern the result:
 
-1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The comparison is **ordinal**: paths are compared one Unicode code point at a time (after normalizing to NFC), never with a language-aware collation. Two consequences are worth calling out:
-    - **"Case-sensitive" means no case-folding.** Uppercase `A`–`Z` (U+0041–U+005A) all sort before lowercase `a`–`z` (U+0061–U+007A), so `Auth` comes before `api`. Names that differ only in case are kept as separate directories, because case can change the module name they map to.
-    - **No linguistic ordering is applied.** Because it compares raw code points, there is no locale, dictionary, phonetic, "reading", or "stroke" ordering. For non-ASCII names (accented Latin, CJK, emoji, …) the order follows Unicode code-point value — fully deterministic, but not "alphabetical" in any human-language sense. The only guarantee is that the order is identical on every machine, language, and OS.
+1. **Sort within a glob.** The directories a single glob matches are inserted at that glob's position, sorted in **ascending order** by their resolved path. The comparison is **ordinal**: paths are compared one UTF-16 code unit at a time (after normalizing to NFC), never with a language-aware collation. Two consequences are worth calling out:
+    - **"Case-sensitive" means no case-folding.** Uppercase `A`–`Z` (U+0041–U+005A) all sort before lowercase `a`–`z` (U+0061–U+007A), so `Auth` comes before `api`. Expansion keeps names that differ only in case distinct. For VS Code settings, paths that resolve to the same directory are deduplicated on case-insensitive filesystems.
+    - **No linguistic ordering is applied.** Because it compares UTF-16 code units, there is no locale, dictionary, phonetic, "reading", or "stroke" ordering. For non-ASCII names (accented Latin, CJK, emoji, …) the order follows UTF-16 code-unit value — fully deterministic, but not "alphabetical" in any human-language sense. The only guarantee is that the order is identical on every machine, language, and OS.
 2. **Precedence on duplicates.** When the same directory would appear more than once, the winner is chosen by this priority:
     - **An explicit (literal) entry always wins** and keeps _its own_ position — even if a glob earlier in the list also matched that directory.
     - **Among globs, the earlier glob wins.**
@@ -78,7 +78,7 @@ packages/api
 packages/auth
 ```
 
-`Core` and `Zeta` come first because `C` (U+0043) and `Z` (U+005A) are below `a` (U+0061) — an uppercase initial always sorts ahead of a lowercase one. This is the whole of the "case-sensitive" rule: it is code-point order, not a locale's alphabetization.
+`Core` and `Zeta` come first because `C` (U+0043) and `Z` (U+005A) are below `a` (U+0061) — an uppercase initial always sorts ahead of a lowercase one. This is the whole of the "case-sensitive" rule: it is UTF-16 code-unit order, not a locale's alphabetization.
 
 ### Worked examples
 
@@ -244,23 +244,23 @@ extraPaths = ["libs/*/src", "generated/**/python"]
 
 Because Pylance is the language server you interact with, glob expansion surfaces in a few places:
 
-- **The resolved paths appear in the log.** Enable [`"python.analysis.logLevel": "Trace"`](../settings/python_analysis_logLevel.md) and open **Output → Pylance**. Each expanded directory is logged as an individual, fully resolved `Looking in extraPath '...'` line during import resolution — so you can confirm exactly which directories a glob produced and in what order. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
+- **The resolved paths appear in the log.** Enable [`"python.analysis.logLevel": "Trace"`](../settings/python_analysis_logLevel.md) and open **Output → Python Language Server**. Each expanded directory is logged as an individual, fully resolved `Looking in extraPath '...'` line during import resolution — so you can confirm exactly which directories a glob produced and in what order. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
 - **A glob that matches nothing is silent.** It contributes zero entries and is not an error. If an import is unresolved, check the log to see whether the glob expanded to the directories you expected.
 - **Restart after configuration changes.** Expansion runs when configuration loads. After editing `extraPaths` (or adding/removing directories a glob covers), run **Python: Restart Language Server** to force re-expansion.
-- **The config-vs-settings rule still applies.** If a `pyrightconfig.json` / `pyproject.toml` exists, its `extraPaths` takes precedence and the VS Code [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) setting is ignored (Pylance shows the usual _"python.analysis.extraPaths cannot be set when a pyrightconfig.json or pyproject.toml is being used"_ warning). Put your globs where your other `extraPaths` live.
-- **Variables expand first.** `${workspaceFolder}` and the other supported path variables are substituted before the glob is matched, so `"${workspaceFolder:shared}/packages/*/src"` works as expected.
-- **Very broad globs are flagged.** If expanding a single glob has to walk an unusually large directory tree (more than ~10,000 directories), Pylance writes a one-time warning to **Output → Pylance** suggesting you narrow the pattern. Expansion still completes; treat the warning as a prompt to scope the glob.
+- **The config-vs-settings rule still applies.** If a `pyrightconfig.json` or a `pyproject.toml` with `[tool.pyright]` controls analysis, its `extraPaths` takes precedence and the VS Code [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) setting is ignored (Pylance shows the usual _"python.analysis.extraPaths cannot be set when a pyrightconfig.json or pyproject.toml is being used"_ warning). Put your globs where your other `extraPaths` live.
+- **Variables in VS Code settings expand first.** `${workspaceFolder}` and the other supported path variables are substituted before the glob is matched, so `"${workspaceFolder:shared}/packages/*/src"` works as expected.
+- **Very broad globs are flagged.** If expanding a single glob has to walk an unusually large directory tree (more than ~10,000 directories), Pylance writes a one-time warning to **Output → Python Language Server** suggesting you narrow the pattern. Expansion can stop at a hard limit; narrow the pattern if that happens.
 
 ---
 
 ## Performance and Memory Considerations
 
-Every directory a glob expands to becomes a real import search root **and** a file-watch root. A broad glob that matches hundreds of directories therefore has a measurable cost, and this is the main thing to tune.
+Every directory a glob expands to becomes a real import search root. Broad globs can increase the cost of expansion, import lookups, and file watching.
 
 **What costs what:**
 
 - **Import lookups.** Each unresolved import is checked against every extra path in order. More expanded roots means more directories to probe per lookup. A tightly scoped glob (`external/rules_python~~pip~pip_310_*/site-packages`) is far cheaper than a greedy one (`**/site-packages`).
-- **File watching.** Each expanded root is watched for changes so analysis stays current. Hundreds of watched roots increase watcher overhead and memory.
+- **File watching.** Watcher overhead depends on the glob's scope, not just the number of matched directories.
 - **Symbol search.** If you enable [`includeExtraPathSymbolsInSymbolSearch`](../settings/python_analysis_includeExtraPathSymbolsInSymbolSearch.md), workspace symbol search also scans expanded extra-path directories, which grows with the number of matches.
 
 **Mitigations:**
@@ -272,35 +272,35 @@ Every directory a glob expands to becomes a real import search root **and** a fi
 
 > For complete performance guidance (language server mode, indexing, heap limits, presets), see [How to Tune Pylance Performance](performance-tuning.md). This section covers the extra-paths-specific cost.
 
-> **Pylance warns when a glob walks a very large tree.** If expanding a single glob scans more than ~10,000 directories, a one-time warning appears in **Output → Pylance**. It does not stop expansion, but it is a strong signal to narrow the pattern (anchor it to a fixed prefix and avoid a bare `**` at a large root) or to move it into an execution environment.
+> **Pylance warns when a glob walks a very large tree.** If expanding a single glob scans more than ~10,000 directories, a one-time warning appears in **Output → Python Language Server**. It does not stop expansion, but it is a strong signal to narrow the pattern (anchor it to a fixed prefix and avoid a bare `**` at a large root) or to move it into an execution environment.
 
 ---
 
 ## How Glob Extra Paths Work for Copilot and AI Tools
 
-GitHub Copilot and other AI tools reason about your project through the same resolved import paths Pylance uses. The key property they can rely on is the **deterministic contract**:
+When Copilot uses Pylance's analysis tools, those requests use Pylance's resolved import paths. The key property they can rely on is the **deterministic contract**:
 
 - Given the same directory tree, a glob always expands to the **same ordered list** of search roots on every machine — there is no hidden dependence on filesystem order.
 - Precedence is stable: an explicit entry always wins over a glob-discovered duplicate, and an earlier glob wins over a later one.
-- The winning root for any importable module is therefore reproducible. When Copilot suggests or fixes an import, the module it points at is the one Pylance would resolve — not a guess that might differ between checkouts.
+- The winning root for any importable module is therefore reproducible. When Copilot suggests or fixes an import, verify it with Go to Definition or the import-resolution log.
 
-If you use [Pylance's MCP tools with Copilot](copilot-pylance-workflow.md), the resolved (expanded) extra paths are what those tools see, so their answers reflect the same order described in [Deterministic Ordering and Precedence](#deterministic-ordering-and-precedence).
+If you use [Pylance's MCP tools with Copilot](copilot-pylance-workflow.md), analysis requests use the expanded extra paths. `pylanceSettings` shows the original settings; use the import-resolution log to inspect the expanded search roots.
 
 ---
 
 ## Edge Cases and Special Behavior
 
-| Case                                   | Behavior                                                                                                                                          |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Glob matches no directory              | Contributes nothing; not an error. Check the Trace log to confirm what expanded.                                                                  |
-| Glob matches a file                    | Ignored — only directories become search roots.                                                                                                   |
-| Empty or whitespace-only entry         | Ignored (an empty entry would otherwise resolve to the project root and silently pollute the search path).                                        |
-| Duplicate via a literal entry          | The literal wins and keeps its own position; the glob-discovered copy is dropped.                                                                 |
-| Duplicate across two globs             | The earlier glob wins; the later glob drops the overlap.                                                                                          |
-| Two entries differ only in letter case | Treated as **distinct** roots (case-sensitive), because case affects the resolved module name. Both survive even on case-insensitive filesystems. |
-| Symbolic links                         | Not resolved — the matched path is used as-is so it maps to the intended module name. Symlink cycles are guarded against during expansion.        |
-| Execution environment `extraPaths`     | Overrides (does not merge with) the global `extraPaths`; expanded independently per environment.                                                  |
-| `.pth` files and auto-detected `src/`  | Unchanged. These conveniences still apply where they did before and operate on the expanded directories; globbing does not alter that behavior.   |
+| Case                                   | Behavior                                                                                                                                        |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Glob matches no directory              | Contributes nothing; not an error. Check the Trace log to confirm what expanded.                                                                |
+| Glob matches a file                    | Ignored — only directories become search roots.                                                                                                 |
+| Empty or whitespace-only entry         | Ignored (an empty entry would otherwise resolve to the project root and silently pollute the search path).                                      |
+| Duplicate via a literal entry          | The literal wins and keeps its own position; the glob-discovered copy is dropped.                                                               |
+| Duplicate across two globs             | The earlier glob wins; the later glob drops the overlap.                                                                                        |
+| Two entries differ only in letter case | Expansion keeps them distinct. For VS Code settings, paths resolving to the same directory are deduplicated on case-insensitive filesystems.    |
+| Symbolic links                         | Not resolved — the matched path is used as-is so it maps to the intended module name. Symlink cycles are guarded against during expansion.      |
+| Execution environment `extraPaths`     | Overrides (does not merge with) the global `extraPaths`; expanded independently per environment.                                                |
+| `.pth` files and auto-detected `src/`  | Unchanged. These conveniences still apply where they did before and operate on the expanded directories; globbing does not alter that behavior. |
 
 ---
 
@@ -308,9 +308,9 @@ If you use [Pylance's MCP tools with Copilot](copilot-pylance-workflow.md), the 
 
 When a glob-based `extraPaths` isn't resolving imports as expected:
 
-- [ ] **Correct location**: Are your `extraPaths` in the file that takes effect? A `pyrightconfig.json` / `pyproject.toml` overrides the VS Code setting.
+- [ ] **Correct location**: Are your `extraPaths` in the file that takes effect? A used `pyrightconfig.json` or `pyproject.toml` with `[tool.pyright]` overrides the VS Code setting.
 - [ ] **Restarted**: Did you run **Python: Restart Language Server** after editing the glob or changing the directories it covers?
-- [ ] **Expanded as expected**: With `"python.analysis.logLevel": "Trace"`, does **Output → Pylance** show the directories you expected as `Looking in extraPath '...'` lines?
+- [ ] **Expanded as expected**: With `"python.analysis.logLevel": "Trace"`, does **Output → Python Language Server** show the directories you expected as `Looking in extraPath '...'` lines?
 - [ ] **Right level**: Does the glob point at the import root (the parent of the top-level package), not one level too high or too low?
 - [ ] **Order**: If the wrong copy of a module resolves, check ordering — an explicit entry or an earlier glob may be winning. See [Deterministic Ordering and Precedence](#deterministic-ordering-and-precedence).
 - [ ] **Scope/perf**: Is the glob broader than it needs to be? Narrow it or move it into an execution environment.
@@ -329,7 +329,7 @@ Yes. Matches are sorted with a case-sensitive, platform-independent comparison, 
 
 ### Q: Will this slow Pylance down?
 
-Only in proportion to how many directories your globs expand to. A specific glob is cheap; a greedy one like `**/site-packages` can add many roots to every import lookup and file-watch. Keep globs narrow and consider execution environments — see [Performance and Memory Considerations](#performance-and-memory-considerations).
+The cost depends on the directories scanned as well as the resulting search roots. A specific glob is cheap; a greedy one like `**/site-packages` can add many roots to import lookups and increase file-watch scope. Keep globs narrow and consider execution environments — see [Performance and Memory Considerations](#performance-and-memory-considerations).
 
 ### Q: Do globs work in `pyrightconfig.json` and `pyproject.toml`, not just VS Code settings?
 
@@ -345,7 +345,7 @@ No. It simply contributes no entries. Use Trace logging to see what a glob expan
 
 ### Q: How do I see exactly which directories a glob added?
 
-Enable `"python.analysis.logLevel": "Trace"` and read **Output → Pylance**; each expanded directory appears as a `Looking in extraPath '...'` line. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
+Enable `"python.analysis.logLevel": "Trace"` and read **Output → Python Language Server**; each expanded directory appears as a `Looking in extraPath '...'` line. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md).
 
 ---
 
@@ -365,3 +365,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

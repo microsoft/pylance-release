@@ -16,7 +16,7 @@ This is an **experimental** feature and is disabled by default.
 
 When `python.analysis.useNearestConfiguration` is set to `true`:
 
-1. **Discovery**: Pylance recursively scans your workspace from the root, looking for `pyrightconfig.json` and qualifying `pyproject.toml` files in subdirectories.
+1. **Discovery**: Pylance looks for `pyrightconfig.json` and qualifying `pyproject.toml` files within included directories, respecting `exclude` patterns.
 2. **Virtual workspace creation**: For each discovered config file, Pylance creates an internal virtual workspace rooted at that config file's parent directory.
 3. **Isolation**: Each Python file is type-checked using the configuration from its enclosing virtual workspace — the nearest ancestor directory that has a config file.
 4. **Dynamic updates**: File watchers detect config files being added, removed, or changed, and recompute virtual workspaces automatically.
@@ -24,7 +24,7 @@ When `python.analysis.useNearestConfiguration` is set to `true`:
 ### What Gets Discovered
 
 - **`pyrightconfig.json`**: Any valid JSON file with this name in a subdirectory.
-- **`pyproject.toml`**: Only included if it contains a `[tool.pyright]` or `[tool.pyrightconfig]` section.
+- **`pyproject.toml`**: Only included if it contains a `[tool.pyright]` section.
 
 ### What Gets Skipped
 
@@ -32,8 +32,8 @@ These directories are automatically skipped during discovery:
 
 - Any directory starting with `.` (covers `.git`, `.vscode`, `.venv`, `.env`, `.tox`, `.nox`, `.mypy_cache`, `.pytest_cache`, `.eggs`, etc.)
 - `node_modules`, `__pycache__`
-- `venv`, `env`, `site-packages`
-- `dist`, `build`, `*.egg-info`
+- Detected virtual environments, such as `venv` or `env` directories containing `pyvenv.cfg`
+- Directories matched by your `exclude` patterns, including `dist` or `build` if configured
 
 ### Example
 
@@ -90,7 +90,7 @@ Virtual workspaces are transparent — they do not appear in the VS Code Explore
 
 ### Isolation Between Virtual Workspaces
 
-Virtual workspaces are **isolated** by default. Files in one virtual workspace cannot import from another virtual workspace unless `extraPaths` is explicitly configured in the config file.
+Virtual workspaces have independent configurations, but do not block cross-workspace imports. Packages installed in the selected Python environment can still resolve without `extraPaths`.
 
 To allow cross-workspace imports, add [`extraPaths`](https://microsoft.github.io/pyright/#/configuration?id=main-configuration-options) in the relevant `pyrightconfig.json`:
 
@@ -138,7 +138,7 @@ Changes to `python.analysis.exclude` trigger an automatic recomputation of virtu
 
 ### Q: Why aren't my `pyproject.toml` files being picked up?
 
-**A:** Pylance only recognizes `pyproject.toml` files that contain a `[tool.pyright]` or `[tool.pyrightconfig]` section. Add one of these sections to your `pyproject.toml`:
+**A:** Pylance only recognizes `pyproject.toml` files that contain a `[tool.pyright]` section. Add this section to your `pyproject.toml`:
 
 ```toml
 [tool.pyright]
@@ -147,7 +147,7 @@ typeCheckingMode = "standard"
 
 ### Q: Can files in one virtual workspace import from another?
 
-**A:** Not by default. Virtual workspaces are isolated. Add [`extraPaths`](https://microsoft.github.io/pyright/#/configuration?id=main-configuration-options) in the relevant `pyrightconfig.json` to enable cross-workspace imports.
+**A:** Yes, when normal import resolution finds the modules, such as an installed package. Add [`extraPaths`](https://microsoft.github.io/pyright/#/configuration?id=main-configuration-options) in the relevant `pyrightconfig.json` to expose an additional source directory.
 
 ### Q: Why does this have no effect in light mode?
 
@@ -170,3 +170,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

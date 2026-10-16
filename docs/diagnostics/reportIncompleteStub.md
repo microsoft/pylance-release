@@ -20,7 +20,7 @@ def public_func(x: int) -> str: ...
 def __getattr__(name: str) -> object: ...  # Indicates the stub is incomplete
 ```
 
-A module-level `__getattr__` in a stub tells Pyright the stub doesn't declare all exports — any attribute access would silently return `object`, hiding real type errors.
+A module-level `__getattr__` in a stub tells Pyright the stub doesn't declare all exports — access to undeclared attributes would silently return `object`, hiding real type errors.
 
 **Fix — complete the stub and remove `__getattr__`:**
 
@@ -42,3 +42,5 @@ def other_func(y: float) -> None: ...  # Add all missing declarations
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -109,22 +109,27 @@ This requires [`python.analysis.useNearestConfiguration`](../settings/python_ana
 
 ### Django
 
-Django uses metaclasses and dynamic model fields that Pylance cannot analyze from source alone. Install [django-stubs](https://github.com/typeddjango/django-stubs) to provide type information:
+For Django's dynamic model attributes, use Pylance's experimental Django support described below. You can also install [django-stubs](https://github.com/typeddjango/django-stubs) to provide type information:
 
 ```bash
 pip install django-stubs
 ```
 
-Add to `pyproject.toml`:
 
-```toml
-[tool.django-stubs]
-django_settings_module = "myproject.settings"
-```
 
 For `django-stubs` to work properly with Pylance, you may also need [django-stubs-ext](https://pypi.org/project/django-stubs-ext/) and a `manage.py` or settings module reachable from the workspace root.
 
 For dynamic model fields that stubs don't cover, create custom stubs under [`stubPath`](../settings/python_analysis_stubPath.md).
+
+**Enable experimental Django support**: Open your Django project as a trusted workspace, select a Python environment with Django installed, and add this to the workspace's `.vscode/settings.json`:
+
+```json
+{
+    "python.analysis.enableDjangoSupport": true
+}
+```
+
+Pylance can then provide IntelliSense for ORM-generated model attributes such as `objects`, reverse relations, and field descriptors. Supported platforms are Windows x64/ARM64, macOS Apple Silicon, and Linux x64/ARM64.
 
 ### Protobuf / gRPC
 
@@ -141,15 +146,15 @@ Then add the generated directory to [`extraPaths`](../settings/python_analysis_e
 
 **Pydantic v2** ships type annotations natively (`py.typed`), so Pylance recognizes `BaseModel` fields, `model_validator`, and `field_validator` out of the box. If Pylance doesn't recognize Pydantic features:
 
-1. Ensure you have Pydantic v2+ installed (`pip install pydantic>=2.0`)
+1. Ensure you have Pydantic v2+ installed (`pip install "pydantic>=2.0"`)
 2. Restart Pylance after installing (**Ctrl+Shift+P → Pylance: Restart Language Server**)
 
-**FastAPI** builds on Pydantic and uses `Depends()` extensively. Pylance understands FastAPI's `Depends` typing when the dependency function has return type annotations:
+**FastAPI** builds on Pydantic and uses `Depends()` extensively. Annotate the handler parameter with the dependency result type:
 
 ```python
 from fastapi import Depends, FastAPI
 
-def get_db() -> Database:  # Return type annotation required
+def get_db() -> Database:  # Dependency result type
     ...
 
 @app.get("/items")
@@ -223,7 +228,7 @@ Pylance has built-in support for `@dataclasses.dataclass`, `@attrs.define`, and 
 
 ### Missing stubs for attrs
 
-For `attrs`, install the stubs package:
+For `attrs`, install the package in your selected interpreter:
 
 ```bash
 pip install attrs  # attrs >= 22.1 ships py.typed; older versions need types-attrs
@@ -231,11 +236,26 @@ pip install attrs  # attrs >= 22.1 ships py.typed; older versions need types-att
 
 ### `from __future__ import annotations` interaction
 
-When `from __future__ import annotations` is active, all annotations are strings at runtime. Pylance handles this correctly for `@dataclass` and `@attrs.define`, but some less common decorators may not be recognized. If fields appear as `Unknown`, try removing `from __future__ import annotations` as a test to confirm this is the cause.
+When `from __future__ import annotations` is active, annotations are strings at runtime. Pylance still reads their types from source. If fields appear as `Unknown`, check the annotation and decorator imports; custom dataclass-like decorators need `dataclass_transform`.
 
 ### Custom decorators that synthesize attributes
 
-Pylance only recognizes a fixed set of well-known decorators (`@dataclass`, `@attrs.define`, `@attrs.s`, `@pydantic.BaseModel`, etc.). For custom decorators that add attributes:
+Pylance recognizes well-known decorators and custom dataclass-like decorators that declare `dataclass_transform`. For other decorators that add attributes:
+
+For a decorator that already creates dataclass-like classes at runtime, add `dataclass_transform` to its stub and annotate the decorated class's fields:
+
+```python
+# typings/my_framework/__init__.pyi
+from typing import TypeVar
+from typing_extensions import dataclass_transform
+
+T = TypeVar("T")
+
+@dataclass_transform()
+def model(cls: T) -> T: ...
+```
+
+Pylance uses the field annotations to check constructor arguments. For other generated members, use the explicit-stub or `__getattr__` approaches below.
 
 1. **Write a stub** listing the synthesized attributes explicitly:
 
@@ -253,7 +273,7 @@ class MyModel:
 
 If `reportAttributeAccessIssue` fires on fields that should exist (e.g., `@dataclass` fields), check:
 
-- The decorator import is correct (`from dataclasses import dataclass`, not a custom wrapper)
+- The decorator import resolves, and a custom dataclass-like wrapper declares `dataclass_transform` behavior
 - Field types are annotated (`name: str`, not just `name = "default"`)
 - The class is not inheriting from a dynamic base that shadows the decorator behavior
 
@@ -297,3 +317,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -32,7 +32,7 @@ def transform(x: int) -> int:
 
 ## Common Fixes & Workarounds
 
-1. Add explicit type annotations to lambda parameters and return types where possible.
+1. Annotate the receiving variable with `Callable` to supply the lambda's parameter and return types.
 2. Use protocols or type hints to clarify expected lambda signatures.
 3. Refactor code to use named functions with explicit types if needed.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnknownLambdaType) for options to adjust or suppress this diagnostic if needed.
@@ -41,3 +41,5 @@ def transform(x: int) -> int:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

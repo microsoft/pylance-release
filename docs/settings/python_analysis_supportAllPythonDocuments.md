@@ -6,7 +6,7 @@ The `python.analysis.supportAllPythonDocuments` setting extends Pylance's Intell
 
 ## What is `python.analysis.supportAllPythonDocuments`?
 
-By default, Pylance provides language features for Python source files. When this setting is enabled, Pylance also offers IntelliSense in other places where Python content can appear — for example, the integrated terminal or diff views.
+By default, Pylance provides language features in Python files, notebooks, interactive input, terminals, and chat code blocks. Enable this setting to support other Python document types.
 
 This exists to bring completions and related features to Python shown in non-file contexts.
 
@@ -34,8 +34,8 @@ This exists to bring completions and related features to Python shown in non-fil
 
 ## When to Use It
 
-- **Enable** if you want IntelliSense for Python content shown in places such as the terminal or diff views.
-- **Keep disabled** (the default) for the standard, file-based experience.
+- **Enable** if you need IntelliSense in other Python document types.
+- **Keep disabled** (the default) for the standard set of supported Python document types.
 
 ## Related Settings
 
@@ -48,3 +48,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

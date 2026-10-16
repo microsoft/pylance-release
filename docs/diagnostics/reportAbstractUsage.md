@@ -4,7 +4,7 @@
 
 ## Representative Issues
 
-- [#7328](https://github.com/microsoft/pyright/issues/7328): Ensure that any overridden method in a subclass calls the corresponding method in the parent class, if it exists and is abstract.
+- [#7328](https://github.com/microsoft/pyright/issues/7328): Avoid calling an unimplemented abstract method from the parent class when overriding it.
 - [#8017](https://github.com/microsoft/pyright/issues/8017): Ensure a clean and properly installed version of pyright to avoid errors related to corrupted installations.
 
 ## Examples
@@ -42,3 +42,5 @@ d = Dog()  # OK
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

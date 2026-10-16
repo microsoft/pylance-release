@@ -2,11 +2,11 @@
 
 When you hover a symbol in an editor — or trigger signature help or read the documentation attached to a completion — a Python language server shows a single docstring. For many symbols there is more than one candidate: a function and its `@overload` declarations, an `__init__` and a `__new__`, a class docstring, an inherited member on any base class, and the same again in a stub (`.pyi`) versus its source (`.py`).
 
-This document specifies, in a language-server-agnostic way, exactly **which** docstring wins. It is grounded only in Python language and typing semantics (method resolution order, overload resolution, stub files, assignment docstrings), not in any particular implementation, so it can be implemented directly from the rules below.
+This document describes **which** docstring Pylance selects. Python concepts such as method resolution order, overloads, stub files and assignment docstrings provide the candidates; the rules below describe Pylance's choices.
 
-The same order governs hover, signature help, and any documentation surfaced with completions, so a symbol reads consistently wherever its docstring appears.
+Hover and completions use the same priorities, but a call hover can narrow the overload candidates while completion documentation uses the symbol's full type. Signature help uses the active-entry borrowing described below.
 
-Hover and completions resolve to a single docstring. Signature help is the exception: it enumerates **every** overload as its own signature entry, each paired with its own docstring. There, the borrowing steps in the rules below (falling back from an undocumented candidate to the implementation, a sibling overload, or a class docstring) apply only to the **active** signature — the entry selected by the call's arguments (see [Matched overload](#terminology)). Every other enumerated overload shows only its own docstring, or nothing. This keeps a documented overload from lending its text — or its parameter documentation — to an unrelated sibling entry, while still letting an undocumented matched overload fall back exactly as a single hover would.
+Hover and completions resolve to a single docstring. Signature help is the exception: it enumerates **every** overload as its own signature entry, each paired with its own docstring. There, the borrowing steps in the rules below (falling back from an undocumented candidate to the implementation, a sibling overload, or a class docstring) apply only to the **active** signature — the entry currently selected in the editor, not necessarily the one matching the argument types. Every other enumerated overload shows only its own docstring, or nothing. The active entry can borrow docstring text, but each entry uses its own parameter documentation.
 
 ---
 
@@ -37,7 +37,7 @@ Every rule derives from four principles. When a case is not covered explicitly, 
 1. **Most specific first.** The docstring closest to what the reader points at wins: the call-matched overload over other overloads; the derived class over its base classes.
 2. **Prefer documentation of the thing being invoked.** A constructor is documentation _about constructing_, so a constructor docstring outranks a generic class docstring.
 3. **Exhaust before inheriting.** Never take a docstring from a base class while a more-derived class still offers one for the same tier (methods before methods; class docstrings before class docstrings).
-4. **Empty is not a stop.** A missing or empty docstring is skipped; resolution continues. Only a non-empty docstring terminates the search.
+4. **Empty is usually not a stop.** A missing or empty docstring is skipped; resolution continues. A class's own explicitly empty docstring blocks base-class docstring inheritance.
 
 Resolution returns the **first non-empty** docstring found in the defined order, or nothing (signature only) if none exists.
 
@@ -55,7 +55,7 @@ The following docstring kinds are supported; each is a string literal placed whe
 | **Method**               | A function docstring on a class member                                               |
 | **Constructor**          | The docstring of `__init__` and/or `__new__`                                         |
 | **Overload**             | A docstring on an individual `@overload` declaration                                 |
-| **Property**             | The docstring of the property getter                                                 |
+| **Property**             | The docstring of a property getter or setter                                         |
 | **Variable / attribute** | A string literal immediately following an assignment (a widely supported convention) |
 
 ---
@@ -64,12 +64,12 @@ The following docstring kinds are supported; each is a string literal placed whe
 
 - **Call hover** — hovering a call expression, e.g. `Line(a, b)`. Arguments participate in overload resolution.
 - **Symbol hover** — hovering a bare name, e.g. the class `Line`, with no call. No arguments, so no overload is "matched."
-- **Matched overload** — the single overload chosen by standard overload resolution (PEP 484 semantics) for a call's arguments. Semantics:
-    - **Zero overloads match** (e.g. an argument-type error): there is no matched overload; resolution proceeds as if it were a symbol hover.
-    - **Multiple overloads match** (ambiguous): use the **first in declaration order**.
+- **Matched overload** — an overload selected for a call's arguments. More than one can match. For documentation:
+    - **Zero overloads match** (e.g. an argument-type error): consider the full overload set as documentation candidates.
+    - **Multiple overloads match** (ambiguous): use the first candidate with documentation; fall back to the implementation if none has it.
 - **Implementation** — the non-`@overload` `def` that carries the runtime body. Present in source files; absent in `.pyi` stubs.
-- **Declaration order** — for candidates that may come from more than one file, order is: (1) the `.py` file, top to bottom; (2) then any `.pyi` declarations not shadowed by a `.py` declaration, top to bottom. With one file only, its source order is used.
-- **MRO** — the C3-linearized method resolution order of a class, `[C, …bases…, object]`. **Builtin base classes** (those declared in the standard library / typeshed, of which `object` is the most common) are excluded by design as _inherited_ docstring sources, so their generic constructor docstrings never leak into user classes. The class **being constructed** is always considered, even when it is itself builtin — so hovering `object()` or `int()` still shows that builtin's own constructor docstring.
+- **Declaration order** — the order of overload declarations in the analyzed symbol. Stub→source fallback happens within each candidate (Rule F), rather than merging source and stub overload lists.
+- **MRO** — the C3-linearized method resolution order of a class, `[C, …bases…, object]`. **Builtin base classes** (such as `object` and `int`) are excluded by design as _inherited_ docstring sources, so their generic constructor docstrings never leak into user classes. The class **being constructed** is always considered, even when it is itself builtin — so hovering `object()` or `int()` still shows that builtin's own constructor docstring.
 - **Directly defined** — a member appearing in a class's own body (its namespace), as opposed to one it only inherits. Inheritance is expressed by the MRO walk, never by a per-class lookup that reaches into base classes.
 - **Tier** — a category of source: _constructor-method_ docstrings vs _class_ docstrings. Rule E orders the tiers.
 
@@ -85,17 +85,17 @@ The module-level docstring (the leading string literal). Rule F applies if a `.p
 
 ### Functions
 
-1. Matched overload (call hover only)
+1. Documented overload candidates (narrowed by a call when possible; otherwise the full overload set)
 2. Implementation docstring
 3. Other overloads, in declaration order
 
-When signature help enumerates these overloads (one entry per overload), the fallback to the implementation or another overload applies only to the **active** (matched) entry: an undocumented matched overload still falls back to the implementation and then the other overloads, but a non-matched overload entry shows only its own docstring, or nothing. This prevents one overload's docstring from being attributed to a different overload's signature.
+When signature help enumerates these overloads (one entry per overload), the fallback to the implementation or another overload applies only to the **active** entry selected in the editor: an undocumented active overload still falls back to the implementation and then the other overloads, but a non-active overload entry shows only its own docstring, or nothing. Parameter documentation always comes from that entry's own docstring.
 
 ### Classes (symbol hover on the class name, no call)
 
 1. The class's own docstring
 2. Stub → source fallback for the class (Rule F)
-3. A base class's docstring, in MRO order
+3. A base class's own non-empty docstring, in MRO order, only when the class has no docstring of its own. An explicitly empty own class docstring blocks this inheritance; undocumented base stubs do not borrow source class documentation.
 
 ### Methods
 
@@ -103,21 +103,21 @@ Same as functions, extended with inheritance: if the derived method is undocumen
 
 ### Properties
 
-A property resolves through its getter:
+A property checks its getter and setter declarations before inherited property declarations:
 
-1. The getter's docstring
-2. The inherited getter's docstring from a base class, in MRO order
+1. The first documented getter or setter declaration on the current class
+2. Inherited property getter or setter documentation from a base class, in MRO order
 3. Otherwise none
 
 ### Variables and attributes
 
 1. A string literal immediately following the assignment, if present
 2. For instance/class attributes: the docstring on the declaring class member, following the MRO walk (Rule D)
-3. Otherwise, none. A variable or attribute is a _reference to a value_, not a declaration of its type, so it does **not** fall back to its declared type's class docstring — that documentation is about the type, not the reference (hover the type name to read it). Only the value's own assignment/member docstring is shown.
+3. Otherwise, an instance value does not fall back to its declared type's class docstring — hover the type name to read that documentation. Function, module and class-object aliases can show the referenced value's documentation, combined with distinct assignment documentation when present.
 
 ### Callable instances
 
-If the value is callable (its type defines `__call__`), hovering it resolves the `__call__` method using the **Methods** rules above; the docstring then describes the call behavior being invoked. This is the only type-directed docstring for a value reference, and it mirrors how the same value already shows its `__call__` signature.
+When a source-defined, non-builtin callable value has no assignment/member docstring, hovering it can show its `__call__` documentation. For a callable type declared in a `.pyi` stub, this fallback is not available on plain-variable hover.
 
 ### Constructors
 
@@ -139,8 +139,8 @@ resolveConstructorDoc(C, call?):
         if d: return d
 
     # -- Phase 2: class docstrings (Rule E) --
-    for M in mro:                      # derived -> base
-        d = docstringOf(classDeclOf(M))
+    for M in ([C] if classDeclOf(C) has an explicit empty docstring else mro):  # derived -> base
+        d = docstringOf(classDeclOf(M)) if M is C else classDeclOf(M).docstring
         if d: return d
 
     return none                        # nothing found -> render signature only
@@ -160,8 +160,8 @@ methodDoc(M, name, call):              # Rule A ordering within one class
 
     candidates = []                    # Rule A priority order
     if call:
-        m = matchedOverload(method, call)   # may be none (zero/failed match)
-        if m: candidates.append(m)          # tier 1: matched overload
+        m = the call's overload candidates for this method name, otherwise []
+        candidates.extend(m + their original overload declarations)  # tier 1
     if method.implementation and method.implementation not in candidates:
         candidates.append(method.implementation)   # tier 2: implementation
     for ov in overloadsOf(method):          # tier 3: @overloads only, in declaration order
@@ -184,8 +184,8 @@ docstringOf(decl):                     # single choke point for Rule F
 Notes for implementers:
 
 - `methodDoc` takes the class `M` explicitly and only inspects members **directly defined** on `M`. Inheritance is never a per-class lookup that reaches into bases — it is expressed solely by the `for M in mro` loop.
-- Rule F is centralized in `docstringOf`, so every candidate (matched overload, implementation, other overloads, and class docstrings) gets the stub→source fallback uniformly, without reordering any tier.
-- `matchedOverload` returns `none` on a zero/failed match, so `call` gracefully degrades to symbol-hover ordering for that method.
+- Rule F is centralized in `docstringOf` for matched overloads, implementations, other overloads, and the original class's own declaration. Inherited class docstrings are read directly from each base, without stub→source recovery for that base.
+- Constructor-method resolution uses the call's overload candidates for the same method name through the MRO. A failed match retains the full set rather than matching arguments again for each base.
 
 Helper predicates used above:
 
@@ -193,7 +193,7 @@ Helper predicates used above:
 - `overloadsOf(method)` — the method's `@overload` declarations **only** (never the implementation), in declaration order. `matchedOverload` likewise returns one of these `@overload` declarations, never the implementation.
 - `method.implementation` — the single non-`@overload` `def` with a runtime body, or `none` for a stub-only symbol.
 - `classDeclOf(M)` — the declaration of class `M` from which its class docstring is read.
-- `correspondingSourceDecl(decl)` — for a `.pyi` declaration, the matching `.py` declaration with the same qualified name and signature, or `none` if there is no source (stub-only) or no unique match.
+- `correspondingSourceDecl(decl)` — for a `.pyi` declaration, the first mapped source declaration with documentation, or `none` if none is available.
 
 Phase 1 walks the **entire** MRO for constructor-method docstrings before Phase 2 ever considers a class docstring — a deliberate consequence of Principle 2 (see [Rule E](#rule-e--constructor-methods-vs-class-docstring)).
 
@@ -205,7 +205,7 @@ Within one method on one class, order candidates as:
 
 | Priority | Candidate                                 | Applies to                       |
 | -------- | ----------------------------------------- | -------------------------------- |
-| 1        | **Matched overload**                      | call hover only                  |
+| 1        | **Overload candidates**                   | narrowed by a call, or full set  |
 | 2        | **Implementation** (`def` with a body)    | source files (a `.pyi` has none) |
 | 3        | **Other overloads**, in declaration order | always                           |
 
@@ -215,7 +215,7 @@ Rationale:
 - **Implementation second** — the implementation body holds the method's canonical/general docstring; the best fallback when the matched overload is undocumented.
 - **Other overloads last** — a deterministic, source-ordered last resort.
 
-For a **symbol hover** there is no matched overload; ordering starts at the implementation, then other overloads. A call matching **zero** overloads is treated identically to a symbol hover for that method. Each candidate is subject to the Rule F stub→source fallback as it is considered, and a matched overload already present in the overload list is not considered twice.
+For ordinary function/method **symbol hover**, consider the full overload set: the first documented overload can win before the implementation. A call matching **zero** overloads uses the same full set. If none has documentation, try the implementation and then the remaining overloads. Each candidate is subject to Rule F stub→source fallback.
 
 ---
 
@@ -268,7 +268,7 @@ This is the primary tier-ordering decision; the alternative is discussed under [
 
 ## Rule F — Stub vs Source
 
-Stub-to-source fallback is applied **per candidate**, centralized in `docstringOf` so every tier benefits uniformly:
+Stub-to-source fallback applies to selected declarations and the original class's own docstring. It does not apply uniformly to inherited class docstrings: those are read directly from each base, so a doc-less base stub does not supply its source class docstring.
 
 - If a selected declaration lives in a `.pyi` stub and has no docstring, resolve to the corresponding `.py` source declaration and use that docstring.
 - If the symbol is **stub-only** (no `.py`), there is nothing to fall back to; the stub's own docstring (or nothing) is used.
@@ -282,16 +282,16 @@ For a **call hover** on class `C` with MRO `[C, B₁, B₂, …]` (builtin bases
 
 **Phase 1 — constructor-method docstrings (walk the full MRO):**
 
-1. `C.__init__` — matched overload
+1. `C.__init__` — call's overload candidates for this member
 2. `C.__init__` — implementation
 3. `C.__init__` — other overloads (declaration order)
-4. `C.__new__` — matched overload
+4. `C.__new__` — call's overload candidates for this member
 5. `C.__new__` — implementation
 6. `C.__new__` — other overloads
-7. `B₁.__init__` — matched overload
+7. `B₁.__init__` — call's overload candidates for this member
 8. `B₁.__init__` — implementation
 9. `B₁.__init__` — other overloads
-10. `B₁.__new__` — matched overload
+10. `B₁.__new__` — call's overload candidates for this member
 11. `B₁.__new__` — implementation
 12. `B₁.__new__` — other overloads
 13. …repeat steps 7–12 for `B₂`, `B₃`, … in MRO order…
@@ -307,7 +307,7 @@ For a **call hover** on class `C` with MRO `[C, B₁, B₂, …]` (builtin bases
 
 18. No docstring — render the signature only.
 
-Each numbered entry is a flat step; the first non-empty docstring wins. For a **symbol hover**, drop the matched-overload entries (1, 4, 7, 10, …); every other tier and its order is unchanged.
+Each numbered entry is a flat step; the first non-empty docstring wins. For a **symbol hover** on the class name, use the class-docstring order instead; constructor-method entries do not participate.
 
 ---
 
@@ -437,9 +437,11 @@ class Query:
 
 Hovering `q.where(0)` ⇒ **"Filter by column index."** (the matched `int` overload beats the other overload and the implementation).
 
-### 12. Overload — symbol hover uses the implementation
+<a id="12-overload--symbol-hover-uses-the-implementation"></a>
 
-Same `Query.where` as example 11, but hovering the bare method `Query.where` (no call) ⇒ the **implementation** docstring if present, otherwise the overloads in order. With no implementation docstring here ⇒ **"Filter by column name."** (first overload).
+### 12. Overload — symbol hover uses the first documented overload
+
+Same `Query.where` as example 11, but hovering the bare method `Query.where` (no call) ⇒ **"Filter by column name."** (first documented overload). The implementation is used only when the overload candidates have no documentation.
 
 ### 13. Overload — matched overload undocumented, a sibling supplies the text
 
@@ -628,9 +630,9 @@ Resolution stops at `Shape`; `Sized` and all class docstrings are never reached.
 | Case                                                           | Resolution                                                                                                                     |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Plain `def __init__` (no overloads)                            | Implementation docstring; MRO walk if empty.                                                                                   |
-| Class defines neither `__init__` nor `__new__`                 | Phase 1 empty → class docstring (Phase 2), MRO-ordered.                                                                        |
-| Call matches zero overloads (type error)                       | Treated as a symbol hover for that method: skip the matched-overload tier.                                                     |
-| Derived adds new overloads; call matches an inherited overload | The derived class contributes no matching documented candidate, so the MRO walk reaches the base overload (Rule C).            |
+| Class defines neither `__init__` nor `__new__`                 | Search inherited constructor methods first; use the class docstring (Phase 2) only if none is documented.                      |
+| Call matches zero overloads (type error)                       | Consider the full overload set, as for ordinary function/method symbol hover.                                                  |
+| Derived adds new overloads; call matches an inherited overload | If the derived class has no implementation or other-overload documentation, the MRO walk continues to the base (Rule C).       |
 | Stub-only class (no `.py`)                                     | Rule F has no source to fall back to; the stub's own docstrings are used.                                                      |
 | `object.__init__` / `object.__new__` (and any builtin base)    | Builtin base classes are never inherited as constructor docstring sources; a builtin constructed directly still shows its own. |
 | Synthesized constructors (dataclass, `NamedTuple`)             | No method docstring → fall through to the class docstring.                                                                     |
@@ -669,3 +671,5 @@ resolveConstructorDoc(C, call?):                # ALTERNATIVE
 
 - [Auto-Import Guide](auto-import-guide.md)
 - [Type Narrowing](type-narrowing.md)
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

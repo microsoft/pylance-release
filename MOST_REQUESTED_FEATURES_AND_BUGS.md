@@ -289,12 +289,12 @@ This report covers **37 GitHub Issues** and **8 GitHub Discussions** (45 items t
 ## Recommendations
 
 ### High Priority Open Items:
-1. **Class Hierarchy/Method Override Indicators** (#4972) - Highly requested IDE feature parity with PyCharm
-2. **PEP 723 Support** (Discussion #6522) - Highest-upvoted open discussion request
-3. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem
-4. **Rename Symbols in Docstrings** (Discussion #2938) - Refactoring quality-of-life improvement
-5. **Context-Based Code Actions** (#5368) - Productivity enhancement
-6. **Django Support** (#3701) - Important for Django developer ecosystem
+1. **Class Hierarchy/Method Override Indicators** (#4972) - Highly requested IDE feature parity with PyCharm; experimental override navigation is available with `python.analysis.gotoOverrideCodeLens` (see [README](README.md)).
+2. **PEP 723 Support** (Discussion #6522) - Highest-upvoted open discussion request; Pylance can use a script's selected PEP 723 environment (see [Python environments](docs/howto/python-environments.md)).
+3. **PyScript & Brython Support** (#6760) - Emerging Python-in-browser ecosystem; experimental `python.analysis.supportHtmlEmbeddedPython` supports inline Python regions (see [README](README.md)).
+4. **Rename Symbols in Docstrings** (Discussion #2938) - Refactoring quality-of-life improvement; enable `python.analysis.renameInDocstrings` for name-based docstring updates (see [README](README.md#settings-and-customization)).
+5. **Context-Based Code Actions** (#5368) - Productivity enhancement; Create function/class/method/parameter Quick Fixes are available (see [README](README.md#quick-fixes)).
+6. **Django Support** (#3701) - Important for Django developer ecosystem; experimental ORM support is available with `python.analysis.enableDjangoSupport` (see [Generated code](docs/howto/generated-code.md)).
 
 ### Community Engagement:
 - The community is very active with detailed bug reports and feature requests
@@ -309,3 +309,5 @@ This report covers **37 GitHub Issues** and **8 GitHub Discussions** (45 items t
 - The development team has been very responsive to community feedback
 - Several library-specific issues require upstream stub packages
 - Import resolution and advanced language framework support remain active areas of development
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

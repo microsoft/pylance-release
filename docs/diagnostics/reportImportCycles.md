@@ -10,7 +10,7 @@
 - [#3855](https://github.com/microsoft/pylance-release/issues/3855): Enable Python indexing in VSCode for auto-imports.
 - [#4012](https://github.com/microsoft/pylance-release/issues/4012): Override diagnostic severity for import cycles globally in pyright.
 - [#4163](https://github.com/microsoft/pylance-release/issues/4163): Ensure consistency in type stubs between Pyright CLI and Pylance settings.
-- [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in config files to prevent analysis of unwanted folders.
+- [#495](https://github.com/microsoft/pylance-release/issues/495): Use the `exclude` property in config files to limit where Pylance looks for files to analyze; imported files can still be analyzed.
 - [#5200](https://github.com/microsoft/pylance-release/issues/5200): Customize diagnostic rule severities by type checking mode.
 - [#531](https://github.com/microsoft/pylance-release/issues/531): Use `# pyright: reportImportCycles=none` to suppress cyclical import warnings for a file/module.
 - [#5887](https://github.com/microsoft/pylance-release/issues/5887): Ensure abstract base classes implement all abstract methods.
@@ -33,7 +33,7 @@ def helper():
     return func_a()
 ```
 
-**Fix — move shared code into a third module or use lazy imports:**
+**Fix — move shared code into a third module:**
 
 ```python
 # module_a.py
@@ -43,7 +43,7 @@ from module_shared import helper
 from module_shared import func_a
 ```
 
-**Fix — use `TYPE_CHECKING` for type-only imports:**
+**Runtime workaround — use `TYPE_CHECKING` for type-only imports; Pylance still includes them in the import graph:**
 
 ```python
 from __future__ import annotations
@@ -55,8 +55,8 @@ if TYPE_CHECKING:
 
 ## Common Fixes & Workarounds
 
-1. Refactor code to break import cycles, possibly by moving imports inside functions or reorganizing modules.
-2. Use the `exclude` property in your `pyrightconfig.json` to avoid analyzing unnecessary folders.
+1. Reorganize modules to break import cycles. Moving imports inside functions can avoid runtime initialization problems, but does not remove dependencies from Pylance's import graph.
+2. Use the `exclude` property in your `pyrightconfig.json` to limit where Pylance looks for files to analyze; imported modules can still be analyzed.
 3. Suppress specific import cycle warnings with `# pyright: reportImportCycles=none` in affected files.
 4. Ensure your Python environment and type stubs are consistent and properly configured.
 5. See the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportImportCycles) for details on configuring this rule.
@@ -65,3 +65,5 @@ if TYPE_CHECKING:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

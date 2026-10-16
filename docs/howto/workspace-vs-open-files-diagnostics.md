@@ -54,7 +54,7 @@ The on-demand LSP path is the most common answer for "I want to know everything 
 
 ## Get Workspace Diagnostics On-Demand via LSP
 
-The LSP `workspace/diagnostic` request asks the language server for diagnostics across all known files. It works regardless of `diagnosticMode`, because the request is explicit.
+The `pylanceLSP` MCP tool handles `workspace/diagnostic` by explicitly analyzing all known user files, regardless of `diagnosticMode`.
 
 ### From Copilot or any MCP client
 
@@ -136,17 +136,17 @@ Canonical guide: [How to Run Pyright in CI](ci-type-checking.md). For project-wi
 
 If `workspace/diagnostic` returns fewer results than you expect, the issue is usually file scope, not the diagnostic mode.
 
-| Question                                                | How to answer it                                                                                                    |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Which files does Pylance treat as user files?           | `pylanceWorkspaceUserFiles` for the workspace root.                                                                 |
-| Are the missing files excluded by include / exclude?    | `pylanceSettings`. Look at `include`, `exclude`, `ignore`.                                                          |
-| Is a `pyrightconfig.json` overriding VS Code scope?     | See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).                                            |
-| Is the file even reachable from the active interpreter? | `pylanceImports` for the file in question; [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md). |
+| Question                                                | How to answer it                                                                                             |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Which files does Pylance treat as user files?           | `pylanceWorkspaceUserFiles` for the workspace root.                                                          |
+| Are the missing files excluded by include / exclude?    | `pylanceSettings`. Look at `include`, `exclude`, `ignore`.                                                   |
+| Is a `pyrightconfig.json` overriding VS Code scope?     | See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).                                     |
+| Is the file even reachable from the active interpreter? | `pylanceImports` for the workspace; [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md). |
 
 Common gotchas:
 
-- Large auto-generated trees ignored by `exclude` will not produce diagnostics anywhere, regardless of `diagnosticMode`.
-- `include` defaults to the workspace root; if you set it explicitly to a subfolder, files outside that subfolder become invisible to diagnostics.
+- Large auto-generated trees excluded by `exclude` are not found as workspace files for analysis, but opening one can still produce diagnostics. Use [`ignore`](../settings/python_analysis_ignore.md) to suppress diagnostics.
+- `include` defaults to the workspace root; if you set it explicitly to a subfolder, Pylance looks there for files to analyze. Opening a file outside that folder can still produce diagnostics.
 - Files filtered out by [`userFileIndexingLimit`](../settings/python_analysis_userFileIndexingLimit.md) are still analyzed for diagnostics; the limit only affects indexing for auto-imports and symbol search. See [How to Tune Pylance Performance](performance-tuning.md).
 
 ---
@@ -184,3 +184,5 @@ Switch back to `"openFilesOnly"` and either run `pylanceLSP` `workspace/diagnost
 ### Q: Should Copilot just flip `diagnosticMode` to `"workspace"` to see everything?
 
 No. The non-destructive answer is `pylanceLSP` `workspace/diagnostic`. Changing the user's settings should be an explicit ask, not a side effect of running a diagnosis. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

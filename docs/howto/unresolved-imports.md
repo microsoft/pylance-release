@@ -1,6 +1,6 @@
 # How to Fix Unresolved Import Errors in Pylance
 
-Pylance uses static analysis to resolve Python imports — it does not execute your code. When it cannot find a module, it reports one of several diagnostics depending on what is missing. This guide covers the most common import errors, their causes, and how to fix them.
+Pylance uses static analysis to resolve Python imports. When it cannot find a module, it reports one of several diagnostics depending on what is missing. This guide covers the most common import errors, their causes, and how to fix them.
 
 ---
 
@@ -27,7 +27,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 1. **Check the Python interpreter**: Click the Python version in the VS Code status bar. Verify it points to the correct virtual environment.
 
     ```bash
-    # In the VS Code terminal, confirm:
+    # Check this terminal's interpreter against the environment selected for the file:
     which python    # Linux/macOS
     where python    # Windows
     python -c "import sys; print(sys.path)"
@@ -48,7 +48,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
     ```bash
     # Look for .pth files:
     find .venv/lib -name "*.pth" | xargs cat
-    # Any line starting with "import" will be ignored by Pylance
+    # Python 3.13+ can discover import hooks when enableEditableInstalls is enabled
     ```
 
 5. **Enable verbose logging**: Add to settings.json:
@@ -59,7 +59,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
     }
     ```
 
-    Then check the **Output** panel → **Pylance** for import resolution attempts. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) for a detailed walkthrough.
+    Then check the **Output** panel → **Python Language Server** for import resolution attempts. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md) for a detailed walkthrough.
 
 6. **Check [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: If it exists, it may override VS Code settings. Verify [`include`](../settings/python_analysis_include.md), [`exclude`](../settings/python_analysis_exclude.md), and [`extraPaths`](../settings/python_analysis_extraPaths.md). See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings) for config precedence and path-validation checks.
 
@@ -71,10 +71,10 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 | Package not installed in the venv                                                              | `pip install mypackage` in the correct venv                                                                                                                    |
 | [`extraPaths`](../settings/python_analysis_extraPaths.md) missing a directory                  | Add the package source dir to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                        |
 | Configured path exists but points to the wrong directory level                                 | Change the path so it points at the intended import root. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings) |
-| Editable install uses import hooks                                                             | Reinstall with `--config-settings editable_mode=compat`. See [How to Use Editable Installs with Pylance](editable-installs.md)                                 |
+| Editable install uses import hooks                                                             | Check Python 3.13+ editable-install discovery or use a path-based install. See [How to Use Editable Installs with Pylance](editable-installs.md)               |
 | [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) overrides settings | Check and update the config file. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md)                                                      |
-| [`include`](../settings/python_analysis_include.md) setting excludes the file                  | Verify [`python.analysis.include`](../settings/python_analysis_include.md) covers your files                                                                   |
-| File is in [`exclude`](../settings/python_analysis_exclude.md) patterns                        | Remove from [`python.analysis.exclude`](../settings/python_analysis_exclude.md)                                                                                |
+| [`include`](../settings/python_analysis_include.md) setting excludes the file                  | Use `include` for finding files for analysis. For unresolved imports, check the import search paths.                                                           |
+| File is in [`exclude`](../settings/python_analysis_exclude.md) patterns                        | Change `exclude` to include it in workspace analysis. For unresolved imports, check the import search paths.                                                   |
 | Namespace package (no `__init__.py`)                                                           | Pylance supports namespace packages, but verify structure                                                                                                      |
 | Missing `__init__.py` in a regular package                                                     | Add `__init__.py` to each package directory (even if empty) unless using namespace packages                                                                    |
 
@@ -84,16 +84,16 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 
 **Symptom**: `Import "mypackage" could not be resolved from source` `Pylance(reportMissingModuleSource)`
 
-**What it means**: Pylance found a type stub (`.pyi`) for the package but could not find the corresponding Python source (`.py`). This is different from `reportMissingImports` — the import _does_ resolve (via stubs), but the source code is missing.
+**What it means**: Pylance found a type stub (`.pyi`) for the package but could not resolve its corresponding runtime implementation. This is different from `reportMissingImports` — the import _does_ resolve (via stubs), but its runtime implementation was not found.
 
 ### Common Causes and Fixes
 
-| Cause                                                                                | Fix                                                                                                                                                                                                            |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package is a C extension or native library (`.so` / `.pyd`)                          | Safe to ignore — native extensions don't have `.py` source. Suppress with `"reportMissingModuleSource": "none"` in [`diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) |
-| Package installed as `.pyc`-only (compiled wheel without source)                     | Install a source distribution, or suppress the diagnostic                                                                                                                                                      |
-| Stubs installed separately (e.g., `types-requests`) but main package not in the venv | Install the main package: `pip install requests`                                                                                                                                                               |
-| Stub-only package with no corresponding runtime package                              | Suppress for that specific package: `# type: ignore[reportMissingModuleSource]`                                                                                                                                |
+| Cause                                                                                | Fix                                                                                                              |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Native runtime module is not resolved in the selected environment                    | Check the selected interpreter and runtime installation; a resolved `.so` / `.pyd` does not require `.py` source |
+| Stub found, but compiled runtime file is not found                                   | Pylance recognizes a `.pyc` file alongside its stub. Check the selected environment and package location.        |
+| Stubs installed separately (e.g., `types-requests`) but main package not in the venv | Install the main package: `pip install requests`                                                                 |
+| Stub-only package with no corresponding runtime package                              | Suppress for that specific package: `# type: ignore[reportMissingModuleSource]`                                  |
 
 ---
 
@@ -101,7 +101,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 
 **Symptom**: `Stub file not found for "mypackage"` `Pylance(reportMissingTypeStubs)`
 
-**What it means**: The package is installed and importable, but it has no type stubs (no `.pyi` files) and is not marked as `py.typed`. This diagnostic is **off by default** and only appears in `strict` type-checking mode (where it's an error).
+**What it means**: The package is installed and importable, but it has no type stubs (no `.pyi` files) and is not marked as `py.typed`. This diagnostic is **off by default** and is an error in `strict` type-checking mode.
 
 ### Common Causes and Fixes
 
@@ -122,7 +122,7 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 ### Mitigation Strategies
 
 - **Move shared types to a separate module** that both sides can import without creating a cycle
-- **Use `TYPE_CHECKING` imports** for type-only references:
+- **Use `TYPE_CHECKING` imports** for type-only references to avoid runtime cycles. These imports still count when Pylance checks for import cycles:
 
     ```python
     from __future__ import annotations
@@ -141,23 +141,25 @@ Pylance uses static analysis to resolve Python imports — it does not execute y
 
 **Symptom**: `import mypackage` works in the terminal (`python -c "import mypackage"` succeeds), but Pylance shows `reportMissingImports`.
 
-This is one of the most common complaint patterns. It happens because Pylance does **static analysis** and cannot execute dynamic Python mechanisms.
+This can happen when runtime and analysis use different environments or search paths.
 
 ### Things Pylance Cannot Follow
 
-| Runtime Mechanism                                           | Why Pylance Can't Follow It                                                                                                                  | Fix                                                                                                                                                                                |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Import-hook `.pth` files** (lines starting with `import`) | Pylance reads `.pth` files but only processes plain path lines — it skips `import` lines                                                     | Reinstall with `--config-settings editable_mode=compat`, or enable `enableEditableInstalls` on Python 3.13+. See [How to Use Editable Installs with Pylance](editable-installs.md) |
-| **`sys.path.append()` / `sys.path.insert()`** in code       | Pylance does not execute Python code — dynamic path modifications are invisible                                                              | Add the path to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                                                                                  |
-| **`PYTHONPATH` environment variable**                       | Pylance does not read environment variables                                                                                                  | Add directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                                       |
-| **`pkgutil.extend_path()` in `__init__.py`**                | Pylance resolves namespace packages statically — it picks the first match rather than merging all `sys.path` entries at runtime              | Add all contributing directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                      |
-| **`importlib` dynamic imports**                             | All programmatic imports are invisible to static analysis                                                                                    | Use regular `import` statements or `TYPE_CHECKING` import blocks for type checking                                                                                                 |
-| **Namespace packages across separate roots**                | Python merges same-named packages from different `sys.path` entries; Pylance resolves to the first match                                     | Put all contributing directories in [`extraPaths`](../settings/python_analysis_extraPaths.md) so Pylance sees all sources                                                          |
-| **pytest `conftest.py` path injection**                     | pytest adds `conftest.py` directories and `rootdir` to `sys.path` at runtime; Pylance has no awareness of pytest's path logic                | Add test root directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                             |
-| **Django `INSTALLED_APPS` / app autodiscovery**             | Django dynamically discovers and imports apps via settings; Pylance can't execute `django.setup()`                                           | Add each app's parent directory to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                       |
-| **Conda environment path layout**                           | Conda environments store packages in `lib/pythonX.Y/site-packages` under the conda prefix, which may differ from a venv layout               | Select the conda interpreter in VS Code status bar; verify with `python -c "import sys; print(sys.prefix)"`                                                                        |
-| **`sys.modules` patching**                                  | Some libraries inject modules into `sys.modules` at runtime (e.g., aliasing `pkg` → `pkg_v2`); Pylance cannot follow runtime module aliasing | Use `TYPE_CHECKING` imports for the real module name, or add a type stub                                                                                                           |
-| **`site.addsitedir()`**                                     | Adds directories to `sys.path` at runtime and processes `.pth` files; Pylance does not call `site.addsitedir()`                              | Add the directories to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                                                                           |
+Some of the mechanisms below can be handled when configured as described in the table.
+
+| Runtime Mechanism                                           | Why Pylance Can't Follow It                                                                                                                  | Fix                                                                                                                                                                            |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Import-hook `.pth` files** (lines starting with `import`) | Pylance can discover editable sources on Python 3.13+                                                                                        | Check the selected environment and use a path-based install or explicit source paths if discovery fails. See [How to Use Editable Installs with Pylance](editable-installs.md) |
+| **`sys.path.append()` / `sys.path.insert()`** in code       | Pylance does not execute Python code — dynamic path modifications are invisible                                                              | Add the path to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                                                                              |
+| **`PYTHONPATH` environment variable**                       | Pylance can receive `PYTHONPATH` from the Python extension                                                                                   | Check `python.envFile` or add explicit [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                               |
+| **`pkgutil.extend_path()` in `__init__.py`**                | Pylance does not execute this runtime path mutation; configure the contributing source roots explicitly                                      | Add all contributing directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                  |
+| **`importlib` dynamic imports**                             | All programmatic imports are invisible to static analysis                                                                                    | Use regular `import` statements or `TYPE_CHECKING` import blocks for type checking                                                                                             |
+| **Namespace packages across separate roots**                | Pylance can resolve namespace portions across configured roots; a missing root cannot contribute its modules                                 | Put all contributing directories in [`extraPaths`](../settings/python_analysis_extraPaths.md) so Pylance sees all sources                                                      |
+| **pytest `conftest.py` path injection**                     | Runtime path changes made by test configuration are not automatically added as ordinary import roots for analysis                            | Add test root directories to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                         |
+| **Django `INSTALLED_APPS` / app autodiscovery**             | Django dynamically discovers and imports apps via settings; Pylance can't execute `django.setup()`                                           | Add each app's parent directory to [`extraPaths`](../settings/python_analysis_extraPaths.md)                                                                                   |
+| **Conda environment path layout**                           | Conda environments store packages in `lib/pythonX.Y/site-packages` under the conda prefix, which may differ from a venv layout               | Select the conda interpreter in VS Code status bar; verify with `python -c "import sys; print(sys.prefix)"`                                                                    |
+| **`sys.modules` patching**                                  | Some libraries inject modules into `sys.modules` at runtime (e.g., aliasing `pkg` → `pkg_v2`); Pylance cannot follow runtime module aliasing | Use `TYPE_CHECKING` imports for the real module name, or add a type stub                                                                                                       |
+| **`site.addsitedir()`**                                     | Adds directories to `sys.path` at runtime and processes `.pth` files; Pylance does not call `site.addsitedir()`                              | Add the directories to [`extraPaths`](../settings/python_analysis_extraPaths.md) instead                                                                                       |
 
 ### Framework-Specific Examples
 
@@ -172,7 +174,7 @@ project/
 │       └── test_utils.py
 ```
 
-pytest makes `from helpers.test_utils import ...` work at runtime but Pylance can't see it. Fix:
+If the test runner makes `from helpers.test_utils import ...` work at runtime but `tests/` is not a Pylance import root, configure that root:
 
 ```json
 {
@@ -192,7 +194,7 @@ myproject/
     └── models.py
 ```
 
-Django resolves `from users.models import User` at runtime because `django.setup()` manipulates `sys.path`. Fix:
+With `myproject/` as the execution root, Pylance can resolve `from users.models import User` from source without running Django. If that root is not otherwise searchable, configure it explicitly:
 
 ```json
 {
@@ -218,7 +220,7 @@ myproject/
     └── conftest.py
 ```
 
-Flask's app factory pattern uses `from app.extensions import db` which works at runtime because the project root is on `sys.path`. Fix:
+With `myproject/` as the execution root, Pylance can resolve `from app.extensions import db` without running the app factory. The following setting is only needed if that root is not otherwise searchable:
 
 ```json
 {
@@ -229,7 +231,7 @@ Flask's app factory pattern uses `from app.extensions import db` which works at 
 ### Diagnosis Workflow
 
 1. **Confirm the runtime path**: `python -c "import mypackage; print(mypackage.__file__)"`
-2. **Check Pylance's search paths**: Enable `"python.analysis.logLevel": "Trace"` and look in **Output → Pylance** for the import resolution log (see [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md))
+2. **Check Pylance's search paths**: Enable `"python.analysis.logLevel": "Trace"` and look in **Output → Python Language Server** for the import resolution log (see [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md))
 3. **Compare**: Is the directory containing `mypackage` in Pylance's search paths? If not, add it to [`extraPaths`](../settings/python_analysis_extraPaths.md)
 
 ---
@@ -246,14 +248,14 @@ For a package-specific patch, prefer a PEP 561 partial stub package under `typin
 
 ## How Pylance Resolves Imports
 
-Pylance searches for modules in a specific order, stopping at the first match:
+Pylance checks the following locations. Stubs and namespace packages can affect which match wins:
 
 | Priority | Search Location                                                                                                                     | Notes                                                  |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | 1        | [`stubPath`](../settings/python_analysis_stubPath.md) (custom stubs)                                                                | Default: `./typings`                                   |
 | 2        | Source files in the project root (or execution environment root)                                                                    | Your workspace files                                   |
-| 3        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries                                                                   | Searched in order listed                               |
-| 4        | `src/` directory (if [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) is `true` and `src/` has no `__init__.py`) | Automatic convenience path                             |
+| 3        | `src/` directory (if [`autoSearchPaths`](../settings/python_analysis_autoSearchPaths.md) is `true` and `src/` has no `__init__.py`) | Automatic convenience path                             |
+| 4        | [`extraPaths`](../settings/python_analysis_extraPaths.md) entries                                                                   | Searched in order listed                               |
 | 5        | Typeshed stdlib stubs                                                                                                               | Standard library type info                             |
 | 6        | Python interpreter search paths (`site-packages`)                                                                                   | Installed packages from the selected interpreter       |
 | 7        | Bundled third-party stubs (Pylance ships with stubs for some popular packages)                                                      | Used when no earlier typed package or custom stub wins |
@@ -261,10 +263,10 @@ Pylance searches for modules in a specific order, stopping at the first match:
 
 **Key implications**:
 
-- [`extraPaths`](../settings/python_analysis_extraPaths.md) entries have **higher priority** than installed packages in `site-packages`. This means workspace source code takes precedence over the same package installed from PyPI.
+- [`extraPaths`](../settings/python_analysis_extraPaths.md) entries are searched before interpreter paths, but a typed package or stub can take priority over an earlier untyped match.
 - [`stubPath`](../settings/python_analysis_stubPath.md) has **higher priority** than bundled third-party stubs. Use it for workspace-local package-stub overrides.
 - Installed packages that include type information, such as a `py.typed` marker or installed stub package, take priority over bundled third-party stubs.
-- If [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` exists, VS Code's [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) setting is **ignored** — use `"extraPaths"` in the config file instead. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
+- If a [`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration) or `pyproject.toml` with `[tool.pyright]` defines `extraPaths`, that list replaces VS Code's [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md). Otherwise, VS Code paths still apply. See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 
 ---
 
@@ -275,12 +277,12 @@ When imports aren't resolving, run through this checklist:
 - [ ] **Interpreter**: Is the correct Python interpreter selected? (status bar)
 - [ ] **Interpreter path**: Does `python -c "import sys; print(sys.prefix)"` in the VS Code terminal point to the right venv?
 - [ ] **Package installed**: Is the package installed in that venv? (`pip show <package>`)
-- [ ] **Editable install**: If editable, is the `.pth` file path-based (not import-hook)? See [How to Use Editable Installs with Pylance](editable-installs.md)
+- [ ] **Editable install**: Is its source found through a path-based `.pth` file or Python 3.13+ import-hook discovery? See [How to Use Editable Installs with Pylance](editable-installs.md)
 - [ ] **[`extraPaths`](../settings/python_analysis_extraPaths.md)**: Do paths exist and point to the import root rather than a nested package directory?
 - [ ] **Path-based settings**: If you use [`stubPath`](../settings/python_analysis_stubPath.md) or [`typeshedPaths`](../settings/python_analysis_typeshedPaths.md), do those resolved paths point to the intended root? See [How to Troubleshoot Pylance Settings](settings-troubleshooting.md#validate-path-based-settings)
 - [ ] **[`pyrightconfig.json`](https://microsoft.github.io/pyright/#/configuration)**: Does a config file exist that might override settings?
-- [ ] **[`include`](../settings/python_analysis_include.md)/[`exclude`](../settings/python_analysis_exclude.md)**: Are the correct files included and not excluded?
-- [ ] **Pylance output**: Check Output panel → Pylance for any errors or warnings
+- [ ] **[`include`](../settings/python_analysis_include.md)/[`exclude`](../settings/python_analysis_exclude.md)**: Are the intended workspace files found for analysis?
+- [ ] **Pylance output**: Check Output panel → Python Language Server for any errors or warnings
 - [ ] **Verbose logging**: Enable `"python.analysis.logLevel": "Trace"` and check for import resolution details. See [How to Read Pylance Import Resolution Logs](reading-pylance-logs.md)
 - [ ] **Restart**: Run "Python: Restart Language Server" after any configuration change
 
@@ -290,7 +292,7 @@ When imports aren't resolving, run through this checklist:
 
 ### Q: My .env file with PYTHONPATH is being ignored. Why?
 
-Pylance does **not** read `.env` files for `PYTHONPATH`. Use [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) instead:
+The Python extension can forward `PYTHONPATH` from its configured `.env` file to Pylance. Check `python.envFile` and the environment for the file being analyzed. Explicit [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) is an alternative:
 
 ```json
 {
@@ -298,11 +300,11 @@ Pylance does **not** read `.env` files for `PYTHONPATH`. Use [`python.analysis.e
 }
 ```
 
-If you need `PYTHONPATH` for runtime, keep the `.env` file for the Python extension's terminal integration, and separately configure [`extraPaths`](../settings/python_analysis_extraPaths.md) for Pylance.
+Configure runtime `PYTHONPATH` in the Python extension's `.env` file; Pylance can use those paths too.
 
 ### Q: Can I use `PYTHONPATH` environment variable instead of `extraPaths`?
 
-Pylance does not use `PYTHONPATH` directly. It relies on [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md) and the selected Python interpreter's `sys.path`. If you need the same paths available:
+Pylance uses `PYTHONPATH` forwarded by the Python extension along with the selected interpreter's search paths. You can also configure explicit [`python.analysis.extraPaths`](../settings/python_analysis_extraPaths.md), for example:
 
 ```json
 {
@@ -311,7 +313,7 @@ Pylance does not use `PYTHONPATH` directly. It relies on [`python.analysis.extra
 }
 ```
 
-The `python.envFile` setting gives the Python extension access to env vars for terminal use, but it does **not** affect Pylance's import resolution.
+The `python.envFile` setting selects the Python extension's environment file; its forwarded `PYTHONPATH` values can affect Pylance's import resolution.
 
 ### Q: How do I handle namespace packages (no `__init__.py`)?
 
@@ -344,15 +346,15 @@ Both `from mycompany.core import X` and `from mycompany.utils import Y` will res
 
 ### Q: What's the difference between `include`, `exclude`, and `ignore`?
 
-| Setting                                                    | Effect on File Discovery | Effect on Diagnostics  | Effect on Import Resolution                                                         |
-| ---------------------------------------------------------- | ------------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
-| Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | No diagnostics         | Not resolved as workspace file                                                      |
-| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | No diagnostics         | Not resolved as workspace file (but still resolved if imported by an included file) |
-| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed | Resolved normally                                                                   |
+| Setting                                                    | Effect on File Discovery | Effect on Diagnostics              | Effect on Import Resolution          |
+| ---------------------------------------------------------- | ------------------------ | ---------------------------------- | ------------------------------------ |
+| Not in [`include`](../settings/python_analysis_include.md) | Not discovered           | Can report diagnostics when opened | Still available to import resolution |
+| In [`exclude`](../settings/python_analysis_exclude.md)     | Not discovered           | Can report diagnostics when opened | Still available to import resolution |
+| In [`ignore`](../settings/python_analysis_ignore.md)       | Discovered & analyzed    | Diagnostics suppressed             | Resolved normally                    |
 
 ### Q: How do I debug import resolution?
 
-Enable trace logging and check the **Output → Pylance** panel:
+Enable trace logging and check the **Output → Python Language Server** panel:
 
 ```json
 {
@@ -384,19 +386,19 @@ Not:
 }
 ```
 
-The [`extraPaths`](../settings/python_analysis_extraPaths.md) entry should point to the directory that _contains_ the top-level `__init__.py` (or namespace package directory).
+The [`extraPaths`](../settings/python_analysis_extraPaths.md) entry should point to the directory that _contains the top-level package directory_.
 
 ### Q: Go to Definition goes to the wrong location. How do I fix it?
 
 **Symptom**: Go to Definition opens a file from `site-packages` instead of the source directory, or vice versa.
 
-**Cause**: Pylance found the module through installed packages instead of the workspace source.
+**Cause**: Pylance found a different copy of the package.
 
 **Fix**:
 
-- If you want source: Add the source directory to [`extraPaths`](../settings/python_analysis_extraPaths.md) (it has higher priority than `site-packages`)
-- If you want installed: Remove the source directory from [`extraPaths`](../settings/python_analysis_extraPaths.md)
-- For editable installs: Ensure the `.pth` file points to the correct location. See [How to Use Editable Installs with Pylance](editable-installs.md)
+- If you want source: Add its import root to [`extraPaths`](../settings/python_analysis_extraPaths.md) and confirm the target with Go to Definition
+- If you want installed: Check for competing workspace import roots, [`extraPaths`](../settings/python_analysis_extraPaths.md), or custom stubs
+- For editable installs: Verify that the selected environment exposes the intended source through paths or supported hook discovery. See [How to Use Editable Installs with Pylance](editable-installs.md)
 
 ---
 
@@ -423,15 +425,15 @@ def process(obj: HeavyClass) -> None:  # Pylance resolves this
 - Pylance treats `TYPE_CHECKING` as `True` and analyzes imports inside the block.
 - Names imported under `TYPE_CHECKING` are available for type annotations.
 - `from __future__ import annotations` (PEP 563) makes all annotations string-based, so the imported names don't need to exist at runtime.
-- Without `from __future__ import annotations`, you must use string annotations (`"HeavyClass"`) for names imported only under `TYPE_CHECKING`, or you'll get a runtime `NameError`.
+- On Python 3.13 and earlier, use `from __future__ import annotations` or string annotations (`"HeavyClass"`) to avoid eager evaluation of names imported only under `TYPE_CHECKING`. Python 3.14+ defers annotation evaluation by default.
 
 ### Common errors
 
-| Error                                             | Cause                                                                    | Fix                                                                                                |
-| ------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `"HeavyClass" is not defined` at runtime          | Used `TYPE_CHECKING` import without `from __future__ import annotations` | Add `from __future__ import annotations` or use `"HeavyClass"` as a string annotation              |
-| Pylance shows errors inside `TYPE_CHECKING` block | The imported module has its own errors                                   | Fix the errors in the imported module, or add to [`ignore`](../settings/python_analysis_ignore.md) |
-| Circular import persists in Pylance               | Both modules import each other under `TYPE_CHECKING`                     | This is valid — Pylance handles `TYPE_CHECKING` circular imports. The error is likely elsewhere    |
+| Error                                             | Cause                                                                                 | Fix                                                                                                                             |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `"HeavyClass" is not defined` at runtime          | Eager annotation evaluation on Python 3.13 or earlier refers to a runtime-absent name | Add `from __future__ import annotations` or use `"HeavyClass"` as a string annotation                                           |
+| Pylance shows errors inside `TYPE_CHECKING` block | Invalid import or type use                                                            | Fix the reported diagnostic in that file; [`ignore`](../settings/python_analysis_ignore.md) hides diagnostics in matching files |
+| Circular import persists in Pylance               | Both modules import each other under `TYPE_CHECKING`                                  | Break the static import cycle or explicitly suppress `reportImportCycles`                                                       |
 
 ---
 
@@ -451,3 +453,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

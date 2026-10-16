@@ -17,7 +17,7 @@ Editable installs (`pip install -e .`) let you develop a package and see changes
 
 ## How Editable Installs Work
 
-When you run `pip install -e .`, pip creates a `.pth` file in the interpreter's `site-packages` directory. This file tells Python (and Pylance) where to find the package source code.
+When you run `pip install -e .`, the installation can create a `.pth` file in the interpreter's `site-packages` directory. Python 3.15+ installations can also use PEP 829 `.start` files. These files help Python and Pylance find the package source.
 
 There are two kinds of `.pth` files:
 
@@ -51,7 +51,7 @@ The type depends on which build backend your project uses and how it's configure
 
 ## Python 3.13+ Enhanced Editable Install Support
 
-Starting with Python 3.13, the Python runtime provides APIs that let Pylance resolve import-hook-based editable installs directly.
+On Python 3.13 or later, Pylance can resolve import-hook-based editable installs.
 
 To enable this:
 
@@ -68,7 +68,7 @@ To enable this:
 - Python 3.13 or later selected as the interpreter
 - The setting `python.analysis.enableEditableInstalls` set to `true`
 
-When enabled, Pylance can resolve imports from any build backend's editable install, including those that use import hooks (setuptools strict, Hatchling, Maturin, etc.).
+On Python 3.13+, Pylance can discover import-hook installs that provide Python source files. If discovery fails, use a path-based install or [`extraPaths`](../settings/python_analysis_extraPaths.md).
 
 ---
 
@@ -78,24 +78,38 @@ When enabled, Pylance can resolve imports from any build backend's editable inst
 
 ```bash
 # Linux/macOS
-ls .venv/lib/python*/site-packages/__editable__*.pth
+ls .venv/lib/python*/site-packages/*.pth
 
 # Windows
-Get-ChildItem .venv\Lib\site-packages\__editable__*.pth
+Get-ChildItem .venv\Lib\site-packages\*.pth
 ```
 
 ### Step 2: Check the `.pth` file content
 
 ```bash
 # Linux/macOS
-cat .venv/lib/python*/site-packages/__editable__*.pth
+cat .venv/lib/python*/site-packages/*.pth
 
 # Windows
-Get-Content .venv\Lib\site-packages\__editable__*.pth
+Get-Content .venv\Lib\site-packages\*.pth
 ```
 
 - **Path-based** `.pth`: Shows a plain path like `/home/user/myproject/src` → Pylance can follow this
 - **Import-hook** `.pth`: Shows `import _editable_impl` or similar → Pylance cannot follow this (unless Python 3.13+ with `enableEditableInstalls`)
+
+For Python 3.15+ installations that use PEP 829, also check for `.start` files in the same environment:
+
+```bash
+# Linux/macOS
+ls .venv/lib/python*/site-packages/*.start
+```
+
+```powershell
+# Windows
+Get-ChildItem .venv\Lib\site-packages\*.start
+```
+
+Pylance can use these files to find package source. Use explicit [`extraPaths`](../settings/python_analysis_extraPaths.md) if discovery fails.
 
 ### Step 3: Confirm the package resolves at runtime
 
@@ -122,7 +136,7 @@ If this works but Pylance shows errors, see [How to Fix Unresolved Import Errors
 
 2. **Reload Pylance**: After reinstalling or changing settings, run **"Python: Restart Language Server"** from the Command Palette.
 
-3. **Check Python version in `.pth` filename**: The `.pth` file must be in the `site-packages` of the Python interpreter Pylance is using. If you have multiple interpreters, ensure the correct one is selected.
+3. **Check the `.pth` location**: The `.pth` file must be in the `site-packages` of the Python interpreter Pylance is using. If you have multiple interpreters, ensure the correct one is selected.
 
 ### Imports Resolve but Auto-Import Completions Are Missing
 
@@ -136,7 +150,7 @@ The `.pth` files are in a specific interpreter's `site-packages`. If Pylance use
 
 1. Click the Python version in the VS Code status bar
 2. Select the interpreter whose `site-packages` contains your `.pth` files
-3. Confirm with: `python -c "import sys; print(sys.prefix)"`
+3. Compare Pylance's selected interpreter with the terminal environment: `python -c "import sys; print(sys.prefix)"`
 
 ### Setuptools Version Gotcha
 
@@ -146,12 +160,7 @@ Setuptools v64+ changed the default editable mode from path-based to strict (imp
 pip install -e . --config-settings editable_mode=compat
 ```
 
-Or pin setuptools behavior in `pyproject.toml`:
 
-```toml
-[tool.setuptools]
-# Forces compat mode for editable installs
-```
 
 ---
 
@@ -182,7 +191,7 @@ With [uv workspaces](https://docs.astral.sh/uv/concepts/workspaces/):
 5. Verify `.pth` files exist:
 
     ```bash
-    ls .venv/lib/python*/site-packages/__editable__*.pth
+    ls .venv/lib/python*/site-packages/*.pth
     ```
 
 ### Q: How do I set up a Poetry monorepo with editable installs?
@@ -211,7 +220,7 @@ Poetry uses path-based `.pth` files for editable installs, which Pylance reads n
 
 ### Q: My build backend doesn't support compat mode. What are my options?
 
-If your build backend only produces import-hook `.pth` files (e.g., Hatchling, Maturin, Meson-python):
+If your installation produces import-hook `.pth` files and you cannot switch to a path-based install:
 
 1. **Python 3.13+**: Enable `"python.analysis.enableEditableInstalls": true`
 2. **Older Python**: Add the source directory to [`extraPaths`](../settings/python_analysis_extraPaths.md):
@@ -265,3 +274,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

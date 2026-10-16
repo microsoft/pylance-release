@@ -1,6 +1,6 @@
 ## Overview
 
-`reportUntypedFunctionDecorator` is a Pylance and Pyright diagnostic that warns when a function decorated with a decorator lacks type annotations. This helps enforce type safety and improves code clarity, especially when using decorators from libraries or frameworks.
+`reportUntypedFunctionDecorator` is a Pylance and Pyright diagnostic that warns when a decorator obscures the type of the function it decorates. This helps enforce type safety and improves code clarity, especially when using decorators from libraries or frameworks.
 
 ## Representative Issues
 
@@ -56,12 +56,14 @@ def my_decorator(func: F) -> F:
 
 ## Common Fixes & Workarounds
 
-1. Add type annotations to all functions, especially those decorated with decorators from libraries or frameworks.
-2. Use type hints for function parameters and return values to improve static analysis and code clarity.
-3. Review your code for untyped decorated functions and update them for better maintainability.
+1. Add type annotations to decorators that obscure the types of the functions they decorate.
+2. Use type hints for decorator parameters and return values to improve static analysis and code clarity.
+3. Review your code for untyped decorators and add annotations or type stubs.
 4. Refer to the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUntypedFunctionDecorator) for details on configuring or disabling this diagnostic.
 
 ## See Also
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

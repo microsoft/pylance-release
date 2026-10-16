@@ -32,6 +32,8 @@ This exists to turn an unresolved-import error into actionable next steps, rathe
 }
 ```
 
+Use **Quick Fix** on the unresolved import and select **Troubleshoot missing imports**. Depending on the result, follow the prompts to switch to a matching Python environment or select missing packages to install in the current environment.
+
 ## When to Use It
 
 - **Enable** if you frequently hit unresolved imports caused by environment or interpreter issues and want guided troubleshooting.
@@ -54,3 +56,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

@@ -5,7 +5,7 @@
 ## Representative Issues
 
 - [#2080](https://github.com/microsoft/pyright/issues/2080): Warn or error on unreachable statements/expressions, providing clearer diagnostic messages.
-- [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, suppress the warning by adding an `else` clause.
+- [#3065](https://github.com/microsoft/pyright/issues/3065): When using `isinstance` in an exhaustive check where all possible types are covered by `Union`, replace the redundant final `isinstance` check with an `else` clause.
 
 ## Examples
 
@@ -38,10 +38,12 @@ def greet(name: str | int) -> str:
 
 1. Remove unnecessary `isinstance` checks when the type is already known or guaranteed.
 2. Refactor code to avoid unreachable or redundant branches.
-3. Add an `else` clause when using exhaustive type checks with `Union` types.
+3. Replace the redundant final `isinstance` check with an `else` clause when using exhaustive type checks with `Union` types.
 4. Review the [Pyright configuration documentation](https://github.com/microsoft/pyright/blob/main/docs/configuration.md#reportUnnecessaryIsInstance) for options to adjust or suppress this diagnostic if needed.
 
 ## See Also
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

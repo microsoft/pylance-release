@@ -17,7 +17,7 @@
 ```python
 class Config:
     def __init__(self):
-        self.timeout = get_default()  # get_default returns Any → member type unknown
+        self.timeout = get_default()  # get_default returns Unknown → member type unknown
 ```
 
 **Fix — add a type annotation to the member:**
@@ -49,3 +49,5 @@ class Config:
 
 - [`python.analysis.diagnosticSeverityOverrides`](../settings/python_analysis_diagnosticSeverityOverrides.md) — adjust or suppress this diagnostic
 - [`python.analysis.typeCheckingMode`](../settings/python_analysis_typeCheckingMode.md) — controls which diagnostics are enabled by default
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

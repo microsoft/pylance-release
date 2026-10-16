@@ -22,9 +22,9 @@ The `python.analysis.userFileIndexingLimit` setting controls the maximum number 
 
 ### How It Works
 
-- **Default Value**: `2000`
+- **Default Value**: `2000` (`-1` in `full` language server mode)
 
-    By default, Pylance indexes up to 2,000 Python files in your workspace.
+    With a limit of `2000`, Pylance indexes up to 2,000 Python files in your workspace.
 
 - **Custom Value**: You can set this to any positive integer or `-1`:
     - **Positive Integer**: Pylance will index up to that number of files.
@@ -72,7 +72,7 @@ You can adjust the `python.analysis.userFileIndexingLimit` setting in Visual Stu
 
 ### Q: What features are affected by changing `python.analysis.userFileIndexingLimit`?
 
-**A:** Indexing affects features like auto-import suggestions, workspace symbol search, and some code navigation capabilities. Reducing the indexing limit may limit these features to the files that are indexed.
+**A:** Reducing the limit can reduce auto-import coverage. Workspace symbol search can still find symbols in unindexed files.
 
 ### Q: Are there other settings I should adjust for large workspaces?
 
@@ -86,7 +86,7 @@ You can adjust the `python.analysis.userFileIndexingLimit` setting in Visual Stu
 
     This will disable both user file indexing and library indexing.
 
-- **[`python.analysis.include`](python_analysis_include.md)** and **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specify which files or directories Pylance should include or exclude from analysis.
+- **[`python.analysis.include`](python_analysis_include.md)** and **[`python.analysis.exclude`](python_analysis_exclude.md)**: Specify where Pylance looks for files to analyze.
 
     ```json
     "python.analysis.exclude": [
@@ -104,7 +104,7 @@ You can adjust the `python.analysis.userFileIndexingLimit` setting in Visual Stu
 
 ### Q: Will reducing the indexing limit affect IntelliSense features?
 
-**A:** Yes, reducing the indexing limit may limit auto-import suggestions and symbol searches to the indexed files. IntelliSense within open files will still function, but some features that rely on indexing may be restricted.
+**A:** Reducing the indexing limit can reduce auto-import coverage. IntelliSense within open files will still function, and workspace symbol search can still find symbols in unindexed files.
 
 ### Q: What is the difference between [`packageIndexDepths`](python_analysis_packageIndexDepths.md) and `userFileIndexingLimit`?
 
@@ -121,3 +121,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).

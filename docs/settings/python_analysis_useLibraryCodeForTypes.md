@@ -2,7 +2,7 @@
 
 [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) is a fast, feature-rich language server extension for Python in Visual Studio Code, powered by the Pyright type checker. It provides advanced type checking, auto-completions, code navigation, and other language features to enhance your Python development experience.
 
-One important Pylance setting is `python.analysis.useLibraryCodeForTypes`, which affects how Pylance handles type information from third-party libraries that do not provide type stubs (such as `.pyi` files) or inline type annotations.
+One important Pylance setting is `python.analysis.useLibraryCodeForTypes`, which affects how Pylance handles type information from third-party libraries that do not provide type stubs (such as `.pyi` files) or a `py.typed` marker.
 
 This guide explains what `python.analysis.useLibraryCodeForTypes` does, how it impacts your development experience, and how you can configure it to suit your needs.
 
@@ -21,7 +21,7 @@ If you want to provide better type information instead of falling back to librar
 ### Purpose of the Setting
 
 - **`true`**: Pylance will parse the library's source code to infer type information when type stubs are not available.
-- **`false`**: Pylance will not parse the library's source code and treats all types from the library as `Any`.
+- **`false`**: Pylance stops inferring types from untyped library source. Missing type information can be `Unknown`.
 
 By default, Pylance sets `python.analysis.useLibraryCodeForTypes` to `true`.
 
@@ -35,8 +35,8 @@ By default, Pylance sets `python.analysis.useLibraryCodeForTypes` to `true`.
 
 ### When Disabled (`false`)
 
-- **Reduced IntelliSense**: Pylance treats all types from untyped libraries as `Any`, resulting in less informative auto-completion and hover information.
-- **Fewer False Positives**: Since types are treated as `Any`, Pylance will not report type checking errors originating from untyped libraries, reducing potential false positives.
+- **Reduced IntelliSense**: Missing library types can be `Unknown`, resulting in less informative auto-completion and hover information.
+- **Fewer False Positives**: Disabling source inference can reduce errors based on inferred library types, but unknown-type diagnostics can still be reported in your code.
 - **Performance Improvement**: Without the need to parse library source code, Pylance may perform better, especially in large projects or when working with heavy libraries.
 
 ## How to Change the Setting
@@ -68,7 +68,7 @@ Alternatively, you can edit your `settings.json` file directly:
 
 Many third-party libraries do not provide type stubs or inline type annotations. Pylance attempts to infer types by parsing their source code, but this process can sometimes lead to incorrect type inferences, resulting in false positives during type checking.
 
-Disabling `useLibraryCodeForTypes` instructs Pylance to treat all types from these libraries as `Any`, effectively disabling type checking for them. This can reduce clutter from unnecessary warnings or errors related to type checking of library code.
+Disabling `useLibraryCodeForTypes` stops inferring types from untyped library source. Missing types can be `Unknown`, so unknown-type diagnostics can still appear.
 
 ### Improving Performance in Large Projects
 
@@ -93,7 +93,7 @@ def process_data(data):
     examplelib.process(data)  # Pylance reports type errors here
 ```
 
-By setting `python.analysis.useLibraryCodeForTypes` to `false`, Pylance will treat `examplelib` functions as returning `Any`, and will not report type errors originating from its inferred types.
+By setting `python.analysis.useLibraryCodeForTypes` to `false`, Pylance stops inferring types from untyped `examplelib` source. Unknown-type diagnostics can still appear.
 
 ## Examples
 
@@ -116,17 +116,17 @@ Pylance may report type errors based on its inference from `unknownlib`, such as
 ```python
 import unknownlib
 
-result = unknownlib.calculate(5, 10)  # Pylance treats 'calculate' as returning 'Any'
+result = unknownlib.calculate(5, 10)  # Unavailable type information can be Unknown
 print(result)
 ```
 
-Pylance no longer reports type errors related to `unknownlib`, and your code remains clean from false positives.
+Errors based on inferred `unknownlib` types may disappear, but enabled unknown-type diagnostics can still appear.
 
 ## Frequently Asked Questions
 
 ### Q: What exactly does `python.analysis.useLibraryCodeForTypes` do?
 
-**A:** It controls whether Pylance parses the source code of third-party libraries to infer type information when type stubs are not available. When set to `true`, Pylance attempts to infer types by parsing library code. When set to `false`, Pylance treats types from such libraries as `Any`.
+**A:** It controls whether Pylance parses the source code of third-party libraries to infer type information when type stubs are not available. When set to `true`, Pylance attempts to infer types by parsing library code. When set to `false`, Pylance stops inferring types from untyped library source; missing types can be `Unknown`.
 
 ### Q: Will disabling `useLibraryCodeForTypes` affect code completion for libraries?
 
@@ -134,7 +134,7 @@ Pylance no longer reports type errors related to `unknownlib`, and your code rem
 
 ### Q: If I disable `useLibraryCodeForTypes`, can I still get type checking for some libraries?
 
-**A:** Yes, libraries that provide type stubs (`.pyi` files) or inline type annotations will still offer type information to Pylance. Disabling this setting only affects libraries without such type information.
+**A:** Yes, libraries that provide type stubs (`.pyi` files) or a `py.typed` marker still offer type information to Pylance.
 
 ### Q: How do I know if a library provides type stubs or type annotations?
 
@@ -169,3 +169,5 @@ _For more detailed information on Pylance settings and customization, refer to t
 ---
 
 _"This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness."_
+
+Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
