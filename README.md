@@ -581,7 +581,7 @@ Pylance provides users with the ability to customize their Python language suppo
 
 - `python.analysis.diagnosticsSource`
     - Allows specifying a different type checker to use for diagnostics. Pylance will combine its results with the chosen server.
-    - This setting is resource-scoped and can be configured per workspace folder.
+    - This setting is window-scoped and applies to all workspace folders in the window.
     - Accepted values:
         - `Pylance` (default) - Use Pylance for diagnostics.
         - `Pylance + Pyright` - Use a different version of Pyright for diagnostics. Allows running a different Pyright than the one shipped with the Pylance extension. Pyright diagnostics will completely replace the diagnostics from Pylance. See the `python.analysis.pyrightVersion` setting.
@@ -811,4 +811,4 @@ Feedback
 
 See [Pylance's license](https://marketplace.visualstudio.com/items/ms-python.vscode-pylance/license) and [the pylance-release repository's license](LICENSE) for more information.
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.100](https://github.com/microsoft/pylance-release/blob/c7d6efcb25c68381cc542a088d218608f6d87761/CHANGELOG.md#20264100-9-october-2026-prerelease).

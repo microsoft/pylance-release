@@ -32,11 +32,15 @@ Matches appear in the completion list with an import icon. Accepting one inserts
 
 Auto-imports also work through **quick fixes**: if you write code with an unresolved name, Pylance offers an "Add import" code action (light bulb).
 
+### Paste code with its imports
+
+Copy code from one Python file in VS Code, then use **Paste As** in another Python file and choose **Paste with Imports**. Review the imports Pylance adds to the destination file.
+
 ---
 
 ## Suggestion ordering and history
 
-"Add import" quick fixes use the ranking below. Completions keep their own recent-completion history, while the import search picker presents candidates without this quick-fix ranking:
+"Add import" quick fixes, auto-import completions, and the import search picker share the ranking below:
 
 1. **Recent choices**, with the most recently accepted symbol and source first.
 2. **The same symbol from the same source** already imported in open project files.
@@ -53,11 +57,11 @@ Without recent choices or open-file preferences, `typing.Literal` ranks before t
 
 The interfaces can still show different lists because their ranking, filtering, and presentation differ. Your environment, indexing, and [which symbols are included](#control-which-symbols-appear) determine the available candidates; ranking does not add missing candidates. Import suggestions keep their category placement within completions, and quick fixes show at most three import candidates after ranking.
 
-**History tracks recency, not frequency.** Quick fixes and picker selections keep up to 100 distinct symbol-and-source choices. Choosing the same pair again moves it to the front; the oldest distinct choices are evicted when the limit is reached. Local aliases do not create separate history entries. Completions keep their own history. Quick fixes and picker selections record a choice when it is selected, before applying the import edit.
+**History tracks recency, not frequency.** Completions, quick fixes, and picker selections share up to 100 distinct symbol-and-source choices. Choosing the same pair again moves it to the front; the oldest distinct choices are evicted when the limit is reached. Local aliases do not create separate history entries. A choice is recorded when the import is accepted.
 
-Import history is kept for the current language-server session and shared across workspace folders.
+Import history is kept separately for each workspace folder.
 
-Recent choices can affect subsequent ordering in the running server. Restarting the language server or VS Code clears this in-memory history.
+Recent choices can affect subsequent ordering across all three interfaces. Restarting the language server or VS Code does not clear saved import history.
 
 Suggestion ordering helps you choose **which symbol and source to import**. It is separate from [organizing imports](#organize-imports-on-save), which rearranges import statements already in your file.
 
@@ -329,4 +333,4 @@ This is the default behavior. Pylance generates `from module import name` style 
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.100](https://github.com/microsoft/pylance-release/blob/c7d6efcb25c68381cc542a088d218608f6d87761/CHANGELOG.md#20264100-9-october-2026-prerelease).

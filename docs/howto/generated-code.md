@@ -149,6 +149,31 @@ Then add the generated directory to [`extraPaths`](../settings/python_analysis_e
 1. Ensure you have Pydantic v2+ installed (`pip install "pydantic>=2.0"`)
 2. Restart Pylance after installing (**Ctrl+Shift+P → Pylance: Restart Language Server**)
 
+**Enable experimental `create_model` support**: For dynamic Pydantic models, add this to `.vscode/settings.json`:
+
+```json
+{
+    "python.analysis.enablePydanticSupport": true
+}
+```
+
+This supports module-level calls with explicit field types, such as:
+
+```python
+from pydantic import create_model
+
+User = create_model(
+    "User",
+    name=(str, ...),
+    age=(int, 0),
+)
+
+user = User(name="Ada")
+user.name
+```
+
+Pylance can suggest the `name` and `age` fields. With type checking enabled, it also reports missing required constructor arguments such as `name`.
+
 **FastAPI** builds on Pydantic and uses `Depends()` extensively. Annotate the handler parameter with the dependency result type:
 
 ```python
@@ -318,4 +343,4 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.100](https://github.com/microsoft/pylance-release/blob/c7d6efcb25c68381cc542a088d218608f6d87761/CHANGELOG.md#20264100-9-october-2026-prerelease).
