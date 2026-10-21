@@ -13,6 +13,7 @@ Pylance runs as a language server inside VS Code and can consume significant CPU
 - [Extra Path Cost](#extra-path-cost)
 - [Node.js Heap Limit](#nodejs-heap-limit)
 - [Per-Folder Memory in Multi-Root Workspaces](#per-folder-memory-in-multi-root-workspaces)
+- [Investigate Slow Type Inference](#investigate-slow-type-inference)
 - [Performance Presets](#performance-presets)
 - [FAQ](#faq)
 
@@ -187,6 +188,19 @@ In multi-root workspaces, each workspace folder creates a separate analyzer serv
 
 ---
 
+## Investigate Slow Type Inference
+
+If a particular expression is slow to analyze, use [Copilot with Pylance's MCP tools](copilot-pylance-workflow.md) to investigate before changing types:
+
+1. Ask Copilot to use `pylanceTypeEvaluationProfile` for the affected Python file and expression. The tool takes a file URI and a 0-based expression position; omit the position to check the whole file.
+2. Inspect the reported source locations and costly return inference. Add an accurate return annotation only where the evidence supports it, rather than replacing useful types with `Any`.
+3. Repeat the same capture with the same settings, Python/package versions, and sample count. Compare the uninstrumented timings separately from the instrumented operation counts.
+4. Recheck diagnostics and repeat the original editor action before deciding whether it improved.
+
+This tool measures isolated synchronous type-evaluation work, not Python execution or actual completion/hover response time.
+
+---
+
 ## Performance Presets
 
 ### Large Projects (minimal resource usage)
@@ -274,4 +288,4 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.100](https://github.com/microsoft/pylance-release/blob/c7d6efcb25c68381cc542a088d218608f6d87761/CHANGELOG.md#20264100-9-october-2026-prerelease).

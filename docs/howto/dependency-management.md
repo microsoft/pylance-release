@@ -72,6 +72,11 @@ Pylance can generate or update a dependency file from workspace imports:
 2. Choose the dependency-file format and version-pinning style.
 3. Choose **Merge only** to add missing packages while keeping existing entries, or **Sync** to also remove packages not found in the code.
 
+To generate dependencies for a folder or a single script, right-click it in the VS Code Explorer and choose **Pylance: Generate Dependency File**:
+
+- For a folder, Pylance creates or updates the dependency file in that folder.
+- For a `.py` script, Pylance creates or updates its PEP 723 `# /// script` metadata block instead of a separate dependency file.
+
 The command applies edits to the dependency file; it does not install packages. Review the updated file, then use your package manager's install or sync workflow for the selected environment.
 
 ---
@@ -207,6 +212,13 @@ Pylance can sometimes resolve an import but show many `unknown` types or attribu
 | Stubs you wrote locally are not picked up.                                                                                                                | Verify [`stubPath`](../settings/python_analysis_stubPath.md) points at the stub root (the directory containing per-package subdirectories), not at one specific package.                                                                    |
 | Stub-only package installed but the runtime package is missing.                                                                                           | You will get `reportMissingModuleSource`. Install the runtime package or suppress the rule. See [How to Fix Unresolved Import Errors in Pylance](unresolved-imports.md#import-could-not-be-resolved-from-source-reportmissingmodulesource). |
 
+You can also use [Copilot with Pylance's MCP tools](copilot-pylance-workflow.md) to add workspace-local stubs:
+
+1. Ask Copilot to use `pylanceTypeStubs` to find stubs for the package in [microsoft/python-type-stubs](https://github.com/microsoft/python-type-stubs).
+2. Review the proposed package and destination under [`stubPath`](../settings/python_analysis_stubPath.md), then approve copying if they match your project.
+3. If no suitable stubs are available, ask Copilot to use the `python-write-stubs` skill to create a partial stub for the affected module. Review the generated `.pyi` files: a partial package still replaces each included module in full.
+4. Recheck the affected imports and diagnostics.
+
 For a wider tour of when to use `stubPath` vs `typeshedPaths` vs `useLibraryCodeForTypes`, see [How to Troubleshoot Pylance Settings](settings-troubleshooting.md).
 
 ---
@@ -251,4 +263,4 @@ Pylance can use a PEP 723 interpreter selected for an open local `.py` script by
 
 Copilot can read this guide via `pylanceDocuments` and use `pylancePythonEnvironments` to identify the environment, but it should not run `pip install` against the wrong one. Tell Copilot the workspace root, ask it to confirm the active environment, and only then install. See [How to Fix Pylance Issues with Copilot](copilot-pylance-workflow.md).
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.100](https://github.com/microsoft/pylance-release/blob/c7d6efcb25c68381cc542a088d218608f6d87761/CHANGELOG.md#20264100-9-october-2026-prerelease).
