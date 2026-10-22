@@ -1,6 +1,6 @@
 # How to Fix Pylance Issues with Copilot
 
-Pylance ships a set of MCP tools that let GitHub Copilot (and any other MCP client) inspect your Python project the same way Pylance does in the editor: it can resolve interpreters, list user files, ask the language server for diagnostics, apply refactorings, and run code against the active environment.
+Pylance ships a set of MCP tools that let GitHub Copilot in VS Code inspect your Python project the same way Pylance does in the editor: it can resolve interpreters, list user files, ask the language server for diagnostics, apply refactorings, and run code against the active environment.
 
 This guide is the canonical entry point for Copilot when fixing Pylance + VS Code problems. It maps common symptoms to the right tool, explains the order to call them in, and links out to topic-specific guides.
 
@@ -21,6 +21,7 @@ The workflows here also work for humans driving Copilot Chat: ask Copilot to use
     - [Remove Unused Imports and Run Fix-All](#remove-unused-imports-and-run-fix-all)
     - [Resolve Type Errors](#resolve-type-errors)
     - [Confirm a Hypothesis at Runtime](#confirm-a-hypothesis-at-runtime)
+    - [Investigate Slow Python Code](#investigate-slow-python-code)
 - [Tool Call Conventions](#tool-call-conventions)
 - [What Copilot Should Not Do](#what-copilot-should-not-do)
 - [Related Guides](#related-guides)
@@ -199,6 +200,16 @@ Static analysis is necessary but not sufficient. When a type error or unresolved
 
 A common pattern: `pylanceLSP` says a value is `Optional[int]` and you do not believe it. Run a `pylanceRunCodeSnippet` that imports the module and prints `type(...)` to confirm. If runtime disagrees with static, the fix is usually a missing annotation, a missing stub, or a shadowing import &mdash; not a Pylance bug.
 
+### Investigate Slow Python Code
+
+Use `pylancePythonProfiling` and `pylancePythonProfileExplorer` to find where a representative script or module spends CPU time. Capturing a CPU profile requires Python 3.15.0b3 or later with `profiling.sampling` available in the selected interpreter.
+
+1. Start a capture with `pylancePythonProfiling` (`action: "startCpu"`) for your script or module. Keep the returned `profilingSessionId`; use it with `action: "stopCpu"` to finish the capture and retrieve the saved artifact paths.
+2. Load the returned `cpu.metadata.json` with `pylancePythonProfileExplorer`, using `action: "loadCpuProfile"` and `filePath`. Keep the returned `profileId` for queries.
+3. Query `action: "query"`, `view: "functionStats"` with that `profileId`. Compare `selfTimeMs` (time in the function itself), `totalTimeMs` (including callees), and `observedEntries`. Set `sortBy: "observedEntries"` to investigate frequently observed work; use a row's `nodeId` with `view: "nodeContext"` to inspect a sampled caller path.
+
+`observedEntries` is not an exact call count: sampling can miss short calls and count resumptions as entries. You can inspect saved profiles without starting a new capture.
+
 ---
 
 ## Tool Call Conventions
@@ -238,4 +249,4 @@ When in doubt, run `pylanceWorkspaceRoots` first to capture the canonical root U
 - [How to Use Type Narrowing](type-narrowing.md)
 - [How to Set Up a Python Monorepo with Pylance](monorepo-setup.md)
 
-Last content update aligned with [Pylance 2026.4.1](https://github.com/microsoft/pylance-release/blob/8095001387e5aa5295b9f6070b97989693de9988/CHANGELOG.md#202641-23-september-2026-release).
+Last content update aligned with [Pylance 2026.4.101](https://github.com/microsoft/pylance-release/blob/b946877fc1245510cdf55850546fc48cb44129fe/CHANGELOG.md#20264101-15-october-2026-prerelease).

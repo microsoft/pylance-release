@@ -50,6 +50,20 @@ All of the built-in default exclusions are turned off, **including virtual-envir
 }
 ```
 
+### Using project configuration
+
+To share this choice with your project, set `useDefaultExcludes` in `pyrightconfig.json`:
+
+```json
+{
+    "useDefaultExcludes": false
+}
+```
+
+For `pyproject.toml`, put `useDefaultExcludes = false` under `[tool.pyright]`.
+
+A project value overrides `python.analysis.useDefaultExcludes`. If the project does not set it, the VS Code setting still applies.
+
 ## When to Use It
 
 - **Keep enabled** (the default) for almost all projects. The built-in excludes keep analysis fast and rarely need to change, and your own `python.analysis.exclude` entries are added on top of them.
@@ -82,3 +96,5 @@ _For more information on Pylance settings and customization, refer to the **[Pyl
 ---
 
 _This document was generated with the assistance of AI and has been reviewed by humans for accuracy and completeness._
+
+Last content update aligned with [Pylance 2026.4.101](https://github.com/microsoft/pylance-release/blob/b946877fc1245510cdf55850546fc48cb44129fe/CHANGELOG.md#20264101-15-october-2026-prerelease).
