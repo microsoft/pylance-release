@@ -104,6 +104,15 @@
     1. Find all references on the `__init__` function
     1. Verify it finds the references to all the creations of the class.
 
+-   [ ] Auto-import completions with a `.pth` workspace path
+    1. Open `testing/pth-auto-import` in VS Code using WSL.
+    1. Follow the setup steps in [`pth-auto-import/README.md`](pth-auto-import/README.md).
+    1. Open `portfolio/processing/handlers/buy_handler.py`.
+    1. Place the cursor after `Processi` and request completions.
+    1. Verify `ProcessingResult` is offered with an auto-import from `.base_handler`.
+    1. Type the complete name and verify the quick fix offers `from .base_handler import ProcessingResult`.
+    1. Remove the `.pth` file as described in the sample README, reload VS Code, and verify the same completion remains available.
+
 ### P2 Test Scenarios
 
 -   [ ] Scikit learn
@@ -132,4 +141,3 @@
     9. Make sure hover on the method works
     9. Try calling a method on the `model` object. Make sure completions come up when you type `.` after model
     9. Try `Go to definition` on `make_column_transformer` and other methods. Make sure you goto the source in scikit learn or the type stubs.
-
