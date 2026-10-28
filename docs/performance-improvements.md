@@ -17,6 +17,6 @@ This note captures 10 practical performance wins that are easy to apply to Pytho
 
 The highest-impact, lowest-effort change is usually caching repeated resolution work. In Python, a small `lru_cache` around a pure lookup function turns repeated imports or path scans from O(n) work on every call into near-constant-time lookups after the first pass.
 
-The example implementation in `testing/performance/lookup_cache.py` demonstrates the pattern. It caches repeated module searches so repeated requests reuse the already resolved path instead of re-walking the filesystem.
+The example implementation in `testing/performance/lookup_cache.py` demonstrates the pattern. It caches repeated module searches so repeated requests reuse the already resolved path instead of re-walking the filesystem. Because both successful paths and misses are cached, call `clear_module_cache()` when files are added, removed, or changed under the search roots.
 
-The return on effort is high because the change is surgical, easy to reason about, and immediately reduces repeated overhead in hot paths.
+The return on effort can be high in a workload that repeatedly resolves the same modules. Measure the lookup workload before adopting this pattern, and clear the cache when filesystem changes could affect resolution.

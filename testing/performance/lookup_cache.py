@@ -22,6 +22,11 @@ def resolve_module_path(module_name: str, roots: tuple[str, ...]) -> str | None:
     return _search_roots(module_name, roots)
 
 
+def clear_module_cache() -> None:
+    """Invalidate cached paths and misses after the search roots change."""
+    resolve_module_path.cache_clear()
+
+
 def resolve_many(module_names: list[str], roots: tuple[str, ...]) -> list[str | None]:
     return [resolve_module_path(module_name, roots) for module_name in module_names]
 
