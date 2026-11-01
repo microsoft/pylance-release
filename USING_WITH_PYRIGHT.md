@@ -19,7 +19,7 @@ If you are aware of other similar tools that could benefit from having the same 
 
 Pylance also has an option to allow you to run a specific version of Pyright to generate diagnostics. You might do this if you don't want to always be on the latest version of Pyright in your CI and you want your Pylance errors to match what your CI is generating.
 
-To get Pylance to run Pyight for diagnostics, set these two settings in your settings.json:
+To get Pylance to run Pyright for diagnostics, set these two settings in your settings.json:
 
 ```jsonc
 "python.analysis.diagnosticsSource": "Pylance + Pyright"
