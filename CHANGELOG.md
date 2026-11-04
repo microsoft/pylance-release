@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+Notable changes:
+
+-   Investigating crash telemetry report of TypeError in type evaluation during protocol assignment with constrained TypeVars [pylance-release#8290](https://github.com/microsoft/pylance-release/issues/8290)
+
 ## 2026.4.101 (15 October 2026) PreRelease
 
 Notable changes:
