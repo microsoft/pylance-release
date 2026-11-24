@@ -1,9 +1,8 @@
-# SCENARIO: source-action driven whole-file fixes
-# TARGET: use the exact file state named in each scenario block below
-# TRIGGER: Source Action, from the command palette, its shortcut, or the editor context menu
-# EXPECT: the named source-action entry is visible before execution
-# VERIFY: when execution is requested, verify the resulting editor or settings text instead of relying on menu visibility alone
-# RECOVER: when the action mutates state, undo or revert until the workspace returns to its original state before the next scenario
+# Source-action driven whole-file fixes. Each scenario block below names the exact file
+# state it needs. Source Action can be opened from the command palette, its shortcut, or
+# the editor context menu. Confirm the named entry is visible before execution, verify the
+# resulting editor or settings text when execution is requested, and undo or revert any
+# mutation until the workspace returns to its original state before the next scenario.
 
 # SCENARIO: run Fix All through Source Action
 # TARGET: place the cursor anywhere in this file while the import block below still contains both unused imports and the relative `from .lib.userModule import MyType` statement
