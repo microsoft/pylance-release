@@ -93,11 +93,11 @@ import unknownModule
 # RECOVER: none
 
 
-# SCENARIO: extract method refactor
+# SCENARIO: extract function refactor
 # TARGET: select the two statements inside `function` from `codeToExtract = 1` through `print(codeToExtract)`
 # TRIGGER: Quick Fix and `Refactoring...`
-# EXPECT: menu contains `Extract method`
-# VERIFY: after execution, a helper method is created and the selected statements are replaced by a call to that helper
+# EXPECT: menu contains `Extract function`
+# VERIFY: after execution, a helper function is created and the selected statements are replaced by a call to that helper
 # RECOVER: undo until the original function body is restored
 def function():
     codeToExtract = 1

@@ -68,7 +68,7 @@ class TypeHierarchyBase(Generic[T]):
 # TARGET: `TypeHierarchyType` in the class definition below
 # TRIGGER: Show Type Hierarchy
 # EXPECT: the cursor is on `TypeHierarchyType` in the class declaration below
-# VERIFY: the Type Hierarchy view opens on `TypeHierarchyType` and the supertypes tree includes `TypeHierarchyBase[int]`
+# VERIFY: the Type Hierarchy view opens on `TypeHierarchyType` and the supertypes tree includes `TypeHierarchyBase` (hierarchy items use the declaration name, without the `[int]` specialization)
 # RECOVER: none
 class TypeHierarchyType(TypeHierarchyBase[int]):
     pass
