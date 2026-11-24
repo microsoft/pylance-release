@@ -9,6 +9,19 @@ class ResolveModulePathTests(unittest.TestCase):
     def setUp(self) -> None:
         clear_module_cache()
 
+    def test_repeated_resolution_reports_only_the_first_lookup_as_a_miss(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "module.py").touch()
+            roots = (directory,)
+
+            for _ in range(100):
+                resolve_module_path("module", roots)
+
+            cache_info = resolve_module_path.cache_info()
+            self.assertEqual(cache_info.misses, 1)
+            self.assertEqual(cache_info.hits, 99)
+
     def test_reuses_cached_lookup(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

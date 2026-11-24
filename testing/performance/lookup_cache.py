@@ -23,7 +23,7 @@ def resolve_module_path(module_name: str, roots: tuple[str, ...]) -> str | None:
 
 
 def clear_module_cache() -> None:
-    """Invalidate cached paths and misses after the search roots change."""
+    """Invalidate module-resolution results after Pylance search roots change."""
     resolve_module_path.cache_clear()
 
 

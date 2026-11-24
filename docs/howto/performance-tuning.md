@@ -122,6 +122,29 @@ Glob expansion itself happens once when configuration loads, not per import. See
 
 ---
 
+## Ten Pylance-Specific Optimization Opportunities
+
+These opportunities cover common Pylance configuration and language-server workloads. The highest-impact, lowest-effort first target is repeated module-resolution caching.
+
+1. **Cache resolved module paths**. Reuse successful and negative import-resolution results until workspace files or search roots change.
+2. **Cache parsed configuration**. Avoid reparsing `pyproject.toml`, `pyrightconfig.json`, and Pylance settings for every request.
+3. **Batch workspace discovery**. Apply file additions and deletions as one indexing update instead of rescanning after each event.
+4. **Limit extra search roots**. Keep `extraPaths` narrow and use execution environments so unnecessary roots are not searched for each file.
+5. **Keep open-file analysis incremental**. Reanalyze the affected scope instead of rebuilding all workspace diagnostics after a small edit.
+6. **Cache parsed syntax trees**. Reuse unchanged document and library models across related hover, completion, and diagnostic requests.
+7. **Short-circuit open-file-only analysis**. Skip workspace-wide work when `diagnosticMode` is `openFilesOnly` unless an explicit workspace operation is requested.
+8. **Index once and update incrementally**. Avoid full re-indexes for file-watcher events that can be handled by updating the affected symbols.
+9. **Avoid quadratic symbol scans**. Use indexes for import names, workspace symbols, and references instead of repeatedly scanning all indexed entries.
+10. **Guard debug tracing**. Move expensive trace formatting and diagnostic serialization behind Pylance trace/debug checks.
+
+### Selected optimization: memoized module resolution
+
+Repeated module lookups can repeatedly probe the same filesystem paths. The fixture in [`testing/performance/lookup_cache.py`](../../testing/performance/lookup_cache.py) demonstrates an `lru_cache` wrapper for successful and failed resolution results. The corresponding unit tests verify both cache reuse and invalidation after a workspace change.
+
+Clear cached resolutions when search roots or relevant files change. For a Pylance implementation, invalidation must be tied to configuration changes and file-watcher events rather than a manual test helper.
+
+---
+
 ## Node.js Heap Limit
 
 By default, Pylance runs inside VS Code's built-in Node.js runtime, which uses [pointer compression](https://v8.dev/blog/pointer-compression). This limits the effective heap to approximately **4 GB**, regardless of system RAM.
